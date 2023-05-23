@@ -9,4 +9,8 @@ object Constants {
 
     const val DEFAULT_PHONE_NUMBER_MAX_LENGTH = 10
 
+    // Country code default values.
+    const val DEFAULT_COUNTRY_NAME = "India"
+    const val DEFAULT_COUNTRY_CODE = "91"
+    const val DEFAULT_COUNTRY_FLAG_URL = "https://flagcdn.com/w320/in.png"
 }

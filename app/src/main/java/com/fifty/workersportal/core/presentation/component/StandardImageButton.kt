@@ -7,20 +7,18 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
-import com.fifty.workersportal.core.presentation.ui.theme.StrokeThickness
+import com.fifty.workersportal.core.presentation.ui.theme.MediumStrokeThickness
 
 @Composable
 fun StandardImageButton(
@@ -34,7 +32,7 @@ fun StandardImageButton(
             .size(60.dp)
             .clip(CircleShape)
             .border(
-                StrokeThickness,
+                MediumStrokeThickness,
                 outlineColor,
                 shape = CircleShape
             )

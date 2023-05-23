@@ -20,7 +20,7 @@ import com.fifty.workersportal.core.presentation.ui.theme.SizeExtraSmall
 import com.fifty.workersportal.core.presentation.ui.theme.SizeLarge
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
-import com.fifty.workersportal.core.presentation.ui.theme.StrokeThickness
+import com.fifty.workersportal.core.presentation.ui.theme.MediumStrokeThickness
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
@@ -36,7 +36,7 @@ fun CountryPickerField(
                 onCountryClick()
             }
             .border(
-                StrokeThickness,
+                MediumStrokeThickness,
                 MaterialTheme.colorScheme.outline,
                 RoundedCornerShape(SizeSmall)
             )
