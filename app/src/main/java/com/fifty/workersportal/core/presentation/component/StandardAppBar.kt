@@ -4,13 +4,17 @@ import android.icu.text.CaseMap.Title
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.fifty.workersportal.R
@@ -19,14 +23,19 @@ import com.fifty.workersportal.R
 @Composable
 fun StandardAppBar(
     modifier: Modifier = Modifier,
+    containerColor: Color = MaterialTheme.colorScheme.background,
     onNavigateUp: () -> Unit = {},
     showBackArrow: Boolean = false,
     navActions: @Composable RowScope.() -> Unit = {},
     title: @Composable () -> Unit = {}
 ) {
     TopAppBar(
+        modifier = modifier,
+        colors = TopAppBarDefaults
+            .centerAlignedTopAppBarColors(
+                containerColor = containerColor
+            ),
         title = title,
-        modifier = modifier.background(MaterialTheme.colorScheme.background),
         navigationIcon = {
             if (showBackArrow) {
                 IconButton(onClick = { onNavigateUp() }) {

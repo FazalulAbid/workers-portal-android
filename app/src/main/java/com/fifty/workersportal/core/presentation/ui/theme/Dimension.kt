@@ -11,4 +11,6 @@ val SizeExtraLarge = 32.dp
 val StrokeThickness = 1.5.dp
 val LineThickness = 2.dp
 
-val FullWidthButtonHeight = 50.dp
+val LargeButtonHeight = 50.dp
+val MediumButtonHeight = 40.dp
+val SmallButtonHeight = 30.dp

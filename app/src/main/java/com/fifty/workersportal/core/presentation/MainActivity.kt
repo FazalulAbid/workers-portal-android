@@ -20,7 +20,9 @@ import com.fifty.workersportal.core.presentation.component.StandardScaffold
 import com.fifty.workersportal.core.presentation.ui.theme.WorkersPortalTheme
 import com.fifty.workersportal.featureauth.presentation.splash.SplashViewModel
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val splashScreenViewModel: SplashViewModel by viewModels()
@@ -47,7 +49,10 @@ class MainActivity : ComponentActivity() {
                         snackBarHostState = snackBarHostState,
                         modifier = Modifier.fillMaxSize()
                     ) {
-                        Navigation(navController)
+                        Navigation(
+                            navController = navController,
+                            snackbarHostState = snackBarHostState
+                        )
                     }
                 }
             }

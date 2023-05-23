@@ -19,4 +19,7 @@
     <string name="favorites">Favorites</string>
     <string name="history">History</string>
     <string name="notifications">Notifications</string>
+    <string name="we_have_sent_a_verification_code_to">We have sent a verification code to</string>
+    <string name="try_other_login_methods">Try other login methods</string>
+    <string name="resend_otp_in_x">Resend OTP in %d</string>
 </resources>

@@ -21,6 +21,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,6 +34,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.presentation.component.FullWidthButton
 import com.fifty.workersportal.core.presentation.component.StandardImageButton
@@ -43,12 +45,17 @@ import com.fifty.workersportal.core.presentation.ui.theme.SizeLarge
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
 import com.fifty.workersportal.core.presentation.ui.theme.StrokeThickness
+import com.fifty.workersportal.core.util.Screen
 import com.fifty.workersportal.featureauth.presentation.component.CountryPickerField
 import com.fifty.workersportal.featureauth.presentation.component.PhoneNumberTextField
 import kotlin.math.roundToInt
 
 @Composable
-fun AuthScreen() {
+fun AuthScreen(
+    snackbarHostState: SnackbarHostState,
+    onNavigate: (String) -> Unit = {},
+    viewModel: AuthViewModel = hiltViewModel()
+) {
     Surface(color = MaterialTheme.colorScheme.background) {
         Column(
             modifier = Modifier.fillMaxSize()
@@ -116,7 +123,9 @@ fun AuthScreen() {
                         )
                     }
                     Spacer(modifier = Modifier.height(SizeMedium))
-                    FullWidthButton(text = stringResource(R.string.continue_text), onClick = {})
+                    FullWidthButton(text = stringResource(R.string.continue_text)) {
+                        onNavigate(Screen.OtpScreen.route)
+                    }
                 }
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     TextBetweenLines(text = stringResource(R.string.or))

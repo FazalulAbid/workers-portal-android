@@ -1,6 +1,8 @@
 package com.fifty.workersportal.core.presentation.component
 
+import android.accessibilityservice.AccessibilityService.ScreenshotResult
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.navigation
@@ -18,11 +20,12 @@ import com.google.accompanist.navigation.animation.composable
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun Navigation(
-    navController: NavHostController
+    navController: NavHostController,
+    snackbarHostState: SnackbarHostState
 ) {
     AnimatedNavHost(
         navController = navController,
-        startDestination = Screen.AuthScreen.route
+        startDestination = Screen.OtpScreen.route
     ) {
         // Home Nav destination
         navigation(
@@ -62,7 +65,10 @@ fun Navigation(
         }
 
         composable(Screen.AuthScreen.route) {
-            AuthScreen()
+            AuthScreen(
+                snackbarHostState = snackbarHostState,
+                onNavigate = navController::navigate
+            )
         }
         composable(Screen.OtpScreen.route) {
             OtpScreen()

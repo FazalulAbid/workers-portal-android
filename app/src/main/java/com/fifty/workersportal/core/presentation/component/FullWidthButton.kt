@@ -12,14 +12,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.fifty.workersportal.core.presentation.ui.theme.FullWidthButtonHeight
-import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
+import com.fifty.workersportal.core.presentation.ui.theme.LargeButtonHeight
 import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
 
 @Composable
 fun FullWidthButton(
     modifier: Modifier = Modifier,
-    height: Dp = FullWidthButtonHeight,
+    height: Dp = LargeButtonHeight,
     text: String = "",
     containerColor: Color = MaterialTheme.colorScheme.primary,
     contentColor: Color = MaterialTheme.colorScheme.onPrimary,
