@@ -1,14 +1,21 @@
 package com.fifty.workersportal.core.presentation.component
 
 import android.icu.text.CaseMap.Title
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import com.fifty.workersportal.R
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StandardAppBar(
     modifier: Modifier = Modifier,
@@ -17,18 +24,20 @@ fun StandardAppBar(
     navActions: @Composable RowScope.() -> Unit = {},
     title: @Composable () -> Unit = {}
 ) {
-//    TopAppBar(
-//        title = title,
-//        modifier = modifier,
-//        navigationIcon = {
-//            if (showBackArrow) {
-//                IconButton(onClick = { onNavigateUp() }) {
-//                    Icon(painter = , contentDescription = )
-//                }
-//            }
-//        }
-//    ) {
-//
-//    }
-
+    TopAppBar(
+        title = title,
+        modifier = modifier.background(MaterialTheme.colorScheme.background),
+        navigationIcon = {
+            if (showBackArrow) {
+                IconButton(onClick = { onNavigateUp() }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_arrow_back_),
+                        contentDescription = stringResource(R.string.go_to_previous_screen),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
+        },
+        actions = navActions
+    )
 }
