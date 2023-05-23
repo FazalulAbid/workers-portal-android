@@ -3,4 +3,13 @@
     <string name="login_screen_banner">Login screen banner</string>
     <string name="kerala_s_1_workers_hiring_and_posting_app">Kerala\'s #1 Workers Hiring and Posting App</string>
     <string name="login_or_sign_up">Login or sign up</string>
+    <string name="selected_country_flag">Selected country flag</string>
+    <string name="choose_country_code">Choose country code</string>
+    <string name="continue_text">Continue</string>
+    <string name="or">or</string>
+    <string name="sign_in_with_google">Sign in with google</string>
+    <string name="by_continuing_you_agree_to_our">By continuing, you agree to our</string>
+    <string name="terms_of_service">Terms of Service</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="content_policy">Content Policy</string>
 </resources>
