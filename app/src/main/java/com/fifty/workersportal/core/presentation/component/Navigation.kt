@@ -1,15 +1,15 @@
 package com.fifty.workersportal.core.presentation.component
 
-import android.accessibilityservice.AccessibilityService.ScreenshotResult
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.navigation
-import com.fifty.workersportal.core.util.NavigationItem
+import com.fifty.workersportal.core.util.NavigationParent
 import com.fifty.workersportal.core.util.Screen
 import com.fifty.workersportal.featureauth.presentation.auth.AuthScreen
 import com.fifty.workersportal.featureauth.presentation.otp.OtpScreen
+import com.fifty.workersportal.featureauth.presentation.selectcountry.SelectCountryCodeScreen
 import com.fifty.workersportal.featureuserdashboard.presentation.testscreen.FavoriteScreen
 import com.fifty.workersportal.featureuserdashboard.presentation.testscreen.HistoryScreen
 import com.fifty.workersportal.featureuserdashboard.presentation.testscreen.WorkerDashboardScreen
@@ -25,12 +25,12 @@ fun Navigation(
 ) {
     AnimatedNavHost(
         navController = navController,
-        startDestination = Screen.OtpScreen.route
+        startDestination = Screen.AuthScreen.route
     ) {
         // Home Nav destination
         navigation(
             startDestination = Screen.UserDashboardScreen.route,
-            route = NavigationItem.Home.label
+            route = NavigationParent.Home.label
         ) {
             composable(Screen.UserDashboardScreen.route) {
                 UserDashboardScreen()
@@ -39,7 +39,7 @@ fun Navigation(
         // Work Nav destination
         navigation(
             startDestination = Screen.WorkerDashboardScreen.route,
-            route = NavigationItem.Work.label
+            route = NavigationParent.Work.label
         ) {
             composable(Screen.WorkerDashboardScreen.route) {
                 WorkerDashboardScreen()
@@ -48,7 +48,7 @@ fun Navigation(
         // Favorite Nav destination
         navigation(
             startDestination = Screen.FavoriteScreen.route,
-            route = NavigationItem.Favorite.label
+            route = NavigationParent.Favorite.label
         ) {
             composable(Screen.FavoriteScreen.route) {
                 FavoriteScreen()
@@ -57,13 +57,12 @@ fun Navigation(
         // Home Nav destination
         navigation(
             startDestination = Screen.HistoryScreen.route,
-            route = NavigationItem.History.label
+            route = NavigationParent.History.label
         ) {
             composable(Screen.HistoryScreen.route) {
                 HistoryScreen()
             }
         }
-
         composable(Screen.AuthScreen.route) {
             AuthScreen(
                 snackbarHostState = snackbarHostState,
@@ -72,6 +71,9 @@ fun Navigation(
         }
         composable(Screen.OtpScreen.route) {
             OtpScreen()
+        }
+        composable(Screen.SelectCountryScreen.route) {
+            SelectCountryCodeScreen()
         }
     }
 }

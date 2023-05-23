@@ -1,10 +1,8 @@
 package com.fifty.workersportal.featureauth.presentation.auth
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,14 +10,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
@@ -39,12 +32,10 @@ import com.fifty.workersportal.R
 import com.fifty.workersportal.core.presentation.component.FullWidthButton
 import com.fifty.workersportal.core.presentation.component.StandardImageButton
 import com.fifty.workersportal.core.presentation.component.TextBetweenLines
-import com.fifty.workersportal.core.presentation.ui.theme.SizeExtraLarge
-import com.fifty.workersportal.core.presentation.ui.theme.SizeExtraSmall
+import com.fifty.workersportal.core.presentation.ui.theme.LargeButtonHeight
 import com.fifty.workersportal.core.presentation.ui.theme.SizeLarge
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
-import com.fifty.workersportal.core.presentation.ui.theme.StrokeThickness
 import com.fifty.workersportal.core.util.Screen
 import com.fifty.workersportal.featureauth.presentation.component.CountryPickerField
 import com.fifty.workersportal.featureauth.presentation.component.PhoneNumberTextField
@@ -104,15 +95,17 @@ fun AuthScreen(
                     Row {
                         CountryPickerField(
                             modifier = Modifier
-                                .height(50.dp),
+                                .height(LargeButtonHeight),
                             "https://flagcdn.com/w320/in.png",
-                            onCountryClick = {}
+                            onCountryClick = {
+                                onNavigate(Screen.SelectCountryScreen.route)
+                            }
                         )
                         Spacer(modifier = Modifier.width(SizeSmall))
                         PhoneNumberTextField(
                             modifier = Modifier
                                 .weight(1f)
-                                .height(50.dp),
+                                .height(LargeButtonHeight),
                             countryCodeText = "+91",
                             phoneNumberText = "9562520502",
                             hint = "Enter Phone Number",

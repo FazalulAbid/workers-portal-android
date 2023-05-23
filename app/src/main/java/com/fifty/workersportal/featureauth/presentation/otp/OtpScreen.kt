@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -17,7 +16,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.presentation.component.StandardAppBar
-import com.fifty.workersportal.core.presentation.ui.theme.LargeButtonHeight
 import com.fifty.workersportal.core.presentation.ui.theme.MediumButtonHeight
 import com.fifty.workersportal.core.presentation.ui.theme.SizeExtraLarge
 import com.fifty.workersportal.core.presentation.ui.theme.SizeLarge
@@ -34,8 +32,8 @@ fun OtpScreen() {
             title = {
                 Text(
                     text = stringResource(R.string.otp_verification),
-                    style = MaterialTheme.typography.titleLarge.copy(
-                        fontWeight = FontWeight.Bold
+                    style = MaterialTheme.typography.headlineSmall.copy(
+                        fontWeight = FontWeight.Medium
                     ),
                     color = MaterialTheme.colorScheme.onBackground
                 )

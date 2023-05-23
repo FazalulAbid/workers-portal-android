@@ -22,7 +22,7 @@ import com.fifty.workersportal.R
 import com.fifty.workersportal.core.domain.model.BottomNavItem
 import com.fifty.workersportal.core.presentation.ui.theme.SizeExtraLarge
 import com.fifty.workersportal.core.presentation.ui.theme.SizeLarge
-import com.fifty.workersportal.core.util.NavigationItem
+import com.fifty.workersportal.core.util.NavigationParent
 import com.fifty.workersportal.core.util.Screen
 
 @Composable
@@ -37,28 +37,28 @@ fun StandardBottomBar(
     )
     val bottomNavItems: List<BottomNavItem> = listOf(
         BottomNavItem(
-            route = NavigationItem.Home.label,
+            route = NavigationParent.Home.label,
             label = stringResource(R.string.home),
             icon = painterResource(id = R.drawable.ic_home),
             iconSelected = painterResource(id = R.drawable.ic_home_filled),
             contentDescription = stringResource(R.string.home)
         ),
         BottomNavItem(
-            route = NavigationItem.Work.label,
+            route = NavigationParent.Work.label,
             label = stringResource(R.string.work),
             icon = painterResource(id = R.drawable.ic_handshake),
             iconSelected = painterResource(id = R.drawable.ic_handshake_filled),
             contentDescription = stringResource(R.string.work)
         ),
         BottomNavItem(
-            route = NavigationItem.Favorite.label,
+            route = NavigationParent.Favorite.label,
             label = stringResource(R.string.favorites),
             icon = painterResource(id = R.drawable.ic_favorite),
             iconSelected = painterResource(id = R.drawable.ic_favorite_filled),
             contentDescription = stringResource(R.string.favorites)
         ),
         BottomNavItem(
-            route = NavigationItem.History.label,
+            route = NavigationParent.History.label,
             label = stringResource(R.string.history),
             icon = painterResource(id = R.drawable.ic_history),
             iconSelected = painterResource(id = R.drawable.ic_history),

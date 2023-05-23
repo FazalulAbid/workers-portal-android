@@ -22,4 +22,7 @@
     <string name="we_have_sent_a_verification_code_to">We have sent a verification code to</string>
     <string name="try_other_login_methods">Try other login methods</string>
     <string name="resend_otp_in_x">Resend OTP in %d</string>
+    <string name="select_country">Select Country</string>
+    <string name="search">Search</string>
+    <string name="search_by_country_name">Search by country name...</string>
 </resources>

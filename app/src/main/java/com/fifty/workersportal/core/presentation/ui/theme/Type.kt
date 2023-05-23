@@ -1,12 +1,10 @@
 package com.fifty.workersportal.core.presentation.ui.theme
 
-import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fifty.workersportal.R
 
@@ -33,7 +31,7 @@ val Typography = Typography(
     ),
     headlineSmall = TextStyle(
         fontFamily = circularStd,
-        fontSize = 24.sp,
+        fontSize = 20.sp,
         lineHeight = 32.sp,
         fontWeight = FontWeight.Bold
     ),
