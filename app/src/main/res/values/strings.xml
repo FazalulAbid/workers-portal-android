@@ -25,4 +25,8 @@
     <string name="select_country">Select Country</string>
     <string name="search">Search</string>
     <string name="search_by_country_name">Search by country name...</string>
+    <string name="unknown_error">Unknown error</string>
+    <string name="error_could_not_reach_server">"Oops! Couldn't reach your server. Check your internet connection."</string>
+    <string name="oops_something_went_wrong">\"Oops! Something went wrong. Please try again.\"</string>
+
 </resources>
