@@ -22,7 +22,7 @@ fun Navigation(
 ) {
     AnimatedNavHost(
         navController = navController,
-        startDestination = NavigationItem.Home.label
+        startDestination = Screen.AuthScreen.route
     ) {
         // Home Nav destination
         navigation(
