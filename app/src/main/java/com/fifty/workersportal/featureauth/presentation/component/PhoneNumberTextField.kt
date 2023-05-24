@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -16,8 +18,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.onFocusEvent
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
@@ -27,14 +33,17 @@ import com.fifty.workersportal.core.util.Constants.DEFAULT_PHONE_NUMBER_MAX_LENG
 
 @Composable
 fun PhoneNumberTextField(
+    modifier: Modifier = Modifier,
+    textFieldModifier: Modifier = Modifier,
     phoneNumberText: String = "",
     countryCodeText: String = "",
     hint: String = "",
     maxLength: Int = DEFAULT_PHONE_NUMBER_MAX_LENGTH,
-    keyboardType: KeyboardType = KeyboardType.Phone,
+    keyboardType: KeyboardType = KeyboardType.Number,
     onValueChange: (String) -> Unit,
     onClearTextClick: () -> Unit,
-    modifier: Modifier,
+    onDone: () -> Unit = {},
+    cursorColor: Color = MaterialTheme.colorScheme.primary,
     focusRequester: FocusRequester = FocusRequester()
 ) {
     Row(
@@ -60,11 +69,26 @@ fun PhoneNumberTextField(
         Spacer(modifier = Modifier.width(SizeSmall))
         BasicTextField(
             value = phoneNumberText,
-            onValueChange = {},
-            modifier = Modifier.weight(1f),
+            onValueChange = {
+                if (it.length <= maxLength) {
+                    onValueChange(it)
+                }
+            },
+            modifier = textFieldModifier
+                .weight(1f),
             textStyle = MaterialTheme.typography.bodyLarge.copy(
                 fontWeight = FontWeight.Medium
-            )
+            ),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = keyboardType,
+                imeAction = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    onDone()
+                }
+            ),
+            cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
         )
         if (phoneNumberText.isNotBlank()) {
             IconButton(onClick = onClearTextClick) {

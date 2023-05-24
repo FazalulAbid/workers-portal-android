@@ -14,6 +14,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.fifty.workersportal.core.presentation.component.Navigation
 import com.fifty.workersportal.core.presentation.component.StandardScaffold
@@ -57,5 +60,11 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
+//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content)) { view, insets ->
+//            val bottom = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
+//            view.updatePadding(bottom = bottom)
+//            insets
+//        }
     }
 }

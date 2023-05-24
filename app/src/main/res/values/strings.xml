@@ -28,5 +28,8 @@
     <string name="unknown_error">Unknown error</string>
     <string name="error_could_not_reach_server">"Oops! Couldn't reach your server. Check your internet connection."</string>
     <string name="oops_something_went_wrong">\"Oops! Something went wrong. Please try again.\"</string>
+    <string name="enter_phone_number">Enter Phone Number</string>
+    <string name="this_field_cant_be_empty">This field can\'t be empty</string>
+    <string name="please_enter_valid_phone_number">Please enter a valid phone number.</string>
 
 </resources>

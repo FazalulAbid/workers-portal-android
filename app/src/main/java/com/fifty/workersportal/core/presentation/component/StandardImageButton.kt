@@ -22,13 +22,14 @@ import com.fifty.workersportal.core.presentation.ui.theme.MediumStrokeThickness
 
 @Composable
 fun StandardImageButton(
+    modifier: Modifier = Modifier,
     size: Dp = 60.dp,
     outlineColor: Color = MaterialTheme.colorScheme.outline,
     imageIcon: Painter,
     onClick: () -> Unit
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .size(60.dp)
             .clip(CircleShape)
             .border(

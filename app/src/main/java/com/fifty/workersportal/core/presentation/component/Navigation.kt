@@ -66,14 +66,15 @@ fun Navigation(
         composable(Screen.AuthScreen.route) {
             AuthScreen(
                 snackbarHostState = snackbarHostState,
-                onNavigate = navController::navigate
+                onNavigate = navController::navigate,
+                currentBackStackEntry = navController.currentBackStackEntry
             )
         }
         composable(Screen.OtpScreen.route) {
             OtpScreen()
         }
         composable(Screen.SelectCountryScreen.route) {
-            SelectCountryCodeScreen()
+            SelectCountryCodeScreen(navController = navController)
         }
     }
 }

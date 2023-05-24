@@ -15,7 +15,7 @@ fun HorizontalDivider(
     thickness: Dp = SmallStrokeThickness
 ) {
     Divider(
-        modifier = Modifier.height(thickness),
+        modifier = modifier.height(thickness),
         color = color
     )
 }

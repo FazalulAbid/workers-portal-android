@@ -4,8 +4,9 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fifty.workersportal.core.domain.state.StandardTextFieldState
+import com.fifty.workersportal.core.presentation.util.UiEvent
 import com.fifty.workersportal.core.util.Resource
+import com.fifty.workersportal.core.util.UiText
 import com.fifty.workersportal.featureauth.domain.model.Country
 import com.fifty.workersportal.featureauth.domain.usecase.GetCountriesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,7 +14,6 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
@@ -31,10 +31,10 @@ class SelectCountryViewModel @Inject constructor(
     private val _searchText = MutableStateFlow("")
     val searchText = _searchText.asStateFlow()
 
-    private val _state = mutableStateOf(SelectCountryState())
+    private var _state = mutableStateOf(SelectCountryState())
     val state: State<SelectCountryState> = _state
 
-    private val _eventFlow = MutableSharedFlow<SelectCountryEvent>()
+    private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
     private val _countries = MutableStateFlow(listOf<Country>())
@@ -85,6 +85,11 @@ class SelectCountryViewModel @Inject constructor(
                 }
 
                 is Resource.Error -> {
+                    _eventFlow.emit(
+                        UiEvent.MakeToast(
+                            uiText = result.uiText ?: UiText.unknownError()
+                        )
+                    )
                     _state.value = state.value.copy(
                         isLoading = false
                     )
