@@ -1,6 +1,7 @@
 package com.fifty.workersportal.featureauth.data.remote
 
 import com.fifty.workersportal.core.data.dto.response.BasicApiResponse
+import com.fifty.workersportal.core.util.Constants
 import com.fifty.workersportal.featureauth.data.remote.request.AuthRequest
 import retrofit2.Response
 import retrofit2.http.Body
@@ -13,4 +14,8 @@ interface AuthApi {
     suspend fun getOtp(
         @Body request: AuthRequest
     ): BasicApiResponse<Unit>
+
+    companion object {
+        const val BASE_URL = Constants.WORKERS_PORTAL_BASE_URL
+    }
 }

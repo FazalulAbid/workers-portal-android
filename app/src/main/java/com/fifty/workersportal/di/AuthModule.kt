@@ -1,8 +1,6 @@
 package com.fifty.workersportal.di
 
-import com.fifty.workersportal.core.util.Constants
 import com.fifty.workersportal.featureauth.data.remote.AuthApi
-import com.fifty.workersportal.featureauth.data.remote.CountryCodeApi
 import com.fifty.workersportal.featureauth.data.repository.AuthRepositoryImpl
 import com.fifty.workersportal.featureauth.domain.repository.AuthRepository
 import com.fifty.workersportal.featureauth.domain.usecase.GetOtpUseCase
@@ -23,9 +21,9 @@ object AuthModule {
     @Singleton
     fun provideAuthApi(client: OkHttpClient): AuthApi {
         return Retrofit.Builder()
-            .baseUrl(Constants.WORKERS_PORTAL_BASE_URL)
-            .client(client)
             .addConverterFactory(GsonConverterFactory.create())
+            .baseUrl(AuthApi.BASE_URL)
+            .client(client)
             .build()
             .create(AuthApi::class.java)
     }

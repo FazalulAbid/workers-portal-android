@@ -1,5 +1,6 @@
 package com.fifty.workersportal.featureauth.presentation.auth
 
+import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -20,6 +21,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
@@ -29,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -47,10 +50,13 @@ import com.fifty.workersportal.core.presentation.ui.theme.LargeButtonHeight
 import com.fifty.workersportal.core.presentation.ui.theme.SizeLarge
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
+import com.fifty.workersportal.core.presentation.util.UiEvent
+import com.fifty.workersportal.core.presentation.util.asString
 import com.fifty.workersportal.core.util.Constants
 import com.fifty.workersportal.core.util.Screen
 import com.fifty.workersportal.featureauth.presentation.component.CountryPickerField
 import com.fifty.workersportal.featureauth.presentation.component.PhoneNumberTextField
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
@@ -62,7 +68,7 @@ fun AuthScreen(
     onNavigate: (String) -> Unit = {},
     viewModel: AuthViewModel = hiltViewModel()
 ) {
-
+    val state = viewModel.state.value
     viewModel.countryName = currentBackStackEntry
         ?.savedStateHandle
         ?.getLiveData<String>("name")?.observeAsState(Constants.DEFAULT_COUNTRY_NAME)!!
@@ -81,7 +87,22 @@ fun AuthScreen(
     val focusManager = LocalFocusManager.current
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
     val isKeyboardOpen by keyboardAsState()
+    val context = LocalContext.current
 
+    LaunchedEffect(key1 = true) {
+        viewModel.eventFlow.collectLatest { event ->
+            when (event) {
+                is UiEvent.MakeToast -> {
+                    Toast.makeText(
+                        context, event.uiText.asString(context),
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+
+                else -> Unit
+            }
+        }
+    }
     Surface(color = MaterialTheme.colorScheme.background) {
         Column(
             modifier = Modifier.fillMaxSize()
@@ -157,7 +178,8 @@ fun AuthScreen(
                     Spacer(modifier = Modifier.height(SizeMedium))
                     FullWidthButton(
                         modifier = Modifier.bringIntoViewRequester(bringIntoViewRequester),
-                        text = stringResource(R.string.continue_text)
+                        text = stringResource(R.string.continue_text),
+                        isLoading = state.isGetOtpLoading
                     ) {
                         viewModel.onEvent(AuthEvent.GetOtp)
                     }
