@@ -27,12 +27,14 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -50,6 +52,7 @@ import com.fifty.workersportal.core.presentation.ui.theme.LargeButtonHeight
 import com.fifty.workersportal.core.presentation.ui.theme.SizeLarge
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
+import com.fifty.workersportal.core.presentation.util.NavArgConstants
 import com.fifty.workersportal.core.presentation.util.UiEvent
 import com.fifty.workersportal.core.presentation.util.asString
 import com.fifty.workersportal.core.util.Constants
@@ -60,7 +63,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun AuthScreen(
     snackbarHostState: SnackbarHostState,
@@ -89,7 +92,8 @@ fun AuthScreen(
     val isKeyboardOpen by keyboardAsState()
     val context = LocalContext.current
 
-    LaunchedEffect(key1 = true) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+    LaunchedEffect(key1 = true, key2 = keyboardController) {
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
                 is UiEvent.MakeToast -> {
@@ -97,6 +101,14 @@ fun AuthScreen(
                         context, event.uiText.asString(context),
                         Toast.LENGTH_LONG
                     ).show()
+                }
+
+                is UiEvent.HideKeyboard -> {
+                    keyboardController?.hide()
+                }
+
+                is UiEvent.Navigate -> {
+                    onNavigate(event.route)
                 }
 
                 else -> Unit

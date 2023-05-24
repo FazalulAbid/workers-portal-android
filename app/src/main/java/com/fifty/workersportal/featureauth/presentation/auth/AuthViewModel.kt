@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fifty.workersportal.core.domain.state.StandardTextFieldState
+import com.fifty.workersportal.core.presentation.util.NavArgConstants
 import com.fifty.workersportal.core.presentation.util.UiEvent
 import com.fifty.workersportal.core.util.Constants
 import com.fifty.workersportal.core.util.Resource
@@ -68,6 +69,9 @@ class AuthViewModel @Inject constructor(
 
     private fun getOtp(countryCode: String, phoneNumber: String) {
         viewModelScope.launch {
+            _eventFlow.emit(
+                UiEvent.HideKeyboard
+            )
             _state.value = state.value.copy(
                 isGetOtpLoading = true
             )
@@ -78,7 +82,10 @@ class AuthViewModel @Inject constructor(
             when (result) {
                 is Resource.Success -> {
                     _eventFlow.emit(
-                        UiEvent.Navigate(Screen.OtpScreen.route)
+                        UiEvent.Navigate(
+                            Screen.OtpScreen.route +
+                                    "/${countryCode}/${phoneNumberState.value.text}"
+                        )
                     )
                     _state.value = state.value.copy(
                         isGetOtpLoading = false

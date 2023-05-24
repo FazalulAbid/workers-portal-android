@@ -4,7 +4,13 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import androidx.navigation.navigation
+import com.fifty.workersportal.core.presentation.util.NavArgConstants
+import com.fifty.workersportal.core.presentation.util.NavArgConstants.NAV_ARG_COUNTRY_CODE
+import com.fifty.workersportal.core.presentation.util.NavArgConstants.NAV_ARG_PHONE_NUMBER
+import com.fifty.workersportal.core.util.Constants
 import com.fifty.workersportal.core.util.NavigationParent
 import com.fifty.workersportal.core.util.Screen
 import com.fifty.workersportal.featureauth.presentation.auth.AuthScreen
@@ -25,12 +31,12 @@ fun Navigation(
 ) {
     AnimatedNavHost(
         navController = navController,
-        startDestination = Screen.AuthScreen.route
+        startDestination = NavigationParent.Auth.route
     ) {
         // Home Nav destination
         navigation(
             startDestination = Screen.UserDashboardScreen.route,
-            route = NavigationParent.Home.label
+            route = NavigationParent.Home.route
         ) {
             composable(Screen.UserDashboardScreen.route) {
                 UserDashboardScreen()
@@ -39,7 +45,7 @@ fun Navigation(
         // Work Nav destination
         navigation(
             startDestination = Screen.WorkerDashboardScreen.route,
-            route = NavigationParent.Work.label
+            route = NavigationParent.Work.route
         ) {
             composable(Screen.WorkerDashboardScreen.route) {
                 WorkerDashboardScreen()
@@ -48,7 +54,7 @@ fun Navigation(
         // Favorite Nav destination
         navigation(
             startDestination = Screen.FavoriteScreen.route,
-            route = NavigationParent.Favorite.label
+            route = NavigationParent.Favorite.route
         ) {
             composable(Screen.FavoriteScreen.route) {
                 FavoriteScreen()
@@ -57,24 +63,42 @@ fun Navigation(
         // Home Nav destination
         navigation(
             startDestination = Screen.HistoryScreen.route,
-            route = NavigationParent.History.label
+            route = NavigationParent.History.route
         ) {
             composable(Screen.HistoryScreen.route) {
                 HistoryScreen()
             }
         }
-        composable(Screen.AuthScreen.route) {
-            AuthScreen(
-                snackbarHostState = snackbarHostState,
-                onNavigate = navController::navigate,
-                currentBackStackEntry = navController.currentBackStackEntry
-            )
+        navigation(
+            startDestination = Screen.AuthScreen.route,
+            route = NavigationParent.Auth.route
+        ) {
+            composable(Screen.AuthScreen.route) {
+                AuthScreen(
+                    snackbarHostState = snackbarHostState,
+                    onNavigate = navController::navigate,
+                    currentBackStackEntry = navController.currentBackStackEntry
+                )
+            }
+            composable(
+                Screen.OtpScreen.route + "/{${NAV_ARG_COUNTRY_CODE}}/{${NAV_ARG_PHONE_NUMBER}}",
+                arguments = listOf(
+                    navArgument(NAV_ARG_PHONE_NUMBER) {
+                        type = NavType.StringType
+                    },
+                    navArgument(NAV_ARG_COUNTRY_CODE) {
+                        type = NavType.StringType
+                    }
+                )
+            ) {
+                OtpScreen(
+                    onNavigate = navController::navigate
+                )
+            }
+            composable(Screen.SelectCountryScreen.route) {
+                SelectCountryCodeScreen(navController = navController)
+            }
         }
-        composable(Screen.OtpScreen.route) {
-            OtpScreen()
-        }
-        composable(Screen.SelectCountryScreen.route) {
-            SelectCountryCodeScreen(navController = navController)
-        }
+
     }
 }

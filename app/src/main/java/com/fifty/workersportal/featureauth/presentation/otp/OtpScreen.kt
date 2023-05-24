@@ -1,5 +1,6 @@
 package com.fifty.workersportal.featureauth.presentation.otp
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -9,21 +10,53 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.presentation.component.StandardAppBar
 import com.fifty.workersportal.core.presentation.ui.theme.MediumButtonHeight
 import com.fifty.workersportal.core.presentation.ui.theme.SizeExtraLarge
 import com.fifty.workersportal.core.presentation.ui.theme.SizeLarge
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
+import com.fifty.workersportal.core.presentation.util.NavArgConstants
+import com.fifty.workersportal.core.presentation.util.UiEvent
+import com.fifty.workersportal.core.presentation.util.asString
+import com.fifty.workersportal.core.util.Screen
 import com.fifty.workersportal.presentation.phoneotp.OtpTextField
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-fun OtpScreen() {
+fun OtpScreen(
+    onNavigate: (String) -> Unit = {},
+    viewModel: OtpViewModel = hiltViewModel()
+) {
+    val state = viewModel.state.value
+    val context = LocalContext.current
+
+    LaunchedEffect(key1 = true) {
+        viewModel.eventFlow.collectLatest { event ->
+            when (event) {
+                is UiEvent.MakeToast -> {
+                    Toast.makeText(
+                        context, event.uiText.asString(context),
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+
+                is UiEvent.Navigate -> {
+
+                }
+
+                else -> Unit
+            }
+        }
+    }
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -49,7 +82,7 @@ fun OtpScreen() {
         )
         Spacer(modifier = Modifier.height(SizeMedium))
         Text(
-            text = "+91-9562520502",
+            text = "+${state.countryCode}-${state.phoneNumber}",
             style = MaterialTheme.typography.titleLarge.copy(
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,

@@ -37,28 +37,28 @@ fun StandardBottomBar(
     )
     val bottomNavItems: List<BottomNavItem> = listOf(
         BottomNavItem(
-            route = NavigationParent.Home.label,
+            route = NavigationParent.Home.route,
             label = stringResource(R.string.home),
             icon = painterResource(id = R.drawable.ic_home),
             iconSelected = painterResource(id = R.drawable.ic_home_filled),
             contentDescription = stringResource(R.string.home)
         ),
         BottomNavItem(
-            route = NavigationParent.Work.label,
+            route = NavigationParent.Work.route,
             label = stringResource(R.string.work),
             icon = painterResource(id = R.drawable.ic_handshake),
             iconSelected = painterResource(id = R.drawable.ic_handshake_filled),
             contentDescription = stringResource(R.string.work)
         ),
         BottomNavItem(
-            route = NavigationParent.Favorite.label,
+            route = NavigationParent.Favorite.route,
             label = stringResource(R.string.favorites),
             icon = painterResource(id = R.drawable.ic_favorite),
             iconSelected = painterResource(id = R.drawable.ic_favorite_filled),
             contentDescription = stringResource(R.string.favorites)
         ),
         BottomNavItem(
-            route = NavigationParent.History.label,
+            route = NavigationParent.History.route,
             label = stringResource(R.string.history),
             icon = painterResource(id = R.drawable.ic_history),
             iconSelected = painterResource(id = R.drawable.ic_history),
