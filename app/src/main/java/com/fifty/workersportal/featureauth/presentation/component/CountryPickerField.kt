@@ -29,7 +29,6 @@ import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
 import com.fifty.workersportal.core.presentation.ui.theme.MediumStrokeThickness
 import com.fifty.workersportal.core.presentation.ui.theme.SizeExtraLarge
 
-@OptIn(ExperimentalCoilApi::class)
 @Composable
 fun CountryPickerField(
     modifier: Modifier = Modifier,
@@ -57,7 +56,7 @@ fun CountryPickerField(
                 .clip(RoundedCornerShape(SizeExtraSmall)),
             painter = rememberAsyncImagePainter(
                 ImageRequest.Builder(LocalContext.current).data(data = flagImageUrl).apply(block = fun ImageRequest.Builder.() {
-                    size(40)
+                    size(100)
                     crossfade(true)
                 }).build()
             ),

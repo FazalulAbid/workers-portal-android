@@ -4,22 +4,71 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fifty.workersportal.core.domain.state.StandardTextFieldState
 import com.fifty.workersportal.core.util.Resource
+import com.fifty.workersportal.featureauth.domain.model.Country
 import com.fifty.workersportal.featureauth.domain.usecase.GetCountriesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@OptIn(FlowPreview::class)
 @HiltViewModel
 class SelectCountryViewModel @Inject constructor(
     private val getCountries: GetCountriesUseCase
 ) : ViewModel() {
 
+    private val _searchText = MutableStateFlow("")
+    val searchText = _searchText.asStateFlow()
+
     private val _state = mutableStateOf(SelectCountryState())
     val state: State<SelectCountryState> = _state
 
+    private val _eventFlow = MutableSharedFlow<SelectCountryEvent>()
+    val eventFlow = _eventFlow.asSharedFlow()
+
+    private val _countries = MutableStateFlow(listOf<Country>())
+    val countries = searchText
+        .debounce(100L)
+        .combine(_countries) { text, countries ->
+            if (text.isBlank()) {
+                countries
+            } else {
+                countries.filter {
+                    it.doesMatchSearchQuery(text)
+                }
+            }
+        }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            _countries.value
+        )
+
     init {
         loadCountries()
+    }
+
+    fun onEvent(event: SelectCountryEvent) {
+        when (event) {
+            is SelectCountryEvent.SearchQuery -> {
+                _searchText.value = event.query
+            }
+
+            is SelectCountryEvent.SelectCountry -> {
+
+            }
+        }
     }
 
     private fun loadCountries() {
@@ -27,18 +76,16 @@ class SelectCountryViewModel @Inject constructor(
             _state.value = state.value.copy(
                 isLoading = true
             )
-            val result = getCountries()
-            when (result) {
+            when (val result = getCountries()) {
                 is Resource.Success -> {
                     _state.value = state.value.copy(
-                        countries = result.data ?: emptyList(),
                         isLoading = false
                     )
+                    _countries.value = result.data ?: emptyList()
                 }
 
                 is Resource.Error -> {
                     _state.value = state.value.copy(
-                        countries = result.data ?: emptyList(),
                         isLoading = false
                     )
                 }

@@ -10,6 +10,7 @@ import com.fifty.workersportal.core.presentation.ui.theme.SmallStrokeThickness
 
 @Composable
 fun HorizontalDivider(
+    modifier: Modifier = Modifier,
     color: Color,
     thickness: Dp = SmallStrokeThickness
 ) {

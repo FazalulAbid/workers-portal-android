@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
@@ -17,6 +16,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -28,16 +30,16 @@ import com.fifty.workersportal.core.presentation.component.StandardAppBar
 import com.fifty.workersportal.core.presentation.component.StandardSearchTextField
 import com.fifty.workersportal.core.presentation.ui.theme.MediumButtonHeight
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
-import com.fifty.workersportal.core.util.Constants
 import com.fifty.workersportal.featureauth.domain.model.Country
 import com.fifty.workersportal.featureauth.presentation.component.CountryCodeItem
-import okhttp3.internal.threadName
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SelectCountryCodeScreen(
     viewModel: SelectCountryViewModel = hiltViewModel()
 ) {
+    val searchText by viewModel.searchText.collectAsState()
+    val countries by viewModel.countries.collectAsState()
     val state = viewModel.state.value
     Column(modifier = Modifier.fillMaxSize()) {
         StandardAppBar(
@@ -74,20 +76,23 @@ fun SelectCountryCodeScreen(
                     },
                     trailingIcon = null,
                     hint = stringResource(R.string.search_by_country_name),
-                    value = "",
-                    onValueChange = {}
+                    value = searchText,
+                    onValueChange = {
+                        viewModel.onEvent(SelectCountryEvent.SearchQuery(it))
+                    }
                 )
             }
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1f)
+                    .weight(1f),
+                contentAlignment = Alignment.Center
             ) {
                 CompositionLocalProvider(
                     LocalOverscrollConfiguration provides null
                 ) {
-                    LazyColumn {
-                        items(state.countries) { country ->
+                    LazyColumn(modifier = Modifier.fillMaxSize()) {
+                        items(countries) { country ->
                             CountryCodeItem(
                                 country = Country(
                                     alpha2Code = country.alpha2Code,

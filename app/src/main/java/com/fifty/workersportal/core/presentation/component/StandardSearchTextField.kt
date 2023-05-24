@@ -26,6 +26,7 @@ fun StandardSearchTextField(
     backgroundColor: Color = MaterialTheme.colorScheme.surface,
     textColor: Color = MaterialTheme.colorScheme.onSurface,
     value: String,
+    maxLength: Int = 400,
     onValueChange: (String) -> Unit
 ) {
     BasicTextField(
@@ -33,7 +34,11 @@ fun StandardSearchTextField(
             .background(backgroundColor, MaterialTheme.shapes.small)
             .padding(horizontal = SizeSmall),
         value = value,
-        onValueChange = onValueChange,
+        onValueChange = {
+            if (it.length < maxLength) {
+                onValueChange(it)
+            }
+        },
         singleLine = true,
         cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
         textStyle = MaterialTheme.typography.bodyLarge,
