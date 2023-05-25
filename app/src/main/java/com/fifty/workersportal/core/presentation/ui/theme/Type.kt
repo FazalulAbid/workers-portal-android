@@ -77,13 +77,13 @@ val Typography = Typography(
     bodyLarge = TextStyle(
         fontFamily = circularStd,
         fontSize = 16.sp,
-        lineHeight = 24.sp,
+        lineHeight = 20.sp,
         fontWeight = FontWeight.Normal
     ),
     bodyMedium = TextStyle(
         fontFamily = circularStd,
         fontSize = 14.sp,
-        lineHeight = 20.sp,
+        lineHeight = 18.sp,
         fontWeight = FontWeight.Normal
     ),
     bodySmall = TextStyle(

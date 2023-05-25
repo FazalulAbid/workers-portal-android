@@ -3,6 +3,7 @@ package com.fifty.workersportal.featureauth.presentation.otp
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Button
@@ -89,6 +90,7 @@ fun OtpVerificationScreen(
         }
     }
     Column(
+        Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         StandardAppBar(
