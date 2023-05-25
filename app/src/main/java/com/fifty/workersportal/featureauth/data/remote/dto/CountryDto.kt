@@ -12,7 +12,7 @@ data class CountryDto(
     fun toCountry(): Country {
         return Country(
             alpha2Code = alpha2Code,
-            callingCode = callingCodes.first(),
+            callingCode = "+${callingCodes.first()}",
             flagUrl = flags.png ?: flags.svg ?: "",
             name = name
         )

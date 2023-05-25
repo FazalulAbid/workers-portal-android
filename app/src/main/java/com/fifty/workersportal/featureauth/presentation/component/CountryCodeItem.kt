@@ -86,7 +86,7 @@ fun CountryCodeItem(
             )
             Spacer(modifier = Modifier.width(SizeMedium))
             Text(
-                text = "+${country.callingCode}",
+                text = country.callingCode,
                 style = MaterialTheme.typography.bodyLarge.copy(
                     fontWeight = FontWeight.Medium
                 ),

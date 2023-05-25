@@ -92,11 +92,16 @@ fun Navigation(
                 )
             ) {
                 OtpScreen(
-                    onNavigate = navController::navigate
+                    onNavigate = navController::navigate,
+                    onNavigateUp = navController::navigateUp
                 )
             }
             composable(Screen.SelectCountryScreen.route) {
-                SelectCountryCodeScreen(navController = navController)
+                SelectCountryCodeScreen(
+                    previousBackStackEntry = navController.previousBackStackEntry,
+                    popBackStack = navController::popBackStack,
+                    onNavigateUp = navController::navigateUp
+                )
             }
         }
 

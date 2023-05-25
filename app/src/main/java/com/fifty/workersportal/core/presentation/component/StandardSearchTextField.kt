@@ -25,6 +25,7 @@ fun StandardSearchTextField(
     hint: String,
     backgroundColor: Color = MaterialTheme.colorScheme.surface,
     textColor: Color = MaterialTheme.colorScheme.onSurface,
+    cursorColor: Color = MaterialTheme.colorScheme.primary,
     value: String,
     maxLength: Int = 400,
     onValueChange: (String) -> Unit
@@ -40,7 +41,7 @@ fun StandardSearchTextField(
             }
         },
         singleLine = true,
-        cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
+        cursorBrush = SolidColor(cursorColor),
         textStyle = MaterialTheme.typography.bodyLarge,
         decorationBox = { innerTextField ->
             Row(
@@ -53,7 +54,7 @@ fun StandardSearchTextField(
                     if (value.isEmpty()) Text(
                         hint,
                         style = MaterialTheme.typography.bodyLarge.copy(
-                            color = MaterialTheme.colorScheme.onSurface
+                            color = textColor
                         )
                     )
                     innerTextField()

@@ -174,7 +174,7 @@ fun AuthScreen(
                                         }
                                     }
                                 },
-                            countryCodeText = "+${viewModel.countryCode.value}",
+                            countryCodeText = viewModel.countryCode.value,
                             phoneNumberText = phoneNumber.text,
                             hint = stringResource(R.string.enter_phone_number),
                             keyboardType = KeyboardType.Number,

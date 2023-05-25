@@ -34,6 +34,7 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun OtpScreen(
     onNavigate: (String) -> Unit = {},
+    onNavigateUp: () -> Unit = {},
     viewModel: OtpViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.value
@@ -61,6 +62,7 @@ fun OtpScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         StandardAppBar(
+            onNavigateUp = onNavigateUp,
             showBackArrow = true,
             title = {
                 Text(
@@ -82,7 +84,7 @@ fun OtpScreen(
         )
         Spacer(modifier = Modifier.height(SizeMedium))
         Text(
-            text = "+${state.countryCode}-${state.phoneNumber}",
+            text = "${state.countryCode}-${state.phoneNumber}",
             style = MaterialTheme.typography.titleLarge.copy(
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,

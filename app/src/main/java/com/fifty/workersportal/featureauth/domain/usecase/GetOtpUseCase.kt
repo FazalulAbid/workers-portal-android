@@ -20,6 +20,6 @@ class GetOtpUseCase(
         if (!Patterns.PHONE.matcher(phoneNumber.trim()).matches()) {
             return Resource.Error(UiText.StringResource(R.string.please_enter_valid_phone_number))
         }
-        return repository.getOtp(phoneNumber = phoneNumber, countryCode = "+$countryCode")
+        return repository.getOtp(phoneNumber = phoneNumber, countryCode = countryCode)
     }
 }

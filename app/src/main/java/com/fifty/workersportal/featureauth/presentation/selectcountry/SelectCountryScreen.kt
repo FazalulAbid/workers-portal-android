@@ -28,6 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.presentation.component.StandardAppBar
@@ -43,7 +44,9 @@ import kotlinx.coroutines.flow.collectLatest
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SelectCountryCodeScreen(
-    navController: NavController,
+    previousBackStackEntry: NavBackStackEntry?,
+    popBackStack: () -> Unit = {},
+    onNavigateUp: () -> Unit = {},
     viewModel: SelectCountryViewModel = hiltViewModel()
 ) {
     val searchText by viewModel.searchText.collectAsState()
@@ -65,6 +68,7 @@ fun SelectCountryCodeScreen(
     }
     Column(modifier = Modifier.fillMaxSize()) {
         StandardAppBar(
+            onNavigateUp = onNavigateUp,
             showBackArrow = true,
             title = {
                 Text(
@@ -93,7 +97,7 @@ fun SelectCountryCodeScreen(
                         Icon(
                             painter = painterResource(id = R.drawable.ic_search),
                             contentDescription = stringResource(R.string.search),
-                            tint = MaterialTheme.colorScheme.onSurface
+                            tint = MaterialTheme.colorScheme.primary
                         )
                     },
                     trailingIcon = null,
@@ -123,16 +127,16 @@ fun SelectCountryCodeScreen(
                                     name = country.name
                                 ),
                                 onClick = {
-                                    navController.previousBackStackEntry
+                                    previousBackStackEntry
                                         ?.savedStateHandle
                                         ?.set("callingCode", country.callingCode)
-                                    navController.previousBackStackEntry
+                                    previousBackStackEntry
                                         ?.savedStateHandle
                                         ?.set("flagUrl", country.flagUrl)
-                                    navController.previousBackStackEntry
+                                    previousBackStackEntry
                                         ?.savedStateHandle
                                         ?.set("name", country.name)
-                                    navController.popBackStack()
+                                    popBackStack()
                                 }
                             )
                         }
