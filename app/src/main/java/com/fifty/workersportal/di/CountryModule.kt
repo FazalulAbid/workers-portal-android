@@ -1,7 +1,7 @@
 package com.fifty.workersportal.di
 
 import com.fifty.workersportal.core.util.Constants
-import com.fifty.workersportal.featureauth.data.remote.CountryCodeApi
+import com.fifty.workersportal.featureauth.data.remote.CountryCodeApiService
 import com.fifty.workersportal.featureauth.data.repository.CountryCodeRepositoryImpl
 import com.fifty.workersportal.featureauth.domain.repository.CountryCodeRepository
 import com.fifty.workersportal.featureauth.domain.usecase.GetCountriesUseCase
@@ -20,18 +20,18 @@ object CountryModule {
 
     @Provides
     @Singleton
-    fun provideRestCountryApi(client: OkHttpClient): CountryCodeApi {
+    fun provideRestCountryApi(client: OkHttpClient): CountryCodeApiService {
         return Retrofit.Builder()
             .baseUrl(Constants.REST_COUNTRIES_BASE_URL)
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(CountryCodeApi::class.java)
+            .create(CountryCodeApiService::class.java)
     }
 
     @Provides
     @Singleton
-    fun CountryCodeRepository(api: CountryCodeApi): CountryCodeRepository {
+    fun CountryCodeRepository(api: CountryCodeApiService): CountryCodeRepository {
         return CountryCodeRepositoryImpl(api)
     }
 

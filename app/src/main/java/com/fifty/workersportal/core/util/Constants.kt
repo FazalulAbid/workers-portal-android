@@ -11,7 +11,7 @@ object Constants {
     const val OTP_RESEND_INTERVAL = 20
 
     // Base urls
-    const val WORKERS_PORTAL_BASE_URL = "https://fazilnbr.online/"
+    const val WORKERS_PORTAL_BASE_URL = "https://fazilnbr.online"
     const val REST_COUNTRIES_BASE_URL = "https://restcountries.com/v2/"
 
     // Country code default values.

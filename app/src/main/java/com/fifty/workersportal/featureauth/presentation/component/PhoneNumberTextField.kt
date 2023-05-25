@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
@@ -43,8 +44,7 @@ fun PhoneNumberTextField(
     onValueChange: (String) -> Unit,
     onClearTextClick: () -> Unit,
     onDone: () -> Unit = {},
-    cursorColor: Color = MaterialTheme.colorScheme.primary,
-    focusRequester: FocusRequester = FocusRequester()
+    cursorColor: Color = MaterialTheme.colorScheme.primary
 ) {
     Row(
         modifier = modifier

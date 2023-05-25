@@ -9,4 +9,10 @@ interface AuthRepository {
         countryCode: String,
         phoneNumber: String
     ): SimpleResource
+
+    suspend fun verifyOtp(
+        countryCode: String,
+        phoneNumber: String,
+        otp: String
+    ): SimpleResource
 }

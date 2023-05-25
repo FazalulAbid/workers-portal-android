@@ -56,6 +56,9 @@ class OtpVerificationViewModel @Inject constructor(
                 _otpTextFieldState.value = otpTextFieldState.value.copy(
                     text = event.otp
                 )
+                if (_otpTextFieldState.value.text.length == 6) {
+                    verifyOtp()
+                }
             }
 
             OtpVerificationEvent.ResendOtp -> {
@@ -63,6 +66,17 @@ class OtpVerificationViewModel @Inject constructor(
                 resendOtp()
             }
 
+            OtpVerificationEvent.VerifyOtp -> {
+                verifyOtp()
+            }
+        }
+    }
+
+    private fun verifyOtp() {
+        viewModelScope.launch {
+            _eventFlow.emit(
+                UiEvent.OnLogin
+            )
         }
     }
 

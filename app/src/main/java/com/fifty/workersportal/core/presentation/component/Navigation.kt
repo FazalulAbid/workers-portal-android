@@ -90,8 +90,15 @@ fun Navigation(
                 )
             ) {
                 OtpVerificationScreen(
+                    onNavigateWithPopBackStack = { route ->
+                        navController.navigate(route) {
+                            popUpTo(Screen.OtpVerificationScreen.route) {
+                                inclusive = true
+                            }
+                        }
+                    },
                     onNavigate = navController::navigate,
-                    onNavigateUp = navController::navigateUp
+                    onNavigateUp = navController::navigateUp,
                 )
             }
             composable(Screen.SelectCountryScreen.route) {

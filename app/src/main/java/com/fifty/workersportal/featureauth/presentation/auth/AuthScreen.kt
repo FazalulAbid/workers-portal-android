@@ -29,6 +29,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
@@ -184,7 +185,7 @@ fun AuthScreen(
                             onClearTextClick = {
                                 viewModel.onEvent(AuthEvent.ClearPhoneNumber)
                             },
-                            onDone = { focusManager.clearFocus() }
+                            onDone = { focusManager.clearFocus() },
                         )
                     }
                     Spacer(modifier = Modifier.height(SizeMedium))

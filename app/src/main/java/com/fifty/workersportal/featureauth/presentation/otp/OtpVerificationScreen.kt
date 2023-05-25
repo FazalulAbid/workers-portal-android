@@ -19,8 +19,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -34,12 +36,16 @@ import com.fifty.workersportal.core.presentation.ui.theme.SizeLarge
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.util.UiEvent
 import com.fifty.workersportal.core.presentation.util.asString
+import com.fifty.workersportal.core.util.NavigationParent
+import com.fifty.workersportal.core.util.Screen
 import com.fifty.workersportal.presentation.phoneotp.OtpTextField
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun OtpVerificationScreen(
+    onNavigateWithPopBackStack: (String) -> Unit = {},
     onNavigate: (String) -> Unit = {},
     onNavigateUp: () -> Unit = {},
     viewModel: OtpVerificationViewModel = hiltViewModel()
@@ -49,8 +55,9 @@ fun OtpVerificationScreen(
     val context = LocalContext.current
     var otpResendSuccessMessage by remember { mutableStateOf("") }
     val timerValue by viewModel.timerValue.collectAsState()
+    val keyboardController = LocalSoftwareKeyboardController.current
 
-    LaunchedEffect(key1 = true) {
+    LaunchedEffect(key1 = true, key2 = keyboardController) {
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
                 is UiEvent.MakeToast -> {
@@ -64,6 +71,11 @@ fun OtpVerificationScreen(
                     otpResendSuccessMessage = event.uiText.asString(context)
                     delay(5000)
                     otpResendSuccessMessage = ""
+                }
+
+                is UiEvent.OnLogin -> {
+                    keyboardController?.hide()
+                    onNavigateWithPopBackStack(NavigationParent.Home.route)
                 }
 
                 else -> Unit
