@@ -18,7 +18,9 @@ import com.fifty.workersportal.featureuserdashboard.presentation.testscreen.Favo
 import com.fifty.workersportal.featureuserdashboard.presentation.testscreen.HistoryScreen
 import com.fifty.workersportal.featureuserdashboard.presentation.testscreen.WorkerDashboardScreen
 import com.fifty.workersportal.featureuserdashboard.presentation.userdashboard.UserDashboardScreen
+import com.fifty.workersportal.featureworker.presentation.component.WorkerListItem
 import com.fifty.workersportal.featureworker.presentation.selectworkercategory.SelectWorkerCategoryScreen
+import com.fifty.workersportal.featureworker.presentation.workerlist.WorkerListScreen
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 
@@ -30,7 +32,7 @@ fun Navigation(
 ) {
     AnimatedNavHost(
         navController = navController,
-        startDestination = Screen.SelectWorkerCategoryScreen.route
+        startDestination = Screen.WorkerListScreen.route
     ) {
         // Home Nav destination
         navigation(
@@ -112,6 +114,12 @@ fun Navigation(
         }
         composable(Screen.SelectWorkerCategoryScreen.route) {
             SelectWorkerCategoryScreen(
+                onNavigate = navController::navigate,
+                onNavigateUp = navController::navigateUp
+            )
+        }
+        composable(Screen.WorkerListScreen.route) {
+            WorkerListScreen(
                 onNavigate = navController::navigate,
                 onNavigateUp = navController::navigateUp
             )

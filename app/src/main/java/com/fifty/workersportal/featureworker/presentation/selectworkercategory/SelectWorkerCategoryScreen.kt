@@ -29,6 +29,7 @@ import com.fifty.workersportal.core.presentation.component.StandardSearchTextFie
 import com.fifty.workersportal.core.presentation.ui.theme.BackgroundColor
 import com.fifty.workersportal.core.presentation.ui.theme.MediumButtonHeight
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
+import com.fifty.workersportal.core.util.Screen
 import com.fifty.workersportal.featureauth.presentation.selectcountry.SelectCountryEvent
 import com.fifty.workersportal.featureworker.presentation.component.WorkerCategoryItem
 
@@ -55,7 +56,14 @@ fun SelectWorkerCategoryScreen(
                 )
             }
         )
-        Box(modifier = Modifier.padding(SizeMedium)) {
+        Box(
+            modifier = Modifier.padding(
+                top = 0.dp,
+                bottom = SizeMedium,
+                end = SizeMedium,
+                start = SizeMedium
+            )
+        ) {
             StandardSearchTextField(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -81,7 +89,10 @@ fun SelectWorkerCategoryScreen(
             items(50) {
                 WorkerCategoryItem(
                     image = painterResource(id = R.drawable.builder),
-                    text = "Bufgh dfghdfg dfgjh ilder"
+                    text = "Bufgh dfghdfg dfgjh ilder",
+                    onClick = {
+                        onNavigate(Screen.WorkerListScreen.route)
+                    }
                 )
             }
         }

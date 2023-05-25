@@ -28,11 +28,14 @@ import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 fun WorkerCategoryItem(
     modifier: Modifier = Modifier,
     image: Painter,
-    text: String = "Builder"
+    text: String = "Builder",
+    onClick: () -> Unit = {}
 ) {
     Column(
         modifier = modifier
-            .clickable {}
+            .clickable {
+                onClick()
+            }
             .padding(SizeMedium),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

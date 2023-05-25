@@ -36,5 +36,7 @@
     <string name="worker_categories">Worker Categories</string>
     <string name="search_plumber">Search \'plumber\'</string>
     <string name="search_for_worker_category">Search for worker category</string>
+    <string name="search_aryan">Search \'aryan\'</string>
+    <string name="rating_star">Rating star</string>
 
 </resources>

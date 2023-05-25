@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -20,13 +18,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.fifty.workersportal.R
+import com.fifty.workersportal.core.presentation.component.HorizontalDivider
 import com.fifty.workersportal.core.presentation.component.StandardAppBar
 import com.fifty.workersportal.core.presentation.component.StandardSearchTextField
 import com.fifty.workersportal.core.presentation.ui.theme.MediumButtonHeight
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
-import com.fifty.workersportal.featureworker.presentation.component.WorkerCategoryItem
-import com.fifty.workersportal.featureworker.presentation.selectworkercategory.SelectWorkerCategoryEvent
-import com.fifty.workersportal.featureworker.presentation.selectworkercategory.SelectWorkerCategoryViewModel
+import com.fifty.workersportal.core.presentation.ui.theme.SmallStrokeThickness
+import com.fifty.workersportal.featureworker.presentation.component.WorkerListItem
 
 @Composable
 fun WorkerListScreen(
@@ -42,7 +40,7 @@ fun WorkerListScreen(
             showBackArrow = true,
             title = {
                 Text(
-                    text = stringResource(R.string.worker_categories),
+                    text = "Plumber",
                     style = MaterialTheme.typography.headlineSmall.copy(
                         fontWeight = FontWeight.Medium
                     ),
@@ -50,7 +48,14 @@ fun WorkerListScreen(
                 )
             }
         )
-        Box(modifier = Modifier.padding(SizeMedium)) {
+        Box(
+            modifier = Modifier.padding(
+                top = 0.dp,
+                bottom = SizeMedium,
+                end = SizeMedium,
+                start = SizeMedium
+            )
+        ) {
             StandardSearchTextField(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -63,7 +68,7 @@ fun WorkerListScreen(
                     )
                 },
                 trailingIcon = null,
-                hint = stringResource(R.string.search_plumber),
+                hint = stringResource(R.string.search_aryan),
                 value = viewModel.searchFieldState.value.text,
                 onValueChange = {
                     viewModel.onEvent(WorkerListEvent.Query(it))
@@ -72,7 +77,12 @@ fun WorkerListScreen(
         }
         LazyColumn() {
             items(50) {
-
+                WorkerListItem()
+                HorizontalDivider(
+                    modifier = Modifier.padding(horizontal = SizeMedium),
+                    color = MaterialTheme.colorScheme.surface,
+                    thickness = SmallStrokeThickness
+                )
             }
         }
     }
