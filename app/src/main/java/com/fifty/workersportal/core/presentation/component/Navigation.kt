@@ -92,7 +92,7 @@ fun Navigation(
                 OtpVerificationScreen(
                     onNavigateWithPopBackStack = { route ->
                         navController.navigate(route) {
-                            popUpTo(Screen.OtpVerificationScreen.route) {
+                            popUpTo(NavigationParent.Auth.route) {
                                 inclusive = true
                             }
                         }
