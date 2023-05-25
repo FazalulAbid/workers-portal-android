@@ -7,14 +7,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
-import com.fifty.workersportal.core.presentation.util.NavArgConstants
 import com.fifty.workersportal.core.presentation.util.NavArgConstants.NAV_ARG_COUNTRY_CODE
 import com.fifty.workersportal.core.presentation.util.NavArgConstants.NAV_ARG_PHONE_NUMBER
-import com.fifty.workersportal.core.util.Constants
 import com.fifty.workersportal.core.util.NavigationParent
 import com.fifty.workersportal.core.util.Screen
 import com.fifty.workersportal.featureauth.presentation.auth.AuthScreen
-import com.fifty.workersportal.featureauth.presentation.otp.OtpScreen
+import com.fifty.workersportal.featureauth.presentation.otp.OtpVerificationScreen
 import com.fifty.workersportal.featureauth.presentation.selectcountry.SelectCountryCodeScreen
 import com.fifty.workersportal.featureuserdashboard.presentation.testscreen.FavoriteScreen
 import com.fifty.workersportal.featureuserdashboard.presentation.testscreen.HistoryScreen
@@ -81,7 +79,7 @@ fun Navigation(
                 )
             }
             composable(
-                Screen.OtpScreen.route + "/{${NAV_ARG_COUNTRY_CODE}}/{${NAV_ARG_PHONE_NUMBER}}",
+                Screen.OtpVerificationScreen.route + "/{${NAV_ARG_COUNTRY_CODE}}/{${NAV_ARG_PHONE_NUMBER}}",
                 arguments = listOf(
                     navArgument(NAV_ARG_PHONE_NUMBER) {
                         type = NavType.StringType
@@ -91,7 +89,7 @@ fun Navigation(
                     }
                 )
             ) {
-                OtpScreen(
+                OtpVerificationScreen(
                     onNavigate = navController::navigate,
                     onNavigateUp = navController::navigateUp
                 )

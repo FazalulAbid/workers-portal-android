@@ -31,5 +31,7 @@
     <string name="enter_phone_number">Enter Phone Number</string>
     <string name="this_field_cant_be_empty">This field can\'t be empty</string>
     <string name="please_enter_valid_phone_number">Please enter a valid phone number.</string>
+    <string name="resend_otp">Resend OTP</string>
+    <string name="otp_resend_success">OTP resend success</string>
 
 </resources>

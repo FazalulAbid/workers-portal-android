@@ -8,6 +8,7 @@ import com.fifty.workersportal.core.domain.model.BottomNavItem
 object Constants {
 
     const val DEFAULT_PHONE_NUMBER_MAX_LENGTH = 10
+    const val OTP_RESEND_INTERVAL = 20
 
     // Base urls
     const val WORKERS_PORTAL_BASE_URL = "https://fazilnbr.online/"

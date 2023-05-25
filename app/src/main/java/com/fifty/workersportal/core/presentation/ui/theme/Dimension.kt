@@ -9,7 +9,7 @@ val SizeLarge = 24.dp
 val SizeExtraLarge = 32.dp
 
 val SmallStrokeThickness = 1.dp
-val MediumStrokeThickness = 1.5.dp
+val MediumStrokeThickness = 1.2.dp
 val LargeStrokeThickness = 2.dp
 
 val LargeButtonHeight = 50.dp
