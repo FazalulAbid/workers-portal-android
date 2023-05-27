@@ -1,9 +1,12 @@
 package com.fifty.workersportal.featureauth.data.repository
 
+import android.content.SharedPreferences
 import coil.network.HttpException
 import com.fifty.workersportal.R
+import com.fifty.workersportal.core.util.Constants
 import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.SimpleResource
+import com.fifty.workersportal.core.util.TokenManager
 import com.fifty.workersportal.core.util.UiText
 import com.fifty.workersportal.featureauth.data.remote.AuthApiService
 import com.fifty.workersportal.featureauth.data.remote.request.AuthRequest
@@ -11,7 +14,8 @@ import com.fifty.workersportal.featureauth.domain.repository.AuthRepository
 import java.io.IOException
 
 class AuthRepositoryImpl(
-    private val api: AuthApiService
+    private val api: AuthApiService,
+    private val tokenManager: TokenManager
 ) : AuthRepository {
 
     override suspend fun getOtp(
@@ -61,6 +65,10 @@ class AuthRepositoryImpl(
                 )
             )
             if (response.successful) {
+                response.data?.let { verifyOtpResponse ->
+                    tokenManager.saveAccessToken(verifyOtpResponse.accessToken)
+                    tokenManager.saveRefreshToken(verifyOtpResponse.refreshToken)
+                }
                 Resource.Success(Unit)
             } else {
                 response.message?.let { message ->

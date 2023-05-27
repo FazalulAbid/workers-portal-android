@@ -2,8 +2,11 @@ package com.fifty.workersportal.core.util
 
 object Constants {
 
+    const val KEY_USER_ID = "userId"
+
     const val DEFAULT_PHONE_NUMBER_LENGTH = 10
     const val OTP_RESEND_INTERVAL = 20
+    const val OTP_LENGTH = 6
 
     // Base urls
     const val WORKERS_PORTAL_BASE_URL = "https://fazilnbr.online"

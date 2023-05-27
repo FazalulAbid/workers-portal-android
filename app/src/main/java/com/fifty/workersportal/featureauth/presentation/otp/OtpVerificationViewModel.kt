@@ -13,7 +13,9 @@ import com.fifty.workersportal.core.presentation.util.UiEvent
 import com.fifty.workersportal.core.util.Constants
 import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.UiText
+import com.fifty.workersportal.featureauth.domain.usecase.AuthUseCases
 import com.fifty.workersportal.featureauth.domain.usecase.GetOtpUseCase
+import com.fifty.workersportal.featureauth.domain.usecase.VerifyOtpUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,7 +27,7 @@ import javax.inject.Inject
 @HiltViewModel
 class OtpVerificationViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
-    private val getOtpUseCase: GetOtpUseCase
+    private val authUseCases: AuthUseCases
 ) : ViewModel() {
 
     private var resendTimer: CountDownTimer? = null
@@ -75,15 +77,17 @@ class OtpVerificationViewModel @Inject constructor(
 
     private fun verifyOtp() {
         viewModelScope.launch {
-            _eventFlow.emit(
-                UiEvent.OnLogin
+            authUseCases.verifyOtp(
+                countryCode = state.value.countryCode,
+                phoneNumber = state.value.phoneNumber,
+                otp = _otpTextFieldState.value.text
             )
         }
     }
 
     private fun resendOtp() {
         viewModelScope.launch {
-            val result = getOtpUseCase(
+            val result = authUseCases.getOtp(
                 countryCode = state.value.countryCode,
                 phoneNumber = state.value.phoneNumber
             )

@@ -3,7 +3,10 @@ package com.fifty.workersportal.di
 import com.fifty.workersportal.featureauth.data.remote.AuthApiService
 import com.fifty.workersportal.featureauth.data.repository.AuthRepositoryImpl
 import com.fifty.workersportal.featureauth.domain.repository.AuthRepository
+import com.fifty.workersportal.featureauth.domain.usecase.AuthUseCases
+import com.fifty.workersportal.featureauth.domain.usecase.GetCountriesUseCase
 import com.fifty.workersportal.featureauth.domain.usecase.GetOtpUseCase
+import com.fifty.workersportal.featureauth.domain.usecase.VerifyOtpUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -36,7 +39,10 @@ object AuthModule {
 
     @Provides
     @Singleton
-    fun providesGetOtpUseCase(repository: AuthRepository): GetOtpUseCase {
-        return GetOtpUseCase(repository)
+    fun providesAuthUseCases(repository: AuthRepository): AuthUseCases {
+        return AuthUseCases(
+            getOtp = GetOtpUseCase(repository),
+            verifyOtp = VerifyOtpUseCase(repository)
+        )
     }
 }

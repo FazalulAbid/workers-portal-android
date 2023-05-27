@@ -10,6 +10,7 @@ import com.fifty.workersportal.core.util.Constants
 import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.Screen
 import com.fifty.workersportal.core.util.UiText
+import com.fifty.workersportal.featureauth.domain.usecase.AuthUseCases
 import com.fifty.workersportal.featureauth.domain.usecase.GetOtpUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -19,7 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val getOtpUseCase: GetOtpUseCase
+    private val authUseCases: AuthUseCases
 ) : ViewModel() {
 
     private val _countryCode = mutableStateOf(Constants.DEFAULT_COUNTRY_CODE)
@@ -71,7 +72,7 @@ class AuthViewModel @Inject constructor(
             _state.value = state.value.copy(
                 isGetOtpLoading = true
             )
-            val result = getOtpUseCase(
+            val result = authUseCases.getOtp(
                 countryCode = countryCode,
                 phoneNumber = phoneNumber
             )
