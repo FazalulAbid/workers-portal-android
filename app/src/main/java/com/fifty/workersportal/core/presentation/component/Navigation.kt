@@ -32,44 +32,9 @@ fun Navigation(
 ) {
     AnimatedNavHost(
         navController = navController,
-        startDestination = Screen.WorkerListScreen.route
+        startDestination = NavigationParent.Auth.route
     ) {
-        // Home Nav destination
-        navigation(
-            startDestination = Screen.UserDashboardScreen.route,
-            route = NavigationParent.Home.route
-        ) {
-            composable(Screen.UserDashboardScreen.route) {
-                UserDashboardScreen()
-            }
-        }
-        // Work Nav destination
-        navigation(
-            startDestination = Screen.WorkerDashboardScreen.route,
-            route = NavigationParent.Work.route
-        ) {
-            composable(Screen.WorkerDashboardScreen.route) {
-                WorkerDashboardScreen()
-            }
-        }
-        // Favorite Nav destination
-        navigation(
-            startDestination = Screen.FavoriteScreen.route,
-            route = NavigationParent.Favorite.route
-        ) {
-            composable(Screen.FavoriteScreen.route) {
-                FavoriteScreen()
-            }
-        }
-        // Home Nav destination
-        navigation(
-            startDestination = Screen.HistoryScreen.route,
-            route = NavigationParent.History.route
-        ) {
-            composable(Screen.HistoryScreen.route) {
-                HistoryScreen()
-            }
-        }
+        // Authentication nav destination
         navigation(
             startDestination = Screen.AuthScreen.route,
             route = NavigationParent.Auth.route
@@ -110,6 +75,42 @@ fun Navigation(
                     popBackStack = navController::popBackStack,
                     onNavigateUp = navController::navigateUp
                 )
+            }
+        }
+        // Home Nav destination
+        navigation(
+            startDestination = Screen.UserDashboardScreen.route,
+            route = NavigationParent.Home.route
+        ) {
+            composable(Screen.UserDashboardScreen.route) {
+                UserDashboardScreen()
+            }
+        }
+        // Work Nav destination
+        navigation(
+            startDestination = Screen.WorkerDashboardScreen.route,
+            route = NavigationParent.Work.route
+        ) {
+            composable(Screen.WorkerDashboardScreen.route) {
+                WorkerDashboardScreen()
+            }
+        }
+        // Favorite Nav destination
+        navigation(
+            startDestination = Screen.FavoriteScreen.route,
+            route = NavigationParent.Favorite.route
+        ) {
+            composable(Screen.FavoriteScreen.route) {
+                FavoriteScreen()
+            }
+        }
+        // Home Nav destination
+        navigation(
+            startDestination = Screen.HistoryScreen.route,
+            route = NavigationParent.History.route
+        ) {
+            composable(Screen.HistoryScreen.route) {
+                HistoryScreen()
             }
         }
         composable(Screen.SelectWorkerCategoryScreen.route) {

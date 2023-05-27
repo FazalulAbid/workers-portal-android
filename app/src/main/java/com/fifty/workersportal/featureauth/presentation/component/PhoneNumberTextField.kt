@@ -17,9 +17,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
@@ -30,7 +27,7 @@ import com.fifty.workersportal.R
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
 import com.fifty.workersportal.core.presentation.ui.theme.MediumStrokeThickness
-import com.fifty.workersportal.core.util.Constants.DEFAULT_PHONE_NUMBER_MAX_LENGTH
+import com.fifty.workersportal.core.util.Constants.DEFAULT_PHONE_NUMBER_LENGTH
 
 @Composable
 fun PhoneNumberTextField(
@@ -39,7 +36,7 @@ fun PhoneNumberTextField(
     phoneNumberText: String = "",
     countryCodeText: String = "",
     hint: String = "",
-    maxLength: Int = DEFAULT_PHONE_NUMBER_MAX_LENGTH,
+    maxLength: Int = DEFAULT_PHONE_NUMBER_LENGTH,
     keyboardType: KeyboardType = KeyboardType.Number,
     onValueChange: (String) -> Unit,
     onClearTextClick: () -> Unit,

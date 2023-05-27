@@ -69,6 +69,7 @@ class OtpVerificationViewModel @Inject constructor(
             OtpVerificationEvent.VerifyOtp -> {
                 verifyOtp()
             }
+
         }
     }
 

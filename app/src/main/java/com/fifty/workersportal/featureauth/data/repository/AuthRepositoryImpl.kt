@@ -19,20 +19,23 @@ class AuthRepositoryImpl(
         phoneNumber: String
     ): SimpleResource {
         return try {
-            val response = api.getOtp(
-                AuthRequest(
-                    countryCode = countryCode,
-                    otp = "",
-                    phoneNumber = phoneNumber
-                )
-            )
-            if (response.successful) {
-                Resource.Success(Unit)
-            } else {
-                response.message?.let { message ->
-                    Resource.Error(UiText.DynamicString(message))
-                } ?: Resource.Error(UiText.unknownError())
-            }
+//            val response = api.getOtp(
+//                AuthRequest(
+//                    countryCode = countryCode,
+//                    otp = "",
+//                    phoneNumber = phoneNumber
+//                )
+//            )
+//            if (response.successful) {
+//                Resource.Success(Unit)
+//            } else {
+//                response.message?.let { message ->
+//                    Resource.Error(UiText.DynamicString(message))
+//                } ?: Resource.Error(UiText.unknownError())
+//            }
+
+            // ----------------testing
+            Resource.Success(Unit)
         } catch (e: IOException) {
             Resource.Error(
                 uiText = UiText.StringResource(R.string.error_could_not_reach_server)

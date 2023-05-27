@@ -68,9 +68,6 @@ class AuthViewModel @Inject constructor(
 
     private fun getOtp(countryCode: String, phoneNumber: String) {
         viewModelScope.launch {
-            _eventFlow.emit(
-                UiEvent.HideKeyboard
-            )
             _state.value = state.value.copy(
                 isGetOtpLoading = true
             )
@@ -80,6 +77,9 @@ class AuthViewModel @Inject constructor(
             )
             when (result) {
                 is Resource.Success -> {
+                    _eventFlow.emit(
+                        UiEvent.HideKeyboard
+                    )
                     _eventFlow.emit(
                         UiEvent.Navigate(
                             Screen.OtpVerificationScreen.route +
