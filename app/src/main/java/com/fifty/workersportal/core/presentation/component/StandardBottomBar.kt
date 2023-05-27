@@ -89,7 +89,7 @@ fun StandardBottomBar(
                     onClick = {
                         selectedItem.value = index
                         navController.navigate(item.route, navOptions {
-                            popUpTo(navController.graph.findStartDestination().id) {
+                            popUpTo(Screen.UserDashboardScreen.route) {
                                 saveState = true
                             }
                             launchSingleTop = true
