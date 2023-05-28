@@ -14,6 +14,7 @@ import com.fifty.workersportal.core.util.Screen
 import com.fifty.workersportal.featureauth.presentation.auth.AuthScreen
 import com.fifty.workersportal.featureauth.presentation.otp.OtpVerificationScreen
 import com.fifty.workersportal.featureauth.presentation.selectcountry.SelectCountryCodeScreen
+import com.fifty.workersportal.featureprofile.presentation.workerprofile.WorkerProfileScreen
 import com.fifty.workersportal.featureuserdashboard.presentation.testscreen.FavoriteScreen
 import com.fifty.workersportal.featureuserdashboard.presentation.testscreen.HistoryScreen
 import com.fifty.workersportal.featureuserdashboard.presentation.testscreen.WorkerDashboardScreen
@@ -32,7 +33,7 @@ fun Navigation(
 ) {
     AnimatedNavHost(
         navController = navController,
-        startDestination = NavigationParent.Auth.route
+        startDestination = Screen.WorkerProfileScreen.route
     ) {
         // Authentication nav destination
         navigation(
@@ -121,6 +122,12 @@ fun Navigation(
         }
         composable(Screen.WorkerListScreen.route) {
             WorkerListScreen(
+                onNavigate = navController::navigate,
+                onNavigateUp = navController::navigateUp
+            )
+        }
+        composable(Screen.WorkerProfileScreen.route) {
+            WorkerProfileScreen(
                 onNavigate = navController::navigate,
                 onNavigateUp = navController::navigateUp
             )

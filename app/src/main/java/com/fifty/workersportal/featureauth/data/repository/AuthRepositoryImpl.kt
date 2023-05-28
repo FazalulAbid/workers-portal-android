@@ -1,9 +1,7 @@
 package com.fifty.workersportal.featureauth.data.repository
 
-import android.content.SharedPreferences
 import coil.network.HttpException
 import com.fifty.workersportal.R
-import com.fifty.workersportal.core.util.Constants
 import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.SimpleResource
 import com.fifty.workersportal.core.util.TokenManager

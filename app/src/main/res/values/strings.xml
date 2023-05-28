@@ -39,5 +39,7 @@
     <string name="search_aryan">Search \'aryan\'</string>
     <string name="rating_star">Rating star</string>
     <string name="please_enter_a_valid_otp">Please enter a valid OTP</string>
+    <string name="worker_profile">Worker Profile</string>
+    <string name="hire_now">Hire Now</string>
 
 </resources>

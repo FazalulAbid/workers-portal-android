@@ -1,5 +1,7 @@
 package com.fifty.workersportal.di
 
+import android.content.SharedPreferences
+import com.fifty.workersportal.core.util.TokenManager
 import com.fifty.workersportal.featureauth.data.remote.AuthApiService
 import com.fifty.workersportal.featureauth.data.repository.AuthRepositoryImpl
 import com.fifty.workersportal.featureauth.domain.repository.AuthRepository
@@ -33,8 +35,14 @@ object AuthModule {
 
     @Provides
     @Singleton
-    fun provideAuthRepository(api: AuthApiService): AuthRepository {
-        return AuthRepositoryImpl(api)
+    fun provideTokenManager(sharedPreferences: SharedPreferences): TokenManager {
+        return TokenManager(sharedPreferences)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAuthRepository(api: AuthApiService, tokenManager: TokenManager): AuthRepository {
+        return AuthRepositoryImpl(api, tokenManager)
     }
 
     @Provides
