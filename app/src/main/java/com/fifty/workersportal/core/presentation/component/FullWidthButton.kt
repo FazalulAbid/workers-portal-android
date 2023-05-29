@@ -22,7 +22,7 @@ import com.fifty.workersportal.core.presentation.ui.theme.MediumButtonHeight
 import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
 
 @Composable
-fun FullWidthButton(
+fun PrimaryButton(
     modifier: Modifier = Modifier,
     height: Dp = LargeButtonHeight,
     progressBarSize: Dp = MediumButtonHeight,

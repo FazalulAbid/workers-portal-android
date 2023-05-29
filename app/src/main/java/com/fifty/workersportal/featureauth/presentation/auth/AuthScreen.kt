@@ -29,7 +29,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
@@ -44,7 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavBackStackEntry
 import com.fifty.workersportal.R
-import com.fifty.workersportal.core.presentation.component.FullWidthButton
+import com.fifty.workersportal.core.presentation.component.PrimaryButton
 import com.fifty.workersportal.core.presentation.component.Keyboard
 import com.fifty.workersportal.core.presentation.component.StandardImageButton
 import com.fifty.workersportal.core.presentation.component.TextBetweenLines
@@ -53,7 +52,6 @@ import com.fifty.workersportal.core.presentation.ui.theme.LargeButtonHeight
 import com.fifty.workersportal.core.presentation.ui.theme.SizeLarge
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
-import com.fifty.workersportal.core.presentation.util.NavArgConstants
 import com.fifty.workersportal.core.presentation.util.UiEvent
 import com.fifty.workersportal.core.presentation.util.asString
 import com.fifty.workersportal.core.util.Constants
@@ -189,7 +187,7 @@ fun AuthScreen(
                         )
                     }
                     Spacer(modifier = Modifier.height(SizeMedium))
-                    FullWidthButton(
+                    PrimaryButton(
                         modifier = Modifier.bringIntoViewRequester(bringIntoViewRequester),
                         text = stringResource(R.string.continue_text),
                         isLoading = state.isGetOtpLoading

@@ -41,5 +41,10 @@
     <string name="please_enter_a_valid_otp">Please enter a valid OTP</string>
     <string name="worker_profile">Worker Profile</string>
     <string name="hire_now">Hire Now</string>
+    <string name="x_ratings">%d Ratings</string>
+    <string name="verification_badge">Verification badge</string>
+    <string name="per_day">Per Day</string>
+    <string name="per_half_day">Per Half Day</string>
+    <string name="address">Address</string>
 
 </resources>
