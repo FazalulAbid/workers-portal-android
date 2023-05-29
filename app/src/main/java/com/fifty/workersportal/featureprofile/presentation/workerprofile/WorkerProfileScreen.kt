@@ -18,7 +18,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -79,104 +81,111 @@ fun WorkerProfileScreen(
                 )
             }
         )
-        Column(
-            modifier = Modifier
-                .padding(SizeMedium)
-                .fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
+
+
+        LazyVerticalGrid(
+            modifier = Modifier.padding(horizontal = SizeMedium),
+            columns = GridCells.Fixed(3)
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.plumber_profile),
-                contentDescription = "Plumber description",
-                Modifier
-                    .size(ExtraLargeProfilePictureHeight)
-                    .clip(CircleShape),
-                contentScale = ContentScale.Crop
-            )
-            Spacer(modifier = Modifier.height(SizeMedium))
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.offset(x = (SizeMedium / 2f))
-            ) {
-                Text(
-                    modifier = Modifier.widthIn(max = screenWidth * 0.75f),
-                    text = "Fazalul Abid",
-                    style = MaterialTheme.typography.titleLarge.copy(
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center,
-                        color = MaterialTheme.colorScheme.onBackground
-                    ),
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Spacer(modifier = Modifier.width(SizeExtraSmall))
-                Icon(
-                    modifier = Modifier.size(SizeMedium),
-                    tint = SkyBlueColor,
-                    painter = painterResource(id = R.drawable.ic_verification),
-                    contentDescription = stringResource(R.string.verification_badge)
-                )
-            }
-            Spacer(modifier = Modifier.height(SizeExtraSmall))
-            Text(
-                modifier = Modifier.widthIn(max = screenWidth * 0.75f),
-                text = "Plumber",
-                style = MaterialTheme.typography.bodyLarge.copy(
-                    color = MaterialTheme.colorScheme.onSurface,
-                    textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.Normal
-                ),
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis
-            )
-            Spacer(modifier = Modifier.height(SizeSmall))
-            Text(
-                modifier = Modifier.widthIn(max = screenWidth * 0.75f),
-                text = "A plumber installs, repairs, and maintains plumbing systems, fixtures, and pipes to ensure proper water flow and drainage.",
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    color = MaterialTheme.colorScheme.onSurface,
-                    textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.Light
-                ),
-            )
-            Spacer(modifier = Modifier.height(SizeLarge))
-            ButtonBetweenLines(text = stringResource(R.string.hire_now))
-            Spacer(modifier = Modifier.height(SizeLarge))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                RatingAndRatingCount(rating = "4.5", ratingCount = 123)
-                Divider(
+            item(span = { GridItemSpan(3) }) {
+                Column(
                     modifier = Modifier
-                        .height(50.dp)
-                        .width(SmallStrokeThickness),
-                    color = MaterialTheme.colorScheme.outline
-                )
-                WorkerWageText(wage = 99.0f, isHalfDay = false)
-                Divider(
-                    modifier = Modifier
-                        .height(50.dp)
-                        .width(SmallStrokeThickness),
-                    color = MaterialTheme.colorScheme.outline
-                )
-                WorkerWageText(wage = 59.0f, isHalfDay = true)
-            }
-            Spacer(modifier = Modifier.height(SizeLarge))
-            PrimaryHeader(text = "Fazlul's Works")
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(3)
-            ) {
-                items(20) {
-                    val randomColor =
-                        Color(Random.nextInt(256), Random.nextInt(256), Random.nextInt(256))
-                    Box(
-                        modifier = Modifier
-                            .aspectRatio(1f)
-                            .background(randomColor)
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Spacer(modifier = Modifier.height(SizeMedium))
+                    Image(
+                        painter = painterResource(id = R.drawable.plumber_profile),
+                        contentDescription = "Plumber description",
+                        Modifier
+                            .size(ExtraLargeProfilePictureHeight)
+                            .clip(CircleShape),
+                        contentScale = ContentScale.Crop
                     )
+                    Spacer(modifier = Modifier.height(SizeMedium))
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.offset(x = (SizeMedium / 2f))
+                    ) {
+                        Text(
+                            modifier = Modifier.widthIn(max = screenWidth * 0.75f),
+                            text = "Fazalul Abid",
+                            style = MaterialTheme.typography.titleLarge.copy(
+                                fontWeight = FontWeight.Bold,
+                                textAlign = TextAlign.Center,
+                                color = MaterialTheme.colorScheme.onBackground
+                            ),
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                        Spacer(modifier = Modifier.width(SizeExtraSmall))
+                        Icon(
+                            modifier = Modifier.size(SizeMedium),
+                            tint = SkyBlueColor,
+                            painter = painterResource(id = R.drawable.ic_verification),
+                            contentDescription = stringResource(R.string.verification_badge)
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(SizeExtraSmall))
+                    Text(
+                        modifier = Modifier.widthIn(max = screenWidth * 0.75f),
+                        text = "Plumber",
+                        style = MaterialTheme.typography.bodyLarge.copy(
+                            color = MaterialTheme.colorScheme.onSurface,
+                            textAlign = TextAlign.Center,
+                            fontWeight = FontWeight.Normal
+                        ),
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Spacer(modifier = Modifier.height(SizeSmall))
+                    Text(
+                        modifier = Modifier.widthIn(max = screenWidth * 0.75f),
+                        text = "A plumber installs, repairs, and maintains plumbing systems, fixtures, and pipes to ensure proper water flow and drainage.",
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            color = MaterialTheme.colorScheme.onSurface,
+                            textAlign = TextAlign.Center,
+                            fontWeight = FontWeight.Light
+                        ),
+                    )
+                    Spacer(modifier = Modifier.height(SizeLarge))
+                    ButtonBetweenLines(text = stringResource(R.string.hire_now))
+                    Spacer(modifier = Modifier.height(SizeLarge))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RatingAndRatingCount(rating = "4.5", ratingCount = 123)
+                        Divider(
+                            modifier = Modifier
+                                .height(50.dp)
+                                .width(SmallStrokeThickness),
+                            color = MaterialTheme.colorScheme.outline
+                        )
+                        WorkerWageText(wage = 99.0f, isHalfDay = false)
+                        Divider(
+                            modifier = Modifier
+                                .height(50.dp)
+                                .width(SmallStrokeThickness),
+                            color = MaterialTheme.colorScheme.outline
+                        )
+                        WorkerWageText(wage = 59.0f, isHalfDay = true)
+                    }
+                    Spacer(modifier = Modifier.height(SizeLarge))
                 }
+            }
+            item(span = { GridItemSpan(3) }) {
+                PrimaryHeader(text = "Fazlul's Works")
+            }
+            items(25) {
+                val randomColor =
+                    Color(Random.nextInt(256), Random.nextInt(256), Random.nextInt(256))
+                Box(
+                    modifier = Modifier
+                        .aspectRatio(1f)
+                        .background(randomColor)
+                )
             }
         }
     }
