@@ -60,6 +60,7 @@ import kotlin.random.Random
 
 @Composable
 fun WorkerProfileScreen(
+    isVerified: Boolean = true,
     onNavigate: (String) -> Unit = {},
     onNavigateUp: () -> Unit = {}
 ) {
@@ -81,8 +82,6 @@ fun WorkerProfileScreen(
                 )
             }
         )
-
-
         LazyVerticalGrid(
             modifier = Modifier.padding(horizontal = SizeMedium),
             columns = GridCells.Fixed(3)
@@ -105,7 +104,11 @@ fun WorkerProfileScreen(
                     Spacer(modifier = Modifier.height(SizeMedium))
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.offset(x = (SizeMedium / 2f))
+                        modifier = Modifier.offset(
+                            x = if (isVerified) {
+                                (SizeMedium / 2f)
+                            } else 0.dp
+                        )
                     ) {
                         Text(
                             modifier = Modifier.widthIn(max = screenWidth * 0.75f),
@@ -118,13 +121,15 @@ fun WorkerProfileScreen(
                             maxLines = 2,
                             overflow = TextOverflow.Ellipsis
                         )
-                        Spacer(modifier = Modifier.width(SizeExtraSmall))
-                        Icon(
-                            modifier = Modifier.size(SizeMedium),
-                            tint = SkyBlueColor,
-                            painter = painterResource(id = R.drawable.ic_verification),
-                            contentDescription = stringResource(R.string.verification_badge)
-                        )
+                        if (isVerified) {
+                            Spacer(modifier = Modifier.width(SizeExtraSmall))
+                            Icon(
+                                modifier = Modifier.size(SizeLarge),
+                                tint = SkyBlueColor,
+                                painter = painterResource(id = R.drawable.ic_verification),
+                                contentDescription = stringResource(R.string.verification_badge)
+                            )
+                        }
                     }
                     Spacer(modifier = Modifier.height(SizeExtraSmall))
                     Text(
