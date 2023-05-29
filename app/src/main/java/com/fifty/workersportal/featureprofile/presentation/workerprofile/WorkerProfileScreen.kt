@@ -1,10 +1,14 @@
 package com.fifty.workersportal.featureprofile.presentation.workerprofile
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -14,6 +18,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
@@ -23,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
@@ -32,6 +40,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.fifty.workersportal.R
+import com.fifty.workersportal.core.presentation.component.PrimaryHeader
 import com.fifty.workersportal.core.presentation.component.StandardAppBar
 import com.fifty.workersportal.core.presentation.ui.theme.ExtraLargeProfilePictureHeight
 import com.fifty.workersportal.core.presentation.ui.theme.SizeExtraSmall
@@ -40,9 +49,12 @@ import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
 import com.fifty.workersportal.core.presentation.ui.theme.SkyBlueColor
 import com.fifty.workersportal.core.presentation.ui.theme.SmallStrokeThickness
+import com.fifty.workersportal.core.util.Screen
 import com.fifty.workersportal.featureprofile.presentation.component.ButtonBetweenLines
 import com.fifty.workersportal.featureprofile.presentation.component.RatingAndRatingCount
 import com.fifty.workersportal.featureprofile.presentation.component.WorkerWageText
+import com.fifty.workersportal.featureworker.presentation.component.WorkerCategoryItem
+import kotlin.random.Random
 
 @Composable
 fun WorkerProfileScreen(
@@ -68,10 +80,11 @@ fun WorkerProfileScreen(
             }
         )
         Column(
-            Modifier.padding(SizeMedium),
+            modifier = Modifier
+                .padding(SizeMedium)
+                .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.heightIn(SizeMedium))
             Image(
                 painter = painterResource(id = R.drawable.plumber_profile),
                 contentDescription = "Plumber description",
@@ -88,7 +101,7 @@ fun WorkerProfileScreen(
                 Text(
                     modifier = Modifier.widthIn(max = screenWidth * 0.75f),
                     text = "Fazalul Abid",
-                    style = MaterialTheme.typography.headlineSmall.copy(
+                    style = MaterialTheme.typography.titleLarge.copy(
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,
                         color = MaterialTheme.colorScheme.onBackground
@@ -150,7 +163,21 @@ fun WorkerProfileScreen(
                 )
                 WorkerWageText(wage = 59.0f, isHalfDay = true)
             }
-            Spacer(modifier = Modifier.height(SizeMedium))
+            Spacer(modifier = Modifier.height(SizeLarge))
+            PrimaryHeader(text = "Fazlul's Works")
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(3)
+            ) {
+                items(20) {
+                    val randomColor =
+                        Color(Random.nextInt(256), Random.nextInt(256), Random.nextInt(256))
+                    Box(
+                        modifier = Modifier
+                            .aspectRatio(1f)
+                            .background(randomColor)
+                    )
+                }
+            }
         }
     }
 }
