@@ -21,8 +21,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -31,8 +33,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import com.fifty.workersportal.R
+import com.fifty.workersportal.core.presentation.component.Keyboard
 import com.fifty.workersportal.core.presentation.component.StandardAppBar
 import com.fifty.workersportal.core.presentation.component.StandardSearchTextField
+import com.fifty.workersportal.core.presentation.component.keyboardAsState
 import com.fifty.workersportal.core.presentation.ui.theme.MediumButtonHeight
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.util.UiEvent
@@ -41,7 +45,7 @@ import com.fifty.workersportal.featureauth.domain.model.Country
 import com.fifty.workersportal.featureauth.presentation.component.CountryCodeItem
 import kotlinx.coroutines.flow.collectLatest
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun SelectCountryCodeScreen(
     previousBackStackEntry: NavBackStackEntry?,
@@ -53,8 +57,10 @@ fun SelectCountryCodeScreen(
     val countries by viewModel.countries.collectAsState()
     val state = viewModel.state.value
     val context = LocalContext.current
+    val keyboardOpenState by keyboardAsState()
+    val keyboardController = LocalSoftwareKeyboardController.current
 
-    LaunchedEffect(key1 = true) {
+    LaunchedEffect(key1 = true, key2 = keyboardController) {
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
                 is UiEvent.MakeToast -> {
@@ -127,6 +133,9 @@ fun SelectCountryCodeScreen(
                                     name = country.name
                                 ),
                                 onClick = {
+                                    if (keyboardOpenState == Keyboard.Opened) {
+                                        keyboardController?.hide()
+                                    }
                                     previousBackStackEntry
                                         ?.savedStateHandle
                                         ?.set("callingCode", country.callingCode)

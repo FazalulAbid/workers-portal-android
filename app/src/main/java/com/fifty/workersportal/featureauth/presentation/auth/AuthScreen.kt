@@ -88,7 +88,7 @@ fun AuthScreen(
     val coroutineScope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
-    val isKeyboardOpen by keyboardAsState()
+    val keyboardOpenState by keyboardAsState()
     val context = LocalContext.current
 
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -195,7 +195,7 @@ fun AuthScreen(
                         viewModel.onEvent(AuthEvent.GetOtp)
                     }
                 }
-                if (isKeyboardOpen == Keyboard.Closed) {
+                if (keyboardOpenState == Keyboard.Closed) {
                     TextBetweenLines(text = stringResource(R.string.or))
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally

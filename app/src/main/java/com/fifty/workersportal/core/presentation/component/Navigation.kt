@@ -33,7 +33,7 @@ fun Navigation(
 ) {
     AnimatedNavHost(
         navController = navController,
-        startDestination = Screen.WorkerProfileScreen.route
+        startDestination = NavigationParent.Auth.route
     ) {
         // Authentication nav destination
         navigation(
