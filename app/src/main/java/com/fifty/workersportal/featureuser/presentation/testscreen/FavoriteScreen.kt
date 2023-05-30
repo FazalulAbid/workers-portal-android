@@ -1,4 +1,4 @@
-package com.fifty.workersportal.featureuserdashboard.presentation.userdashboard
+package com.fifty.workersportal.featureuser.presentation.testscreen
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,13 +9,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
 @Composable
-fun UserDashboardScreen() {
+fun FavoriteScreen() {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = "User Dashboard",
+            text = "Favorite Screen",
             style = MaterialTheme.typography.titleMedium
         )
     }

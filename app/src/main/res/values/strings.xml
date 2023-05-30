@@ -46,5 +46,14 @@
     <string name="per_day">Per Day</string>
     <string name="per_half_day">Per Half Day</string>
     <string name="address">Address</string>
+    <string name="selected_address">Selected address</string>
+    <string name="profile_picture">Profile Picture</string>
+    <string name="worker_dashboard">Worker Dashboard</string>
+    <string name="open_to_work">Open to work</string>
+    <string name="work_proposals">Work Proposals</string>
+    <string name="accept">Accept</string>
+    <string name="reject">Reject</string>
+    <string name="payment">Payment</string>
+    <string name="requested_date_and_time">Requested date and time</string>
 
 </resources>

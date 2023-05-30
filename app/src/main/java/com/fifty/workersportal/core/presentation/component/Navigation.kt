@@ -15,11 +15,10 @@ import com.fifty.workersportal.featureauth.presentation.auth.AuthScreen
 import com.fifty.workersportal.featureauth.presentation.otp.OtpVerificationScreen
 import com.fifty.workersportal.featureauth.presentation.selectcountry.SelectCountryCodeScreen
 import com.fifty.workersportal.featureprofile.presentation.workerprofile.WorkerProfileScreen
-import com.fifty.workersportal.featureuserdashboard.presentation.testscreen.FavoriteScreen
-import com.fifty.workersportal.featureuserdashboard.presentation.testscreen.HistoryScreen
-import com.fifty.workersportal.featureuserdashboard.presentation.testscreen.WorkerDashboardScreen
-import com.fifty.workersportal.featureuserdashboard.presentation.userdashboard.UserDashboardScreen
-import com.fifty.workersportal.featureworker.presentation.component.WorkerListItem
+import com.fifty.workersportal.featureuser.presentation.testscreen.FavoriteScreen
+import com.fifty.workersportal.featureuser.presentation.testscreen.HistoryScreen
+import com.fifty.workersportal.featureworker.presentation.workerdashboard.WorkerDashboardScreen
+import com.fifty.workersportal.featureuser.presentation.userdashboard.UserDashboardScreen
 import com.fifty.workersportal.featureworker.presentation.selectworkercategory.SelectWorkerCategoryScreen
 import com.fifty.workersportal.featureworker.presentation.workerlist.WorkerListScreen
 import com.google.accompanist.navigation.animation.AnimatedNavHost
@@ -33,7 +32,7 @@ fun Navigation(
 ) {
     AnimatedNavHost(
         navController = navController,
-        startDestination = NavigationParent.Auth.route
+        startDestination = NavigationParent.Work.route
     ) {
         // Authentication nav destination
         navigation(
@@ -95,6 +94,24 @@ fun Navigation(
             composable(Screen.WorkerDashboardScreen.route) {
                 WorkerDashboardScreen()
             }
+            composable(Screen.SelectWorkerCategoryScreen.route) {
+                SelectWorkerCategoryScreen(
+                    onNavigate = navController::navigate,
+                    onNavigateUp = navController::navigateUp
+                )
+            }
+            composable(Screen.WorkerListScreen.route) {
+                WorkerListScreen(
+                    onNavigate = navController::navigate,
+                    onNavigateUp = navController::navigateUp
+                )
+            }
+            composable(Screen.WorkerProfileScreen.route) {
+                WorkerProfileScreen(
+                    onNavigate = navController::navigate,
+                    onNavigateUp = navController::navigateUp
+                )
+            }
         }
         // Favorite Nav destination
         navigation(
@@ -113,24 +130,6 @@ fun Navigation(
             composable(Screen.HistoryScreen.route) {
                 HistoryScreen()
             }
-        }
-        composable(Screen.SelectWorkerCategoryScreen.route) {
-            SelectWorkerCategoryScreen(
-                onNavigate = navController::navigate,
-                onNavigateUp = navController::navigateUp
-            )
-        }
-        composable(Screen.WorkerListScreen.route) {
-            WorkerListScreen(
-                onNavigate = navController::navigate,
-                onNavigateUp = navController::navigateUp
-            )
-        }
-        composable(Screen.WorkerProfileScreen.route) {
-            WorkerProfileScreen(
-                onNavigate = navController::navigate,
-                onNavigateUp = navController::navigateUp
-            )
         }
     }
 }

@@ -1,7 +1,5 @@
 package com.fifty.workersportal.core.presentation.component
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -13,22 +11,19 @@ import androidx.compose.ui.text.font.FontWeight
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 
 @Composable
-fun PrimaryHeader(
+fun SecondaryHeader(
     modifier: Modifier = Modifier,
     text: String,
     color: Color = MaterialTheme.colorScheme.onBackground
 ) {
-    Box(modifier = Modifier
-        .fillMaxWidth()
-        .padding(vertical = SizeMedium)) {
-        Text(
-            modifier = modifier
-                .fillMaxWidth(0.5f),
-            text = text,
-            style = MaterialTheme.typography.headlineMedium.copy(
-                fontWeight = FontWeight.ExtraBold,
-                color = color,
-            )
+    Text(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = SizeMedium),
+        text = text,
+        style = MaterialTheme.typography.headlineSmall.copy(
+            fontWeight = FontWeight.SemiBold,
+            color = color
         )
-    }
+    )
 }

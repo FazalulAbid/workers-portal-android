@@ -1,4 +1,4 @@
-package com.fifty.workersportal.featureuserdashboard.presentation.testscreen
+package com.fifty.workersportal.featureuser.presentation.testscreen
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,13 +9,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
 @Composable
-fun WorkerDashboardScreen() {
+fun HistoryScreen() {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = "Worker Dashboard Screen",
+            text = "History Screen",
             style = MaterialTheme.typography.titleMedium
         )
     }

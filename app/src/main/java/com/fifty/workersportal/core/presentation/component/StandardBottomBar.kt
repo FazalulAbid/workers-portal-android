@@ -78,7 +78,7 @@ fun StandardBottomBar(
                 val isSelected = parentRouteName == item.route
                 NavigationBarItem(
                     colors = NavigationBarItemDefaults.colors(
-                        selectedTextColor = MaterialTheme.colorScheme.primary,
+                        selectedTextColor = MaterialTheme.colorScheme.onSurface,
                         indicatorColor = MaterialTheme.colorScheme.primary,
                         selectedIconColor = MaterialTheme.colorScheme.onPrimary,
                         unselectedIconColor = MaterialTheme.colorScheme.onSurface

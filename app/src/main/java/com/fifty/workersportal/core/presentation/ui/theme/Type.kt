@@ -25,8 +25,8 @@ val Typography = Typography(
     ),
     headlineMedium = TextStyle(
         fontFamily = circularStd,
-        fontSize = 28.sp,
-        lineHeight = 36.sp,
+        fontSize = 24.sp,
+        lineHeight = 28.sp,
         fontWeight = FontWeight.Bold
     ),
     headlineSmall = TextStyle(

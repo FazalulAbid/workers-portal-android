@@ -1,4 +1,4 @@
-package com.fifty.workersportal.featureuserdashboard.presentation.userdashboard
+package com.fifty.workersportal.featureuser.presentation.userdashboard
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel

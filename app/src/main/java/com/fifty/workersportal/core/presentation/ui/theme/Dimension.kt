@@ -19,3 +19,5 @@ val SmallButtonHeight = 30.dp
 
 val ExtraLargeProfilePictureHeight = 120.dp
 val LargeProfilePictureHeight = 80.dp
+val MediumProfilePictureHeight = 60.dp
+val SmallProfilePictureHeight = 50.dp
