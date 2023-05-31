@@ -21,3 +21,4 @@ val ExtraLargeProfilePictureHeight = 120.dp
 val LargeProfilePictureHeight = 80.dp
 val MediumProfilePictureHeight = 60.dp
 val SmallProfilePictureHeight = 50.dp
+val ExtraSmallProfilePictureHeight = 40.dp

@@ -9,6 +9,9 @@ object Constants {
     const val OTP_RESEND_INTERVAL = 20
     const val OTP_LENGTH = 6
 
+    // Message defaults
+    const val MESSAGE_LENGTH = 1000
+
     // Base urls
     const val WORKERS_PORTAL_BASE_URL = "https://fazilnbr.online"
     const val REST_COUNTRIES_BASE_URL = "https://restcountries.com/v2/"
