@@ -1,4 +1,4 @@
-package com.fifty.workersportal.featureauth.presentation.otp
+package com.fifty.workersportal.featureauth.presentation.otpverification
 
 sealed class OtpVerificationEvent {
     data class EnterOtp(val otp: String) : OtpVerificationEvent()

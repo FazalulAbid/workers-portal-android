@@ -1,4 +1,4 @@
-package com.fifty.workersportal.featureauth.presentation.otp
+package com.fifty.workersportal.featureauth.presentation.otpverification
 
 import android.os.CountDownTimer
 import androidx.compose.runtime.State
@@ -14,8 +14,6 @@ import com.fifty.workersportal.core.util.Constants
 import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.UiText
 import com.fifty.workersportal.featureauth.domain.usecase.AuthUseCases
-import com.fifty.workersportal.featureauth.domain.usecase.GetOtpUseCase
-import com.fifty.workersportal.featureauth.domain.usecase.VerifyOtpUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -80,7 +78,7 @@ class OtpVerificationViewModel @Inject constructor(
             authUseCases.verifyOtp(
                 countryCode = state.value.countryCode,
                 phoneNumber = state.value.phoneNumber,
-                otp = _otpTextFieldState.value.text
+                otpCode = _otpTextFieldState.value.text
             )
         }
     }

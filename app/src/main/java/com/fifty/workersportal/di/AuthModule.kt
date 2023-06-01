@@ -1,12 +1,11 @@
 package com.fifty.workersportal.di
 
 import android.content.SharedPreferences
-import com.fifty.workersportal.core.util.TokenManager
+import com.fifty.workersportal.featureauth.utils.TokenManager
 import com.fifty.workersportal.featureauth.data.remote.AuthApiService
 import com.fifty.workersportal.featureauth.data.repository.AuthRepositoryImpl
 import com.fifty.workersportal.featureauth.domain.repository.AuthRepository
 import com.fifty.workersportal.featureauth.domain.usecase.AuthUseCases
-import com.fifty.workersportal.featureauth.domain.usecase.GetCountriesUseCase
 import com.fifty.workersportal.featureauth.domain.usecase.GetOtpUseCase
 import com.fifty.workersportal.featureauth.domain.usecase.VerifyOtpUseCase
 import dagger.Module

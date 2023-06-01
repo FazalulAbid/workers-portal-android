@@ -12,7 +12,7 @@ import com.fifty.workersportal.core.presentation.util.NavArgConstants.NAV_ARG_PH
 import com.fifty.workersportal.core.util.NavigationParent
 import com.fifty.workersportal.core.util.Screen
 import com.fifty.workersportal.featureauth.presentation.auth.AuthScreen
-import com.fifty.workersportal.featureauth.presentation.otp.OtpVerificationScreen
+import com.fifty.workersportal.featureauth.presentation.otpverification.OtpVerificationScreen
 import com.fifty.workersportal.featureauth.presentation.selectcountry.SelectCountryCodeScreen
 import com.fifty.workersportal.featurechat.presentation.message.MessageScreen
 import com.fifty.workersportal.featureprofile.presentation.workerprofile.WorkerProfileScreen
@@ -33,7 +33,7 @@ fun Navigation(
 ) {
     AnimatedNavHost(
         navController = navController,
-        startDestination = NavigationParent.Message.route
+        startDestination = NavigationParent.Auth.route
     ) {
         // Authentication nav destination
         navigation(
@@ -89,7 +89,7 @@ fun Navigation(
         }
         // Work Nav destination
         navigation(
-            startDestination = Screen.WorkerDashboardScreen.route,
+            startDestination = Screen.WorkerProfileScreen.route,
             route = NavigationParent.Work.route
         ) {
             composable(Screen.WorkerDashboardScreen.route) {

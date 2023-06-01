@@ -1,6 +1,7 @@
 package com.fifty.workersportal.featureauth.domain.repository
 
 import com.fifty.workersportal.core.util.SimpleResource
+import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {
 
@@ -12,6 +13,6 @@ interface AuthRepository {
     suspend fun verifyOtp(
         countryCode: String,
         phoneNumber: String,
-        otp: String
+        otpCode: String
     ): SimpleResource
 }

@@ -1,4 +1,4 @@
-package com.fifty.workersportal.featureauth.presentation.otp
+package com.fifty.workersportal.featureauth.presentation.otpverification
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
@@ -38,7 +38,6 @@ import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.util.UiEvent
 import com.fifty.workersportal.core.presentation.util.asString
 import com.fifty.workersportal.core.util.NavigationParent
-import com.fifty.workersportal.core.util.Screen
 import com.fifty.workersportal.presentation.phoneotp.OtpTextField
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest

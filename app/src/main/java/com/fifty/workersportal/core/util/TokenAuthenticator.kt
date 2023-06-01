@@ -2,9 +2,9 @@ package com.fifty.workersportal.core.util
 
 import com.fifty.workersportal.core.data.dto.response.BasicApiResponse
 import com.fifty.workersportal.featureauth.data.remote.AuthApiService
+import com.fifty.workersportal.featureauth.utils.TokenManager
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
-import okhttp3.OkHttp
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response

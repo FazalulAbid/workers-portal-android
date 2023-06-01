@@ -2,10 +2,10 @@ package com.fifty.workersportal.featureauth.data.remote.request
 
 import com.google.gson.annotations.SerializedName
 
-data class AuthRequest(
+data class VerifyOtpRequest(
     @SerializedName("countrycode")
     val countryCode: String,
-    val otp: String,
+    val otpCode: String,
     @SerializedName("phonenumber")
     val phoneNumber: String
 )

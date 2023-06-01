@@ -14,15 +14,15 @@ class VerifyOtpUseCase(
     suspend operator fun invoke(
         countryCode: String,
         phoneNumber: String,
-        otp: String
+        otpCode: String
     ): SimpleResource {
-        if (otp.length != Constants.OTP_RESEND_INTERVAL || !otp.matches(Regex("\\d+"))) {
+        if (otpCode.length != Constants.OTP_RESEND_INTERVAL || !otpCode.matches(Regex("\\d+"))) {
             return Resource.Error(UiText.StringResource(R.string.please_enter_a_valid_otp))
         }
         return repository.verifyOtp(
             countryCode = countryCode,
             phoneNumber = phoneNumber,
-            otp = otp
+            otpCode = otpCode
         )
     }
 }
