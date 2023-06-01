@@ -3,8 +3,8 @@ package com.fifty.workersportal.featureauth.data.remote.request
 import com.google.gson.annotations.SerializedName
 
 data class SendOtpRequest(
-    @SerializedName("countrycode")
+    @SerializedName("countryCode")
     val countryCode: String,
-    @SerializedName("phonenumber")
+    @SerializedName("mobile")
     val phoneNumber: String
 )

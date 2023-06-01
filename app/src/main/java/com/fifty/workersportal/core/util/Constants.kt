@@ -2,7 +2,6 @@ package com.fifty.workersportal.core.util
 
 object Constants {
 
-    const val SHARED_PREF_NAME = "shared_pref"
     const val KEY_USER_ID = "userId"
 
     const val DEFAULT_PHONE_NUMBER_LENGTH = 10

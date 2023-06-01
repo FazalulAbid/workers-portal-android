@@ -1,6 +1,8 @@
 package com.fifty.workersportal.di
 
+import android.content.Context
 import android.content.SharedPreferences
+import com.fifty.workersportal.core.util.Constants
 import com.fifty.workersportal.featureauth.utils.TokenManager
 import com.fifty.workersportal.featureauth.data.remote.AuthApiService
 import com.fifty.workersportal.featureauth.data.repository.AuthRepositoryImpl
@@ -8,9 +10,12 @@ import com.fifty.workersportal.featureauth.domain.repository.AuthRepository
 import com.fifty.workersportal.featureauth.domain.usecase.AuthUseCases
 import com.fifty.workersportal.featureauth.domain.usecase.GetOtpUseCase
 import com.fifty.workersportal.featureauth.domain.usecase.VerifyOtpUseCase
+import com.fifty.workersportal.featureauth.utils.AuthAuthenticator
+import com.fifty.workersportal.featureauth.utils.AuthInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -23,33 +28,36 @@ object AuthModule {
 
     @Provides
     @Singleton
-    fun provideAuthApi(client: OkHttpClient): AuthApiService {
-        return Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl(AuthApiService.BASE_URL)
-            .client(client)
+    fun provideAuthApiService(client: OkHttpClient, retrofit: Retrofit.Builder): AuthApiService =
+        retrofit
             .build()
             .create(AuthApiService::class.java)
-    }
 
     @Provides
     @Singleton
-    fun provideTokenManager(sharedPreferences: SharedPreferences): TokenManager {
-        return TokenManager(sharedPreferences)
-    }
+    fun provideTokenManager(@ApplicationContext context: Context): TokenManager =
+        TokenManager(context)
 
     @Provides
     @Singleton
-    fun provideAuthRepository(api: AuthApiService, tokenManager: TokenManager): AuthRepository {
-        return AuthRepositoryImpl(api, tokenManager)
-    }
+    fun provideAuthInterceptor(tokenManager: TokenManager): AuthInterceptor =
+        AuthInterceptor(tokenManager)
 
     @Provides
     @Singleton
-    fun providesAuthUseCases(repository: AuthRepository): AuthUseCases {
-        return AuthUseCases(
+    fun provideAuthAuthenticator(tokenManager: TokenManager): AuthAuthenticator =
+        AuthAuthenticator(tokenManager)
+
+    @Provides
+    @Singleton
+    fun provideAuthRepository(api: AuthApiService, tokenManager: TokenManager): AuthRepository =
+        AuthRepositoryImpl(api, tokenManager)
+
+    @Provides
+    @Singleton
+    fun providesAuthUseCases(repository: AuthRepository): AuthUseCases =
+        AuthUseCases(
             getOtp = GetOtpUseCase(repository),
             verifyOtp = VerifyOtpUseCase(repository)
         )
-    }
 }

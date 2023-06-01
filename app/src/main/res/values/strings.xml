@@ -56,5 +56,6 @@
     <string name="payment">Payment</string>
     <string name="requested_date_and_time">Requested date and time</string>
     <string name="send_message">Send message</string>
+    <string name="error_unknown">Unknown error</string>
 
 </resources>

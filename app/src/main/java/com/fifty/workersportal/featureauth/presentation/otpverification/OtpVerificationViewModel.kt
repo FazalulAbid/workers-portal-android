@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.domain.state.StandardTextFieldState
+import com.fifty.workersportal.core.domain.usecase.GetOwnUserIdUseCase
 import com.fifty.workersportal.core.presentation.util.NavArgConstants
 import com.fifty.workersportal.core.presentation.util.UiEvent
 import com.fifty.workersportal.core.util.Constants
@@ -15,6 +16,7 @@ import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.UiText
 import com.fifty.workersportal.featureauth.domain.usecase.AuthUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -25,7 +27,8 @@ import javax.inject.Inject
 @HiltViewModel
 class OtpVerificationViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
-    private val authUseCases: AuthUseCases
+    private val authUseCases: AuthUseCases,
+    private val getOwnUserId: GetOwnUserIdUseCase
 ) : ViewModel() {
 
     private var resendTimer: CountDownTimer? = null
@@ -75,11 +78,35 @@ class OtpVerificationViewModel @Inject constructor(
 
     private fun verifyOtp() {
         viewModelScope.launch {
-            authUseCases.verifyOtp(
+            val result = authUseCases.verifyOtp(
                 countryCode = state.value.countryCode,
                 phoneNumber = state.value.phoneNumber,
                 otpCode = _otpTextFieldState.value.text
             )
+            when (result) {
+                is Resource.Success -> {
+                    _eventFlow.emit(
+                        UiEvent.OnLogin
+                    )
+                    val userId = getOwnUserId()
+                    _eventFlow.emit(
+                        UiEvent.MakeToast(
+                            UiText.DynamicString(userId ?: "No user id found!")
+                        )
+                    )
+                }
+
+                is Resource.Error -> {
+                    _otpTextFieldState.value = otpTextFieldState.value.copy(
+                        text = ""
+                    )
+                    _eventFlow.emit(
+                        UiEvent.MakeToast(
+                            uiText = result.uiText ?: UiText.unknownError()
+                        )
+                    )
+                }
+            }
         }
     }
 

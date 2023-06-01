@@ -16,7 +16,7 @@ interface AuthApiService {
     @POST("send-sms-otp")
     suspend fun getOtp(
         @Body request: SendOtpRequest
-    ): BasicApiResponse<Unit>
+    ): BasicApiResponse<String>
 
     @POST("verify-sms-otp")
     suspend fun verifyOtp(
@@ -27,8 +27,4 @@ interface AuthApiService {
     suspend fun refreshToken(
         @Header("Authorization") token: String
     ): Response<Unit>
-
-    companion object {
-        const val BASE_URL = Constants.WORKERS_PORTAL_BASE_URL
-    }
 }

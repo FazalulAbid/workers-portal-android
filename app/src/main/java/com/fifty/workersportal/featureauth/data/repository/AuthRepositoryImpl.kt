@@ -1,5 +1,6 @@
 package com.fifty.workersportal.featureauth.data.repository
 
+import android.util.Log
 import coil.network.HttpException
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.util.Resource
@@ -17,17 +18,21 @@ class AuthRepositoryImpl(
     private val tokenManager: TokenManager
 ) : AuthRepository {
 
+    val TAG = "AuthRepositoryImpl"
+
     override suspend fun getOtp(
         countryCode: String,
         phoneNumber: String
     ): SimpleResource {
         return try {
+            Log.d(TAG, "getOtp: getOtp function called!")
             val response = api.getOtp(
                 SendOtpRequest(
                     countryCode = countryCode,
                     phoneNumber = phoneNumber
                 )
             )
+            Log.d(TAG, "getOtp: Got response $response")
             if (response.successful) {
                 Resource.Success(Unit)
             } else {
@@ -59,13 +64,26 @@ class AuthRepositoryImpl(
                     otpCode = otpCode
                 )
             )
-            if (response.isSuccessful) {
-
+            Log.d(TAG, "verifyOtp: ${response.body()?.data}")
+            if (response.isSuccessful && response.body()?.successful == true) {
+                val accessToken = response.headers()["accessToken"]
+                val refreshToken = response.headers()["refreshToken"]
+                val userId = response.body()?.data?.id
+                accessToken?.let { token ->
+                    tokenManager.saveAccessToken(token)
+                }
+                refreshToken?.let { token ->
+                    tokenManager.saveRefreshToken(token)
+                }
+                userId?.let {
+                    tokenManager.saveUserId(it)
+                }
                 Resource.Success(Unit)
             } else {
-
+                response.body()?.message?.let { msg ->
+                    Resource.Error(UiText.DynamicString(msg))
+                } ?: Resource.Error(UiText.StringResource(R.string.error_unknown))
             }
-            Resource.Error(UiText.DynamicString(message))
         } catch (e: IOException) {
             Resource.Error(
                 uiText = UiText.StringResource(R.string.error_could_not_reach_server)

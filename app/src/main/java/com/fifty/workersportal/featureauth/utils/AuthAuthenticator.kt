@@ -1,6 +1,5 @@
 package com.fifty.workersportal.featureauth.utils
 
-import com.fifty.workersportal.core.data.dto.response.BasicApiResponse
 import com.fifty.workersportal.core.util.Constants
 import com.fifty.workersportal.featureauth.data.remote.AuthApiService
 import kotlinx.coroutines.flow.first

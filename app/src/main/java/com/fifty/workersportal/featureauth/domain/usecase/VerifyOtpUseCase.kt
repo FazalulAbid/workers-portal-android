@@ -16,7 +16,7 @@ class VerifyOtpUseCase(
         phoneNumber: String,
         otpCode: String
     ): SimpleResource {
-        if (otpCode.length != Constants.OTP_RESEND_INTERVAL || !otpCode.matches(Regex("\\d+"))) {
+        if (otpCode.length != Constants.OTP_LENGTH || !otpCode.matches(Regex("\\d+"))) {
             return Resource.Error(UiText.StringResource(R.string.please_enter_a_valid_otp))
         }
         return repository.verifyOtp(
