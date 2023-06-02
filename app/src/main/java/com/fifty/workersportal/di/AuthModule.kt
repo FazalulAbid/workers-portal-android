@@ -1,9 +1,6 @@
 package com.fifty.workersportal.di
 
 import android.content.Context
-import android.content.SharedPreferences
-import com.fifty.workersportal.core.util.Constants
-import com.fifty.workersportal.featureauth.utils.TokenManager
 import com.fifty.workersportal.featureauth.data.remote.AuthApiService
 import com.fifty.workersportal.featureauth.data.remote.AuthenticateApiService
 import com.fifty.workersportal.featureauth.data.repository.AuthRepositoryImpl
@@ -14,6 +11,7 @@ import com.fifty.workersportal.featureauth.domain.usecase.GetOtpUseCase
 import com.fifty.workersportal.featureauth.domain.usecase.VerifyOtpUseCase
 import com.fifty.workersportal.featureauth.utils.AuthAuthenticator
 import com.fifty.workersportal.featureauth.utils.AuthInterceptor
+import com.fifty.workersportal.featureauth.utils.SessionManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,7 +19,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
@@ -48,30 +45,30 @@ object AuthModule {
 
     @Provides
     @Singleton
-    fun provideTokenManager(@ApplicationContext context: Context): TokenManager =
-        TokenManager(context)
+    fun provideTokenManager(@ApplicationContext context: Context): SessionManager =
+        SessionManager(context)
 
     @Provides
     @Singleton
-    fun provideAuthInterceptor(tokenManager: TokenManager): AuthInterceptor =
-        AuthInterceptor(tokenManager)
+    fun provideAuthInterceptor(sessionManager: SessionManager): AuthInterceptor =
+        AuthInterceptor(sessionManager)
 
     @Provides
     @Singleton
-    fun provideAuthAuthenticator(tokenManager: TokenManager): AuthAuthenticator =
-        AuthAuthenticator(tokenManager)
+    fun provideAuthAuthenticator(sessionManager: SessionManager): AuthAuthenticator =
+        AuthAuthenticator(sessionManager)
 
     @Provides
     @Singleton
     fun provideAuthRepository(
         api: AuthApiService,
         authenticateApi: AuthenticateApiService,
-        tokenManager: TokenManager
+        sessionManager: SessionManager
     ): AuthRepository =
         AuthRepositoryImpl(
             api = api,
             authenticateApi = authenticateApi,
-            tokenManager = tokenManager
+            sessionManager = sessionManager
         )
 
     @Provides

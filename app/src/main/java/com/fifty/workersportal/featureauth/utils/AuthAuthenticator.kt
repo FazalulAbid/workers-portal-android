@@ -18,29 +18,25 @@ import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Inject
 
 class AuthAuthenticator @Inject constructor(
-    private val tokenManager: TokenManager
+    private val sessionManager: SessionManager
 ) : Authenticator {
 
-    private val TAG = "Hello AuthAuthenticator"
-
     override fun authenticate(route: Route?, response: Response): Request? {
-        Log.d(TAG, "authenticate: Authenticator Worked")
         val refreshToken = runBlocking {
-            tokenManager.getRefreshToken().first()
+            sessionManager.getRefreshToken().first()
         }
         return runBlocking {
             val newAccessTokenResponse = getNewAccessToken(refreshToken)
-            Log.d(TAG, "authenticate: ${newAccessTokenResponse.headers()}")
             val newAccessToken = newAccessTokenResponse.headers().let {
                 it[ACCESS_TOKEN_KEY]
             }
 
             if (!newAccessTokenResponse.isSuccessful || newAccessToken.isNullOrBlank()) {
-                tokenManager.deleteTokens()
+                sessionManager.deleteTokens()
             }
 
             newAccessToken?.let {
-                tokenManager.saveAccessToken(it)
+                sessionManager.saveAccessToken(it)
                 response.request.newBuilder()
                     .header(AUTHORIZATION_KEY, it)
                     .build()

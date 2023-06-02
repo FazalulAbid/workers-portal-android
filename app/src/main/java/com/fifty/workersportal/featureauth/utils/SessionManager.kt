@@ -8,7 +8,7 @@ import com.fifty.workersportal.core.util.dataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class TokenManager(private val context: Context) {
+class SessionManager(private val context: Context) {
     companion object {
         private val KEY_JWT_ACCESS_TOKEN = stringPreferencesKey("access_token")
         private val KEY_JWT_REFRESH_TOKEN = stringPreferencesKey("refresh_token")
@@ -33,15 +33,15 @@ class TokenManager(private val context: Context) {
         }
     }
 
-    suspend fun saveUserId(userId: String) {
-        context.dataStore.edit { preferences ->
-            preferences[KEY_USER_ID] = userId
-        }
-    }
-
     suspend fun saveRefreshToken(refreshToken: String) {
         context.dataStore.edit { preferences ->
             preferences[KEY_JWT_REFRESH_TOKEN] = refreshToken
+        }
+    }
+
+    suspend fun saveUserId(userId: String) {
+        context.dataStore.edit { preferences ->
+            preferences[KEY_USER_ID] = userId
         }
     }
 

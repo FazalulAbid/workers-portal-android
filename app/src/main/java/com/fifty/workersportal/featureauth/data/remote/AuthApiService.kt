@@ -1,6 +1,7 @@
 package com.fifty.workersportal.featureauth.data.remote
 
 import com.fifty.workersportal.core.data.dto.response.BasicApiResponse
+import com.fifty.workersportal.core.data.util.ApiConstants.AUTHORIZATION_KEY
 import com.fifty.workersportal.featureauth.data.remote.request.SendOtpRequest
 import com.fifty.workersportal.featureauth.data.remote.request.VerifyOtpRequest
 import com.fifty.workersportal.featureauth.data.remote.response.UserResponse
@@ -24,6 +25,6 @@ interface AuthApiService {
 
     @GET("refresh-token")
     suspend fun refreshToken(
-        @Header("authorization") token: String
+        @Header(AUTHORIZATION_KEY) token: String
     ): Response<Unit>
 }

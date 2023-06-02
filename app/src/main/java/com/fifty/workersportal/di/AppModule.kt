@@ -31,8 +31,8 @@ object AppModule {
         }
 
         return OkHttpClient.Builder()
-            .addInterceptor(loggingInterceptor)
             .addInterceptor(authInterceptor)
+            .addInterceptor(loggingInterceptor)
             .authenticator(authAuthenticator)
             .build()
     }

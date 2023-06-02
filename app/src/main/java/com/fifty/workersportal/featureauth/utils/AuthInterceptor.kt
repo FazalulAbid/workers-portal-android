@@ -1,6 +1,5 @@
 package com.fifty.workersportal.featureauth.utils
 
-import android.util.Log
 import com.fifty.workersportal.core.data.util.ApiConstants.AUTHORIZATION_KEY
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -9,12 +8,12 @@ import okhttp3.Response
 import javax.inject.Inject
 
 class AuthInterceptor @Inject constructor(
-    private val tokenManager: TokenManager
+    private val sessionManager: SessionManager
 ) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val accessToken = runBlocking {
-            tokenManager.getAccessToken().first()
+            sessionManager.getAccessToken().first()
         }
         val request = chain.request().newBuilder()
         request.addHeader(
