@@ -1,5 +1,8 @@
 package com.fifty.workersportal.featureauth.utils
 
+import android.util.Log
+import com.fifty.workersportal.core.data.util.ApiConstants.ACCESS_TOKEN_KEY
+import com.fifty.workersportal.core.data.util.ApiConstants.AUTHORIZATION_KEY
 import com.fifty.workersportal.core.util.Constants
 import com.fifty.workersportal.featureauth.data.remote.AuthApiService
 import kotlinx.coroutines.flow.first
@@ -18,25 +21,29 @@ class AuthAuthenticator @Inject constructor(
     private val tokenManager: TokenManager
 ) : Authenticator {
 
+    private val TAG = "Hello AuthAuthenticator"
+
     override fun authenticate(route: Route?, response: Response): Request? {
+        Log.d(TAG, "authenticate: Authenticator Worked")
         val refreshToken = runBlocking {
             tokenManager.getRefreshToken().first()
         }
         return runBlocking {
             val newAccessTokenResponse = getNewAccessToken(refreshToken)
+            Log.d(TAG, "authenticate: ${newAccessTokenResponse.headers()}")
+            val newAccessToken = newAccessTokenResponse.headers().let {
+                it[ACCESS_TOKEN_KEY]
+            }
 
-            if (!newAccessTokenResponse.isSuccessful || newAccessTokenResponse.body() == null) {
+            if (!newAccessTokenResponse.isSuccessful || newAccessToken.isNullOrBlank()) {
                 tokenManager.deleteTokens()
             }
 
-            newAccessTokenResponse.headers()?.let { headers ->
-                val newAccessToken = headers["accessToken"]
-                newAccessToken?.let { accessToken ->
-                    tokenManager.saveAccessToken(accessToken)
-                    response.request.newBuilder()
-                        .header("Authorization", "Bearer $accessToken")
-                        .build()
-                } ?: response.request
+            newAccessToken?.let {
+                tokenManager.saveAccessToken(it)
+                response.request.newBuilder()
+                    .header(AUTHORIZATION_KEY, it)
+                    .build()
             }
         }
     }
@@ -54,6 +61,6 @@ class AuthAuthenticator @Inject constructor(
             .client(okHttpClient)
             .build()
         val service = retrofit.create(AuthApiService::class.java)
-        return service.refreshToken("Bearer $refreshToken")
+        return service.refreshToken(refreshToken ?: "")
     }
 }

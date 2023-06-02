@@ -1,6 +1,7 @@
 package com.fifty.workersportal.core.presentation.component
 
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
@@ -9,6 +10,14 @@ import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.fifty.workersportal.core.presentation.util.NavArgConstants.NAV_ARG_COUNTRY_CODE
 import com.fifty.workersportal.core.presentation.util.NavArgConstants.NAV_ARG_PHONE_NUMBER
+import com.fifty.workersportal.core.presentation.util.enterTransitionHorizontal
+import com.fifty.workersportal.core.presentation.util.enterTransitionVertical
+import com.fifty.workersportal.core.presentation.util.exitTransitionHorizontal
+import com.fifty.workersportal.core.presentation.util.exitTransitionVertical
+import com.fifty.workersportal.core.presentation.util.popEnterTransitionHorizontal
+import com.fifty.workersportal.core.presentation.util.popEnterTransitionVertical
+import com.fifty.workersportal.core.presentation.util.popExitTransitionHorizontal
+import com.fifty.workersportal.core.presentation.util.popExitTransitionVertical
 import com.fifty.workersportal.core.util.NavigationParent
 import com.fifty.workersportal.core.util.Screen
 import com.fifty.workersportal.featureauth.presentation.auth.AuthScreen
@@ -29,18 +38,25 @@ import com.google.accompanist.navigation.animation.composable
 @Composable
 fun Navigation(
     navController: NavHostController,
-    snackbarHostState: SnackbarHostState
+    snackbarHostState: SnackbarHostState,
+    startDestination: String
 ) {
     AnimatedNavHost(
         navController = navController,
-        startDestination = NavigationParent.Auth.route
+        startDestination = startDestination,
+        enterTransition = { enterTransitionHorizontal },
+        exitTransition = { exitTransitionHorizontal },
+        popEnterTransition = { popEnterTransitionHorizontal },
+        popExitTransition = { popExitTransitionHorizontal },
     ) {
         // Authentication nav destination
         navigation(
             startDestination = Screen.AuthScreen.route,
             route = NavigationParent.Auth.route
         ) {
-            composable(Screen.AuthScreen.route) {
+            composable(
+                Screen.AuthScreen.route
+            ) {
                 AuthScreen(
                     snackbarHostState = snackbarHostState,
                     onNavigate = navController::navigate,

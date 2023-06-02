@@ -6,6 +6,6 @@ data class VerifyOtpRequest(
     @SerializedName("countryCode")
     val countryCode: String,
     val otpCode: String,
-    @SerializedName("mobile")
+    @SerializedName("phone")
     val phoneNumber: String
 )

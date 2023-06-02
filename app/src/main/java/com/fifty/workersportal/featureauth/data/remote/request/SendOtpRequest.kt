@@ -5,6 +5,6 @@ import com.google.gson.annotations.SerializedName
 data class SendOtpRequest(
     @SerializedName("countryCode")
     val countryCode: String,
-    @SerializedName("mobile")
+    @SerializedName("phone")
     val phoneNumber: String
 )

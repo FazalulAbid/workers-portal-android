@@ -75,7 +75,6 @@ fun OtpVerificationScreen(
 
                 is UiEvent.OnLogin -> {
                     keyboardController?.hide()
-                    delay(100L)
                     onNavigateWithPopBackStack(NavigationParent.Home.route)
                 }
 

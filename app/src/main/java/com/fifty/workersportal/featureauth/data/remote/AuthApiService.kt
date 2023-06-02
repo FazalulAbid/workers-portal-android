@@ -1,10 +1,9 @@
 package com.fifty.workersportal.featureauth.data.remote
 
 import com.fifty.workersportal.core.data.dto.response.BasicApiResponse
-import com.fifty.workersportal.core.util.Constants
 import com.fifty.workersportal.featureauth.data.remote.request.SendOtpRequest
 import com.fifty.workersportal.featureauth.data.remote.request.VerifyOtpRequest
-import com.fifty.workersportal.featureauth.data.remote.response.VerifyOtpResponse
+import com.fifty.workersportal.featureauth.data.remote.response.UserResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -21,10 +20,10 @@ interface AuthApiService {
     @POST("verify-sms-otp")
     suspend fun verifyOtp(
         @Body request: VerifyOtpRequest
-    ): Response<BasicApiResponse<VerifyOtpResponse>>
+    ): Response<BasicApiResponse<UserResponse>>
 
     @GET("refresh-token")
     suspend fun refreshToken(
-        @Header("Authorization") token: String
+        @Header("authorization") token: String
     ): Response<Unit>
 }

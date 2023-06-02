@@ -1,7 +1,6 @@
 package com.fifty.workersportal.featureauth.domain.repository
 
 import com.fifty.workersportal.core.util.SimpleResource
-import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {
 
@@ -15,4 +14,6 @@ interface AuthRepository {
         phoneNumber: String,
         otpCode: String
     ): SimpleResource
+
+    suspend fun authenticate(): SimpleResource
 }
