@@ -4,6 +4,7 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
@@ -33,14 +34,19 @@ import com.fifty.workersportal.featureworker.presentation.selectworkercategory.S
 import com.fifty.workersportal.featureworker.presentation.workerlist.WorkerListScreen
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun Navigation(
     navController: NavHostController,
     snackbarHostState: SnackbarHostState,
-    startDestination: String
+    startDestination: String,
+    onDataLoaded: () -> Unit
 ) {
+    LaunchedEffect(key1 = Unit) {
+        onDataLoaded()
+    }
     AnimatedNavHost(
         navController = navController,
         startDestination = startDestination,

@@ -5,12 +5,16 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
@@ -29,6 +33,7 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    private var keepSplashScreenOn = true
     private val splashScreenViewModel: SplashViewModel by viewModels()
     private var userAuthState = mutableStateOf(UserAuthState.UNKNOWN)
 
@@ -53,14 +58,12 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-
-                    val splash = installSplashScreen()
-                    splash.setKeepOnScreenCondition {
-                        userAuthState.value != UserAuthState.UNKNOWN
-                    }
-
                     val navController = rememberAnimatedNavController()
                     val snackBarHostState = remember { SnackbarHostState() }
+                    val splash = installSplashScreen()
+                    splash.setKeepOnScreenCondition {
+                        keepSplashScreenOn
+                    }
                     StandardScaffold(
                         navController = navController,
                         snackBarHostState = snackBarHostState,
@@ -71,7 +74,8 @@ class MainActivity : ComponentActivity() {
                                 Navigation(
                                     navController = navController,
                                     snackbarHostState = snackBarHostState,
-                                    startDestination = NavigationParent.Auth.route
+                                    startDestination = NavigationParent.Auth.route,
+                                    onDataLoaded = { keepSplashScreenOn = false }
                                 )
                             }
 
@@ -79,7 +83,8 @@ class MainActivity : ComponentActivity() {
                                 Navigation(
                                     navController = navController,
                                     snackbarHostState = snackBarHostState,
-                                    startDestination = NavigationParent.Home.route
+                                    startDestination = NavigationParent.Home.route,
+                                    onDataLoaded = { keepSplashScreenOn = false }
                                 )
                             }
 
