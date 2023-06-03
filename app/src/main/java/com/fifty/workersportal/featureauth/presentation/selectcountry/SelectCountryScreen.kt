@@ -31,11 +31,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavController
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.presentation.component.Keyboard
 import com.fifty.workersportal.core.presentation.component.StandardAppBar
-import com.fifty.workersportal.core.presentation.component.StandardSearchTextField
+import com.fifty.workersportal.core.presentation.component.StandardTextField
 import com.fifty.workersportal.core.presentation.component.keyboardAsState
 import com.fifty.workersportal.core.presentation.ui.theme.MediumButtonHeight
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
@@ -80,7 +79,7 @@ fun SelectCountryCodeScreen(
                 Text(
                     text = stringResource(R.string.select_country),
                     style = MaterialTheme.typography.headlineSmall.copy(
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.SemiBold
                     ),
                     color = MaterialTheme.colorScheme.onBackground
                 )
@@ -95,7 +94,7 @@ fun SelectCountryCodeScreen(
                     end = SizeMedium
                 )
             ) {
-                StandardSearchTextField(
+                StandardTextField(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(MediumButtonHeight),

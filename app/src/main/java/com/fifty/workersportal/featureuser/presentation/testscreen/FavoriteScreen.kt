@@ -16,7 +16,7 @@ fun FavoriteScreen() {
     ) {
         Text(
             text = "Favorite Screen",
-            style = MaterialTheme.typography.titleMedium
+            style = MaterialTheme.typography.bodyLarge
         )
     }
 }

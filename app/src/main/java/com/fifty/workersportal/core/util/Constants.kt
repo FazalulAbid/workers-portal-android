@@ -12,12 +12,15 @@ object Constants {
     const val MESSAGE_LENGTH = 1000
 
     // Base urls
-    const val WORKERS_PORTAL_BASE_URL = "http://192.168.64.148:8080/"
+    const val WORKERS_PORTAL_BASE_URL = "http://192.168.64.121:8080/"
     const val REST_COUNTRIES_BASE_URL = "https://restcountries.com/v2/"
 
     // Country code default values.
     const val DEFAULT_COUNTRY_NAME = "India"
     const val DEFAULT_COUNTRY_CODE = "+91"
     const val DEFAULT_COUNTRY_FLAG_URL = "https://flagcdn.com/w320/in.png"
+
+    // Worker
+    const val MAXIMUM_SELECTABLE_CATEGORIES = 5
 
 }

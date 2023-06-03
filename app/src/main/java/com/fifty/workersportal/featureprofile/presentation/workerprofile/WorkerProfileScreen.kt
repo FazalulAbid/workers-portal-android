@@ -70,7 +70,7 @@ fun WorkerProfileScreen(
                 Text(
                     text = stringResource(R.string.worker_profile),
                     style = MaterialTheme.typography.headlineSmall.copy(
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.SemiBold
                     ),
                     color = MaterialTheme.colorScheme.onBackground
                 )

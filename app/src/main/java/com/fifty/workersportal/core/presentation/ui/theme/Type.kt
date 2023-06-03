@@ -44,7 +44,7 @@ val Typography = Typography(
     ),
     titleMedium = TextStyle(
         fontFamily = circularStd,
-        fontSize = 16.sp,
+        fontSize = 18.sp,
         lineHeight = 24.sp,
         fontWeight = FontWeight.Normal
     ),

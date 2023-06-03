@@ -82,6 +82,7 @@ dependencies {
     // Accompanist
     implementation "com.google.accompanist:accompanist-systemuicontroller:0.31.2-alpha"
     implementation "com.google.accompanist:accompanist-insets:0.17.0"
+    implementation "com.google.accompanist:accompanist-flowlayout:0.17.0"
 
     // Accompanist Navigation Animation
     def nav_animation_version = "0.31.0-alpha"

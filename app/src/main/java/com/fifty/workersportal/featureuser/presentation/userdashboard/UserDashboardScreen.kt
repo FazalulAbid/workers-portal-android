@@ -16,7 +16,7 @@ fun UserDashboardScreen() {
     ) {
         Text(
             text = "User Dashboard",
-            style = MaterialTheme.typography.titleMedium
+            style = MaterialTheme.typography.bodyLarge
         )
     }
 }

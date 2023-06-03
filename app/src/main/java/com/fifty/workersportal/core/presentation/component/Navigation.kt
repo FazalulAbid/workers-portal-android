@@ -30,6 +30,7 @@ import com.fifty.workersportal.featureuser.presentation.testscreen.FavoriteScree
 import com.fifty.workersportal.featureuser.presentation.testscreen.HistoryScreen
 import com.fifty.workersportal.featureworker.presentation.workerdashboard.WorkerDashboardScreen
 import com.fifty.workersportal.featureuser.presentation.userdashboard.UserDashboardScreen
+import com.fifty.workersportal.featureworker.presentation.registerasworker.RegisterAsWorkerScreen
 import com.fifty.workersportal.featureworker.presentation.selectworkercategory.SelectWorkerCategoryScreen
 import com.fifty.workersportal.featureworker.presentation.workerlist.WorkerListScreen
 import com.google.accompanist.navigation.animation.AnimatedNavHost
@@ -49,7 +50,7 @@ fun Navigation(
     }
     AnimatedNavHost(
         navController = navController,
-        startDestination = startDestination,
+        startDestination = NavigationParent.Work.route,
         enterTransition = { enterTransitionHorizontal },
         exitTransition = { exitTransitionHorizontal },
         popEnterTransition = { popEnterTransitionHorizontal },
@@ -111,9 +112,12 @@ fun Navigation(
         }
         // Work Nav destination
         navigation(
-            startDestination = Screen.WorkerProfileScreen.route,
+            startDestination = Screen.RegisterAsWorkerScreen.route,
             route = NavigationParent.Work.route
         ) {
+            composable(Screen.RegisterAsWorkerScreen.route) {
+                RegisterAsWorkerScreen()
+            }
             composable(Screen.WorkerDashboardScreen.route) {
                 WorkerDashboardScreen()
             }

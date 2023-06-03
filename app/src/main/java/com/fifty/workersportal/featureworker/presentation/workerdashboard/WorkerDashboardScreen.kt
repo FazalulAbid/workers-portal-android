@@ -13,11 +13,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -27,12 +24,12 @@ import com.fifty.workersportal.R
 import com.fifty.workersportal.core.presentation.component.HorizontalDivider
 import com.fifty.workersportal.core.presentation.component.PrimaryHeader
 import com.fifty.workersportal.core.presentation.component.SecondaryHeader
-import com.fifty.workersportal.core.presentation.ui.theme.DarkGreenColor
 import com.fifty.workersportal.core.presentation.ui.theme.SizeExtraSmall
 import com.fifty.workersportal.core.presentation.ui.theme.SizeLarge
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.ui.theme.SmallProfilePictureHeight
 import com.fifty.workersportal.core.presentation.ui.theme.SmallStrokeThickness
+import com.fifty.workersportal.featureworker.presentation.component.OpenToWorkSwitch
 import com.fifty.workersportal.featureworker.presentation.component.WorkProposalListItem
 
 @Composable
@@ -102,34 +99,12 @@ fun WorkerDashboardScreen(
             PrimaryHeader(text = stringResource(R.string.worker_dashboard))
             HorizontalDivider()
             Spacer(modifier = Modifier.height(SizeExtraSmall))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = stringResource(R.string.open_to_work),
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        fontWeight = FontWeight.Medium,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                )
-                Switch(
-                    checked = true,
-                    onCheckedChange = {},
-                    colors = SwitchDefaults.colors(
-                        uncheckedThumbColor = MaterialTheme.colorScheme.primary,
-                        uncheckedBorderColor = MaterialTheme.colorScheme.outline,
-                        uncheckedTrackColor = MaterialTheme.colorScheme.surface,
-                        checkedThumbColor = DarkGreenColor,
-                        checkedBorderColor = MaterialTheme.colorScheme.outline,
-                        checkedTrackColor = MaterialTheme.colorScheme.surface
-                    )
-                )
-            }
+            OpenToWorkSwitch(modifier = Modifier.fillMaxWidth())
             Spacer(modifier = Modifier.height(SizeExtraSmall))
             HorizontalDivider()
-            SecondaryHeader(text = stringResource(R.string.work_proposals))
+            SecondaryHeader(
+                text = stringResource(R.string.work_proposals)
+            )
         }
         LazyColumn() {
             items(20) {

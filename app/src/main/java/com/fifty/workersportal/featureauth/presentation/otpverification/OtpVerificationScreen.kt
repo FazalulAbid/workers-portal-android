@@ -99,7 +99,7 @@ fun OtpVerificationScreen(
                 Text(
                     text = stringResource(R.string.otp_verification),
                     style = MaterialTheme.typography.headlineSmall.copy(
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.SemiBold
                     ),
                     color = MaterialTheme.colorScheme.onBackground
                 )

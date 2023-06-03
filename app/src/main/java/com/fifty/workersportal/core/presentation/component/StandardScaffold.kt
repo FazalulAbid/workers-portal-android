@@ -37,7 +37,7 @@ fun StandardScaffold(
 ) {
     Scaffold(
         bottomBar = {
-            StandardBottomBar(navController)
+            StandardBottomBar(navController = navController)
         }
     ) {
         Box(modifier = Modifier.padding(it)) {

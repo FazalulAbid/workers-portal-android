@@ -16,7 +16,7 @@ fun HistoryScreen() {
     ) {
         Text(
             text = "History Screen",
-            style = MaterialTheme.typography.titleMedium
+            style = MaterialTheme.typography.bodyLarge
         )
     }
 }

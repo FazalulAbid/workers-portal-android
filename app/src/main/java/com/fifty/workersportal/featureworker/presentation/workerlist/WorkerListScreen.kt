@@ -20,7 +20,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.presentation.component.HorizontalDivider
 import com.fifty.workersportal.core.presentation.component.StandardAppBar
-import com.fifty.workersportal.core.presentation.component.StandardSearchTextField
+import com.fifty.workersportal.core.presentation.component.StandardTextField
 import com.fifty.workersportal.core.presentation.ui.theme.MediumButtonHeight
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.ui.theme.SmallStrokeThickness
@@ -42,7 +42,7 @@ fun WorkerListScreen(
                 Text(
                     text = "Plumber",
                     style = MaterialTheme.typography.headlineSmall.copy(
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.SemiBold
                     ),
                     color = MaterialTheme.colorScheme.onBackground
                 )
@@ -56,7 +56,7 @@ fun WorkerListScreen(
                 start = SizeMedium
             )
         ) {
-            StandardSearchTextField(
+            StandardTextField(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(MediumButtonHeight),
