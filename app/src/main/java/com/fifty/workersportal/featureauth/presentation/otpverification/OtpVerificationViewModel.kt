@@ -91,7 +91,7 @@ class OtpVerificationViewModel @Inject constructor(
                     val userId = getOwnUserId()
                     _eventFlow.emit(
                         UiEvent.MakeToast(
-                            UiText.DynamicString(userId ?: "No user id found!")
+                            UiText.DynamicString(userId)
                         )
                     )
                 }

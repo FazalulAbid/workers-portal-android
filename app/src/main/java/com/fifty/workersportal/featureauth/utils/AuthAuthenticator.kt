@@ -5,6 +5,7 @@ import com.fifty.workersportal.core.data.util.ApiConstants.ACCESS_TOKEN_KEY
 import com.fifty.workersportal.core.data.util.ApiConstants.AUTHORIZATION_KEY
 import com.fifty.workersportal.core.util.Constants
 import com.fifty.workersportal.featureauth.data.remote.AuthApiService
+import com.fifty.workersportal.featureauth.domain.repository.SessionRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
@@ -18,12 +19,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Inject
 
 class AuthAuthenticator @Inject constructor(
-    private val sessionManager: SessionManager
+    private val sessionRepository: SessionRepository
 ) : Authenticator {
 
     override fun authenticate(route: Route?, response: Response): Request? {
         val refreshToken = runBlocking {
-            sessionManager.getRefreshToken().first()
+            sessionRepository.getRefreshToken().first()
         }
         return runBlocking {
             val newAccessTokenResponse = getNewAccessToken(refreshToken)
@@ -32,11 +33,11 @@ class AuthAuthenticator @Inject constructor(
             }
 
             if (!newAccessTokenResponse.isSuccessful || newAccessToken.isNullOrBlank()) {
-                sessionManager.deleteTokens()
+                sessionRepository.deleteTokens()
             }
 
             newAccessToken?.let {
-                sessionManager.saveAccessToken(it)
+                sessionRepository.saveAccessToken(it)
                 response.request.newBuilder()
                     .header(AUTHORIZATION_KEY, it)
                     .build()

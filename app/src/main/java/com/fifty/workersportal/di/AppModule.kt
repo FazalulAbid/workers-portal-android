@@ -3,6 +3,7 @@ package com.fifty.workersportal.di
 import android.content.Context
 import com.fifty.workersportal.core.domain.usecase.GetOwnUserIdUseCase
 import com.fifty.workersportal.core.util.Constants
+import com.fifty.workersportal.featureauth.domain.repository.SessionRepository
 import com.fifty.workersportal.featureauth.utils.AuthAuthenticator
 import com.fifty.workersportal.featureauth.utils.AuthInterceptor
 import dagger.Module
@@ -46,6 +47,6 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideGetOwnUserId(@ApplicationContext context: Context): GetOwnUserIdUseCase =
-        GetOwnUserIdUseCase(context)
+    fun provideGetOwnUserId(repository: SessionRepository): GetOwnUserIdUseCase =
+        GetOwnUserIdUseCase(repository)
 }

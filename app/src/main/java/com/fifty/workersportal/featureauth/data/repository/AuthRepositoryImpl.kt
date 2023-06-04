@@ -1,26 +1,26 @@
 package com.fifty.workersportal.featureauth.data.repository
 
+import android.util.Log
 import coil.network.HttpException
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.data.util.ApiConstants.ACCESS_TOKEN_KEY
 import com.fifty.workersportal.core.data.util.ApiConstants.REFRESH_TOKEN_KEY
-import com.fifty.workersportal.core.data.util.Session
 import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.SimpleResource
-import com.fifty.workersportal.featureauth.utils.SessionManager
 import com.fifty.workersportal.core.util.UiText
 import com.fifty.workersportal.featureauth.data.remote.AuthApiService
 import com.fifty.workersportal.featureauth.data.remote.AuthenticateApiService
 import com.fifty.workersportal.featureauth.data.remote.request.SendOtpRequest
 import com.fifty.workersportal.featureauth.data.remote.request.VerifyOtpRequest
+import com.fifty.workersportal.featureauth.domain.model.OtpVerification
 import com.fifty.workersportal.featureauth.domain.repository.AuthRepository
 import java.io.IOException
 
 class AuthRepositoryImpl(
     private val api: AuthApiService,
     private val authenticateApi: AuthenticateApiService,
-    private val sessionManager: SessionManager
-) : AuthRepository {
+
+    ) : AuthRepository {
 
     override suspend fun getOtp(
         countryCode: String,
@@ -55,7 +55,7 @@ class AuthRepositoryImpl(
         countryCode: String,
         phoneNumber: String,
         otpCode: String
-    ): SimpleResource {
+    ): Resource<OtpVerification> {
         return try {
             val response = api.verifyOtp(
                 VerifyOtpRequest(
@@ -67,17 +67,17 @@ class AuthRepositoryImpl(
             if (response.isSuccessful && response.body()?.successful == true) {
                 val accessToken = response.headers()[ACCESS_TOKEN_KEY]
                 val refreshToken = response.headers()[REFRESH_TOKEN_KEY]
-                val userId = response.body()?.data?.id
-                accessToken?.let { token ->
-                    sessionManager.saveAccessToken(token)
-                }
-                refreshToken?.let { token ->
-                    sessionManager.saveRefreshToken(token)
-                }
-                userId?.let {
-                    sessionManager.saveUserId(it)
-                }
-                Resource.Success(Unit)
+                val user = response.body()?.data
+                Log.d("Hello", "user = $user")
+                return if (accessToken != null && refreshToken != null && user != null) {
+                    Resource.Success(
+                        data = OtpVerification(
+                            accessToken = accessToken,
+                            refreshToken = refreshToken,
+                            user = user
+                        )
+                    )
+                } else Resource.Error(UiText.unknownError())
             } else {
                 response.body()?.message?.let { msg ->
                     Resource.Error(UiText.DynamicString(msg))
@@ -93,6 +93,7 @@ class AuthRepositoryImpl(
             )
         }
     }
+
 
     override suspend fun authenticate(): SimpleResource {
         return try {

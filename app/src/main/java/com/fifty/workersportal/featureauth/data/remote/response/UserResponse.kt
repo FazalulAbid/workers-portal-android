@@ -29,8 +29,6 @@ data class UserResponse(
     fun toUser(): User {
         return User(
             id = id,
-            phone = phone,
-            countryCode = countryCode,
             firstName = firstName,
             isWorker = isWorker,
             lastName = lastName

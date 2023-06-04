@@ -4,14 +4,15 @@ import android.content.Context
 import com.fifty.workersportal.featureauth.data.remote.AuthApiService
 import com.fifty.workersportal.featureauth.data.remote.AuthenticateApiService
 import com.fifty.workersportal.featureauth.data.repository.AuthRepositoryImpl
+import com.fifty.workersportal.featureauth.data.repository.SessionRepositoryImpl
 import com.fifty.workersportal.featureauth.domain.repository.AuthRepository
+import com.fifty.workersportal.featureauth.domain.repository.SessionRepository
 import com.fifty.workersportal.featureauth.domain.usecase.AuthUseCases
 import com.fifty.workersportal.featureauth.domain.usecase.AuthenticateUseCase
 import com.fifty.workersportal.featureauth.domain.usecase.GetOtpUseCase
 import com.fifty.workersportal.featureauth.domain.usecase.VerifyOtpUseCase
 import com.fifty.workersportal.featureauth.utils.AuthAuthenticator
 import com.fifty.workersportal.featureauth.utils.AuthInterceptor
-import com.fifty.workersportal.featureauth.utils.SessionManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -45,38 +46,39 @@ object AuthModule {
 
     @Provides
     @Singleton
-    fun provideTokenManager(@ApplicationContext context: Context): SessionManager =
-        SessionManager(context)
+    fun provideSessionRepository(@ApplicationContext context: Context): SessionRepository =
+        SessionRepositoryImpl(context)
 
     @Provides
     @Singleton
-    fun provideAuthInterceptor(sessionManager: SessionManager): AuthInterceptor =
-        AuthInterceptor(sessionManager)
+    fun provideAuthInterceptor(sessionRepository: SessionRepository): AuthInterceptor =
+        AuthInterceptor(sessionRepository)
 
     @Provides
     @Singleton
-    fun provideAuthAuthenticator(sessionManager: SessionManager): AuthAuthenticator =
-        AuthAuthenticator(sessionManager)
+    fun provideAuthAuthenticator(sessionRepository: SessionRepository): AuthAuthenticator =
+        AuthAuthenticator(sessionRepository)
 
     @Provides
     @Singleton
     fun provideAuthRepository(
         api: AuthApiService,
-        authenticateApi: AuthenticateApiService,
-        sessionManager: SessionManager
+        authenticateApi: AuthenticateApiService
     ): AuthRepository =
         AuthRepositoryImpl(
             api = api,
-            authenticateApi = authenticateApi,
-            sessionManager = sessionManager
+            authenticateApi = authenticateApi
         )
 
     @Provides
     @Singleton
-    fun providesAuthUseCases(repository: AuthRepository): AuthUseCases =
+    fun providesAuthUseCases(
+        authRepository: AuthRepository,
+        sessionRepository: SessionRepository
+    ): AuthUseCases =
         AuthUseCases(
-            getOtp = GetOtpUseCase(repository),
-            verifyOtp = VerifyOtpUseCase(repository)
+            getOtp = GetOtpUseCase(authRepository),
+            verifyOtp = VerifyOtpUseCase(authRepository, sessionRepository)
         )
 
     @Provides

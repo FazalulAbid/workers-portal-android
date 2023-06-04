@@ -1,18 +1,14 @@
 package com.fifty.workersportal.core.domain.usecase
 
-import android.content.Context
-import androidx.datastore.preferences.core.stringPreferencesKey
-import com.fifty.workersportal.core.util.Constants
-import com.fifty.workersportal.core.util.dataStore
+import android.util.Log
+import com.fifty.workersportal.featureauth.domain.repository.SessionRepository
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 
 class GetOwnUserIdUseCase(
-    private val context: Context
+    private val repository: SessionRepository
 ) {
-    suspend operator fun invoke(): String? {
-        return context.dataStore.data.map { preferences ->
-            preferences[stringPreferencesKey(Constants.KEY_USER_ID)]
-        }.first()
+    suspend operator fun invoke(): String {
+        val user = repository.getUserSession()
+        return user.id
     }
 }
