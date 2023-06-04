@@ -1,4 +1,4 @@
-package com.fifty.workersportal.featurechat.presentation.message.component
+package com.fifty.workersportal.featurechat.presentation.component
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable

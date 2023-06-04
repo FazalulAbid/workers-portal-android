@@ -38,9 +38,9 @@ import com.fifty.workersportal.core.presentation.ui.theme.SizeExtraSmall
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
 import com.fifty.workersportal.core.util.Constants
-import com.fifty.workersportal.featurechat.presentation.message.component.OwnMessage
-import com.fifty.workersportal.featurechat.presentation.message.component.RemoteMessage
-import com.fifty.workersportal.featurechat.presentation.message.component.SuggestMessageItem
+import com.fifty.workersportal.featurechat.presentation.component.OwnMessage
+import com.fifty.workersportal.featurechat.presentation.component.RemoteMessage
+import com.fifty.workersportal.featurechat.presentation.component.SuggestMessageItem
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable

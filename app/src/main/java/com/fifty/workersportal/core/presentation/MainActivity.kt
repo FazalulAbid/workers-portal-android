@@ -5,25 +5,26 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.compose.currentBackStackEntryAsState
+import com.fifty.workersportal.core.data.util.Session
 import com.fifty.workersportal.core.presentation.component.Navigation
 import com.fifty.workersportal.core.presentation.component.StandardScaffold
 import com.fifty.workersportal.core.presentation.ui.theme.WorkersPortalTheme
 import com.fifty.workersportal.core.util.NavigationParent
+import com.fifty.workersportal.core.util.Screen
 import com.fifty.workersportal.featureauth.presentation.splash.SplashEvent
 import com.fifty.workersportal.featureauth.presentation.splash.SplashViewModel
 import com.fifty.workersportal.featureauth.presentation.splash.UserAuthState
@@ -58,16 +59,23 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    val isWorker by remember {
+                        mutableStateOf(Session.userIsWorker ?: false)
+                    }
                     val navController = rememberAnimatedNavController()
+                    val navBackStackEntry by navController.currentBackStackEntryAsState()
                     val snackBarHostState = remember { SnackbarHostState() }
                     val splash = installSplashScreen()
                     splash.setKeepOnScreenCondition {
                         keepSplashScreenOn
                     }
                     StandardScaffold(
-                        navController = navController,
+                        onNavigate = navController::navigate,
+                        navBackStackEntry = navBackStackEntry,
                         snackBarHostState = snackBarHostState,
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.fillMaxSize(),
+                        showBottomBar = shouldShowBottomBar(navBackStackEntry),
+                        isWorker = isWorker
                     ) {
                         when (userAuthState.value) {
                             UserAuthState.UNAUTHENTICATED -> {
@@ -95,4 +103,12 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    private fun shouldShowBottomBar(backStackEntry: NavBackStackEntry?): Boolean =
+        backStackEntry?.destination?.route in listOf(
+            Screen.UserDashboardScreen.route,
+            Screen.WorkerDashboardScreen.route,
+            Screen.FavoriteScreen.route,
+            Screen.HistoryScreen.route
+        )
 }

@@ -25,4 +25,7 @@ import com.fifty.workersportal.core.presentation.ui.theme.SmallProfilePictureHei
 @Composable
 fun ChatScreen(
     onNavigateUp: () -> Unit = {},
-) {}
+    onNavigate: (String) -> Unit = {}
+) {
+
+}

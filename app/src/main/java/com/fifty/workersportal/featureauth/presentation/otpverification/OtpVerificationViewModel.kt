@@ -9,14 +9,14 @@ import androidx.lifecycle.viewModelScope
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.domain.state.StandardTextFieldState
 import com.fifty.workersportal.core.domain.usecase.GetOwnUserIdUseCase
-import com.fifty.workersportal.core.presentation.util.NavArgConstants
 import com.fifty.workersportal.core.presentation.util.UiEvent
 import com.fifty.workersportal.core.util.Constants
 import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.UiText
 import com.fifty.workersportal.featureauth.domain.usecase.AuthUseCases
+import com.fifty.workersportal.featureauth.presentation.component.NAV_ARG_COUNTRY_CODE
+import com.fifty.workersportal.featureauth.presentation.component.NAV_ARG_PHONE_NUMBER
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -47,9 +47,9 @@ class OtpVerificationViewModel @Inject constructor(
     init {
         _state.value = state.value.copy(
             countryCode = savedStateHandle
-                .get<String>(NavArgConstants.NAV_ARG_COUNTRY_CODE) ?: "",
+                .get<String>(NAV_ARG_COUNTRY_CODE) ?: "",
             phoneNumber = savedStateHandle
-                .get<String>(NavArgConstants.NAV_ARG_PHONE_NUMBER) ?: ""
+                .get<String>(NAV_ARG_PHONE_NUMBER) ?: ""
         )
     }
 

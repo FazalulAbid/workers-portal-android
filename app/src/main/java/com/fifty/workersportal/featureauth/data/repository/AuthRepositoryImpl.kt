@@ -100,7 +100,7 @@ class AuthRepositoryImpl(
                 if (response.successful) {
                     val user = response.data?.toUser()
                     user?.let {
-                        Session.user = it
+//                        Session.user = it
                         Resource.Success(Unit)
                     } ?: return Resource.Error(UiText.unknownError())
                 } else {

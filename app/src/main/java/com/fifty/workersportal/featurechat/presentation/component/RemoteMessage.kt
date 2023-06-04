@@ -1,7 +1,6 @@
-package com.fifty.workersportal.featurechat.presentation.message.component
+package com.fifty.workersportal.featurechat.presentation.component
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,42 +15,32 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.fifty.workersportal.core.presentation.ui.theme.SizeLarge
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
 
 @Composable
-fun OwnMessage(
+fun RemoteMessage(
     message: String,
     modifier: Modifier = Modifier,
-    color: Color = MaterialTheme.colorScheme.primary,
-    textColor: Color = MaterialTheme.colorScheme.onPrimary,
+    color: Color = Color.DarkGray,
+    textColor: Color = Color.White,
     formattedTime: String
 ) {
-    val cornerRadius = MaterialTheme.shapes.medium.bottomEnd
+    val cornerRadius = MaterialTheme.shapes.medium.bottomStart
     Row(
-        modifier = modifier
-            .fillMaxWidth(),
-        horizontalArrangement = Arrangement.End
+        modifier = modifier.fillMaxWidth()
     ) {
-        Text(
-            text = formattedTime,
-            modifier = Modifier.align(Alignment.Bottom),
-            style = MaterialTheme.typography.bodyMedium,
-            fontWeight = FontWeight.Medium,
-            color = MaterialTheme.colorScheme.onSurface
-        )
-        Spacer(modifier = Modifier.width(SizeLarge))
+        Spacer(modifier = Modifier.width(SizeMedium))
         Box(
             modifier = Modifier
                 .weight(1f, false)
                 .background(
                     color = color,
                     shape = RoundedCornerShape(
-                        topStart = SizeMedium,
-                        topEnd = 0.dp,
+                        topStart = 0.dp,
+                        topEnd = SizeMedium,
                         bottomEnd = SizeMedium,
                         bottomStart = SizeMedium
                     ),
@@ -60,9 +49,16 @@ fun OwnMessage(
         ) {
             Text(
                 text = message,
-                color = textColor,
+                color = textColor
             )
         }
-        Spacer(modifier = Modifier.width(SizeMedium))
+        Spacer(modifier = Modifier.width(SizeLarge))
+        Text(
+            text = formattedTime,
+            modifier = Modifier.align(Alignment.Bottom),
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Medium,
+            color = MaterialTheme.colorScheme.onSurface
+        )
     }
 }

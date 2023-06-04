@@ -8,15 +8,14 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavController
-import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavOptions
 import androidx.navigation.navOptions
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.domain.model.BottomNavItem
@@ -27,16 +26,11 @@ import com.fifty.workersportal.core.util.Screen
 
 @Composable
 fun StandardBottomBar(
-    onNavigate: (String) -> Unit = {},
-//    navBackStackEntry: NavBackStackEntry,
-    navController: NavController
+    onNavigate: (route: String, navOptions: NavOptions) -> Unit,
+    navBackStackEntry: NavBackStackEntry?,
+    isWorker: Boolean,
+    showBottomBar: Boolean = true
 ) {
-    val bottomBarNeededScreens = listOf(
-        Screen.UserDashboardScreen,
-        Screen.WorkerDashboardScreen,
-        Screen.FavoriteScreen,
-        Screen.HistoryScreen
-    )
     val bottomNavItems: List<BottomNavItem> = listOf(
         BottomNavItem(
             route = NavigationParent.Home.route,
@@ -68,12 +62,9 @@ fun StandardBottomBar(
         ),
     )
     val selectedItem = remember { mutableStateOf(0) }
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.destination
     val parentRouteName = navBackStackEntry?.destination?.parent?.route
-    val isBottomBarNeeded = bottomBarNeededScreens.any { it.route == currentDestination?.route }
 
-    if (isBottomBarNeeded) {
+    if (showBottomBar) {
         NavigationBar(
             modifier = Modifier.shadow(
                 elevation = SizeExtraLarge
@@ -93,7 +84,16 @@ fun StandardBottomBar(
                     alwaysShowLabel = isSelected,
                     onClick = {
                         selectedItem.value = index
-                        navController.navigate(item.route, navOptions {
+                        val destinationRoute = when (item.route) {
+                            NavigationParent.Work.route -> if (isWorker) {
+                                Screen.WorkerDashboardScreen.route
+                            } else {
+                                Screen.RegisterAsWorkerScreen.route
+                            }
+
+                            else -> item.route
+                        }
+                        onNavigate(destinationRoute, navOptions {
                             popUpTo(Screen.UserDashboardScreen.route) {
                                 saveState = true
                             }
