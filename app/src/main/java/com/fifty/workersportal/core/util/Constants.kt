@@ -10,7 +10,7 @@ object Constants {
     const val MESSAGE_LENGTH = 1000
 
     // Base urls
-    const val WORKERS_PORTAL_BASE_URL = "http://192.168.64.114:8080/"
+    const val WORKERS_PORTAL_BASE_URL = "http://192.168.64.147:8080/"
     const val REST_COUNTRIES_BASE_URL = "https://restcountries.com/v2/"
 
     // Country code default values.

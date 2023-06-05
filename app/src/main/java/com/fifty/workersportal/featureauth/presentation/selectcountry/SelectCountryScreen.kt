@@ -95,7 +95,7 @@ fun SelectCountryCodeScreen(
                 )
             ) {
                 StandardTextField(
-                    modifier = Modifier
+                    basicTextFieldModifier = Modifier
                         .fillMaxWidth()
                         .height(MediumButtonHeight),
                     leadingIcon = {

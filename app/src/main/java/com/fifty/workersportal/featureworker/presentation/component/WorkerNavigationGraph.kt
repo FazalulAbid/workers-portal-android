@@ -20,7 +20,7 @@ fun NavGraphBuilder.workerNavGraph(
     snackbarHostState: SnackbarHostState
 ) {
     navigation(
-        startDestination = Screen.WorkerDashboardScreen.route,
+        startDestination = Screen.RegisterAsWorkerScreen.route,
         route = NavigationParent.Work.route
     ) {
         composable(Screen.RegisterAsWorkerScreen.route) {

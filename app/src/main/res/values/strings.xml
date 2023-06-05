@@ -70,5 +70,8 @@
     <string name="email">Email</string>
     <string name="gender">Gender</string>
     <string name="age">Age</string>
+    <string name="personal">Personal</string>
+    <string name="skills">Skills</string>
+    <string name="wages">Wages</string>
 
 </resources>

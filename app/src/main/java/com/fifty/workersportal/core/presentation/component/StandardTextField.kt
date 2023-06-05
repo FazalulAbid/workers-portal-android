@@ -23,6 +23,7 @@ import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
 @Composable
 fun StandardTextField(
     modifier: Modifier = Modifier,
+    basicTextFieldModifier: Modifier = Modifier,
     leadingIcon: (@Composable () -> Unit)? = null,
     trailingIcon: (@Composable () -> Unit)? = null,
     hint: String,
@@ -37,7 +38,9 @@ fun StandardTextField(
     maxLines: Int = 1,
     keyboardType: KeyboardType = KeyboardType.Text,
 ) {
-    Column {
+    Column(
+        modifier = modifier
+    ) {
         if (titleHint) {
             Text(
                 hint,
@@ -48,7 +51,7 @@ fun StandardTextField(
         }
         Spacer(modifier = Modifier.height(SizeSmall))
         BasicTextField(
-            modifier = modifier
+            modifier = basicTextFieldModifier
                 .background(backgroundColor, MaterialTheme.shapes.medium)
                 .padding(horizontal = SizeSmall),
             value = value,
@@ -62,7 +65,7 @@ fun StandardTextField(
             textStyle = MaterialTheme.typography.bodyLarge,
             decorationBox = { innerTextField ->
                 Row(
-                    modifier,
+                    basicTextFieldModifier,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     if (leadingIcon != null) leadingIcon()

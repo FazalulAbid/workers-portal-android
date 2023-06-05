@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -115,9 +116,14 @@ fun MessageScreen(
                 }
                 Spacer(modifier = Modifier.height(SizeMedium))
                 Row(
+                    modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     StandardTextField(
+                        modifier = Modifier.weight(1f),
+                        basicTextFieldModifier = Modifier
+                            .heightIn(min = MediumButtonHeight)
+                            .padding(vertical = SizeExtraSmall),
                         leadingIcon = {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_message_filled),
@@ -125,10 +131,6 @@ fun MessageScreen(
                                 tint = MaterialTheme.colorScheme.primary
                             )
                         },
-                        modifier = Modifier
-                            .weight(1f)
-                            .heightIn(min = MediumButtonHeight)
-                            .padding(vertical = SizeExtraSmall),
                         value = "Hello",
                         onValueChange = {
 

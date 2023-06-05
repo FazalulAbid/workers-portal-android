@@ -57,7 +57,7 @@ fun WorkerListScreen(
             )
         ) {
             StandardTextField(
-                modifier = Modifier
+                basicTextFieldModifier = Modifier
                     .fillMaxWidth()
                     .height(MediumButtonHeight),
                 leadingIcon = {

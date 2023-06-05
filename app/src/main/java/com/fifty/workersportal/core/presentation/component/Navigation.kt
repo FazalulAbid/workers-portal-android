@@ -42,7 +42,7 @@ fun Navigation(
     }
     AnimatedNavHost(
         navController = navController,
-        startDestination = startDestination,
+        startDestination = NavigationParent.Work.route,
         enterTransition = { enterTransitionHorizontal },
         exitTransition = { exitTransitionHorizontal },
         popEnterTransition = { popEnterTransitionHorizontal },
