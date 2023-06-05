@@ -35,6 +35,7 @@ fun StandardTextField(
     maxLength: Int = 400,
     onValueChange: (String) -> Unit,
     singleLine: Boolean = true,
+    readOnly: Boolean = false,
     maxLines: Int = 1,
     keyboardType: KeyboardType = KeyboardType.Text,
 ) {
@@ -60,6 +61,7 @@ fun StandardTextField(
                     onValueChange(it)
                 }
             },
+            readOnly = readOnly,
             singleLine = singleLine,
             cursorBrush = SolidColor(cursorColor),
             textStyle = MaterialTheme.typography.bodyLarge,

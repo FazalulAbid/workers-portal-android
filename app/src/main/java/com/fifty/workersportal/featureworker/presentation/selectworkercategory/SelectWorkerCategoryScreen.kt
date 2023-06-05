@@ -81,7 +81,7 @@ fun SelectWorkerCategoryScreen(
             items(50) {
                 WorkerCategoryItem(
                     image = painterResource(id = R.drawable.builder),
-                    text = "Bufgh dfghdfg dfgjh ilder",
+                    text = "Plumber",
                     onClick = {
                         onNavigate(Screen.WorkerListScreen.route)
                     }

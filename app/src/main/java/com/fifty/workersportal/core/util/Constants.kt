@@ -1,5 +1,8 @@
 package com.fifty.workersportal.core.util
 
+import androidx.compose.ui.res.stringResource
+import com.fifty.workersportal.R
+
 object Constants {
 
     const val DEFAULT_PHONE_NUMBER_LENGTH = 10
@@ -20,5 +23,4 @@ object Constants {
 
     // Worker
     const val MAXIMUM_SELECTABLE_CATEGORIES = 5
-
 }
