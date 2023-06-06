@@ -13,7 +13,7 @@ object Constants {
     const val MESSAGE_LENGTH = 1000
 
     // Base urls
-    const val WORKERS_PORTAL_BASE_URL = "http://192.168.64.147:8080/"
+    const val WORKERS_PORTAL_BASE_URL = "http://192.168.64.139:8080/"
     const val REST_COUNTRIES_BASE_URL = "https://restcountries.com/v2/"
 
     // Country code default values.
@@ -23,4 +23,9 @@ object Constants {
 
     // Worker
     const val MAXIMUM_SELECTABLE_CATEGORIES = 5
+    const val MAXIMUM_NAME_LENGTH = 20
+
+    val genderOptions = listOf(
+        "Male", "Female", "Other"
+    )
 }

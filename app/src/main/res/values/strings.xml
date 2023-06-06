@@ -76,5 +76,7 @@
     <string name="male">Male</string>
     <string name="female">Female</string>
     <string name="other">Other</string>
+    <string name="error_max_skills_selected">Maximum skills selected</string>
+    <string name="set_default_wages">Set default wages</string>
 
 </resources>

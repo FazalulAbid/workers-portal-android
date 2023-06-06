@@ -9,11 +9,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.input.KeyboardType
@@ -37,7 +41,9 @@ fun StandardTextField(
     singleLine: Boolean = true,
     readOnly: Boolean = false,
     maxLines: Int = 1,
-    keyboardType: KeyboardType = KeyboardType.Text,
+    keyboardActions: KeyboardActions = KeyboardActions(),
+    keyboardOptions: KeyboardOptions = KeyboardOptions(),
+    focusRequester: FocusRequester = FocusRequester()
 ) {
     Column(
         modifier = modifier
@@ -54,10 +60,11 @@ fun StandardTextField(
         BasicTextField(
             modifier = basicTextFieldModifier
                 .background(backgroundColor, MaterialTheme.shapes.medium)
-                .padding(horizontal = SizeSmall),
+                .padding(horizontal = SizeSmall)
+                .focusRequester(focusRequester),
             value = value,
             onValueChange = {
-                if (it.length < maxLength) {
+                if (it.length <= maxLength) {
                     onValueChange(it)
                 }
             },
@@ -83,7 +90,9 @@ fun StandardTextField(
                     }
                     if (trailingIcon != null) trailingIcon()
                 }
-            }
+            },
+            keyboardActions = keyboardActions,
+            keyboardOptions = keyboardOptions
         )
     }
 }

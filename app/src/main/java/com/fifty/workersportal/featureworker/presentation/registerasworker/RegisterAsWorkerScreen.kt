@@ -15,13 +15,19 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.presentation.component.StandardAppBar
 import com.fifty.workersportal.core.presentation.ui.theme.SizeLarge
@@ -29,14 +35,18 @@ import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.featureworker.presentation.component.RegisterPagerNavItem
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun RegisterAsWorkerScreen(
-    onNavigateUp: () -> Unit = {}
+    onNavigateUp: () -> Unit = {},
+    viewModel: RegisterAsWorkerViewModel = hiltViewModel()
 ) {
 
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
+    val focusRequester = remember { FocusRequester() }
+    val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     Column(
         Modifier.fillMaxSize(),
@@ -77,15 +87,25 @@ fun RegisterAsWorkerScreen(
         ) { page ->
             when (page) {
                 0 -> {
-                    PersonalDetailsSection()
+                    PersonalDetailsSection(
+                        viewModel = viewModel,
+                        focusRequester = focusRequester,
+                        focusManager = focusManager,
+                        keyboardController = keyboardController
+                    )
                 }
 
                 1 -> {
-                    SelectSkillsSection()
+                    SelectSkillsSection(viewModel = viewModel)
                 }
 
                 2 -> {
-                    SkillWagesSection()
+                    SkillWagesSection(
+                        viewModel = viewModel,
+                        focusRequester = focusRequester,
+                        focusManager = focusManager,
+                        keyboardController = keyboardController
+                    )
                 }
             }
         }

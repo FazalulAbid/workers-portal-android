@@ -10,6 +10,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
+import kotlin.math.max
 
 @Composable
 fun SecondaryHeader(
@@ -17,7 +18,8 @@ fun SecondaryHeader(
     text: String,
     color: Color = MaterialTheme.colorScheme.onBackground,
     style: TextStyle = MaterialTheme.typography.headlineSmall,
-    fontWeight: FontWeight = FontWeight.Medium
+    fontWeight: FontWeight = FontWeight.Medium,
+    maxLines: Int = 1
 ) {
     Text(
         modifier = modifier
@@ -27,6 +29,7 @@ fun SecondaryHeader(
         style = style.copy(
             fontWeight = fontWeight,
             color = color
-        )
+        ),
+        maxLines = maxLines
     )
 }

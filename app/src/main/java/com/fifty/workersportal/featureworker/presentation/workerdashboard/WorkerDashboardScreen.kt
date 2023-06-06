@@ -99,7 +99,11 @@ fun WorkerDashboardScreen(
             PrimaryHeader(text = stringResource(R.string.worker_dashboard))
             HorizontalDivider()
             Spacer(modifier = Modifier.height(SizeExtraSmall))
-            OpenToWorkSwitch(modifier = Modifier.fillMaxWidth())
+            OpenToWorkSwitch(
+                modifier = Modifier.fillMaxWidth(),
+                checked = false,
+                onCheckedChange = {}
+            )
             Spacer(modifier = Modifier.height(SizeExtraSmall))
             HorizontalDivider()
             SecondaryHeader(

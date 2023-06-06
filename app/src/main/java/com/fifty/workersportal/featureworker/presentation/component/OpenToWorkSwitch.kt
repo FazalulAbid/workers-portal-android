@@ -2,7 +2,6 @@ package com.fifty.workersportal.featureworker.presentation.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
@@ -17,7 +16,9 @@ import com.fifty.workersportal.core.presentation.ui.theme.DarkGreenColor
 
 @Composable
 fun OpenToWorkSwitch(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    checked: Boolean,
+    onCheckedChange: () -> Unit = {}
 ) {
     Row(
         modifier = modifier,
@@ -32,8 +33,8 @@ fun OpenToWorkSwitch(
             )
         )
         Switch(
-            checked = true,
-            onCheckedChange = {},
+            checked = checked,
+            onCheckedChange = { onCheckedChange() },
             colors = SwitchDefaults.colors(
                 uncheckedThumbColor = MaterialTheme.colorScheme.primary,
                 uncheckedBorderColor = MaterialTheme.colorScheme.outline,

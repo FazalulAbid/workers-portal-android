@@ -1,32 +1,25 @@
 package com.fifty.workersportal.featureworker.presentation.registerasworker
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.KeyboardType
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.presentation.component.SecondaryHeader
-import com.fifty.workersportal.core.presentation.component.StandardTextField
-import com.fifty.workersportal.core.presentation.ui.theme.MediumButtonHeight
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
+import com.fifty.workersportal.featureworker.domain.model.WorkerCategory
 import com.fifty.workersportal.featureworker.presentation.component.Chip
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
-import kotlin.random.Random
 
 @Composable
 fun SelectSkillsSection(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: RegisterAsWorkerViewModel
 ) {
     Column(
         modifier = modifier
@@ -45,11 +38,29 @@ fun SelectSkillsSection(
             mainAxisSpacing = SizeMedium,
             crossAxisSpacing = SizeMedium
         ) {
-            repeat(10) {
+            // Sample data
+            val workerCategories = listOf(
+                WorkerCategory("1", "Plumber", "Plumbing", "", 500.0f, 600.0f, "0.0", "0.0"),
+                WorkerCategory("2", "Cleaner", "Cleaning", "", 400.0f, 550.0f, "0.0", "0.0"),
+                WorkerCategory("3", "Electrician", "Electrical", "", 600.0f, 700.0f, "0.0", "0.0"),
+                WorkerCategory("4", "Carpenter", "Carpentry", "", 450.0f, 550.0f, "0.0", "0.0"),
+                WorkerCategory("5", "Gardener", "Gardening", "", 550.0f, 650.0f, "0.0", "0.0"),
+                WorkerCategory("6", "Painter", "Painting", "", 500.0f, 600.0f, "0.0", "0.0"),
+                WorkerCategory("7", "Mover", "Moving", "", 400.0f, 500.0f, "0.0", "0.0"),
+                WorkerCategory("8", "Tutor", "Tutoring", "", 600.0f, 700.0f, "0.0", "0.0"),
+                WorkerCategory("9", "Cook", "Cooking", "", 550.0f, 650.0f, "0.0", "0.0"),
+                WorkerCategory("10", "Mechanic", "Mechanical", "", 500.0f, 600.0f, "0.0", "0.0"),
+                WorkerCategory("11", "IT Technician", "IT Services", "", 700.0f, 800.0f, "0.0", "0.0"),
+                WorkerCategory("12", "Plasterer", "Plastering", "", 400.0f, 500.0f, "0.0", "0.0")
+            )
+
+            workerCategories.forEach { workerCategory ->
                 Chip(
-                    text = "Hello there",
-                    selected = Random.nextBoolean(),
-                    onChipClick = {}
+                    text = workerCategory.name,
+                    selected = viewModel.skillsState.value.selectedSkills.any { it.name == workerCategory.name },
+                    onChipClick = {
+                        viewModel.onEvent(RegisterAsWorkerEvent.SetSkillSelected(workerCategory))
+                    }
                 )
             }
         }

@@ -1,6 +1,5 @@
 package com.fifty.workersportal.featureworker.presentation.registerasworker
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,24 +11,28 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.traceEventStart
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.FocusManager
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.times
 import com.fifty.workersportal.R
@@ -40,21 +43,21 @@ import com.fifty.workersportal.core.presentation.ui.theme.MediumButtonHeight
 import com.fifty.workersportal.core.presentation.ui.theme.SizeExtraSmall
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
+import com.fifty.workersportal.core.util.Constants
+import com.fifty.workersportal.core.util.Constants.genderOptions
 import com.fifty.workersportal.featureworker.presentation.component.OpenToWorkSwitch
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun PersonalDetailsSection(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: RegisterAsWorkerViewModel,
+    focusRequester: FocusRequester,
+    focusManager: FocusManager,
+    keyboardController: SoftwareKeyboardController?
 ) {
 
-    val genderOptions = listOf(
-        stringResource(id = R.string.male),
-        stringResource(id = R.string.female),
-        stringResource(id = R.string.other),
-    )
     var genderDropDownExpanded by remember { mutableStateOf(false) }
-    var genderDropDownSelectedOption by remember { mutableStateOf(genderOptions[0]) }
 
     LazyColumn(
         modifier = modifier.fillMaxSize()
@@ -66,7 +69,13 @@ fun PersonalDetailsSection(
                     .fillMaxSize()
             ) {
                 Spacer(modifier = Modifier.height(SizeExtraSmall))
-                OpenToWorkSwitch(modifier = Modifier.fillMaxWidth())
+                OpenToWorkSwitch(
+                    modifier = Modifier.fillMaxWidth(),
+                    checked = viewModel.openToWorkState.value,
+                    onCheckedChange = {
+                        viewModel.onEvent(RegisterAsWorkerEvent.ToggleOpenToWork)
+                    }
+                )
                 Spacer(modifier = Modifier.height(SizeExtraSmall))
                 SecondaryHeader(
                     text = stringResource(R.string.enter_your_personal_info),
@@ -81,10 +90,23 @@ fun PersonalDetailsSection(
                                 .height(MediumButtonHeight)
                                 .fillMaxWidth(),
                             hint = stringResource(R.string.first_name),
-                            value = "",
-                            onValueChange = {},
+                            value = viewModel.firstNameState.value.text,
+                            onValueChange = {
+                                viewModel.onEvent(
+                                    RegisterAsWorkerEvent.EnterFirstName(it)
+                                )
+                            },
+                            maxLength = Constants.MAXIMUM_NAME_LENGTH,
                             titleHint = true,
-                            keyboardType = KeyboardType.Decimal
+                            focusRequester = focusRequester,
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Text,
+                                imeAction = ImeAction.Next,
+                                capitalization = KeyboardCapitalization.Words
+                            ),
+                            keyboardActions = KeyboardActions(
+                                onNext = { focusManager.moveFocus(FocusDirection.Next) }
+                            )
                         )
                     }
                     Spacer(modifier = Modifier.width(SizeMedium))
@@ -94,10 +116,23 @@ fun PersonalDetailsSection(
                                 .height(MediumButtonHeight)
                                 .fillMaxWidth(),
                             hint = stringResource(R.string.last_name),
-                            value = "",
-                            onValueChange = {},
+                            maxLength = Constants.MAXIMUM_NAME_LENGTH,
+                            value = viewModel.lastNameState.value.text,
+                            onValueChange = {
+                                viewModel.onEvent(
+                                    RegisterAsWorkerEvent.EnterLastName(it)
+                                )
+                            },
                             titleHint = true,
-                            keyboardType = KeyboardType.Decimal
+                            focusRequester = focusRequester,
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Text,
+                                imeAction = ImeAction.Next,
+                                capitalization = KeyboardCapitalization.Words
+                            ),
+                            keyboardActions = KeyboardActions(
+                                onNext = { focusManager.moveFocus(FocusDirection.Next) }
+                            )
                         )
                     }
                 }
@@ -107,10 +142,21 @@ fun PersonalDetailsSection(
                         .height(MediumButtonHeight)
                         .fillMaxWidth(),
                     hint = stringResource(R.string.email),
-                    value = "",
-                    onValueChange = {},
+                    value = viewModel.emailState.value.text,
+                    onValueChange = {
+                        viewModel.onEvent(
+                            RegisterAsWorkerEvent.EnterEmail(it)
+                        )
+                    },
                     titleHint = true,
-                    keyboardType = KeyboardType.Email
+                    focusRequester = focusRequester,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Email,
+                        imeAction = ImeAction.Next
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onNext = { focusManager.moveFocus(FocusDirection.Next) }
+                    )
                 )
                 Spacer(modifier = Modifier.height(SizeMedium))
                 StandardTextField(
@@ -119,10 +165,23 @@ fun PersonalDetailsSection(
                         .heightIn(min = MediumButtonHeight, max = (3f * MediumButtonHeight))
                         .padding(vertical = SizeSmall),
                     hint = stringResource(R.string.bio),
-                    value = "",
-                    onValueChange = {},
+                    focusRequester = focusRequester,
+                    value = viewModel.bioState.value.text,
+                    onValueChange = {
+                        viewModel.onEvent(
+                            RegisterAsWorkerEvent.EnterBio(it)
+                        )
+                    },
                     titleHint = true,
                     singleLine = false,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Next,
+                        capitalization = KeyboardCapitalization.Sentences
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onNext = { focusRequester.requestFocus() }
+                    )
                 )
                 Spacer(modifier = Modifier.height(SizeMedium))
                 Row(
@@ -137,8 +196,12 @@ fun PersonalDetailsSection(
                             isTitleHintNeeded = true,
                             expandedState = genderDropDownExpanded,
                             onExpandedChange = { genderDropDownExpanded = it },
-                            selectedOption = genderDropDownSelectedOption,
-                            onOptionSelected = { genderDropDownSelectedOption = it }
+                            selectedOption = viewModel.genderState.value,
+                            onOptionSelected = {
+                                viewModel.onEvent(
+                                    RegisterAsWorkerEvent.GenderSelectedChanged(it)
+                                )
+                            }
                         )
                     }
                     Spacer(modifier = Modifier.width(SizeMedium))
@@ -148,11 +211,22 @@ fun PersonalDetailsSection(
                                 .height(MediumButtonHeight)
                                 .fillMaxWidth(),
                             hint = stringResource(R.string.age),
-                            value = "",
-                            onValueChange = {},
+                            focusRequester = focusRequester,
+                            value = viewModel.ageState.value.text,
+                            onValueChange = {
+                                viewModel.onEvent(
+                                    RegisterAsWorkerEvent.EnterAge(it)
+                                )
+                            },
                             titleHint = true,
-                            keyboardType = KeyboardType.Number,
-                            maxLength = 2
+                            maxLength = 2,
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Number,
+                                imeAction = ImeAction.Done
+                            ),
+                            keyboardActions = KeyboardActions(
+                                onDone = { keyboardController?.hide() }
+                            )
                         )
                     }
                 }

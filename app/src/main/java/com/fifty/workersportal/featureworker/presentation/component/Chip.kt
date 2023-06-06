@@ -20,7 +20,7 @@ import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
 fun Chip(
     text: String,
     modifier: Modifier = Modifier,
-    textStyle: TextStyle = MaterialTheme.typography.bodyMedium,
+    textStyle: TextStyle = MaterialTheme.typography.bodyLarge,
     selected: Boolean = false,
     selectedTextColor: Color = MaterialTheme.colorScheme.onSecondary,
     unselectedTextColor: Color = MaterialTheme.colorScheme.onSurface,
