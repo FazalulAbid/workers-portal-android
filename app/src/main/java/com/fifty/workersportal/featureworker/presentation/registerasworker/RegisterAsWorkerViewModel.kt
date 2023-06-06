@@ -1,15 +1,16 @@
 package com.fifty.workersportal.featureworker.presentation.registerasworker
 
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fifty.workersportal.core.domain.state.StandardTextFieldState
+import com.fifty.workersportal.core.domain.util.ValidationUtil
 import com.fifty.workersportal.core.presentation.util.UiEvent
 import com.fifty.workersportal.core.util.Constants.genderOptions
 import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.UiText
+import com.fifty.workersportal.featureworker.domain.model.UpdateWorkerData
 import com.fifty.workersportal.featureworker.domain.usecase.RegisterAsWorkerUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -148,9 +149,32 @@ class RegisterAsWorkerViewModel @Inject constructor(
                 setDefaultWages()
             }
 
-            RegisterAsWorkerEvent.RegisterAsWorker -> {
-
+            RegisterAsWorkerEvent.UpdateWorker -> {
+                updateWorker()
             }
+        }
+    }
+
+    private fun updateWorker() {
+        viewModelScope.launch {
+            _firstNameState.value = firstNameState.value.copy(error = null)
+            _emailState.value = emailState.value.copy(error = null)
+            _bioState.value = bioState.value.copy(error = null)
+            _ageState.value = bioState.value.copy(error = null)
+            _skillsState.value = skillsState.value.copy(error = null)
+            validateCategoryWages()
+            val updateWorkerResult = registerAsWorkerUseCases.updateWorker(
+                UpdateWorkerData(
+                    openToWork = _openToWorkState.value,
+                    firstName = _firstNameState.value.text,
+                    lastName = _lastNameState.value.text,
+                    email = _emailState.value.text,
+                    bio = _bioState.value.text,
+                    gender = _genderState.value,
+                    age = _ageState.value.text.toInt(),
+                    categoryList = _skillsState.value.selectedSkills
+                )
+            )
         }
     }
 
@@ -161,6 +185,24 @@ class RegisterAsWorkerViewModel @Inject constructor(
                 updatedSkills[index].copy(
                     dailyWage = updatedSkills[index].minHourlyWage.toString(),
                     hourlyWage = updatedSkills[index].minDailyWage.toString()
+                )
+            _skillsState.value = skillsState.value.copy(selectedSkills = updatedSkills)
+        }
+    }
+
+    private fun validateCategoryWages() {
+        val updatedSkills = skillsState.value.selectedSkills.toMutableList()
+        for (index in updatedSkills.indices) {
+            updatedSkills[index] =
+                updatedSkills[index].copy(
+                    dailyWage = ValidationUtil.validateWage(
+                        updatedSkills[index].dailyWage,
+                        updatedSkills[index].minDailyWage
+                    ).toString(),
+                    hourlyWage = ValidationUtil.validateWage(
+                        updatedSkills[index].hourlyWage,
+                        updatedSkills[index].minHourlyWage
+                    ).toString(),
                 )
             _skillsState.value = skillsState.value.copy(selectedSkills = updatedSkills)
         }

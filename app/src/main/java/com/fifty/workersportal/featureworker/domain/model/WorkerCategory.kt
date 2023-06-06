@@ -1,5 +1,7 @@
 package com.fifty.workersportal.featureworker.domain.model
 
+import com.fifty.workersportal.featureworker.data.remote.dto.WorkerCategoryDto
+
 data class WorkerCategory(
     val id: String,
     val name: String,

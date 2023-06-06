@@ -41,7 +41,6 @@ fun RegisterAsWorkerScreen(
     onNavigateUp: () -> Unit = {},
     viewModel: RegisterAsWorkerViewModel = hiltViewModel()
 ) {
-
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
     val focusRequester = remember { FocusRequester() }
@@ -103,8 +102,7 @@ fun RegisterAsWorkerScreen(
                     SkillWagesSection(
                         viewModel = viewModel,
                         focusRequester = focusRequester,
-                        focusManager = focusManager,
-                        keyboardController = keyboardController
+                        focusManager = focusManager
                     )
                 }
             }

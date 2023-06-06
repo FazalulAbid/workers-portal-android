@@ -1,10 +1,10 @@
 package com.fifty.workersportal.featureworker.domain.usecase
 
 import com.fifty.workersportal.R
+import com.fifty.workersportal.core.util.Constants
 import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.UiText
 import com.fifty.workersportal.featureworker.domain.model.WorkerCategory
-import com.fifty.workersportal.featureworker.domain.util.WorkerConstants
 
 class SetSkillSelectedUseCase {
 
@@ -16,7 +16,7 @@ class SetSkillSelectedUseCase {
         if (skillInList != null) {
             return Resource.Success(selectedSkills - skillInList)
         }
-        return if (selectedSkills.size >= WorkerConstants.MAX_SELECTED_SKILL_COUNT) {
+        return if (selectedSkills.size >= Constants.MAX_SELECTED_SKILL_COUNT) {
             Resource.Error(
                 uiText = UiText.StringResource(
                     R.string.error_max_skills_selected

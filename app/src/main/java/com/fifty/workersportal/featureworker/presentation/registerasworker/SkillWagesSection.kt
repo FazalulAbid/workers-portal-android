@@ -43,8 +43,7 @@ fun SkillWagesSection(
     modifier: Modifier = Modifier,
     viewModel: RegisterAsWorkerViewModel,
     focusRequester: FocusRequester,
-    focusManager: FocusManager,
-    keyboardController: SoftwareKeyboardController?
+    focusManager: FocusManager
 ) {
     val selectedSkills = viewModel.skillsState.value.selectedSkills
 

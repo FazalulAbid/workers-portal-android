@@ -22,8 +22,12 @@ object Constants {
     const val DEFAULT_COUNTRY_FLAG_URL = "https://flagcdn.com/w320/in.png"
 
     // Worker
+    const val MAX_SELECTED_SKILL_COUNT = 5
     const val MAXIMUM_SELECTABLE_CATEGORIES = 5
     const val MAXIMUM_NAME_LENGTH = 20
+    const val MINIMUM_NAME_LENGTH = 3
+    const val MAXIMUM_WORKER_AGE = 70
+    const val MINIMUM_WORKER_AGE = 70
 
     val genderOptions = listOf(
         "Male", "Female", "Other"

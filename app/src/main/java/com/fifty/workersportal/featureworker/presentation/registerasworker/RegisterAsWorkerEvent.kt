@@ -18,5 +18,5 @@ sealed class RegisterAsWorkerEvent {
 
     object SetDefaultWages : RegisterAsWorkerEvent()
     object ToggleOpenToWork : RegisterAsWorkerEvent()
-    object RegisterAsWorker : RegisterAsWorkerEvent()
+    object UpdateWorker : RegisterAsWorkerEvent()
 }

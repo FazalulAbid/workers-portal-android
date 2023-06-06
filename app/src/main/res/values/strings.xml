@@ -78,5 +78,9 @@
     <string name="other">Other</string>
     <string name="error_max_skills_selected">Maximum skills selected</string>
     <string name="set_default_wages">Set default wages</string>
+    <string name="enter_a_valid_first_name">Enter a valid first name</string>
+    <string name="enter_a_valid_email">Enter a valid email</string>
+    <string name="bio_can_t_be_empty">Bio can\'t be empty</string>
+    <string name="enter_a_valid_age">Enter a valid age</string>
 
 </resources>
