@@ -88,5 +88,8 @@
     <string name="enter_a_valid_bio">Enter a valid bio</string>
     <string name="you_can_customize_your_wages_from_the_next_page">You can customize your wages from the next page</string>
     <string name="select_your_primary_skill">Select your primary skill</string>
+    <string name="thank_you_for_registering_as_a_worker">Thank you for registering as a worker</string>
+    <string name="your_registration_has_been_successfully_submitted">Your registration has been successfully submitted. Now you can accept work proposals from your worker dashboard.</string>
+    <string name="go_to_dashboard">Go to dashboard</string>
 
 </resources>

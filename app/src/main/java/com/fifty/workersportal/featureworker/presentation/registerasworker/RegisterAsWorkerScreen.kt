@@ -16,6 +16,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -33,7 +35,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.presentation.component.StandardAppBar
 import com.fifty.workersportal.core.presentation.component.StandardBottomSheet
+import com.fifty.workersportal.core.presentation.component.SuccessDialogContent
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
+import com.fifty.workersportal.core.presentation.util.AnimatedTransitionDialogEntryOnly
 import com.fifty.workersportal.core.presentation.util.UiEvent
 import com.fifty.workersportal.core.presentation.util.asString
 import com.fifty.workersportal.core.presentation.util.makeToast
@@ -71,6 +75,13 @@ fun RegisterAsWorkerScreen(
 
                 else -> Unit
             }
+        }
+    }
+
+    LaunchedEffect(key1 = true) {
+        viewModel.onUpdate.collectLatest {
+            bottomSheetState.hide()
+            viewModel.isRegisterCompleteDialogDisplayed.postValue(true)
         }
     }
 
@@ -121,6 +132,11 @@ fun RegisterAsWorkerScreen(
                     keyboardController?.hide()
                     pagerState.animateScrollToPage(2)
                 }
+
+                WorkerError.NoPrimarySkillSelected -> {
+                    makeToast(R.string.select_your_primary_skill, context)
+                    bottomSheetState.partialExpand()
+                }
             }
         }
     }
@@ -143,10 +159,7 @@ fun RegisterAsWorkerScreen(
             },
             navActions = {
                 IconButton(onClick = {
-//                    viewModel.onEvent(RegisterAsWorkerEvent.UpdateWorker)
-                    coroutineScope.launch {
-                        bottomSheetState.partialExpand()
-                    }
+                    viewModel.onEvent(RegisterAsWorkerEvent.UpdateWorker)
                 }) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_done),
@@ -222,8 +235,32 @@ fun RegisterAsWorkerScreen(
                 viewModel.onEvent(RegisterAsWorkerEvent.PrimarySkillSelected(it))
             },
             onSaveChanges = {
-
+                coroutineScope.launch {
+                    viewModel.onEvent(RegisterAsWorkerEvent.UpdateWorker)
+                }
             }
         )
+    }
+
+    val isRegisterCompleteDialogDisplayed by viewModel
+        .isRegisterCompleteDialogDisplayed
+        .observeAsState(false)
+
+    if (isRegisterCompleteDialogDisplayed) {
+        AnimatedTransitionDialogEntryOnly(
+            onDismissRequest = {
+                viewModel.isRegisterCompleteDialogDisplayed.postValue(false)
+            }
+        ) {
+            SuccessDialogContent(
+                painter = painterResource(id = R.drawable.plumber_profile),
+                title = stringResource(R.string.thank_you_for_registering_as_a_worker),
+                description = stringResource(R.string.your_registration_has_been_successfully_submitted),
+                buttonText = stringResource(R.string.go_to_dashboard),
+                onButtonClick = {
+                    viewModel.isRegisterCompleteDialogDisplayed.postValue(false)
+                }
+            )
+        }
     }
 }

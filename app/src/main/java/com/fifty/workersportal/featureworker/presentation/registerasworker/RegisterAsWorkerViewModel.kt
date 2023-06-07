@@ -1,8 +1,8 @@
 package com.fifty.workersportal.featureworker.presentation.registerasworker
 
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fifty.workersportal.R
@@ -26,6 +26,8 @@ import javax.inject.Inject
 class RegisterAsWorkerViewModel @Inject constructor(
     private val registerAsWorkerUseCases: RegisterAsWorkerUseCases
 ) : ViewModel() {
+
+    val isRegisterCompleteDialogDisplayed = MutableLiveData(false)
 
     private val _openToWorkState = mutableStateOf(true)
     val openToWorkState: State<Boolean> = _openToWorkState
@@ -175,7 +177,14 @@ class RegisterAsWorkerViewModel @Inject constructor(
         }
     }
 
+    private fun setWorkerCategoryAsPrimary(workerCategory: WorkerCategory) {
+        _primarySkill.value = workerCategory
+    }
+
     private fun updateWorker() {
+        if (_skillsState.value.selectedSkills.size == 1) {
+            setWorkerCategoryAsPrimary(_skillsState.value.selectedSkills.first())
+        }
         viewModelScope.launch {
             _firstNameState.value = firstNameState.value.copy(error = null)
             _emailState.value = emailState.value.copy(error = null)
@@ -194,7 +203,8 @@ class RegisterAsWorkerViewModel @Inject constructor(
                     bio = _bioState.value.text,
                     gender = _genderState.value,
                     age = if (_ageState.value.text.isBlank()) 0 else _ageState.value.text.toInt(),
-                    categoryList = _skillsState.value.selectedSkills
+                    categoryList = _skillsState.value.selectedSkills,
+                    primarySkill = _primarySkill.value
                 )
             )
 
@@ -221,6 +231,10 @@ class RegisterAsWorkerViewModel @Inject constructor(
             } else if (updateWorkerResult.skillsWageError != null) {
                 _errorFlow.emit(
                     updateWorkerResult.skillsWageError
+                )
+            } else if (updateWorkerResult.primarySkillError != null) {
+                _errorFlow.emit(
+                    updateWorkerResult.primarySkillError
                 )
             }
 

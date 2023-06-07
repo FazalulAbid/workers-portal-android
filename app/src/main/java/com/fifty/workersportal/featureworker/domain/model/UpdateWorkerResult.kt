@@ -9,6 +9,7 @@ data class UpdateWorkerResult(
     val bioError: WorkerError? = null,
     val ageError: WorkerError? = null,
     val skillsError: WorkerError? = null,
+    val primarySkillError: WorkerError? = null,
     val skillsWageError: WorkerError? = null,
     val unknownError: WorkerError? = null,
     val result: SimpleResource? = null

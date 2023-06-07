@@ -10,5 +10,6 @@ sealed class WorkerError : Error() {
     object InvalidAge : WorkerError()
     object InvalidBio : WorkerError()
     object NoSkillSelected : WorkerError()
+    object NoPrimarySkillSelected : WorkerError()
     object SkillWageError : WorkerError()
 }

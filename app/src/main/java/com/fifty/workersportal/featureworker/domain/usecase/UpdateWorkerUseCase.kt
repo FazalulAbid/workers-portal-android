@@ -20,16 +20,23 @@ class UpdateWorkerUseCase(
         val bioError = if (updateWorkerData.bio.isBlank()) WorkerError.InvalidBio else null
         val skillsError =
             if (updateWorkerData.categoryList.isEmpty()) WorkerError.NoSkillSelected else null
+        val primarySkillError =
+            if (updateWorkerData.primarySkill == null ||
+                !updateWorkerData.categoryList.any { it == updateWorkerData.primarySkill }
+            ) {
+                WorkerError.NoPrimarySkillSelected
+            } else null
 
         if (firstNameError != null || emailError != null ||
-            ageError != null || bioError != null || skillsError != null
+            ageError != null || bioError != null || skillsError != null || primarySkillError != null
         ) {
             return UpdateWorkerResult(
                 firstNameError = firstNameError,
                 emailError = emailError,
                 bioError = bioError,
                 ageError = ageError,
-                skillsError = skillsError
+                skillsError = skillsError,
+                primarySkillError = primarySkillError
             )
         }
 
