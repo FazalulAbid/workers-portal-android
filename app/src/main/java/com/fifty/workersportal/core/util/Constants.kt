@@ -27,7 +27,7 @@ object Constants {
     const val MAXIMUM_NAME_LENGTH = 20
     const val MINIMUM_NAME_LENGTH = 3
     const val MAXIMUM_WORKER_AGE = 70
-    const val MINIMUM_WORKER_AGE = 70
+    const val MINIMUM_WORKER_AGE = 18
 
     val genderOptions = listOf(
         "Male", "Female", "Other"

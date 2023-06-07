@@ -52,7 +52,10 @@ import com.fifty.workersportal.featureworker.presentation.component.OpenToWorkSw
 fun PersonalDetailsSection(
     modifier: Modifier = Modifier,
     viewModel: RegisterAsWorkerViewModel,
-    focusRequester: FocusRequester,
+    firstNameFocusRequester: FocusRequester,
+    emailFocusRequester: FocusRequester,
+    bioFocusRequester: FocusRequester,
+    ageFocusRequester: FocusRequester,
     focusManager: FocusManager,
     keyboardController: SoftwareKeyboardController?
 ) {
@@ -98,7 +101,7 @@ fun PersonalDetailsSection(
                             },
                             maxLength = Constants.MAXIMUM_NAME_LENGTH,
                             titleHint = true,
-                            focusRequester = focusRequester,
+                            focusRequester = firstNameFocusRequester,
                             keyboardOptions = KeyboardOptions(
                                 keyboardType = KeyboardType.Text,
                                 imeAction = ImeAction.Next,
@@ -124,7 +127,6 @@ fun PersonalDetailsSection(
                                 )
                             },
                             titleHint = true,
-                            focusRequester = focusRequester,
                             keyboardOptions = KeyboardOptions(
                                 keyboardType = KeyboardType.Text,
                                 imeAction = ImeAction.Next,
@@ -149,7 +151,7 @@ fun PersonalDetailsSection(
                         )
                     },
                     titleHint = true,
-                    focusRequester = focusRequester,
+                    focusRequester = emailFocusRequester,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Email,
                         imeAction = ImeAction.Next
@@ -165,7 +167,7 @@ fun PersonalDetailsSection(
                         .heightIn(min = MediumButtonHeight, max = (3f * MediumButtonHeight))
                         .padding(vertical = SizeSmall),
                     hint = stringResource(R.string.bio),
-                    focusRequester = focusRequester,
+                    focusRequester = bioFocusRequester,
                     value = viewModel.bioState.value.text,
                     onValueChange = {
                         viewModel.onEvent(
@@ -180,7 +182,7 @@ fun PersonalDetailsSection(
                         capitalization = KeyboardCapitalization.Sentences
                     ),
                     keyboardActions = KeyboardActions(
-                        onNext = { focusRequester.requestFocus() }
+                        onNext = { focusManager.moveFocus(FocusDirection.Next) }
                     )
                 )
                 Spacer(modifier = Modifier.height(SizeMedium))
@@ -211,7 +213,7 @@ fun PersonalDetailsSection(
                                 .height(MediumButtonHeight)
                                 .fillMaxWidth(),
                             hint = stringResource(R.string.age),
-                            focusRequester = focusRequester,
+                            focusRequester = ageFocusRequester,
                             value = viewModel.ageState.value.text,
                             onValueChange = {
                                 viewModel.onEvent(

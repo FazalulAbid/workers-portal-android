@@ -1,5 +1,6 @@
 package com.fifty.workersportal.featureworker.domain.usecase
 
+import android.util.Log
 import com.fifty.workersportal.core.domain.util.ValidationUtil
 import com.fifty.workersportal.featureworker.data.remote.dto.WorkerCategoryDto
 import com.fifty.workersportal.featureworker.data.remote.request.UpdateWorkerRequest
@@ -12,10 +13,11 @@ class UpdateWorkerUseCase(
     private val repository: WorkerRepository
 ) {
     suspend operator fun invoke(updateWorkerData: UpdateWorkerData): UpdateWorkerResult {
+        Log.d("Hello", "invoke: UpdateWorkerUseCase worked")
         val firstNameError = ValidationUtil.validateFirstName(updateWorkerData.firstName)
         val emailError = ValidationUtil.validateEmail(updateWorkerData.email)
         val ageError = ValidationUtil.validateWorkerAge(updateWorkerData.age)
-        val bioError = if (updateWorkerData.bio.isBlank()) WorkerError.FieldEmpty else null
+        val bioError = if (updateWorkerData.bio.isBlank()) WorkerError.InvalidBio else null
         val skillsError =
             if (updateWorkerData.categoryList.isEmpty()) WorkerError.NoSkillSelected else null
 

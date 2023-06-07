@@ -8,6 +8,7 @@ sealed class WorkerError : Error() {
     object InvalidEmail : WorkerError()
     object InvalidFirstName : WorkerError()
     object InvalidAge : WorkerError()
+    object InvalidBio : WorkerError()
     object NoSkillSelected : WorkerError()
     object SkillWageError : WorkerError()
 }

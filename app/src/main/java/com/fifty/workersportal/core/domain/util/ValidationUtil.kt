@@ -1,5 +1,6 @@
 package com.fifty.workersportal.core.domain.util
 
+import android.util.Log
 import android.util.Patterns
 import com.fifty.workersportal.core.util.Constants
 import com.fifty.workersportal.featureworker.util.WorkerError

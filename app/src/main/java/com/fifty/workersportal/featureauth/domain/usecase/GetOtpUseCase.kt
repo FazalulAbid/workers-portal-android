@@ -17,7 +17,7 @@ class GetOtpUseCase(
     ): SimpleResource {
         val regex = Regex("^\\d{10}$")
         if (phoneNumber.isBlank()) {
-            return Resource.Error(UiText.StringResource(R.string.this_field_cant_be_empty))
+            return Resource.Error(UiText.StringResource(R.string.error_this_field_cant_be_empty))
         }
         if (!Patterns.PHONE.matcher(phoneNumber.trim())
                 .matches() || phoneNumber.trim().length != Constants.DEFAULT_PHONE_NUMBER_LENGTH ||

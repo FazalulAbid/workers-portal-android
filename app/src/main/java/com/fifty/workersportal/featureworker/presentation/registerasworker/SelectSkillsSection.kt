@@ -1,15 +1,19 @@
 package com.fifty.workersportal.featureworker.presentation.registerasworker
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.presentation.component.SecondaryHeader
+import com.fifty.workersportal.core.presentation.ui.theme.SizeLarge
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.featureworker.domain.model.WorkerCategory
 import com.fifty.workersportal.featureworker.presentation.component.Chip
@@ -32,6 +36,11 @@ fun SelectSkillsSection(
             text = stringResource(R.string.select_your_skills),
             style = MaterialTheme.typography.titleMedium
         )
+        Text(
+            text = stringResource(id = R.string.you_can_customize_your_wages_from_the_next_page),
+            color = MaterialTheme.colorScheme.primary
+        )
+        Spacer(modifier = Modifier.height(SizeLarge))
         FlowRow(
             modifier = Modifier.fillMaxWidth(),
             mainAxisAlignment = MainAxisAlignment.Start,
@@ -50,7 +59,16 @@ fun SelectSkillsSection(
                 WorkerCategory("8", "Tutor", "Tutoring", "", 600.0f, 700.0f, "0.0", "0.0"),
                 WorkerCategory("9", "Cook", "Cooking", "", 550.0f, 650.0f, "0.0", "0.0"),
                 WorkerCategory("10", "Mechanic", "Mechanical", "", 500.0f, 600.0f, "0.0", "0.0"),
-                WorkerCategory("11", "IT Technician", "IT Services", "", 700.0f, 800.0f, "0.0", "0.0"),
+                WorkerCategory(
+                    "11",
+                    "IT Technician",
+                    "IT Services",
+                    "",
+                    700.0f,
+                    800.0f,
+                    "0.0",
+                    "0.0"
+                ),
                 WorkerCategory("12", "Plasterer", "Plastering", "", 400.0f, 500.0f, "0.0", "0.0")
             )
 

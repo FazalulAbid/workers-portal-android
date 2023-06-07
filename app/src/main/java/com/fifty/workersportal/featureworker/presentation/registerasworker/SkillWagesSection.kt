@@ -37,12 +37,10 @@ import com.fifty.workersportal.core.presentation.component.StandardTextField
 import com.fifty.workersportal.core.presentation.ui.theme.MediumButtonHeight
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun SkillWagesSection(
     modifier: Modifier = Modifier,
     viewModel: RegisterAsWorkerViewModel,
-    focusRequester: FocusRequester,
     focusManager: FocusManager
 ) {
     val selectedSkills = viewModel.skillsState.value.selectedSkills
@@ -95,7 +93,6 @@ fun SkillWagesSection(
                             titleHint = true,
                             maxLines = 3,
                             maxLength = 6,
-                            focusRequester = focusRequester,
                             keyboardOptions = KeyboardOptions(
                                 keyboardType = KeyboardType.Decimal,
                                 imeAction = ImeAction.Next,
@@ -121,7 +118,6 @@ fun SkillWagesSection(
                             titleHint = true,
                             maxLines = 3,
                             maxLength = 6,
-                            focusRequester = focusRequester,
                             keyboardOptions = KeyboardOptions(
                                 keyboardType = KeyboardType.Decimal,
                                 imeAction = ImeAction.Next,

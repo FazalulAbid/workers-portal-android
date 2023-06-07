@@ -10,5 +10,6 @@ data class UpdateWorkerResult(
     val ageError: WorkerError? = null,
     val skillsError: WorkerError? = null,
     val skillsWageError: WorkerError? = null,
+    val unknownError: WorkerError? = null,
     val result: SimpleResource? = null
 )
