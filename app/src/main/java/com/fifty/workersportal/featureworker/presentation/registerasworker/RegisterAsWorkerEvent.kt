@@ -10,6 +10,7 @@ sealed class RegisterAsWorkerEvent {
     data class GenderSelectedChanged(val gender: String) : RegisterAsWorkerEvent()
     data class EnterAge(val age: String) : RegisterAsWorkerEvent()
     data class SetSkillSelected(val workerCategory: WorkerCategory) : RegisterAsWorkerEvent()
+    data class PrimarySkillSelected(val workerCategory: WorkerCategory) : RegisterAsWorkerEvent()
     data class EnterSelectedSkillDailyWage(val index: Int, val dailyWage: String) :
         RegisterAsWorkerEvent()
 

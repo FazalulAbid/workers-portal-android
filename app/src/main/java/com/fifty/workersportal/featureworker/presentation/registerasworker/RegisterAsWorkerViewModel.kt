@@ -13,6 +13,7 @@ import com.fifty.workersportal.core.util.Constants.genderOptions
 import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.UiText
 import com.fifty.workersportal.featureworker.domain.model.UpdateWorkerData
+import com.fifty.workersportal.featureworker.domain.model.WorkerCategory
 import com.fifty.workersportal.featureworker.domain.usecase.RegisterAsWorkerUseCases
 import com.fifty.workersportal.featureworker.util.WorkerError
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -49,6 +50,9 @@ class RegisterAsWorkerViewModel @Inject constructor(
 
     private val _skillsState = mutableStateOf(SkillsState())
     val skillsState: State<SkillsState> = _skillsState
+
+    private val _primarySkill = mutableStateOf<WorkerCategory?>(null)
+    val primarySkill: State<WorkerCategory?> = _primarySkill
 
     private val _updateWorkerState = mutableStateOf(UpdateWorkerState())
     val updateWorkerState: State<UpdateWorkerState> = _updateWorkerState
@@ -127,6 +131,10 @@ class RegisterAsWorkerViewModel @Inject constructor(
                         }
                     }
                 }
+            }
+
+            is RegisterAsWorkerEvent.PrimarySkillSelected -> {
+                _primarySkill.value = event.workerCategory
             }
 
             is RegisterAsWorkerEvent.EnterSelectedSkillDailyWage -> {

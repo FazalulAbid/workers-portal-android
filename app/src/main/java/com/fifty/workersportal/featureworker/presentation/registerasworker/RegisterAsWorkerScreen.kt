@@ -1,17 +1,19 @@
 package com.fifty.workersportal.featureworker.presentation.registerasworker
 
-import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -26,9 +28,11 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.presentation.component.StandardAppBar
+import com.fifty.workersportal.core.presentation.component.StandardBottomSheet
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.util.UiEvent
 import com.fifty.workersportal.core.presentation.util.asString
@@ -38,12 +42,16 @@ import com.fifty.workersportal.featureworker.util.WorkerError
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
+@OptIn(
+    ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class,
+    ExperimentalMaterial3Api::class
+)
 @Composable
 fun RegisterAsWorkerScreen(
     onNavigateUp: () -> Unit = {},
     viewModel: RegisterAsWorkerViewModel = hiltViewModel()
 ) {
+    val bottomSheetState = rememberModalBottomSheetState()
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
     val firstNameFocusRequester = remember { FocusRequester() }
@@ -135,7 +143,10 @@ fun RegisterAsWorkerScreen(
             },
             navActions = {
                 IconButton(onClick = {
-                    viewModel.onEvent(RegisterAsWorkerEvent.UpdateWorker)
+//                    viewModel.onEvent(RegisterAsWorkerEvent.UpdateWorker)
+                    coroutineScope.launch {
+                        bottomSheetState.partialExpand()
+                    }
                 }) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_done),
@@ -193,5 +204,26 @@ fun RegisterAsWorkerScreen(
                 }
             }
         }
+    }
+
+    StandardBottomSheet(
+        modifier = Modifier.heightIn(max = 400.dp),
+        sheetState = bottomSheetState,
+        onDismiss = {
+            coroutineScope.launch {
+                bottomSheetState.hide()
+            }
+        }
+    ) {
+        RegisterAsWorkerBottomSheetContent(
+            chosenSkills = viewModel.skillsState.value.selectedSkills,
+            primarySkillSelected = viewModel.primarySkill.value,
+            setSelected = {
+                viewModel.onEvent(RegisterAsWorkerEvent.PrimarySkillSelected(it))
+            },
+            onSaveChanges = {
+
+            }
+        )
     }
 }
