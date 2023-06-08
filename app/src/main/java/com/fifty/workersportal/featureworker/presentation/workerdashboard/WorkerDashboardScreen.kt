@@ -21,6 +21,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import com.fifty.workersportal.R
+import com.fifty.workersportal.core.presentation.component.DashboardNavigationAndProfile
 import com.fifty.workersportal.core.presentation.component.HorizontalDivider
 import com.fifty.workersportal.core.presentation.component.PrimaryHeader
 import com.fifty.workersportal.core.presentation.component.SecondaryHeader
@@ -49,53 +50,7 @@ fun WorkerDashboardScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column(
-                    modifier = Modifier
-                        .weight(1f),
-                    verticalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            modifier = Modifier.size(SizeLarge),
-                            painter = painterResource(id = R.drawable.ic_near_me),
-                            contentDescription = stringResource(R.string.selected_address),
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                        Spacer(modifier = Modifier.width(SizeExtraSmall))
-                        Text(
-                            text = "Ernakulam",
-                            style = MaterialTheme.typography.bodyLarge.copy(
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onBackground
-                            )
-                        )
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_expand_more),
-                            contentDescription = "",
-                            tint = MaterialTheme.colorScheme.onBackground
-                        )
-                    }
-                    Text(
-                        text = "Vikas Nagas, Maradu, Ernakulam",
-                        style = MaterialTheme.typography.bodyMedium.copy(
-                            fontWeight = FontWeight.Normal,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                    )
-                }
-                Spacer(modifier = Modifier.width(SizeMedium))
-                Image(
-                    modifier = Modifier.size(SmallProfilePictureHeight),
-                    painter = painterResource(id = R.drawable.test_man_profile),
-                    contentDescription = stringResource(R.string.profile_picture)
-                )
-            }
+            DashboardNavigationAndProfile()
             PrimaryHeader(text = stringResource(R.string.worker_dashboard))
             HorizontalDivider()
             Spacer(modifier = Modifier.height(SizeExtraSmall))

@@ -1,5 +1,6 @@
 package com.fifty.workersportal.featureworker.presentation.registerasworker
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
@@ -22,6 +23,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
@@ -76,94 +78,107 @@ class RegisterAsWorkerViewModel @Inject constructor(
         viewModelScope.launch {
             val userId = getOwnUserId()
             getWorkerCategories()
-//            getWorkerProfileDetails(userId)
+            getWorkerProfileDetails(userId)
         }
     }
 
-    private fun getWorkerCategories() {
-        viewModelScope.launch {
-            when (val result = workerUseCases.getCategories()) {
-                is Resource.Success -> {
-                    _skillsState.value = _skillsState.value.copy(
-                        skills = result.data?.map { it.toWorkerCategory() } ?: kotlin.run {
-                            _eventFlow.emit(
-                                UiEvent.MakeToast(
-                                    UiText.StringResource(R.string.oops_couldn_t_load_worker_categories)
-                                )
+    private suspend fun getWorkerCategories() {
+        when (val result = workerUseCases.getCategories()) {
+            is Resource.Success -> {
+                _skillsState.value = _skillsState.value.copy(
+                    skills = result.data?.map { it.toWorkerCategory() } ?: kotlin.run {
+                        _eventFlow.emit(
+                            UiEvent.MakeToast(
+                                UiText.StringResource(R.string.oops_couldn_t_load_worker_categories)
                             )
-                            return@launch
-                        }
-                    )
-                }
-
-                is Resource.Error -> {
-                    _eventFlow.emit(
-                        UiEvent.MakeToast(
-                            result.uiText ?: UiText.unknownError()
                         )
+                        return
+                    }
+                )
+                Log.d(
+                    "Hello",
+                    "getWorkerCategories:  Alllll Cates ${_skillsState.value.skills}"
+                )
+            }
+
+            is Resource.Error -> {
+                _eventFlow.emit(
+                    UiEvent.MakeToast(
+                        result.uiText ?: UiText.unknownError()
                     )
-                }
+                )
             }
         }
     }
 
-    private fun getWorkerProfileDetails(id: String) {
-        viewModelScope.launch {
-            _eventFlow.emit(
-                UiEvent.MakeToast(
-                    UiText.DynamicString(id)
-                )
+    private suspend fun getWorkerProfileDetails(id: String) {
+        _eventFlow.emit(
+            UiEvent.MakeToast(
+                UiText.DynamicString(id)
             )
-            when (val result = workerUseCases.getUserProfileDetails(id)) {
-                is Resource.Success -> {
-                    val profile = result.data ?: kotlin.run {
-                        _eventFlow.emit(
-                            UiEvent.MakeToast(
-                                UiText.StringResource(R.string.oops_couldn_t_load_profile)
-                            )
-                        )
-                        return@launch
-                    }
-                    _openToWorkState.value = profile.openToWork
-                    _firstNameState.value = firstNameState.value.copy(
-                        text = profile.firstName
-                    )
-                    _lastNameState.value = lastNameState.value.copy(
-                        text = profile.lastName
-                    )
-                    _emailState.value = emailState.value.copy(
-                        text = profile.email
-                    )
-                    _bioState.value = bioState.value.copy(
-                        text = profile.bio
-                    )
-                    _genderState.value = profile.gender
-                    _ageState.value = ageState.value.copy(
-                        text = profile.age.toString()
-                    )
-                    _skillsState.value = skillsState.value.copy(
-                        selectedSkills = profile.categoryList?.map { workerCategory ->
-                            workerCategory.copy(
-                                title = _skillsState.value.skills.find { it.id == id }?.title,
-                                skill = _skillsState.value.skills.find { it.id == id }?.skill,
-                                dailyMinWage = _skillsState.value.skills.find { it.id == id }?.dailyMinWage,
-                                hourlyMinWage = _skillsState.value.skills.find { it.id == id }?.hourlyMinWage,
-                            )
-                        } ?: emptyList()
-                    )
-                    _primarySkill.value = profile.primaryCategory?.copy(
-                        title = _skillsState.value.skills.find { it.id == id }?.title,
-                        skill = _skillsState.value.skills.find { it.id == id }?.skill,
-                        dailyMinWage = _skillsState.value.skills.find { it.id == id }?.dailyMinWage,
-                        hourlyMinWage = _skillsState.value.skills.find { it.id == id }?.hourlyMinWage,
-                    )
-                }
-
-                is Resource.Error -> {
+        )
+        when (val result = workerUseCases.getUserProfileDetails(id)) {
+            is Resource.Success -> {
+                val profile = result.data ?: kotlin.run {
                     _eventFlow.emit(
-                        UiEvent.MakeToast(result.uiText ?: UiText.unknownError())
+                        UiEvent.MakeToast(
+                            UiText.StringResource(R.string.oops_couldn_t_load_profile)
+                        )
                     )
+                    return
                 }
+                _openToWorkState.value = profile.openToWork
+                _firstNameState.value = firstNameState.value.copy(
+                    text = profile.firstName
+                )
+                _lastNameState.value = lastNameState.value.copy(
+                    text = profile.lastName
+                )
+                _emailState.value = emailState.value.copy(
+                    text = profile.email
+                )
+                _bioState.value = bioState.value.copy(
+                    text = profile.bio
+                )
+                _genderState.value = profile.gender
+                _ageState.value = ageState.value.copy(
+                    text = profile.age.toString()
+                )
+                _skillsState.value = skillsState.value.copy(
+                    selectedSkills = profile.categoryList?.map { workerCategory ->
+                        workerCategory.copy(
+                            title = _skillsState.value.skills.findLast { it.id == id }?.title,
+                            skill = _skillsState.value.skills.findLast { it.id == id }?.skill,
+                            dailyMinWage = _skillsState.value.skills.findLast { it.id == id }?.dailyMinWage,
+                            hourlyMinWage = _skillsState.value.skills.findLast { it.id == id }?.hourlyMinWage,
+                        )
+                    } ?: emptyList()
+                )
+                _skillsState.value = skillsState.value.copy(
+                    selectedSkills = profile.categoryList?.map { workerCategory ->
+                        workerCategory.copy(
+                            title = _skillsState.value.skills.findLast { it.id == id }?.title,
+                            skill = _skillsState.value.skills.findLast { it.id == id }?.skill,
+                            dailyMinWage = _skillsState.value.skills.findLast { it.id == id }?.dailyMinWage,
+                            hourlyMinWage = _skillsState.value.skills.findLast { it.id == id }?.hourlyMinWage,
+                        )
+                    } ?: emptyList()
+                )
+                Log.d("Hello", "All Categories : ${_skillsState.value.skills}")
+                Log.d("Hello", "selected Categories : ${_skillsState.value.selectedSkills}")
+                Log.d("Hello", "Primary category : ${profile.primaryCategory}")
+                _primarySkill.value = profile.primaryCategory?.copy(
+                    title = _skillsState.value.selectedSkills.find { it.id == id }?.title,
+                    skill = _skillsState.value.selectedSkills.find { it.id == id }?.skill,
+                    dailyMinWage = _skillsState.value.selectedSkills.find { it.id == id }?.dailyMinWage,
+                    hourlyMinWage = _skillsState.value.selectedSkills.find { it.id == id }?.hourlyMinWage,
+                )
+            }
+
+            is Resource.Error -> {
+                _eventFlow.emit(
+                    UiEvent.MakeToast(result.uiText ?: UiText.unknownError())
+                )
             }
         }
     }

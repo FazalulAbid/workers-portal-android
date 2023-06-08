@@ -26,7 +26,7 @@ import com.fifty.workersportal.core.presentation.component.StandardTextField
 import com.fifty.workersportal.core.presentation.ui.theme.MediumButtonHeight
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.util.Screen
-import com.fifty.workersportal.featureworker.presentation.component.WorkerCategoryItem
+import com.fifty.workersportal.featureworker.presentation.component.CategoryItem
 
 @Composable
 fun SelectWorkerCategoryScreen(
@@ -83,7 +83,7 @@ fun SelectWorkerCategoryScreen(
             columns = GridCells.Adaptive(minSize = 110.dp)
         ) {
             items(state.workerCategories) {
-                WorkerCategoryItem(
+                CategoryItem(
                     category = it,
                     imageLoader = imageLoader,
                     onClick = {

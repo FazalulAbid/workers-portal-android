@@ -93,5 +93,7 @@
     <string name="go_to_dashboard">Go to dashboard</string>
     <string name="oops_couldn_t_load_profile">Oops! Couldn\'t load profile</string>
     <string name="oops_couldn_t_load_worker_categories">Oops! Couldn\'t load worker categories</string>
+    <string name="dashboard_greeting_prefix">Hey</string>
+    <string name="suggested_categories">Suggested Categories</string>
 
 </resources>
