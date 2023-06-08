@@ -3,6 +3,8 @@ package com.fifty.workersportal.di
 import com.fifty.workersportal.featureworker.data.remote.WorkerApiService
 import com.fifty.workersportal.featureworker.data.repository.WorkerRepositoryImpl
 import com.fifty.workersportal.featureworker.domain.repository.WorkerRepository
+import com.fifty.workersportal.featureworker.domain.usecase.GetCategoriesUseCase
+import com.fifty.workersportal.featureworker.domain.usecase.GetSuggestedCategoriesUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -30,5 +32,19 @@ object WorkerModule {
     @Singleton
     fun provideWorkerRepository(api: WorkerApiService): WorkerRepository =
         WorkerRepositoryImpl(api)
+
+    @Provides
+    @Singleton
+    fun provideGetCategoriesUseCase(
+        workerRepository: WorkerRepository
+    ): GetCategoriesUseCase =
+        GetCategoriesUseCase(workerRepository)
+
+    @Provides
+    @Singleton
+    fun provideGetSuggestedCategoriesUseCase(
+        repository: WorkerRepository
+    ): GetSuggestedCategoriesUseCase =
+        GetSuggestedCategoriesUseCase(repository)
 
 }

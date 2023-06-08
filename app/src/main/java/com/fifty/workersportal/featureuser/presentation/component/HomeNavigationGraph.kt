@@ -5,6 +5,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.navigation
+import coil.ImageLoader
 import com.fifty.workersportal.core.util.NavigationParent
 import com.fifty.workersportal.core.util.Screen
 import com.fifty.workersportal.featureuser.presentation.userdashboard.UserDashboardScreen
@@ -13,7 +14,8 @@ import com.google.accompanist.navigation.animation.composable
 @OptIn(ExperimentalAnimationApi::class)
 fun NavGraphBuilder.homeNavGraph(
     navController: NavController,
-    snackbarHostState: SnackbarHostState
+    snackbarHostState: SnackbarHostState,
+    imageLoader: ImageLoader
 ) {
     navigation(
         startDestination = Screen.UserDashboardScreen.route,
@@ -21,7 +23,8 @@ fun NavGraphBuilder.homeNavGraph(
     ) {
         composable(Screen.UserDashboardScreen.route) {
             UserDashboardScreen(
-                onNavigate = navController::navigate
+                onNavigate = navController::navigate,
+                imageLoader
             )
         }
     }

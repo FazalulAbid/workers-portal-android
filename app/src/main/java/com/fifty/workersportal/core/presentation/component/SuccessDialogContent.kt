@@ -18,7 +18,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import com.fifty.workersportal.R
-import com.fifty.workersportal.core.presentation.ui.theme.ExtraLargeProfilePictureHeight
+import com.fifty.workersportal.core.presentation.ui.theme.ExtraExtraLargeProfilePictureHeight
 import com.fifty.workersportal.core.presentation.ui.theme.SizeLarge
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.ui.theme.SuccessDialogBoxHeight
@@ -55,7 +55,7 @@ fun SuccessDialogContent(
                 painter = painterResource(id = R.drawable.checked_vector),
                 contentDescription = null,
                 Modifier
-                    .size(ExtraLargeProfilePictureHeight)
+                    .size(ExtraExtraLargeProfilePictureHeight)
             )
             Spacer(modifier = Modifier.height(SizeMedium))
             SecondaryHeader(

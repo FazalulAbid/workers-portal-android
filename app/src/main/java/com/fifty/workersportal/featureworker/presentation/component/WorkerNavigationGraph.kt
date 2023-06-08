@@ -10,7 +10,6 @@ import coil.ImageLoader
 import com.fifty.workersportal.core.domain.util.Session
 import com.fifty.workersportal.core.util.NavigationParent
 import com.fifty.workersportal.core.util.Screen
-import com.fifty.workersportal.featureauth.data.repository.SessionRepositoryImpl
 import com.fifty.workersportal.featureworker.presentation.workerprofile.WorkerProfileScreen
 import com.fifty.workersportal.featureworker.presentation.registerasworker.RegisterAsWorkerScreen
 import com.fifty.workersportal.featureworker.presentation.selectworkercategory.SelectWorkerCategoryScreen
@@ -43,7 +42,7 @@ fun NavGraphBuilder.workerNavGraph(
         composable(Screen.WorkerDashboardScreen.route) {
             WorkerDashboardScreen()
         }
-        composable(Screen.SelectWorkerCategoryScreen.route) {
+        composable(Screen.SearchCategoryScreen.route) {
             SelectWorkerCategoryScreen(
                 onNavigate = navController::navigate,
                 onNavigateUp = navController::navigateUp,

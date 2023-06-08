@@ -1,12 +1,15 @@
 package com.fifty.workersportal.featureuser.presentation.component
 
+import android.util.Log
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -18,9 +21,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
+import coil.ImageLoader
+import coil.annotation.ExperimentalCoilApi
+import coil.compose.rememberImagePainter
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
+import com.fifty.workersportal.featureuser.domain.model.Banner
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.calculateCurrentOffsetForPage
@@ -29,11 +37,15 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.yield
 import kotlin.math.absoluteValue
 
+@OptIn(ExperimentalCoilApi::class)
 @ExperimentalPagerApi
 @Composable
-fun AutoSlidingCarousal() {
+fun AutoSlidingCarousal(
+    banners: List<Banner>,
+    imageLoader: ImageLoader
+) {
     val pagerState = rememberPagerState(
-        pageCount = 5,
+        pageCount = banners.size,
         initialOffscreenLimit = 2
     )
 
@@ -70,7 +82,8 @@ fun AutoSlidingCarousal() {
                     }
                     .fillMaxWidth()
                     .padding(horizontal = SizeMedium),
-                shape = RoundedCornerShape(SizeMedium)
+                shape = RoundedCornerShape(SizeMedium),
+                elevation = 0.dp
             ) {
                 Box(
                     modifier = Modifier
@@ -78,13 +91,18 @@ fun AutoSlidingCarousal() {
                         .background(Color.LightGray)
                         .align(Alignment.Center)
                 ) {
+                    val banner = banners.getOrNull(page)
+                    Log.d("Hello", "AutoSlidingCarousal: ${banner?.imageUrl}")
                     Image(
-                        painter = painterResource(R.drawable.plumber_profile),
+                        painter = rememberImagePainter(
+                            data = banner?.imageUrl,
+                            imageLoader = imageLoader
+                        ),
                         contentDescription = "Image",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
-                            .fillMaxSize()
-                            .background(Color.Blue)
+                            .fillMaxWidth()
+                            .aspectRatio(1.77f)
                     )
                 }
             }

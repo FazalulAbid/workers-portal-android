@@ -1,17 +1,14 @@
 package com.fifty.workersportal.featureworker.presentation.registerasworker
 
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.text.capitalize
-import androidx.compose.ui.text.intl.Locale
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.domain.state.StandardTextFieldState
 import com.fifty.workersportal.core.domain.usecase.GetOwnUserIdUseCase
+import com.fifty.workersportal.core.domain.usecase.GetUserProfileDetailsUseCase
 import com.fifty.workersportal.core.domain.util.ValidationUtil
 import com.fifty.workersportal.core.presentation.util.UiEvent
 import com.fifty.workersportal.core.util.Constants.genderOptions
@@ -19,20 +16,23 @@ import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.UiText
 import com.fifty.workersportal.featureworker.domain.model.UpdateWorkerData
 import com.fifty.workersportal.featureworker.domain.model.WorkerCategory
-import com.fifty.workersportal.featureworker.domain.usecase.WorkerUseCases
+import com.fifty.workersportal.featureworker.domain.usecase.GetCategoriesUseCase
+import com.fifty.workersportal.featureworker.domain.usecase.SetSkillSelectedUseCase
+import com.fifty.workersportal.featureworker.domain.usecase.UpdateUserAsWorkerUseCase
 import com.fifty.workersportal.featureworker.util.WorkerError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
 class RegisterAsWorkerViewModel @Inject constructor(
-    private val workerUseCases: WorkerUseCases,
     private val getOwnUserId: GetOwnUserIdUseCase,
-    savedStateHandle: SavedStateHandle
+    private val getCategories: GetCategoriesUseCase,
+    private val getUserProfileDetails: GetUserProfileDetailsUseCase,
+    private val setSkillSelected: SetSkillSelectedUseCase,
+    private val updateUserAsWorker: UpdateUserAsWorkerUseCase,
 ) : ViewModel() {
 
     val isRegisterCompleteDialogDisplayed = MutableLiveData(false)
@@ -85,7 +85,7 @@ class RegisterAsWorkerViewModel @Inject constructor(
     }
 
     private suspend fun getWorkerCategories() {
-        when (val result = workerUseCases.getCategories()) {
+        when (val result = getCategories()) {
             is Resource.Success -> {
                 _skillsState.value = _skillsState.value.copy(
                     skills = result.data?.map { it.toWorkerCategory() } ?: kotlin.run {
@@ -115,7 +115,7 @@ class RegisterAsWorkerViewModel @Inject constructor(
                 UiText.DynamicString(id)
             )
         )
-        when (val result = workerUseCases.getUserProfileDetails(id)) {
+        when (val result = getUserProfileDetails(id)) {
             is Resource.Success -> {
                 val profile = result.data ?: kotlin.run {
                     _eventFlow.emit(
@@ -221,7 +221,7 @@ class RegisterAsWorkerViewModel @Inject constructor(
             }
 
             is RegisterAsWorkerEvent.SetSkillSelected -> {
-                val result = workerUseCases.setSkillSelected(
+                val result = setSkillSelected(
                     selectedSkills = skillsState.value.selectedSkills,
                     event.workerCategory
                 )
@@ -306,7 +306,7 @@ class RegisterAsWorkerViewModel @Inject constructor(
             _updateWorkerState.value = UpdateWorkerState(isLoading = true)
             validateCategoryWages()
 
-            val updateWorkerResult = workerUseCases.updateUserAsWorker(
+            val updateWorkerResult = updateUserAsWorker(
                 UpdateWorkerData(
                     openToWork = _openToWorkState.value,
                     firstName = _firstNameState.value.text,

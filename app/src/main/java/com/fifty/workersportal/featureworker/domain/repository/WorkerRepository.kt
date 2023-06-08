@@ -7,4 +7,6 @@ import com.fifty.workersportal.featureworker.domain.model.WorkerCategory
 interface WorkerRepository {
 
     suspend fun getCategories(): Resource<List<Category>>
+
+    suspend fun getSuggestedCategories(): Resource<List<Category>>
 }

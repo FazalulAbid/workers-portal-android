@@ -7,7 +7,6 @@ import com.fifty.workersportal.featureuser.data.repository.ProfileRepositoryImpl
 import com.fifty.workersportal.featureuser.domain.repository.ProfileRepository
 import com.fifty.workersportal.featureworker.domain.repository.WorkerRepository
 import com.fifty.workersportal.featureworker.domain.usecase.GetCategoriesUseCase
-import com.fifty.workersportal.featureworker.domain.usecase.WorkerUseCases
 import com.fifty.workersportal.featureworker.domain.usecase.SetSkillSelectedUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.UpdateUserAsWorkerUseCase
 import dagger.Module
@@ -35,15 +34,22 @@ object ProfileModule {
 
     @Provides
     @Singleton
-    fun providesRegisterAsWorkerUseCases(
+    fun provideSetSkillSelectedUseCase(): SetSkillSelectedUseCase =
+        SetSkillSelectedUseCase()
+
+    @Provides
+    @Singleton
+    fun provideUpdateUserAsWorkerUseCase(
         profileRepository: ProfileRepository,
-        sessionRepository: SessionRepository,
-        workerRepository: WorkerRepository
-    ): WorkerUseCases =
-        WorkerUseCases(
-            setSkillSelected = SetSkillSelectedUseCase(),
-            updateUserAsWorker = UpdateUserAsWorkerUseCase(profileRepository, sessionRepository),
-            getUserProfileDetails = GetUserProfileDetailsUseCase(profileRepository),
-            getCategories = GetCategoriesUseCase(workerRepository)
-        )
+        sessionRepository: SessionRepository
+    ): UpdateUserAsWorkerUseCase =
+        UpdateUserAsWorkerUseCase(profileRepository, sessionRepository)
+
+    @Provides
+    @Singleton
+    fun provideGetUserProfileDetailsUseCase(
+        profileRepository: ProfileRepository
+    ): GetUserProfileDetailsUseCase =
+        GetUserProfileDetailsUseCase(profileRepository)
+
 }

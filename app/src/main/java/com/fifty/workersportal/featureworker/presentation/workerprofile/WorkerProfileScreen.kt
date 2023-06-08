@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.dp
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.presentation.component.SecondaryHeader
 import com.fifty.workersportal.core.presentation.component.StandardAppBar
-import com.fifty.workersportal.core.presentation.ui.theme.ExtraLargeProfilePictureHeight
+import com.fifty.workersportal.core.presentation.ui.theme.ExtraExtraLargeProfilePictureHeight
 import com.fifty.workersportal.core.presentation.ui.theme.SizeExtraSmall
 import com.fifty.workersportal.core.presentation.ui.theme.SizeLarge
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
@@ -91,7 +91,7 @@ fun WorkerProfileScreen(
                         painter = painterResource(id = R.drawable.plumber_profile),
                         contentDescription = "Plumber description",
                         Modifier
-                            .size(ExtraLargeProfilePictureHeight)
+                            .size(ExtraExtraLargeProfilePictureHeight)
                             .clip(CircleShape),
                         contentScale = ContentScale.Crop
                     )

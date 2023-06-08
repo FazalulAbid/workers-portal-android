@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -23,8 +25,12 @@ import coil.ImageLoader
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.presentation.component.StandardAppBar
 import com.fifty.workersportal.core.presentation.component.StandardTextField
+import com.fifty.workersportal.core.presentation.ui.theme.ExtraSmallProfilePictureHeight
+import com.fifty.workersportal.core.presentation.ui.theme.LargeProfilePictureHeight
 import com.fifty.workersportal.core.presentation.ui.theme.MediumButtonHeight
+import com.fifty.workersportal.core.presentation.ui.theme.MediumProfilePictureHeight
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
+import com.fifty.workersportal.core.presentation.ui.theme.SmallProfilePictureHeight
 import com.fifty.workersportal.core.util.Screen
 import com.fifty.workersportal.featureworker.presentation.component.CategoryItem
 

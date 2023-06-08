@@ -1,35 +1,36 @@
 package com.fifty.workersportal.featureuser.presentation.userdashboard
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.ImageLoader
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.presentation.component.DashboardNavigationAndProfile
 import com.fifty.workersportal.core.presentation.component.HorizontalDivider
 import com.fifty.workersportal.core.presentation.component.SecondaryHeader
 import com.fifty.workersportal.core.presentation.component.StandardTextField
 import com.fifty.workersportal.core.presentation.ui.theme.MediumButtonHeight
+import com.fifty.workersportal.core.presentation.ui.theme.MediumProfilePictureHeight
 import com.fifty.workersportal.core.presentation.ui.theme.SizeExtraSmall
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
+import com.fifty.workersportal.core.util.Screen
 import com.fifty.workersportal.featureuser.presentation.component.AutoSlidingCarousal
 import com.fifty.workersportal.featureuser.presentation.component.DashboardGreetingText
+import com.fifty.workersportal.featureuser.presentation.component.SuggestedCategoryItem
 import com.fifty.workersportal.featureworker.presentation.component.CategoryItem
 import com.google.accompanist.pager.ExperimentalPagerApi
 
@@ -37,6 +38,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 @Composable
 fun UserDashboardScreen(
     onNavigate: (String) -> Unit = {},
+    imageLoader: ImageLoader,
     viewModel: UserDashboardViewModel = hiltViewModel()
 ) {
 //    Box(
@@ -101,26 +103,39 @@ fun UserDashboardScreen(
         item {
             Column {
                 Spacer(modifier = Modifier.height(SizeSmall))
-                AutoSlidingCarousal()
-                Spacer(modifier = Modifier.height(SizeMedium))
+                AutoSlidingCarousal(
+                    banners = viewModel.bannersState.value.banners,
+                    imageLoader = imageLoader
+                )
+                Spacer(modifier = Modifier.height(SizeSmall))
             }
         }
         item {
             Column(Modifier.padding(horizontal = SizeMedium)) {
                 SecondaryHeader(
                     text = stringResource(R.string.suggested_categories),
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleMedium,
+                    moreOption = true,
+                    moreOptionText = stringResource(R.string.all_categories),
+                    onMoreOptionClick = {
+                        onNavigate(Screen.SearchCategoryScreen.route)
+                    }
                 )
             }
-            LazyRow() {
-                items(20) {
-                    Box(
-                        modifier = Modifier
-                            .size(100.dp)
-                            .padding(SizeMedium)
-                            .background(Color.Red)
-                    )
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                LazyRow(Modifier.fillMaxWidth()) {
+                    items(viewModel.suggestedCategoriesState.value.suggestedCategories) {
+                        SuggestedCategoryItem(
+                            category = it,
+                            imageLoader = imageLoader,
+                            imageSize = MediumProfilePictureHeight
+                        )
+                    }
                 }
+                Spacer(modifier = Modifier.height(SizeSmall))
             }
         }
     }

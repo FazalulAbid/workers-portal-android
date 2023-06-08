@@ -95,5 +95,7 @@
     <string name="oops_couldn_t_load_worker_categories">Oops! Couldn\'t load worker categories</string>
     <string name="dashboard_greeting_prefix">Hey</string>
     <string name="suggested_categories">Suggested Categories</string>
+    <string name="show_more">Show more</string>
+    <string name="all_categories">All categories</string>
 
 </resources>

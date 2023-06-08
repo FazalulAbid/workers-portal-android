@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.fifty.workersportal.core.domain.state.StandardTextFieldState
 import com.fifty.workersportal.core.presentation.util.UiEvent
 import com.fifty.workersportal.core.util.Resource
-import com.fifty.workersportal.featureworker.domain.usecase.WorkerUseCases
+import com.fifty.workersportal.featureworker.domain.usecase.GetCategoriesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchCategoryViewModel @Inject constructor(
-    private val workerUseCases: WorkerUseCases
+    private val getCategories: GetCategoriesUseCase
 ) : ViewModel() {
 
     private val _searchFieldState = mutableStateOf(StandardTextFieldState())
@@ -40,7 +40,7 @@ class SearchCategoryViewModel @Inject constructor(
             _searchState.value = searchState.value.copy(
                 isLoading = true
             )
-            when (val result = workerUseCases.getCategories()) {
+            when (val result = getCategories()) {
                 is Resource.Success -> {
                     _searchState.value = searchState.value.copy(
                         workerCategories = result.data ?: emptyList(),

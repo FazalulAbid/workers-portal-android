@@ -7,5 +7,8 @@ import retrofit2.http.GET
 interface WorkerApiService {
 
     @GET("worker/get-worker-categories")
-    suspend fun getWorkerCategories(): BasicApiResponse<List<CategoryDto>>
+    suspend fun getCategories(): BasicApiResponse<List<CategoryDto>>
+
+    @GET("worker/get-suggested-categories")
+    suspend fun getSuggestedCategories(): BasicApiResponse<List<CategoryDto>>
 }
