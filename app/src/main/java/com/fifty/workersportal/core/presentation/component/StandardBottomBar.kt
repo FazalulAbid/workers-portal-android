@@ -28,7 +28,6 @@ import com.fifty.workersportal.core.util.Screen
 fun StandardBottomBar(
     onNavigate: (route: String, navOptions: NavOptions) -> Unit,
     navBackStackEntry: NavBackStackEntry?,
-    isWorker: Boolean,
     showBottomBar: Boolean = true
 ) {
     val bottomNavItems: List<BottomNavItem> = listOf(
@@ -84,16 +83,7 @@ fun StandardBottomBar(
                     alwaysShowLabel = isSelected,
                     onClick = {
                         selectedItem.value = index
-                        val destinationRoute = when (item.route) {
-                            NavigationParent.Work.route -> if (isWorker) {
-                                Screen.WorkerDashboardScreen.route
-                            } else {
-                                Screen.RegisterAsWorkerScreen.route
-                            }
-
-                            else -> item.route
-                        }
-                        onNavigate(destinationRoute, navOptions {
+                        onNavigate(item.route, navOptions {
                             popUpTo(Screen.UserDashboardScreen.route) {
                                 saveState = true
                             }

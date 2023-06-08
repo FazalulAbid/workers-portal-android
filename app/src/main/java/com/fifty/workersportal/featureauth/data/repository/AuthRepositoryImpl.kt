@@ -5,7 +5,7 @@ import coil.network.HttpException
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.data.util.ApiConstants.ACCESS_TOKEN_KEY
 import com.fifty.workersportal.core.data.util.ApiConstants.REFRESH_TOKEN_KEY
-import com.fifty.workersportal.core.data.util.Session
+import com.fifty.workersportal.core.domain.model.UserSession
 import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.SimpleResource
 import com.fifty.workersportal.core.util.UiText
@@ -95,14 +95,13 @@ class AuthRepositoryImpl(
     }
 
 
-    override suspend fun authenticate(): SimpleResource {
+    override suspend fun authenticate(): Resource<UserSession> {
         return try {
             authenticateApi.authenticate().body()?.let { response ->
                 if (response.successful) {
                     val user = response.data?.toUser()
                     user?.let {
-//                        Session.user = it
-                        Resource.Success(Unit)
+                        Resource.Success(data = user)
                     } ?: return Resource.Error(UiText.unknownError())
                 } else {
                     response.message?.let { message ->

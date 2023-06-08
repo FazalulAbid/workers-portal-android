@@ -83,6 +83,9 @@ object AuthModule {
 
     @Provides
     @Singleton
-    fun provideAuthenticateUseCase(repository: AuthRepository): AuthenticateUseCase =
-        AuthenticateUseCase(repository)
+    fun provideAuthenticateUseCase(
+        authRepository: AuthRepository,
+        sessionRepository: SessionRepository
+    ): AuthenticateUseCase =
+        AuthenticateUseCase(authRepository, sessionRepository)
 }

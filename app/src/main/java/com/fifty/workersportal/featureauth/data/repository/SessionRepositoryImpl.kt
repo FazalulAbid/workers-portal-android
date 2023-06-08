@@ -3,6 +3,7 @@ package com.fifty.workersportal.featureauth.data.repository
 import android.content.Context
 import androidx.datastore.preferences.core.edit
 import com.fifty.workersportal.core.domain.model.UserSession
+import com.fifty.workersportal.core.domain.util.Session
 import com.fifty.workersportal.core.util.dataStore
 import com.fifty.workersportal.featureauth.domain.repository.SessionRepository
 import com.fifty.workersportal.featureauth.utils.AuthConstants.KEY_JWT_ACCESS_TOKEN
@@ -61,6 +62,7 @@ class SessionRepositoryImpl(
             preferences[KEY_USER_LAST_NAME] = userSession.lastName
             preferences[KEY_USER_IS_WORKER] = userSession.isWorker
         }
+        Session.userSession = userSession
     }
 
     override suspend fun deleteTokens() {

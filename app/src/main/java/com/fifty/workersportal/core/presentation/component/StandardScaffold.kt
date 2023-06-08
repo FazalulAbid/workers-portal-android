@@ -21,7 +21,6 @@ fun StandardScaffold(
     modifier: Modifier = Modifier,
     showBottomBar: Boolean = true,
     snackBarHostState: SnackbarHostState,
-    isWorker: Boolean,
     content: @Composable () -> Unit,
 ) {
     Scaffold(
@@ -31,7 +30,6 @@ fun StandardScaffold(
                 onNavigate = onNavigate,
                 navBackStackEntry = navBackStackEntry,
                 showBottomBar = showBottomBar,
-                isWorker = isWorker
             )
         },
         snackbarHost = { SnackbarHost(hostState = snackBarHostState) }

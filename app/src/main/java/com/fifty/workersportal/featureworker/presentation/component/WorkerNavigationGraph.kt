@@ -1,13 +1,16 @@
 package com.fifty.workersportal.featureworker.presentation.component
 
+import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material3.SnackbarHostState
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.navigation
 import coil.ImageLoader
+import com.fifty.workersportal.core.domain.util.Session
 import com.fifty.workersportal.core.util.NavigationParent
 import com.fifty.workersportal.core.util.Screen
+import com.fifty.workersportal.featureauth.data.repository.SessionRepositoryImpl
 import com.fifty.workersportal.featureworker.presentation.workerprofile.WorkerProfileScreen
 import com.fifty.workersportal.featureworker.presentation.registerasworker.RegisterAsWorkerScreen
 import com.fifty.workersportal.featureworker.presentation.selectworkercategory.SelectWorkerCategoryScreen
@@ -21,8 +24,17 @@ fun NavGraphBuilder.workerNavGraph(
     snackbarHostState: SnackbarHostState,
     imageLoader: ImageLoader
 ) {
+    var isWorker = false
+    try {
+        isWorker = Session.userSession.isWorker
+        Log.d("Hello", "workerNavGraph: $isWorker")
+    } catch (e: UninitializedPropertyAccessException) {
+        e.printStackTrace()
+    }
     navigation(
-        startDestination = Screen.RegisterAsWorkerScreen.route,
+        startDestination = if (isWorker) {
+            Screen.WorkerDashboardScreen.route
+        } else Screen.RegisterAsWorkerScreen.route,
         route = NavigationParent.Work.route
     ) {
         composable(Screen.RegisterAsWorkerScreen.route) {

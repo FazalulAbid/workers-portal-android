@@ -20,7 +20,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.currentBackStackEntryAsState
 import coil.ImageLoader
-import com.fifty.workersportal.core.data.util.Session
+import com.fifty.workersportal.core.domain.util.Session
 import com.fifty.workersportal.core.presentation.component.Navigation
 import com.fifty.workersportal.core.presentation.component.StandardScaffold
 import com.fifty.workersportal.core.presentation.ui.theme.WorkersPortalTheme
@@ -65,9 +65,6 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val isWorker by remember {
-                        mutableStateOf(Session.userIsWorker ?: false)
-                    }
                     val navController = rememberAnimatedNavController()
                     val navBackStackEntry by navController.currentBackStackEntryAsState()
                     val snackBarHostState = remember { SnackbarHostState() }
@@ -81,7 +78,6 @@ class MainActivity : ComponentActivity() {
                         snackBarHostState = snackBarHostState,
                         modifier = Modifier.fillMaxSize(),
                         showBottomBar = shouldShowBottomBar(navBackStackEntry),
-                        isWorker = isWorker
                     ) {
                         when (userAuthState.value) {
                             UserAuthState.UNAUTHENTICATED -> {

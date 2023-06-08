@@ -3,6 +3,8 @@ package com.fifty.workersportal.featureworker.presentation.registerasworker
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.text.capitalize
+import androidx.compose.ui.text.intl.Locale
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -95,10 +97,6 @@ class RegisterAsWorkerViewModel @Inject constructor(
                         return
                     }
                 )
-                Log.d(
-                    "Hello",
-                    "getWorkerCategories:  Alllll Cates ${_skillsState.value.skills}"
-                )
             }
 
             is Resource.Error -> {
@@ -140,39 +138,38 @@ class RegisterAsWorkerViewModel @Inject constructor(
                 _bioState.value = bioState.value.copy(
                     text = profile.bio
                 )
-                _genderState.value = profile.gender
+                _genderState.value =
+                    profile.gender.replaceFirstChar {
+                        if (it.isLowerCase())
+                            it.titlecase(java.util.Locale.ROOT)
+                        else it.toString()
+                    }
                 _ageState.value = ageState.value.copy(
                     text = profile.age.toString()
                 )
                 _skillsState.value = skillsState.value.copy(
                     selectedSkills = profile.categoryList?.map { workerCategory ->
+                        val categoryId = workerCategory.id
+                        val matchingSkill =
+                            _skillsState.value.skills.firstOrNull { it.id == categoryId }
                         workerCategory.copy(
-                            title = _skillsState.value.skills.findLast { it.id == id }?.title,
-                            skill = _skillsState.value.skills.findLast { it.id == id }?.skill,
-                            dailyMinWage = _skillsState.value.skills.findLast { it.id == id }?.dailyMinWage,
-                            hourlyMinWage = _skillsState.value.skills.findLast { it.id == id }?.hourlyMinWage,
+                            title = matchingSkill?.title,
+                            skill = matchingSkill?.skill,
+                            dailyMinWage = matchingSkill?.dailyMinWage,
+                            hourlyMinWage = matchingSkill?.hourlyMinWage,
                         )
                     } ?: emptyList()
                 )
-                _skillsState.value = skillsState.value.copy(
-                    selectedSkills = profile.categoryList?.map { workerCategory ->
-                        workerCategory.copy(
-                            title = _skillsState.value.skills.findLast { it.id == id }?.title,
-                            skill = _skillsState.value.skills.findLast { it.id == id }?.skill,
-                            dailyMinWage = _skillsState.value.skills.findLast { it.id == id }?.dailyMinWage,
-                            hourlyMinWage = _skillsState.value.skills.findLast { it.id == id }?.hourlyMinWage,
-                        )
-                    } ?: emptyList()
-                )
-                Log.d("Hello", "All Categories : ${_skillsState.value.skills}")
-                Log.d("Hello", "selected Categories : ${_skillsState.value.selectedSkills}")
-                Log.d("Hello", "Primary category : ${profile.primaryCategory}")
-                _primarySkill.value = profile.primaryCategory?.copy(
-                    title = _skillsState.value.selectedSkills.find { it.id == id }?.title,
-                    skill = _skillsState.value.selectedSkills.find { it.id == id }?.skill,
-                    dailyMinWage = _skillsState.value.selectedSkills.find { it.id == id }?.dailyMinWage,
-                    hourlyMinWage = _skillsState.value.selectedSkills.find { it.id == id }?.hourlyMinWage,
-                )
+                _primarySkill.value = profile.primaryCategory?.let { primaryCategory ->
+                    val matchingSkill =
+                        _skillsState.value.selectedSkills.find { it.id == primaryCategory.id }
+                    primaryCategory.copy(
+                        title = matchingSkill?.title,
+                        skill = matchingSkill?.skill,
+                        dailyMinWage = matchingSkill?.dailyMinWage,
+                        hourlyMinWage = matchingSkill?.hourlyMinWage,
+                    )
+                }
             }
 
             is Resource.Error -> {
@@ -355,11 +352,6 @@ class RegisterAsWorkerViewModel @Inject constructor(
 
             when (updateWorkerResult.result) {
                 is Resource.Success -> {
-                    _eventFlow.emit(
-                        UiEvent.MakeToast(
-                            UiText.StringResource(R.string.you_are_registered_as_worker)
-                        )
-                    )
                     _onUpdate.emit(Unit)
                     _updateWorkerState.value = UpdateWorkerState(isLoading = false)
                 }
