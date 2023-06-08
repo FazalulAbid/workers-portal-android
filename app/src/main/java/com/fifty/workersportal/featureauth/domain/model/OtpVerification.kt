@@ -1,9 +1,9 @@
 package com.fifty.workersportal.featureauth.domain.model
 
-import com.fifty.workersportal.featureauth.data.remote.response.UserResponse
+import com.fifty.workersportal.featureuser.data.remote.dto.ProfileDto
 
 data class OtpVerification(
     val accessToken: String,
     val refreshToken: String,
-    val user: UserResponse
+    val user: ProfileDto
 )

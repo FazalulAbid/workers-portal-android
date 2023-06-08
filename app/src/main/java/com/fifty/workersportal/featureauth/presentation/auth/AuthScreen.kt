@@ -42,9 +42,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavBackStackEntry
+import coil.ImageLoader
 import com.fifty.workersportal.R
-import com.fifty.workersportal.core.presentation.component.PrimaryButton
 import com.fifty.workersportal.core.presentation.component.Keyboard
+import com.fifty.workersportal.core.presentation.component.PrimaryButton
 import com.fifty.workersportal.core.presentation.component.StandardImageButton
 import com.fifty.workersportal.core.presentation.component.TextBetweenLines
 import com.fifty.workersportal.core.presentation.component.keyboardAsState
@@ -68,6 +69,7 @@ fun AuthScreen(
     snackbarHostState: SnackbarHostState,
     currentBackStackEntry: NavBackStackEntry?,
     onNavigate: (String) -> Unit = {},
+    imageLoader: ImageLoader,
     viewModel: AuthViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.value
@@ -155,8 +157,8 @@ fun AuthScreen(
                         CountryPickerField(
                             modifier = Modifier
                                 .height(LargeButtonHeight),
-                            flagImageUrl = viewModel.countryFlagUrl.value
-                                ?: Constants.DEFAULT_COUNTRY_FLAG_URL,
+                            flagImageUrl = viewModel.countryFlagUrl.value,
+                            imageLoader = imageLoader,
                             onCountryClick = {
                                 onNavigate(Screen.SelectCountryScreen.route)
                             }

@@ -19,6 +19,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.currentBackStackEntryAsState
+import coil.ImageLoader
 import com.fifty.workersportal.core.data.util.Session
 import com.fifty.workersportal.core.presentation.component.Navigation
 import com.fifty.workersportal.core.presentation.component.StandardScaffold
@@ -31,9 +32,14 @@ import com.fifty.workersportal.featureauth.presentation.splash.UserAuthState
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var imageLoader: ImageLoader
+
     private var keepSplashScreenOn = true
     private val splashScreenViewModel: SplashViewModel by viewModels()
     private var userAuthState = mutableStateOf(UserAuthState.UNKNOWN)
@@ -83,7 +89,8 @@ class MainActivity : ComponentActivity() {
                                     navController = navController,
                                     snackbarHostState = snackBarHostState,
                                     startDestination = NavigationParent.Auth.route,
-                                    onDataLoaded = { keepSplashScreenOn = false }
+                                    onDataLoaded = { keepSplashScreenOn = false },
+                                    imageLoader = imageLoader
                                 )
                             }
 
@@ -92,7 +99,8 @@ class MainActivity : ComponentActivity() {
                                     navController = navController,
                                     snackbarHostState = snackBarHostState,
                                     startDestination = NavigationParent.Home.route,
-                                    onDataLoaded = { keepSplashScreenOn = false }
+                                    onDataLoaded = { keepSplashScreenOn = false },
+                                    imageLoader = imageLoader
                                 )
                             }
 

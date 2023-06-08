@@ -7,6 +7,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
+import coil.ImageLoader
 import com.fifty.workersportal.core.util.NavigationParent
 import com.fifty.workersportal.core.util.Screen
 import com.fifty.workersportal.featureauth.presentation.auth.AuthScreen
@@ -20,7 +21,8 @@ const val NAV_ARG_COUNTRY_CODE = "countryCode"
 @OptIn(ExperimentalAnimationApi::class)
 fun NavGraphBuilder.authNavGraph(
     navController: NavController,
-    snackbarHostState: SnackbarHostState
+    snackbarHostState: SnackbarHostState,
+    imageLoader: ImageLoader
 ) {
     navigation(
         startDestination = Screen.AuthScreen.route,
@@ -32,7 +34,8 @@ fun NavGraphBuilder.authNavGraph(
             AuthScreen(
                 snackbarHostState = snackbarHostState,
                 onNavigate = navController::navigate,
-                currentBackStackEntry = navController.currentBackStackEntry
+                currentBackStackEntry = navController.currentBackStackEntry,
+                imageLoader = imageLoader
             )
         }
         composable(
@@ -62,7 +65,8 @@ fun NavGraphBuilder.authNavGraph(
             SelectCountryCodeScreen(
                 previousBackStackEntry = navController.previousBackStackEntry,
                 popBackStack = navController::popBackStack,
-                onNavigateUp = navController::navigateUp
+                onNavigateUp = navController::navigateUp,
+                imageLoader = imageLoader
             )
         }
     }

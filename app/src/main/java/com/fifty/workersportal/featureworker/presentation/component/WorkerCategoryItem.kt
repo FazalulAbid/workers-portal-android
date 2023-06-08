@@ -6,7 +6,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
@@ -16,19 +15,24 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.fifty.workersportal.R
+import coil.ImageLoader
+import coil.annotation.ExperimentalCoilApi
+import coil.compose.rememberImagePainter
+import coil.decode.SvgDecoder
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
+import com.fifty.workersportal.core.util.Constants
+import com.fifty.workersportal.featureworker.domain.model.Category
 
+@OptIn(ExperimentalCoilApi::class)
 @Composable
 fun WorkerCategoryItem(
     modifier: Modifier = Modifier,
-    image: Painter,
-    text: String = "Builder",
+    category: Category,
+    imageLoader: ImageLoader,
     onClick: () -> Unit = {}
 ) {
     Column(
@@ -39,14 +43,19 @@ fun WorkerCategoryItem(
             .padding(SizeMedium),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        val context = LocalContext.current
         Image(
-            modifier = Modifier.sizeIn(maxWidth = 80.dp),
-            painter = image,
-            contentDescription = ""
+            modifier = Modifier
+                .size(80.dp),
+            painter = rememberImagePainter(
+                data = "https://cdn-icons-png.flaticon.com/512/1670/1670444.png",
+                imageLoader = imageLoader
+            ),
+            contentDescription = null
         )
         Spacer(modifier = Modifier.height(SizeMedium))
         Text(
-            text = text,
+            text = category.title,
             style = MaterialTheme.typography.bodyMedium.copy(
                 color = MaterialTheme.colorScheme.onSurface
             ),

@@ -72,7 +72,7 @@ fun SkillWagesSection(
             items(selectedSkills.size) { index ->
                 val skill = selectedSkills[index]
                 SecondaryHeader(
-                    text = skill.skill,
+                    text = skill.skill ?: "",
                     style = MaterialTheme.typography.titleMedium
                 )
                 Row(

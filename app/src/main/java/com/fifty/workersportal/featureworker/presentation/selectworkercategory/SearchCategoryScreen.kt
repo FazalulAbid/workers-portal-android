@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -18,6 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.ImageLoader
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.presentation.component.StandardAppBar
 import com.fifty.workersportal.core.presentation.component.StandardTextField
@@ -28,10 +30,12 @@ import com.fifty.workersportal.featureworker.presentation.component.WorkerCatego
 
 @Composable
 fun SelectWorkerCategoryScreen(
+    imageLoader: ImageLoader,
     onNavigate: (String) -> Unit = {},
     onNavigateUp: () -> Unit = {},
-    viewModel: SelectWorkerCategoryViewModel = hiltViewModel()
+    viewModel: SearchCategoryViewModel = hiltViewModel()
 ) {
+    val state = viewModel.searchState.value
     Column(
         Modifier.fillMaxSize()
     ) {
@@ -71,17 +75,17 @@ fun SelectWorkerCategoryScreen(
                 hint = stringResource(R.string.search_plumber),
                 value = viewModel.searchFieldState.value.text,
                 onValueChange = {
-                    viewModel.onEvent(SelectWorkerCategoryEvent.Query(it))
+                    viewModel.onEvent(SearchCategoryEvent.Query(it))
                 }
             )
         }
         LazyVerticalGrid(
-            columns = GridCells.Adaptive(minSize = 90.dp)
+            columns = GridCells.Adaptive(minSize = 110.dp)
         ) {
-            items(50) {
+            items(state.workerCategories) {
                 WorkerCategoryItem(
-                    image = painterResource(id = R.drawable.builder),
-                    text = "Plumber",
+                    category = it,
+                    imageLoader = imageLoader,
                     onClick = {
                         onNavigate(Screen.WorkerListScreen.route)
                     }

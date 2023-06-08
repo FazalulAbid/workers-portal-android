@@ -1,10 +1,8 @@
 package com.fifty.workersportal.featureauth.data.repository
 
 import android.content.Context
-import android.util.Log
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.preferencesOf
-import com.fifty.workersportal.core.domain.model.User
+import com.fifty.workersportal.core.domain.model.UserSession
 import com.fifty.workersportal.core.util.dataStore
 import com.fifty.workersportal.featureauth.domain.repository.SessionRepository
 import com.fifty.workersportal.featureauth.utils.AuthConstants.KEY_JWT_ACCESS_TOKEN
@@ -33,9 +31,9 @@ class SessionRepositoryImpl(
         }
     }
 
-    override suspend fun getUserSession(): User {
+    override suspend fun getUserSession(): UserSession {
         val preferences = context.dataStore.data.first()
-        return User(
+        return UserSession(
             id = preferences[KEY_USER_ID] ?: "",
             firstName = preferences[KEY_USER_FIRST_NAME] ?: "",
             lastName = preferences[KEY_USER_LAST_NAME] ?: "",
@@ -56,12 +54,12 @@ class SessionRepositoryImpl(
         }
     }
 
-    override suspend fun saveUserSession(user: User) {
+    override suspend fun saveUserSession(userSession: UserSession) {
         context.dataStore.edit { preferences ->
-            preferences[KEY_USER_ID] = user.id
-            preferences[KEY_USER_FIRST_NAME] = user.firstName
-            preferences[KEY_USER_LAST_NAME] = user.lastName
-            preferences[KEY_USER_IS_WORKER] = user.isWorker
+            preferences[KEY_USER_ID] = userSession.id
+            preferences[KEY_USER_FIRST_NAME] = userSession.firstName
+            preferences[KEY_USER_LAST_NAME] = userSession.lastName
+            preferences[KEY_USER_IS_WORKER] = userSession.isWorker
         }
     }
 

@@ -1,8 +1,6 @@
 package com.fifty.workersportal.featureworker.data.remote.request
 
-import com.fifty.workersportal.featureworker.data.remote.dto.WorkerCategoryDto
-
-data class UpdateWorkerRequest(
+data class UpdateProfileForWorkerRequest(
     val openToWork: Boolean,
     val firstName: String,
     val lastName: String,
@@ -10,5 +8,5 @@ data class UpdateWorkerRequest(
     val bio: String,
     val gender: String,
     val age: Int,
-    val categoryList: List<WorkerCategoryDto>
+    val categoryList: List<WorkerCategoryRequest>
 )

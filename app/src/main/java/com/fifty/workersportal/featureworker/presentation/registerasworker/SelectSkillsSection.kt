@@ -72,10 +72,10 @@ fun SelectSkillsSection(
                 WorkerCategory("12", "Plasterer", "Plastering", "", 400.0f, 500.0f, "0.0", "0.0")
             )
 
-            workerCategories.forEach { workerCategory ->
+            viewModel.skillsState.value.skills.forEach { workerCategory ->
                 Chip(
-                    text = workerCategory.name,
-                    selected = viewModel.skillsState.value.selectedSkills.any { it.name == workerCategory.name },
+                    text = workerCategory.title ?: "",
+                    selected = viewModel.skillsState.value.selectedSkills.any { it.title == workerCategory.title },
                     onChipClick = {
                         viewModel.onEvent(RegisterAsWorkerEvent.SetSkillSelected(workerCategory))
                     }

@@ -1,4 +1,4 @@
-package com.fifty.workersportal.featureprofile.presentation.component
+package com.fifty.workersportal.featureworker.presentation.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

@@ -1,8 +1,7 @@
 package com.fifty.workersportal.featureauth.domain.usecase
 
-import android.util.Log
 import com.fifty.workersportal.R
-import com.fifty.workersportal.core.domain.model.User
+import com.fifty.workersportal.core.domain.model.UserSession
 import com.fifty.workersportal.core.util.Constants
 import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.SimpleResource
@@ -29,14 +28,12 @@ class VerifyOtpUseCase(
             otpCode = otpCode
         ).data
 
-        Log.d("Hello", "invoke: ${otpVerification.toString()}")
 
         otpVerification?.let {
-            Log.d("Hello", "User Id from inside: ${otpVerification.user.id}")
             sessionRepository.saveAccessToken(it.accessToken)
             sessionRepository.saveRefreshToken(it.refreshToken)
             sessionRepository.saveUserSession(
-                User(
+                UserSession(
                     id = it.user.id,
                     firstName = it.user.firstName,
                     lastName = it.user.lastName,

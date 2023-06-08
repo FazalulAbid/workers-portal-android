@@ -12,7 +12,7 @@ class SetSkillSelectedUseCase {
         selectedSkills: List<WorkerCategory>,
         skillToToggle: WorkerCategory
     ): Resource<List<WorkerCategory>> {
-        val skillInList = selectedSkills.find { it.name == skillToToggle.name }
+        val skillInList = selectedSkills.find { it.title == skillToToggle.title }
         if (skillInList != null) {
             return Resource.Success(selectedSkills - skillInList)
         }

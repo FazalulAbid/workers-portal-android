@@ -1,4 +1,4 @@
-package com.fifty.workersportal.featureprofile.presentation.workerprofile
+package com.fifty.workersportal.featureworker.presentation.workerprofile
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -47,9 +47,9 @@ import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
 import com.fifty.workersportal.core.presentation.ui.theme.SkyBlueColor
 import com.fifty.workersportal.core.presentation.ui.theme.SmallStrokeThickness
-import com.fifty.workersportal.featureprofile.presentation.component.ButtonBetweenLines
-import com.fifty.workersportal.featureprofile.presentation.component.RatingAndRatingCount
-import com.fifty.workersportal.featureprofile.presentation.component.WorkerWageText
+import com.fifty.workersportal.featureworker.presentation.component.ButtonBetweenLines
+import com.fifty.workersportal.featureworker.presentation.component.RatingAndRatingCount
+import com.fifty.workersportal.featureworker.presentation.component.WorkerWageText
 import kotlin.random.Random
 
 @Composable

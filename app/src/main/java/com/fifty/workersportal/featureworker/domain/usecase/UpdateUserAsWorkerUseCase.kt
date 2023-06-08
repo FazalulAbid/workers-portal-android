@@ -1,16 +1,21 @@
 package com.fifty.workersportal.featureworker.domain.usecase
 
 import android.util.Log
+import com.fifty.workersportal.core.domain.model.UserSession
 import com.fifty.workersportal.core.domain.util.ValidationUtil
-import com.fifty.workersportal.featureworker.data.remote.dto.WorkerCategoryDto
-import com.fifty.workersportal.featureworker.data.remote.request.UpdateWorkerRequest
+import com.fifty.workersportal.core.util.Resource
+import com.fifty.workersportal.core.util.UiText
+import com.fifty.workersportal.featureauth.domain.repository.SessionRepository
+import com.fifty.workersportal.featureuser.domain.repository.ProfileRepository
+import com.fifty.workersportal.featureworker.data.remote.request.WorkerCategoryRequest
+import com.fifty.workersportal.featureworker.data.remote.request.UpdateProfileForWorkerRequest
 import com.fifty.workersportal.featureworker.domain.model.UpdateWorkerData
 import com.fifty.workersportal.featureworker.domain.model.UpdateWorkerResult
-import com.fifty.workersportal.featureworker.domain.repository.WorkerRepository
 import com.fifty.workersportal.featureworker.util.WorkerError
 
-class UpdateWorkerUseCase(
-    private val repository: WorkerRepository
+class UpdateUserAsWorkerUseCase(
+    private val profileRepository: ProfileRepository,
+    private val sessionRepository: SessionRepository
 ) {
     suspend operator fun invoke(updateWorkerData: UpdateWorkerData): UpdateWorkerResult {
         Log.d("Hello", "invoke: UpdateWorkerUseCase worked")
@@ -40,8 +45,8 @@ class UpdateWorkerUseCase(
             )
         }
 
-        val result = repository.updateWorker(
-            UpdateWorkerRequest(
+        val result = profileRepository.updateProfileForWorker(
+            UpdateProfileForWorkerRequest(
                 openToWork = updateWorkerData.openToWork,
                 firstName = updateWorkerData.firstName,
                 lastName = updateWorkerData.lastName,
@@ -50,17 +55,25 @@ class UpdateWorkerUseCase(
                 gender = updateWorkerData.gender,
                 age = updateWorkerData.age,
                 categoryList = updateWorkerData.categoryList.map { workerCategory ->
-                    WorkerCategoryDto(
+                    WorkerCategoryRequest(
                         id = workerCategory.id,
                         hourlyWage = workerCategory.hourlyWage.toFloat(),
                         dailyWage = workerCategory.dailyWage.toFloat()
                     )
                 }
             )
-        )
+        ).data
 
-        return UpdateWorkerResult(
-            result = result
-        )
+        result?.let { profile ->
+            sessionRepository.saveUserSession(
+                UserSession(
+                    id = profile.id,
+                    firstName = profile.firstName,
+                    lastName = profile.lastName,
+                    isWorker = profile.isWorker
+                )
+            )
+            return UpdateWorkerResult(result = Resource.Success(Unit))
+        } ?: return UpdateWorkerResult(result = Resource.Error(UiText.unknownError()))
     }
 }

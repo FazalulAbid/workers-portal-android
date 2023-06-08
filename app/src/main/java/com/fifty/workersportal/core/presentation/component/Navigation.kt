@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavHostController
 import androidx.navigation.navigation
+import coil.ImageLoader
 import com.fifty.workersportal.core.presentation.util.enterTransitionHorizontal
 import com.fifty.workersportal.core.presentation.util.exitTransitionHorizontal
 import com.fifty.workersportal.core.presentation.util.popEnterTransitionHorizontal
@@ -17,7 +18,7 @@ import com.fifty.workersportal.featurechat.presentation.component.chatNavGraph
 import com.fifty.workersportal.featurechat.presentation.message.MessageScreen
 import com.fifty.workersportal.featurefavorites.presentation.component.favouriteNavGraph
 import com.fifty.workersportal.featurehistory.presentation.component.historyNavGraph
-import com.fifty.workersportal.featureprofile.presentation.workerprofile.WorkerProfileScreen
+import com.fifty.workersportal.featureworker.presentation.workerprofile.WorkerProfileScreen
 import com.fifty.workersportal.featureuser.presentation.component.homeNavGraph
 import com.fifty.workersportal.featureuser.presentation.testscreen.FavoriteScreen
 import com.fifty.workersportal.featureuser.presentation.testscreen.HistoryScreen
@@ -35,6 +36,7 @@ fun Navigation(
     navController: NavHostController,
     snackbarHostState: SnackbarHostState,
     startDestination: String,
+    imageLoader: ImageLoader,
     onDataLoaded: () -> Unit
 ) {
     LaunchedEffect(key1 = Unit) {
@@ -42,15 +44,15 @@ fun Navigation(
     }
     AnimatedNavHost(
         navController = navController,
-        startDestination = NavigationParent.Work.route,
+        startDestination = startDestination,
         enterTransition = { enterTransitionHorizontal },
         exitTransition = { exitTransitionHorizontal },
         popEnterTransition = { popEnterTransitionHorizontal },
         popExitTransition = { popExitTransitionHorizontal },
     ) {
-        authNavGraph(navController, snackbarHostState)
+        authNavGraph(navController, snackbarHostState, imageLoader)
         homeNavGraph(navController, snackbarHostState)
-        workerNavGraph(navController, snackbarHostState)
+        workerNavGraph(navController, snackbarHostState, imageLoader)
         favouriteNavGraph(navController, snackbarHostState)
         historyNavGraph(navController, snackbarHostState)
         chatNavGraph(navController, snackbarHostState)

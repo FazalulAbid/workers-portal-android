@@ -31,6 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavBackStackEntry
+import coil.ImageLoader
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.presentation.component.Keyboard
 import com.fifty.workersportal.core.presentation.component.StandardAppBar
@@ -48,6 +49,7 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun SelectCountryCodeScreen(
     previousBackStackEntry: NavBackStackEntry?,
+    imageLoader: ImageLoader,
     popBackStack: () -> Unit = {},
     onNavigateUp: () -> Unit = {},
     viewModel: SelectCountryViewModel = hiltViewModel()
@@ -145,7 +147,8 @@ fun SelectCountryCodeScreen(
                                         ?.savedStateHandle
                                         ?.set("name", country.name)
                                     popBackStack()
-                                }
+                                },
+                                imageLoader = imageLoader
                             )
                         }
                     }

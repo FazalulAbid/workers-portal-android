@@ -84,7 +84,7 @@ fun SelectPrimarySkillChips(
                         onChipClick = {
                             setSelected(workerCategory)
                         },
-                        text = workerCategory.skill
+                        text = workerCategory.skill ?: ""
                     )
                 }
             }

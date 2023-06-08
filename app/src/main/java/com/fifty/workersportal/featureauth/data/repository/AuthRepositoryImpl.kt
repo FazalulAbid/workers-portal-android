@@ -5,6 +5,7 @@ import coil.network.HttpException
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.data.util.ApiConstants.ACCESS_TOKEN_KEY
 import com.fifty.workersportal.core.data.util.ApiConstants.REFRESH_TOKEN_KEY
+import com.fifty.workersportal.core.data.util.Session
 import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.SimpleResource
 import com.fifty.workersportal.core.util.UiText
@@ -18,9 +19,8 @@ import java.io.IOException
 
 class AuthRepositoryImpl(
     private val api: AuthApiService,
-    private val authenticateApi: AuthenticateApiService,
-
-    ) : AuthRepository {
+    private val authenticateApi: AuthenticateApiService
+) : AuthRepository {
 
     override suspend fun getOtp(
         countryCode: String,

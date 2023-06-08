@@ -3,10 +3,12 @@ package com.fifty.workersportal.featureworker.presentation.registerasworker
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.domain.state.StandardTextFieldState
+import com.fifty.workersportal.core.domain.usecase.GetOwnUserIdUseCase
 import com.fifty.workersportal.core.domain.util.ValidationUtil
 import com.fifty.workersportal.core.presentation.util.UiEvent
 import com.fifty.workersportal.core.util.Constants.genderOptions
@@ -14,7 +16,7 @@ import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.UiText
 import com.fifty.workersportal.featureworker.domain.model.UpdateWorkerData
 import com.fifty.workersportal.featureworker.domain.model.WorkerCategory
-import com.fifty.workersportal.featureworker.domain.usecase.RegisterAsWorkerUseCases
+import com.fifty.workersportal.featureworker.domain.usecase.WorkerUseCases
 import com.fifty.workersportal.featureworker.util.WorkerError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -24,7 +26,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegisterAsWorkerViewModel @Inject constructor(
-    private val registerAsWorkerUseCases: RegisterAsWorkerUseCases
+    private val workerUseCases: WorkerUseCases,
+    private val getOwnUserId: GetOwnUserIdUseCase,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     val isRegisterCompleteDialogDisplayed = MutableLiveData(false)
@@ -68,6 +72,102 @@ class RegisterAsWorkerViewModel @Inject constructor(
     private val _onUpdate = MutableSharedFlow<Unit>(replay = 1)
     val onUpdate = _onUpdate.asSharedFlow()
 
+    init {
+        viewModelScope.launch {
+            val userId = getOwnUserId()
+            getWorkerCategories()
+//            getWorkerProfileDetails(userId)
+        }
+    }
+
+    private fun getWorkerCategories() {
+        viewModelScope.launch {
+            when (val result = workerUseCases.getCategories()) {
+                is Resource.Success -> {
+                    _skillsState.value = _skillsState.value.copy(
+                        skills = result.data?.map { it.toWorkerCategory() } ?: kotlin.run {
+                            _eventFlow.emit(
+                                UiEvent.MakeToast(
+                                    UiText.StringResource(R.string.oops_couldn_t_load_worker_categories)
+                                )
+                            )
+                            return@launch
+                        }
+                    )
+                }
+
+                is Resource.Error -> {
+                    _eventFlow.emit(
+                        UiEvent.MakeToast(
+                            result.uiText ?: UiText.unknownError()
+                        )
+                    )
+                }
+            }
+        }
+    }
+
+    private fun getWorkerProfileDetails(id: String) {
+        viewModelScope.launch {
+            _eventFlow.emit(
+                UiEvent.MakeToast(
+                    UiText.DynamicString(id)
+                )
+            )
+            when (val result = workerUseCases.getUserProfileDetails(id)) {
+                is Resource.Success -> {
+                    val profile = result.data ?: kotlin.run {
+                        _eventFlow.emit(
+                            UiEvent.MakeToast(
+                                UiText.StringResource(R.string.oops_couldn_t_load_profile)
+                            )
+                        )
+                        return@launch
+                    }
+                    _openToWorkState.value = profile.openToWork
+                    _firstNameState.value = firstNameState.value.copy(
+                        text = profile.firstName
+                    )
+                    _lastNameState.value = lastNameState.value.copy(
+                        text = profile.lastName
+                    )
+                    _emailState.value = emailState.value.copy(
+                        text = profile.email
+                    )
+                    _bioState.value = bioState.value.copy(
+                        text = profile.bio
+                    )
+                    _genderState.value = profile.gender
+                    _ageState.value = ageState.value.copy(
+                        text = profile.age.toString()
+                    )
+                    _skillsState.value = skillsState.value.copy(
+                        selectedSkills = profile.categoryList?.map { workerCategory ->
+                            workerCategory.copy(
+                                title = _skillsState.value.skills.find { it.id == id }?.title,
+                                skill = _skillsState.value.skills.find { it.id == id }?.skill,
+                                dailyMinWage = _skillsState.value.skills.find { it.id == id }?.dailyMinWage,
+                                hourlyMinWage = _skillsState.value.skills.find { it.id == id }?.hourlyMinWage,
+                            )
+                        } ?: emptyList()
+                    )
+                    _primarySkill.value = profile.primaryCategory?.copy(
+                        title = _skillsState.value.skills.find { it.id == id }?.title,
+                        skill = _skillsState.value.skills.find { it.id == id }?.skill,
+                        dailyMinWage = _skillsState.value.skills.find { it.id == id }?.dailyMinWage,
+                        hourlyMinWage = _skillsState.value.skills.find { it.id == id }?.hourlyMinWage,
+                    )
+                }
+
+                is Resource.Error -> {
+                    _eventFlow.emit(
+                        UiEvent.MakeToast(result.uiText ?: UiText.unknownError())
+                    )
+                }
+            }
+        }
+    }
+
     fun onEvent(event: RegisterAsWorkerEvent) {
         when (event) {
             is RegisterAsWorkerEvent.ToggleOpenToWork -> {
@@ -109,7 +209,7 @@ class RegisterAsWorkerViewModel @Inject constructor(
             }
 
             is RegisterAsWorkerEvent.SetSkillSelected -> {
-                val result = registerAsWorkerUseCases.setSkillSelected(
+                val result = workerUseCases.setSkillSelected(
                     selectedSkills = skillsState.value.selectedSkills,
                     event.workerCategory
                 )
@@ -194,7 +294,7 @@ class RegisterAsWorkerViewModel @Inject constructor(
             _updateWorkerState.value = UpdateWorkerState(isLoading = true)
             validateCategoryWages()
 
-            val updateWorkerResult = registerAsWorkerUseCases.updateWorker(
+            val updateWorkerResult = workerUseCases.updateUserAsWorker(
                 UpdateWorkerData(
                     openToWork = _openToWorkState.value,
                     firstName = _firstNameState.value.text,
@@ -270,8 +370,8 @@ class RegisterAsWorkerViewModel @Inject constructor(
         for (index in updatedSkills.indices) {
             updatedSkills[index] =
                 updatedSkills[index].copy(
-                    dailyWage = updatedSkills[index].minHourlyWage.toString(),
-                    hourlyWage = updatedSkills[index].minDailyWage.toString()
+                    dailyWage = updatedSkills[index].hourlyMinWage.toString(),
+                    hourlyWage = updatedSkills[index].dailyMinWage.toString()
                 )
             _skillsState.value = skillsState.value.copy(selectedSkills = updatedSkills)
         }
@@ -284,11 +384,11 @@ class RegisterAsWorkerViewModel @Inject constructor(
                 updatedSkills[index].copy(
                     dailyWage = ValidationUtil.validateWage(
                         updatedSkills[index].dailyWage,
-                        updatedSkills[index].minDailyWage
+                        updatedSkills[index].dailyMinWage ?: 0f
                     ).toString(),
                     hourlyWage = ValidationUtil.validateWage(
                         updatedSkills[index].hourlyWage,
-                        updatedSkills[index].minHourlyWage
+                        updatedSkills[index].hourlyMinWage ?: 0f
                     ).toString(),
                 )
             _skillsState.value = skillsState.value.copy(selectedSkills = updatedSkills)

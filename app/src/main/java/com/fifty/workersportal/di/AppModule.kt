@@ -1,6 +1,9 @@
 package com.fifty.workersportal.di
 
+import android.app.Application
 import android.content.Context
+import coil.ImageLoader
+import coil.decode.SvgDecoder
 import com.fifty.workersportal.core.domain.usecase.GetOwnUserIdUseCase
 import com.fifty.workersportal.core.util.Constants
 import com.fifty.workersportal.featureauth.domain.repository.SessionRepository
@@ -44,6 +47,16 @@ object AppModule {
         Retrofit.Builder()
             .baseUrl(Constants.WORKERS_PORTAL_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
+
+    @Provides
+    @Singleton
+    fun provideImageLoader(app: Application): ImageLoader =
+        ImageLoader.Builder(app)
+            .crossfade(true)
+            .componentRegistry {
+                add(SvgDecoder(app))
+            }
+            .build()
 
     @Provides
     @Singleton

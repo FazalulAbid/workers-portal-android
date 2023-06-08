@@ -91,5 +91,7 @@
     <string name="thank_you_for_registering_as_a_worker">Thank you for registering as a worker</string>
     <string name="your_registration_has_been_successfully_submitted">Your registration has been successfully submitted. Now you can accept work proposals from your worker dashboard.</string>
     <string name="go_to_dashboard">Go to dashboard</string>
+    <string name="oops_couldn_t_load_profile">Oops! Couldn\'t load profile</string>
+    <string name="oops_couldn_t_load_worker_categories">Oops! Couldn\'t load worker categories</string>
 
 </resources>

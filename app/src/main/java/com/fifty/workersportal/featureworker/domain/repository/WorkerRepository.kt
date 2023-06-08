@@ -1,9 +1,10 @@
 package com.fifty.workersportal.featureworker.domain.repository
 
-import com.fifty.workersportal.core.util.SimpleResource
-import com.fifty.workersportal.featureworker.data.remote.request.UpdateWorkerRequest
+import com.fifty.workersportal.core.util.Resource
+import com.fifty.workersportal.featureworker.domain.model.Category
+import com.fifty.workersportal.featureworker.domain.model.WorkerCategory
 
 interface WorkerRepository {
 
-    suspend fun updateWorker(updateWorkerRequest: UpdateWorkerRequest): SimpleResource
+    suspend fun getCategories(): Resource<List<Category>>
 }
