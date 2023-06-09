@@ -1,18 +1,24 @@
 package com.fifty.workersportal.core.presentation.component
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -24,7 +30,8 @@ import com.fifty.workersportal.core.presentation.ui.theme.SmallProfilePictureHei
 
 @Composable
 fun DashboardNavigationAndProfile(
-
+    onProfileClick: () -> Unit = {},
+    onLocationClick: () -> Unit = {}
 ) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -32,7 +39,15 @@ fun DashboardNavigationAndProfile(
     ) {
         Column(
             modifier = Modifier
-                .weight(1f),
+                .weight(1f)
+                .clickable(
+                    indication = null,
+                    interactionSource = remember {
+                        MutableInteractionSource()
+                    }
+                ) {
+                    onLocationClick()
+                },
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Row(
@@ -68,7 +83,11 @@ fun DashboardNavigationAndProfile(
         }
         Spacer(modifier = Modifier.width(SizeMedium))
         Image(
-            modifier = Modifier.size(SmallProfilePictureHeight),
+            modifier = Modifier
+                .size(SmallProfilePictureHeight)
+                .clip(CircleShape)
+                .clickable { onProfileClick() },
+            contentScale = ContentScale.Crop,
             painter = painterResource(id = R.drawable.test_man_profile),
             contentDescription = stringResource(R.string.profile_picture)
         )

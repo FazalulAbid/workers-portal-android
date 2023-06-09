@@ -1,8 +1,5 @@
 package com.fifty.workersportal.featureauth.presentation.splash
 
-import android.util.Log
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fifty.workersportal.core.presentation.util.UiEvent
@@ -21,8 +18,6 @@ import javax.inject.Inject
 class SplashViewModel @Inject constructor(
     private val authenticate: AuthenticateUseCase
 ) : ViewModel() {
-
-    private val TAG = "Hello SplashViewModel"
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()

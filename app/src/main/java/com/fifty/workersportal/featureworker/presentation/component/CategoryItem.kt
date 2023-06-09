@@ -35,9 +35,12 @@ fun CategoryItem(
     imageLoader: ImageLoader,
     onClick: () -> Unit = {}
 ) {
-    Box(modifier = Modifier.padding(SizeSmall)) {
+    Box(
+        modifier = modifier.padding(SizeSmall),
+        contentAlignment = Alignment.Center
+    ) {
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .clickable {
                     onClick()
                 }

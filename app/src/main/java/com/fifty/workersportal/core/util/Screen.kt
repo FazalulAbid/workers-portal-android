@@ -15,4 +15,6 @@ sealed class Screen(val route: String) {
     object RegisterAsWorkerScreen : Screen("register_as_worker_screen")
     object ChatScreen : Screen("chat_screen")
     object MessageScreen : Screen("message_screen")
+    object SelectLocationScreen : Screen("select_location_screen")
+    object DetectCurrentLocationScreen : Screen("detect_current_location_screen")
 }

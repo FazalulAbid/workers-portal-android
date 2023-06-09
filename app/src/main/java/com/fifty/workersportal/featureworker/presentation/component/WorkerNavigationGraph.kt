@@ -10,11 +10,11 @@ import coil.ImageLoader
 import com.fifty.workersportal.core.domain.util.Session
 import com.fifty.workersportal.core.util.NavigationParent
 import com.fifty.workersportal.core.util.Screen
-import com.fifty.workersportal.featureworker.presentation.workerprofile.WorkerProfileScreen
 import com.fifty.workersportal.featureworker.presentation.registerasworker.RegisterAsWorkerScreen
 import com.fifty.workersportal.featureworker.presentation.selectworkercategory.SelectWorkerCategoryScreen
 import com.fifty.workersportal.featureworker.presentation.workerdashboard.WorkerDashboardScreen
 import com.fifty.workersportal.featureworker.presentation.workerlist.WorkerListScreen
+import com.fifty.workersportal.featureworker.presentation.workerprofile.WorkerProfileScreen
 import com.google.accompanist.navigation.animation.composable
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -23,15 +23,8 @@ fun NavGraphBuilder.workerNavGraph(
     snackbarHostState: SnackbarHostState,
     imageLoader: ImageLoader
 ) {
-    var isWorker = false
-    try {
-        isWorker = Session.userSession.isWorker
-        Log.d("Hello", "workerNavGraph: $isWorker")
-    } catch (e: UninitializedPropertyAccessException) {
-        e.printStackTrace()
-    }
     navigation(
-        startDestination = if (isWorker) {
+        startDestination = if (Session.isWorker) {
             Screen.WorkerDashboardScreen.route
         } else Screen.RegisterAsWorkerScreen.route,
         route = NavigationParent.Work.route

@@ -77,13 +77,13 @@ fun WorkerProfileScreen(
             }
         )
         LazyVerticalGrid(
-            modifier = Modifier.padding(horizontal = SizeMedium),
             columns = GridCells.Fixed(3)
         ) {
             item(span = { GridItemSpan(3) }) {
                 Column(
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .padding(horizontal = SizeMedium),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Spacer(modifier = Modifier.height(SizeMedium))
@@ -174,8 +174,12 @@ fun WorkerProfileScreen(
                     Spacer(modifier = Modifier.height(SizeLarge))
                 }
             }
-            item(span = { GridItemSpan(3) }) {
-                SecondaryHeader(text = "Fazlul's Works")
+            item(
+                span = { GridItemSpan(3) }) {
+                SecondaryHeader(
+                    modifier = Modifier.padding(horizontal = SizeMedium),
+                    text = "Fazlul's Works"
+                )
             }
             items(25) {
                 val randomColor =

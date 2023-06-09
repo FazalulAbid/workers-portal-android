@@ -1,7 +1,8 @@
 package com.fifty.workersportal.core.domain.util
 
-import com.fifty.workersportal.core.domain.model.UserSession
-
 object Session {
-    lateinit var userSession: UserSession
+    var userId: String? = null
+    var firstName: String? = null
+    var isWorker: Boolean = false
+    var lastName: String? = null
 }

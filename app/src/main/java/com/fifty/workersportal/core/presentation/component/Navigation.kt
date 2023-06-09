@@ -18,6 +18,7 @@ import com.fifty.workersportal.featurechat.presentation.component.chatNavGraph
 import com.fifty.workersportal.featurechat.presentation.message.MessageScreen
 import com.fifty.workersportal.featurefavorites.presentation.component.favouriteNavGraph
 import com.fifty.workersportal.featurehistory.presentation.component.historyNavGraph
+import com.fifty.workersportal.featurelocation.presentation.component.locationNavGraph
 import com.fifty.workersportal.featureworker.presentation.workerprofile.WorkerProfileScreen
 import com.fifty.workersportal.featureuser.presentation.component.homeNavGraph
 import com.fifty.workersportal.featureuser.presentation.testscreen.FavoriteScreen
@@ -56,5 +57,6 @@ fun Navigation(
         favouriteNavGraph(navController, snackbarHostState)
         historyNavGraph(navController, snackbarHostState)
         chatNavGraph(navController, snackbarHostState)
+        locationNavGraph(navController, snackbarHostState)
     }
 }

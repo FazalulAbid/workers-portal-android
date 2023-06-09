@@ -34,12 +34,17 @@ class SessionRepositoryImpl(
 
     override suspend fun getUserSession(): UserSession {
         val preferences = context.dataStore.data.first()
-        return UserSession(
+        val userSession = UserSession(
             id = preferences[KEY_USER_ID] ?: "",
             firstName = preferences[KEY_USER_FIRST_NAME] ?: "",
             lastName = preferences[KEY_USER_LAST_NAME] ?: "",
             isWorker = preferences[KEY_USER_IS_WORKER] ?: false
         )
+        Session.userId = userSession.id
+        Session.firstName = userSession.firstName
+        Session.lastName = userSession.lastName
+        Session.isWorker = userSession.isWorker
+        return userSession
     }
 
 
@@ -62,7 +67,10 @@ class SessionRepositoryImpl(
             preferences[KEY_USER_LAST_NAME] = userSession.lastName
             preferences[KEY_USER_IS_WORKER] = userSession.isWorker
         }
-        Session.userSession = userSession
+        Session.userId = userSession.id
+        Session.firstName = userSession.firstName
+        Session.lastName = userSession.lastName
+        Session.isWorker = userSession.isWorker
     }
 
     override suspend fun deleteTokens() {
