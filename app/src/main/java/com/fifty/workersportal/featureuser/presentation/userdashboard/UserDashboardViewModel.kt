@@ -54,7 +54,7 @@ class UserDashboardViewModel @Inject constructor(
             viewModelScope.launch {
                 _eventFlow.emit(
                     UiEvent.Navigate(
-                        Screen.DetectCurrentLocationScreen.route
+                        Screen.SelectLocationScreen.route
                     )
                 )
             }

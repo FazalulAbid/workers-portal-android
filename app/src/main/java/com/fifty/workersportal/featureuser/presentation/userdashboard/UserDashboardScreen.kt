@@ -141,6 +141,7 @@ fun UserDashboardScreen(
             Column(Modifier.padding(horizontal = SizeMedium)) {
                 SecondaryHeader(
                     text = stringResource(R.string.suggested_categories),
+                    modifier = Modifier.padding(vertical = SizeMedium),
                     style = MaterialTheme.typography.titleMedium,
                     moreOption = true,
                     moreOptionText = stringResource(R.string.all_categories),

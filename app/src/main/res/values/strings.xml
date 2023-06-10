@@ -100,5 +100,8 @@
     <string name="choose_your_location">Choose your location</string>
     <string name="confirm_location">Confirm location</string>
     <string name="use_current_location">Use current location</string>
+    <string name="select_a_location">Select a location</string>
+    <string name="detect_your_current_location">Detect your current location</string>
+    <string name="saved_addresses">Saved addresses</string>
 
 </resources>

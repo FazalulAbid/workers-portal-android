@@ -42,8 +42,7 @@ fun SecondaryHeader(
     ) {
         Text(
             modifier = modifier
-                .weight(1f)
-                .padding(vertical = SizeMedium),
+                .weight(1f),
             text = text,
             style = style.copy(
                 fontWeight = fontWeight,
