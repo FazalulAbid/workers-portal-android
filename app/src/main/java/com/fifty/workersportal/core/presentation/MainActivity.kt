@@ -1,6 +1,8 @@
 package com.fifty.workersportal.core.presentation
 
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -30,13 +32,13 @@ import com.fifty.workersportal.featureauth.presentation.splash.SplashEvent
 import com.fifty.workersportal.featureauth.presentation.splash.SplashViewModel
 import com.fifty.workersportal.featureauth.presentation.splash.UserAuthState
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.google.android.gms.location.LocationServices
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
     @Inject
     lateinit var imageLoader: ImageLoader
 

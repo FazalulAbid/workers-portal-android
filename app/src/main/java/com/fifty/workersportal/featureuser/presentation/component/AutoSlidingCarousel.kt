@@ -92,7 +92,6 @@ fun AutoSlidingCarousal(
                         .align(Alignment.Center)
                 ) {
                     val banner = banners.getOrNull(page)
-                    Log.d("Hello", "AutoSlidingCarousal: ${banner?.imageUrl}")
                     Image(
                         painter = rememberImagePainter(
                             data = banner?.imageUrl,

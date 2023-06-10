@@ -56,7 +56,7 @@ fun UserDashboardScreen(
     val context = LocalContext.current
 
     val permissionsToRequest = arrayOf(
-        Manifest.permission.ACCESS_COARSE_LOCATION,
+        Manifest.permission.ACCESS_FINE_LOCATION
     )
 
     val multiplePermissionResultLauncher = rememberLauncherForActivityResult(
@@ -171,7 +171,7 @@ fun UserDashboardScreen(
     viewModel.visiblePermissionDialogQueue.reversed().forEach { permission ->
         PermissionDialog(
             permissionTextProvider = when (permission) {
-                Manifest.permission.ACCESS_COARSE_LOCATION -> CoarseLocationPermissionTextProvider()
+                Manifest.permission.ACCESS_FINE_LOCATION -> CoarseLocationPermissionTextProvider()
                 else -> {
                     return@forEach
                 }

@@ -8,6 +8,7 @@ val SizeSmall = 8.dp
 val SizeMedium = 16.dp
 val SizeLarge = 24.dp
 val SizeExtraLarge = 32.dp
+val SizeExtraExtraLarge = 40.dp
 
 val SmallStrokeThickness = 1.dp
 val MediumStrokeThickness = 1.2.dp
