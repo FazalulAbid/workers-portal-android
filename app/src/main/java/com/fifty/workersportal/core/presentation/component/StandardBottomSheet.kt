@@ -1,6 +1,7 @@
 package com.fifty.workersportal.core.presentation.component
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -20,16 +21,13 @@ fun StandardBottomSheet(
     onDismiss: () -> Unit,
     sheetContent: @Composable () -> Unit
 ) {
-    when {
-        sheetState.isVisible -> {
-            ModalBottomSheet(
-                onDismissRequest = onDismiss,
-                modifier = modifier.fillMaxSize(),
-                containerColor = containerColor,
-                tonalElevation = SizeMedium,
-            ) {
-                sheetContent()
-            }
-        }
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        containerColor = containerColor,
+        tonalElevation = SizeMedium,
+        sheetState = sheetState,
+        dragHandle = { BottomSheetDefaults.DragHandle() }
+    ) {
+        sheetContent()
     }
 }

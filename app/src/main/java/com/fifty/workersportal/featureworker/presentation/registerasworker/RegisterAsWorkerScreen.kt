@@ -4,7 +4,6 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -18,8 +17,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -30,7 +31,6 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.presentation.component.StandardAppBar
@@ -55,7 +55,7 @@ fun RegisterAsWorkerScreen(
     onNavigateUp: () -> Unit = {},
     viewModel: RegisterAsWorkerViewModel = hiltViewModel()
 ) {
-    val bottomSheetState = rememberModalBottomSheetState()
+    var showSheet by remember { mutableStateOf(false) }
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
     val firstNameFocusRequester = remember { FocusRequester() }
@@ -80,7 +80,7 @@ fun RegisterAsWorkerScreen(
 
     LaunchedEffect(key1 = true) {
         viewModel.onUpdate.collectLatest {
-            bottomSheetState.hide()
+            showSheet = false
             viewModel.isRegisterCompleteDialogDisplayed.postValue(true)
         }
     }
@@ -135,7 +135,7 @@ fun RegisterAsWorkerScreen(
 
                 WorkerError.NoPrimarySkillSelected -> {
                     makeToast(R.string.select_your_primary_skill, context)
-                    bottomSheetState.partialExpand()
+                    showSheet = true
                 }
             }
         }
@@ -219,27 +219,26 @@ fun RegisterAsWorkerScreen(
         }
     }
 
-    StandardBottomSheet(
-        modifier = Modifier.heightIn(max = 400.dp),
-        sheetState = bottomSheetState,
-        onDismiss = {
-            coroutineScope.launch {
-                bottomSheetState.hide()
+    if (showSheet) {
+        StandardBottomSheet(
+            sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+            onDismiss = {
+                showSheet = false
             }
-        }
-    ) {
-        RegisterAsWorkerBottomSheetContent(
-            chosenSkills = viewModel.skillsState.value.selectedSkills,
-            primarySkillSelected = viewModel.primarySkill.value,
-            setSelected = {
-                viewModel.onEvent(RegisterAsWorkerEvent.PrimarySkillSelected(it))
-            },
-            onSaveChanges = {
-                coroutineScope.launch {
-                    viewModel.onEvent(RegisterAsWorkerEvent.UpdateWorker)
+        ) {
+            RegisterAsWorkerBottomSheetContent(
+                chosenSkills = viewModel.skillsState.value.selectedSkills,
+                primarySkillSelected = viewModel.primaryCategory.value,
+                setSelected = {
+                    viewModel.onEvent(RegisterAsWorkerEvent.PrimarySkillSelected(it))
+                },
+                onSaveChanges = {
+                    coroutineScope.launch {
+                        viewModel.onEvent(RegisterAsWorkerEvent.UpdateWorker)
+                    }
                 }
-            }
-        )
+            )
+        }
     }
 
     val isRegisterCompleteDialogDisplayed by viewModel

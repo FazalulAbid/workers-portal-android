@@ -177,8 +177,12 @@ fun WorkerProfileScreen(
             item(
                 span = { GridItemSpan(3) }) {
                 SecondaryHeader(
-                    modifier = Modifier.padding(horizontal = SizeMedium),
-                    text = "Fazlul's Works"
+                    modifier = Modifier.padding(
+                        vertical = SizeMedium,
+                        horizontal = SizeMedium
+                    ),
+                    text = "Fazalul's works",
+                    style = MaterialTheme.typography.titleMedium
                 )
             }
             items(25) {

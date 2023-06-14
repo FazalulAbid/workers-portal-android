@@ -5,16 +5,23 @@ import android.app.Activity
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -22,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.ImageLoader
@@ -164,6 +172,33 @@ fun UserDashboardScreen(
                     }
                 }
                 Spacer(modifier = Modifier.height(SizeSmall))
+                Spacer(modifier = Modifier.height(SizeSmall))
+                Spacer(modifier = Modifier.height(SizeSmall))
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+//                    val list = listOf(
+//                        Screen.WorkerDashboardScreen.route,
+//                        Screen.SearchCategoryScreen.route,
+//                        Screen.WorkerListScreen.route,
+//                        Screen.WorkerProfileScreen.route,
+//                        Screen.RegisterAsWorkerScreen.route,
+//                        Screen.MessageScreen.route,
+//                    )
+//                    LazyHorizontalGrid(
+//                        rows = GridCells.Adaptive(minSize = 70.dp),
+//                        modifier = Modifier.fillMaxWidth()
+//                    ) {
+//                        items(list) {
+//                            Button(onClick = {
+//                                onNavigate(it)
+//                            }, Modifier.padding(SizeMedium)) {
+//                                Text(text = it)
+//                            }
+//                        }
+//                    }
+                }
             }
         }
     }

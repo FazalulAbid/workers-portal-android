@@ -61,8 +61,8 @@ class RegisterAsWorkerViewModel @Inject constructor(
     private val _skillsState = mutableStateOf(SkillsState())
     val skillsState: State<SkillsState> = _skillsState
 
-    private val _primarySkill = mutableStateOf<WorkerCategory?>(null)
-    val primarySkill: State<WorkerCategory?> = _primarySkill
+    private val _primaryCategory = mutableStateOf<WorkerCategory?>(null)
+    val primaryCategory: State<WorkerCategory?> = _primaryCategory
 
     private val _updateWorkerState = mutableStateOf(UpdateWorkerState())
     val updateWorkerState: State<UpdateWorkerState> = _updateWorkerState
@@ -160,15 +160,8 @@ class RegisterAsWorkerViewModel @Inject constructor(
                         )
                     } ?: emptyList()
                 )
-                _primarySkill.value = profile.primaryCategory?.let { primaryCategory ->
-                    val matchingSkill =
-                        _skillsState.value.selectedSkills.find { it.id == primaryCategory.id }
-                    primaryCategory.copy(
-                        title = matchingSkill?.title,
-                        skill = matchingSkill?.skill,
-                        dailyMinWage = matchingSkill?.dailyMinWage,
-                        hourlyMinWage = matchingSkill?.hourlyMinWage,
-                    )
+                _primaryCategory.value = _skillsState.value.skills.find {
+                    it.id == profile.primaryCategory
                 }
             }
 
@@ -248,7 +241,7 @@ class RegisterAsWorkerViewModel @Inject constructor(
             }
 
             is RegisterAsWorkerEvent.PrimarySkillSelected -> {
-                _primarySkill.value = event.workerCategory
+                _primaryCategory.value = event.workerCategory
             }
 
             is RegisterAsWorkerEvent.EnterSelectedSkillDailyWage -> {
@@ -290,7 +283,7 @@ class RegisterAsWorkerViewModel @Inject constructor(
     }
 
     private fun setWorkerCategoryAsPrimary(workerCategory: WorkerCategory) {
-        _primarySkill.value = workerCategory
+        _primaryCategory.value = workerCategory
     }
 
     private fun updateWorker() {
@@ -316,7 +309,7 @@ class RegisterAsWorkerViewModel @Inject constructor(
                     gender = _genderState.value,
                     age = if (_ageState.value.text.isBlank()) 0 else _ageState.value.text.toInt(),
                     categoryList = _skillsState.value.selectedSkills,
-                    primarySkill = _primarySkill.value
+                    primarySkill = _primaryCategory.value
                 )
             )
 
@@ -377,8 +370,8 @@ class RegisterAsWorkerViewModel @Inject constructor(
         for (index in updatedSkills.indices) {
             updatedSkills[index] =
                 updatedSkills[index].copy(
-                    dailyWage = updatedSkills[index].hourlyMinWage.toString(),
-                    hourlyWage = updatedSkills[index].dailyMinWage.toString()
+                    dailyWage = updatedSkills[index].dailyWage,
+                    hourlyWage = updatedSkills[index].hourlyWage
                 )
             _skillsState.value = skillsState.value.copy(selectedSkills = updatedSkills)
         }

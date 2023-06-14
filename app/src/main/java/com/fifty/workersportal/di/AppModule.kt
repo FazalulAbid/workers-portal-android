@@ -9,6 +9,8 @@ import com.fifty.workersportal.core.util.Constants
 import com.fifty.workersportal.featureauth.domain.repository.SessionRepository
 import com.fifty.workersportal.featureauth.utils.AuthAuthenticator
 import com.fifty.workersportal.featureauth.utils.AuthInterceptor
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.SettingsClient
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -57,6 +59,13 @@ object AppModule {
                 add(SvgDecoder(app))
             }
             .build()
+
+    @Provides
+    @Singleton
+    fun provideSettingsClient(
+        @ApplicationContext context: Context
+    ): SettingsClient =
+        LocationServices.getSettingsClient(context)
 
     @Provides
     @Singleton

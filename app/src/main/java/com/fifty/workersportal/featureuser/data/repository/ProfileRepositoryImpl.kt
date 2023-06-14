@@ -18,9 +18,7 @@ class ProfileRepositoryImpl(
 
     override suspend fun getUserProfileDetails(userId: String): Resource<Profile> {
         return try {
-            Log.d("Hello", "getUserProfileDetails: Before $userId")
             val response = api.getUserProfileDetails(userId = userId)
-            Log.d("Hello", "getUserProfileDetails: After")
             if (response.successful) {
                 Resource.Success(data = response.data?.toProfile())
             } else {
@@ -46,10 +44,9 @@ class ProfileRepositoryImpl(
     override suspend fun updateProfileForWorker(
         updateProfileForWorkerRequest: UpdateProfileForWorkerRequest
     ): Resource<Profile> {
+        Log.d("Hello", "updateProfileForWorker: $updateProfileForWorkerRequest")
         return try {
-            Log.d("Hello", "updateProfileForWorker: $updateProfileForWorkerRequest")
             val response = api.updateProfileForWorker(updateProfileForWorkerRequest)
-            Log.d("Hello", "response: $response")
             if (response.successful) {
                 Resource.Success(data = response.data?.toProfile())
             } else {

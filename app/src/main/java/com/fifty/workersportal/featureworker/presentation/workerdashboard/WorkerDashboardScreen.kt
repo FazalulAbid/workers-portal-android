@@ -28,6 +28,7 @@ import com.fifty.workersportal.core.presentation.component.SecondaryHeader
 import com.fifty.workersportal.core.presentation.ui.theme.SizeExtraSmall
 import com.fifty.workersportal.core.presentation.ui.theme.SizeLarge
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
+import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
 import com.fifty.workersportal.core.presentation.ui.theme.SmallProfilePictureHeight
 import com.fifty.workersportal.core.presentation.ui.theme.SmallStrokeThickness
 import com.fifty.workersportal.featureworker.presentation.component.OpenToWorkSwitch
@@ -62,7 +63,11 @@ fun WorkerDashboardScreen(
             Spacer(modifier = Modifier.height(SizeExtraSmall))
             HorizontalDivider()
             SecondaryHeader(
-                text = stringResource(R.string.work_proposals)
+                modifier = Modifier.padding(
+                    vertical = SizeMedium
+                ),
+                text = stringResource(R.string.work_proposals),
+                style = MaterialTheme.typography.titleMedium
             )
         }
         LazyColumn() {

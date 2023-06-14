@@ -33,6 +33,7 @@ fun SelectSkillsSection(
             .fillMaxSize()
     ) {
         SecondaryHeader(
+            modifier = Modifier.padding(SizeMedium),
             text = stringResource(R.string.select_your_skills),
             style = MaterialTheme.typography.titleMedium
         )

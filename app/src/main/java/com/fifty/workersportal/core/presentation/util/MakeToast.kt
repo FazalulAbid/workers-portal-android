@@ -18,3 +18,11 @@ fun makeToast(messageRes: Int, context: Context, isLong: Boolean = false) {
         if (isLong) Toast.LENGTH_LONG else Toast.LENGTH_SHORT
     ).show()
 }
+
+fun makeToast(messageRes: Int, formatArg: Int, context: Context, isLong: Boolean = false) {
+    Toast.makeText(
+        context,
+        context.getString(messageRes, formatArg),
+        if (isLong) Toast.LENGTH_LONG else Toast.LENGTH_SHORT
+    ).show()
+}

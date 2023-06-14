@@ -38,6 +38,7 @@ fun Navigation(
     snackbarHostState: SnackbarHostState,
     startDestination: String,
     imageLoader: ImageLoader,
+    isWorker: Boolean,
     onDataLoaded: () -> Unit
 ) {
     LaunchedEffect(key1 = Unit) {
@@ -53,7 +54,7 @@ fun Navigation(
     ) {
         authNavGraph(navController, snackbarHostState, imageLoader)
         homeNavGraph(navController, snackbarHostState, imageLoader)
-        workerNavGraph(navController, snackbarHostState, imageLoader)
+        workerNavGraph(navController, snackbarHostState, imageLoader, isWorker)
         favouriteNavGraph(navController, snackbarHostState)
         historyNavGraph(navController, snackbarHostState)
         chatNavGraph(navController, snackbarHostState)

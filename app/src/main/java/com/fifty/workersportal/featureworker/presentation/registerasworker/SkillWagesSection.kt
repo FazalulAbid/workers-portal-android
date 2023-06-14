@@ -1,5 +1,6 @@
 package com.fifty.workersportal.featureworker.presentation.registerasworker
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,9 +26,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.InspectableModifier
 import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
@@ -36,6 +39,7 @@ import com.fifty.workersportal.core.presentation.component.SecondaryHeader
 import com.fifty.workersportal.core.presentation.component.StandardTextField
 import com.fifty.workersportal.core.presentation.ui.theme.MediumButtonHeight
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
+import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
 
 @Composable
 fun SkillWagesSection(
@@ -47,16 +51,22 @@ fun SkillWagesSection(
 
     Column(
         modifier = modifier
-            .padding(
-                horizontal = SizeMedium
-            )
+            .padding(horizontal = SizeMedium)
             .fillMaxSize()
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            SecondaryHeader(
-                modifier = Modifier.weight(1f),
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
                 text = stringResource(R.string.enter_your_wages),
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleMedium.copy(
+                    color = MaterialTheme.colorScheme.onBackground,
+                    fontWeight = FontWeight.SemiBold
+                ),
+                modifier = Modifier
+                    .padding(vertical = SizeMedium)
+                    .weight(1f)
             )
             Button(
                 onClick = { viewModel.onEvent(RegisterAsWorkerEvent.SetDefaultWages) },
@@ -72,8 +82,9 @@ fun SkillWagesSection(
             items(selectedSkills.size) { index ->
                 val skill = selectedSkills[index]
                 SecondaryHeader(
+                    modifier = Modifier.padding(vertical = SizeSmall),
                     text = skill.skill ?: "",
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleSmall
                 )
                 Row(
                     modifier = Modifier.fillMaxWidth()

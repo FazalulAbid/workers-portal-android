@@ -10,5 +10,5 @@ data class UpdateProfileForWorkerRequest(
     val gender: String,
     val age: Int,
     val categoryList: List<WorkerCategoryRequest>,
-    val primarySkill: String
+    val primaryCategory: String
 )

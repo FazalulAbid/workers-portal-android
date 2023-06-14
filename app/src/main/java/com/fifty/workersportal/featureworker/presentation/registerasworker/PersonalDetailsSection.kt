@@ -81,6 +81,7 @@ fun PersonalDetailsSection(
                 )
                 Spacer(modifier = Modifier.height(SizeExtraSmall))
                 SecondaryHeader(
+                    modifier = Modifier.padding(vertical = SizeMedium),
                     text = stringResource(R.string.enter_your_personal_info),
                     style = MaterialTheme.typography.titleMedium
                 )

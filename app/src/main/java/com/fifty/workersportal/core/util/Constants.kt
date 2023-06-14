@@ -13,7 +13,7 @@ object Constants {
     const val MESSAGE_LENGTH = 1000
 
     // Base urls
-    const val WORKERS_PORTAL_BASE_URL = "http://192.168.64.149:8080/api/"
+    const val WORKERS_PORTAL_BASE_URL = "http://192.168.29.118:8080/api/"
     const val REST_COUNTRIES_BASE_URL = "https://restcountries.com/v2/"
 
     // Country code default values.
@@ -28,6 +28,9 @@ object Constants {
     const val MINIMUM_NAME_LENGTH = 3
     const val MAXIMUM_WORKER_AGE = 70
     const val MINIMUM_WORKER_AGE = 18
+
+    // Address
+    const val MINIMUM_ADDRESS_LENGTH = 10
 
     val genderOptions = listOf(
         "Male", "Female", "Other"

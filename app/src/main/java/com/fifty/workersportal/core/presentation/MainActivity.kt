@@ -41,7 +41,6 @@ import javax.inject.Inject
 class MainActivity : ComponentActivity() {
     @Inject
     lateinit var imageLoader: ImageLoader
-
     private var keepSplashScreenOn = true
     private val splashScreenViewModel: SplashViewModel by viewModels()
     private var userAuthState = mutableStateOf(UserAuthState.UNKNOWN)
@@ -61,6 +60,10 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
+            val isWorker = remember {
+                mutableStateOf(Session.isWorker)
+            }
+
             WorkersPortalTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
@@ -88,7 +91,8 @@ class MainActivity : ComponentActivity() {
                                     snackbarHostState = snackBarHostState,
                                     startDestination = NavigationParent.Auth.route,
                                     onDataLoaded = { keepSplashScreenOn = false },
-                                    imageLoader = imageLoader
+                                    imageLoader = imageLoader,
+                                    isWorker = isWorker.value
                                 )
                             }
 
@@ -98,7 +102,8 @@ class MainActivity : ComponentActivity() {
                                     snackbarHostState = snackBarHostState,
                                     startDestination = NavigationParent.Home.route,
                                     onDataLoaded = { keepSplashScreenOn = false },
-                                    imageLoader = imageLoader
+                                    imageLoader = imageLoader,
+                                    isWorker = isWorker.value
                                 )
                             }
 

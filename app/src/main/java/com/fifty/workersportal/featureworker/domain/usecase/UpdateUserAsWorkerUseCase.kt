@@ -1,8 +1,7 @@
 package com.fifty.workersportal.featureworker.domain.usecase
 
-import android.util.Log
-import androidx.compose.ui.text.toLowerCase
 import com.fifty.workersportal.core.domain.model.UserSession
+import com.fifty.workersportal.core.domain.util.Session
 import com.fifty.workersportal.core.domain.util.ValidationUtil
 import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.UiText
@@ -20,7 +19,6 @@ class UpdateUserAsWorkerUseCase(
     private val sessionRepository: SessionRepository
 ) {
     suspend operator fun invoke(updateWorkerData: UpdateWorkerData): UpdateWorkerResult {
-        Log.d("Hello", "invoke: UpdateWorkerUseCase worked")
         val firstNameError = ValidationUtil.validateFirstName(updateWorkerData.firstName)
         val emailError = ValidationUtil.validateEmail(updateWorkerData.email)
         val ageError = ValidationUtil.validateWorkerAge(updateWorkerData.age)
@@ -45,39 +43,39 @@ class UpdateUserAsWorkerUseCase(
                 skillsError = skillsError,
                 primarySkillError = primarySkillError
             )
-        }
-
-        val result = profileRepository.updateProfileForWorker(
-            UpdateProfileForWorkerRequest(
-                userId = "",
-                openToWork = updateWorkerData.openToWork,
-                firstName = updateWorkerData.firstName,
-                lastName = updateWorkerData.lastName,
-                email = updateWorkerData.email,
-                bio = updateWorkerData.bio,
-                gender = updateWorkerData.gender.lowercase(Locale.ROOT),
-                age = updateWorkerData.age,
-                categoryList = updateWorkerData.categoryList.map { workerCategory ->
-                    WorkerCategoryRequest(
-                        id = workerCategory.id,
-                        hourlyWage = workerCategory.hourlyWage.toFloat(),
-                        dailyWage = workerCategory.dailyWage.toFloat()
-                    )
-                },
-                primarySkill = updateWorkerData.primarySkill?.id ?: ""
-            )
-        ).data
-
-        result?.let { profile ->
-            sessionRepository.saveUserSession(
-                UserSession(
-                    id = profile.id,
-                    firstName = profile.firstName,
-                    lastName = profile.lastName,
-                    isWorker = profile.isWorker
+        } else {
+            val result = profileRepository.updateProfileForWorker(
+                UpdateProfileForWorkerRequest(
+                    userId = Session.userId ?: "",
+                    openToWork = updateWorkerData.openToWork,
+                    firstName = updateWorkerData.firstName,
+                    lastName = updateWorkerData.lastName,
+                    email = updateWorkerData.email,
+                    bio = updateWorkerData.bio,
+                    gender = updateWorkerData.gender.lowercase(Locale.ROOT),
+                    age = updateWorkerData.age,
+                    categoryList = updateWorkerData.categoryList.map { workerCategory ->
+                        WorkerCategoryRequest(
+                            id = workerCategory.id,
+                            hourlyWage = workerCategory.hourlyWage.toFloat(),
+                            dailyWage = workerCategory.dailyWage.toFloat()
+                        )
+                    },
+                    primaryCategory = updateWorkerData.primarySkill?.id ?: ""
                 )
-            )
-            return UpdateWorkerResult(result = Resource.Success(Unit))
-        } ?: return UpdateWorkerResult(result = Resource.Error(UiText.unknownError()))
+            ).data
+
+            result?.let { profile ->
+                sessionRepository.saveUserSession(
+                    UserSession(
+                        id = profile.id,
+                        firstName = profile.firstName,
+                        lastName = profile.lastName,
+                        isWorker = profile.isWorker
+                    )
+                )
+                return UpdateWorkerResult(result = Resource.Success(Unit))
+            } ?: return UpdateWorkerResult(result = Resource.Error(UiText.unknownError()))
+        }
     }
 }

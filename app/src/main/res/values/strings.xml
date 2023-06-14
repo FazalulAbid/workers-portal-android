@@ -103,5 +103,15 @@
     <string name="select_a_location">Select a location</string>
     <string name="detect_your_current_location">Detect your current location</string>
     <string name="saved_addresses">Saved addresses</string>
+    <string name="enter_complete_address">Enter complete address</string>
+    <string name="save_address_as">Save address as</string>
+    <string name="save_address">Save address</string>
+    <string name="complete_address">Complete address</string>
+    <string name="floor">Floor</string>
+    <string name="optional">optional</string>
+    <string name="nearby_landmark">Nearby landmark</string>
+    <string name="address_title_field_can_t_be_empty">Address title field can\'t be empty</string>
+    <string name="address_field_can_t_be_empty">Address field can\'t be empty</string>
+    <string name="address_too_short">Address must contain %d charactors</string>
 
 </resources>

@@ -38,12 +38,12 @@ fun RegisterAsWorkerBottomSheetContent(
             .padding(bottom = SizeMedium, start = SizeMedium, end = SizeMedium),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Column(Modifier.weight(1f)) {
+        Column() {
             SecondaryHeader(
+                modifier = Modifier.padding(vertical = SizeMedium),
                 text = stringResource(R.string.select_your_primary_skill),
                 style = MaterialTheme.typography.titleMedium
             )
-            Spacer(modifier = Modifier.height(SizeMedium))
             FlowRow(
                 modifier = Modifier.fillMaxWidth(),
                 mainAxisAlignment = MainAxisAlignment.Start,
@@ -56,6 +56,7 @@ fun RegisterAsWorkerBottomSheetContent(
                 )
             }
         }
+        Spacer(modifier = Modifier.height(SizeMedium))
         PrimaryButton(text = "Save changes") {
             onSaveChanges()
         }

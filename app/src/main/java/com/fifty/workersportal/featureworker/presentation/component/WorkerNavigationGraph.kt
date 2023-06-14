@@ -21,10 +21,11 @@ import com.google.accompanist.navigation.animation.composable
 fun NavGraphBuilder.workerNavGraph(
     navController: NavController,
     snackbarHostState: SnackbarHostState,
-    imageLoader: ImageLoader
+    imageLoader: ImageLoader,
+    isWorker: Boolean
 ) {
     navigation(
-        startDestination = if (Session.isWorker) {
+        startDestination = if (isWorker) {
             Screen.WorkerDashboardScreen.route
         } else Screen.RegisterAsWorkerScreen.route,
         route = NavigationParent.Work.route

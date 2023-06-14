@@ -16,7 +16,7 @@ data class Profile(
     val isWorker: Boolean,
     val lastName: String,
     val openToWork: Boolean,
-    val primaryCategory: WorkerCategory?,
+    val primaryCategory: String?,
     val profilePicture: String,
     val sampleWorkImages: List<String>?,
     val categoryList: List<WorkerCategory>?,
