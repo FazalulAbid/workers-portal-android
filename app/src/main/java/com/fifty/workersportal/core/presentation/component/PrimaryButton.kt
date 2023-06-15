@@ -1,5 +1,6 @@
 package com.fifty.workersportal.core.presentation.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,43 +21,48 @@ import androidx.compose.ui.unit.dp
 import com.fifty.workersportal.core.presentation.ui.theme.LargeButtonHeight
 import com.fifty.workersportal.core.presentation.ui.theme.MediumButtonHeight
 import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
+import com.fifty.workersportal.core.presentation.ui.theme.SmallButtonHeight
 
 @Composable
 fun PrimaryButton(
     modifier: Modifier = Modifier,
     height: Dp = LargeButtonHeight,
-    progressBarSize: Dp = MediumButtonHeight,
+    progressBarSize: Dp = SmallButtonHeight,
     isLoading: Boolean = false,
     text: String = "",
     containerColor: Color = MaterialTheme.colorScheme.primary,
     contentColor: Color = MaterialTheme.colorScheme.onPrimary,
     onClick: () -> Unit
 ) {
-    Box(
+    Button(
         modifier = modifier
-            .fillMaxWidth()
-            .height(height),
-        contentAlignment = Alignment.Center
+            .height(height)
+            .fillMaxWidth(),
+        onClick = onClick,
+        shape = RoundedCornerShape(SizeSmall),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = containerColor,
+            contentColor = contentColor
+        ),
+        enabled = !isLoading,
+        elevation = ButtonDefaults.buttonElevation(0.dp)
     ) {
         if (isLoading) {
-            CircularProgressIndicator(modifier.size(progressBarSize))
-        } else {
-            Button(
-                modifier = Modifier
-                    .fillMaxSize(),
-                onClick = onClick,
-                shape = RoundedCornerShape(SizeSmall),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = containerColor,
-                    contentColor = contentColor
-                ),
-                elevation = ButtonDefaults.buttonElevation(0.dp)
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = text,
-                    style = MaterialTheme.typography.bodyLarge
+                CircularProgressIndicator(
+                    modifier
+                        .size(progressBarSize),
+                    color = MaterialTheme.colorScheme.primary
                 )
             }
+        } else {
+            Text(
+                text = text,
+                style = MaterialTheme.typography.bodyLarge
+            )
         }
     }
 }

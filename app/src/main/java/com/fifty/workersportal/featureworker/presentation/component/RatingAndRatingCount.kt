@@ -32,6 +32,7 @@ fun RatingAndRatingCount(
     ratingCount: Int,
 ) {
     Column(
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {

@@ -1,7 +1,5 @@
 package com.fifty.workersportal.featurelocation.presentation.detectcurrentlocation
 
-import android.R
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -10,17 +8,15 @@ import com.fifty.workersportal.core.domain.state.StandardTextFieldState
 import com.fifty.workersportal.core.presentation.util.UiEvent
 import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.UiText
-import com.fifty.workersportal.featurelocation.domain.model.LocalAddress
 import com.fifty.workersportal.featurelocation.domain.usecase.CheckIfDeviceLocationEnabledUseCase
 import com.fifty.workersportal.featurelocation.domain.usecase.GetAddressFromLatLngUseCase
 import com.fifty.workersportal.featurelocation.domain.usecase.GetCurrentLocationUseCase
 import com.fifty.workersportal.featurelocation.domain.usecase.GetLocalAddressFromAddressUseCase
 import com.fifty.workersportal.featurelocation.domain.usecase.SaveAddressUseCase
 import com.fifty.workersportal.featurelocation.util.AddressError
-import com.fifty.workersportal.featureworker.presentation.registerasworker.UpdateWorkerState
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
@@ -148,6 +144,7 @@ class DetectCurrentLocationViewModel @Inject constructor(
                 } else {
                     when (saveAddressResult.result) {
                         is Resource.Success -> {
+                            delay(3000L)
                             _state.value = state.value.copy(
                                 isAddressLoading = false
                             )
@@ -176,11 +173,11 @@ class DetectCurrentLocationViewModel @Inject constructor(
                         }
                     }
                 }
+                _state.value = state.value.copy(
+                    isAddressLoading = false
+                )
             }
         }
-        _state.value = state.value.copy(
-            isAddressLoading = false
-        )
     }
 
     private fun getCurrentDeviceLocation() {

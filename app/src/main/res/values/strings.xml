@@ -113,5 +113,11 @@
     <string name="address_title_field_can_t_be_empty">Address title field can\'t be empty</string>
     <string name="address_field_can_t_be_empty">Address field can\'t be empty</string>
     <string name="address_too_short">Address must contain %d charactors</string>
+    <string name="reviews">Reviews</string>
+    <string name="excellent">Excellent</string>
+    <string name="good">Good</string>
+    <string name="average">Average</string>
+    <string name="below_average">Below average</string>
+    <string name="poor">Poor</string>
 
 </resources>

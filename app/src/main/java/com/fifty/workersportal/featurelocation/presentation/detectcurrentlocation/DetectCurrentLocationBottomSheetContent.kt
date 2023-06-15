@@ -1,5 +1,6 @@
 package com.fifty.workersportal.featurelocation.presentation.detectcurrentlocation
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -8,17 +9,22 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusDirection
-import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusEvent
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -26,25 +32,42 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.presentation.component.HorizontalDivider
+import com.fifty.workersportal.core.presentation.component.Keyboard
 import com.fifty.workersportal.core.presentation.component.PrimaryButton
 import com.fifty.workersportal.core.presentation.component.SecondaryHeader
 import com.fifty.workersportal.core.presentation.component.StandardOutlinedTextField
+import com.fifty.workersportal.core.presentation.component.keyboardAsState
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
 import com.fifty.workersportal.featureworker.presentation.component.Chip
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DetectCurrentLocationBottomSheetContent(
     viewModel: DetectCurrentLocationViewModel,
-    focusManager: FocusManager,
     completeAddressFocusRequester: FocusRequester,
     addressTitleFocusRequester: FocusRequester,
-    onDone: () -> Unit,
+    floorFocusRequester: FocusRequester,
+    landmarkFocusRequester: FocusRequester,
+    isLoading: Boolean,
     onSaveAddressClick: () -> Unit
 ) {
+    val context = LocalContext.current
+    val bringIntoViewRequester = remember { BringIntoViewRequester() }
+    val focusManager = LocalFocusManager.current
+    val coroutineScope = rememberCoroutineScope()
+    val keyboardOpenState by keyboardAsState()
+
+    LaunchedEffect(key1 = keyboardOpenState) {
+        if (keyboardOpenState == Keyboard.Opened) {
+            bringIntoViewRequester.bringIntoView()
+        }
+    }
+
     Column(
         modifier = Modifier
-            .padding(SizeMedium),
+            .padding(horizontal = SizeMedium),
     ) {
         SecondaryHeader(
             modifier = Modifier.weight(1f),
@@ -81,7 +104,13 @@ fun DetectCurrentLocationBottomSheetContent(
         StandardOutlinedTextField(
             modifier = Modifier
                 .fillMaxWidth()
-                .focusRequester(addressTitleFocusRequester),
+                .onFocusEvent { event ->
+                    if (event.isFocused) {
+                        coroutineScope.launch {
+                            bringIntoViewRequester.bringIntoView()
+                        }
+                    }
+                },
             hint = stringResource(R.string.save_address_as),
             value = viewModel.addressTitleState.value.text,
             onValueChange = {
@@ -93,14 +122,21 @@ fun DetectCurrentLocationBottomSheetContent(
                 capitalization = KeyboardCapitalization.Words
             ),
             keyboardActions = KeyboardActions(
-                onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                onNext = { completeAddressFocusRequester.requestFocus() }
             ),
             focusRequester = addressTitleFocusRequester
         )
         Spacer(modifier = Modifier.height(SizeSmall))
         StandardOutlinedTextField(
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .onFocusEvent { event ->
+                    if (event.isFocused) {
+                        coroutineScope.launch {
+                            bringIntoViewRequester.bringIntoView()
+                        }
+                    }
+                },
             hint = stringResource(R.string.complete_address),
             value = viewModel.completeAddressState.value.text,
             onValueChange = {
@@ -112,14 +148,21 @@ fun DetectCurrentLocationBottomSheetContent(
                 capitalization = KeyboardCapitalization.Words
             ),
             keyboardActions = KeyboardActions(
-                onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                onNext = { floorFocusRequester.requestFocus() }
             ),
             focusRequester = completeAddressFocusRequester
         )
         Spacer(modifier = Modifier.height(SizeSmall))
         StandardOutlinedTextField(
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .onFocusEvent { event ->
+                    if (event.isFocused) {
+                        coroutineScope.launch {
+                            bringIntoViewRequester.bringIntoView()
+                        }
+                    }
+                },
             hint = "${stringResource(R.string.floor)} (${stringResource(R.string.optional)})",
             value = viewModel.floorState.value.text,
             onValueChange = {
@@ -131,13 +174,21 @@ fun DetectCurrentLocationBottomSheetContent(
                 capitalization = KeyboardCapitalization.Words
             ),
             keyboardActions = KeyboardActions(
-                onNext = { focusManager.moveFocus(FocusDirection.Down) }
-            )
+                onNext = { landmarkFocusRequester.requestFocus() }
+            ),
+            focusRequester = floorFocusRequester
         )
         Spacer(modifier = Modifier.height(SizeSmall))
         StandardOutlinedTextField(
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .onFocusEvent { event ->
+                    if (event.isFocused) {
+                        coroutineScope.launch {
+                            bringIntoViewRequester.bringIntoView()
+                        }
+                    }
+                },
             hint = "${stringResource(R.string.nearby_landmark)} (${stringResource(R.string.optional)})",
             value = viewModel.landmarkState.value.text,
             onValueChange = {
@@ -150,15 +201,17 @@ fun DetectCurrentLocationBottomSheetContent(
             ),
             keyboardActions = KeyboardActions(
                 onDone = {
-                    onDone()
+                    focusManager.clearFocus()
                 }
-            )
+            ),
+            focusRequester = landmarkFocusRequester
         )
         HorizontalDivider(verticalPadding = true)
         PrimaryButton(
+            modifier = Modifier.bringIntoViewRequester(bringIntoViewRequester),
             text = stringResource(R.string.save_address),
             onClick = onSaveAddressClick,
-            isLoading = viewModel.state.value.isAddressLoading
+            isLoading = isLoading
         )
     }
 }

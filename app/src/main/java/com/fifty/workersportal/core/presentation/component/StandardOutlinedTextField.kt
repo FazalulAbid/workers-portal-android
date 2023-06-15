@@ -46,11 +46,11 @@ fun StandardOutlinedTextField(
         onValueChange = onValueChange,
         shape = shape,
         maxLines = maxLines,
-        keyboardActions = keyboardActions,
-        keyboardOptions = keyboardOptions,
         readOnly = readOnly,
         singleLine = singleLine,
         textStyle = MaterialTheme.typography.bodyMedium
             .copy(color = MaterialTheme.colorScheme.onBackground),
+        keyboardActions = keyboardActions,
+        keyboardOptions = keyboardOptions,
     )
 }

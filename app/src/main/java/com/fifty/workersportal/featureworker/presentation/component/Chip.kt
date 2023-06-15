@@ -26,7 +26,7 @@ fun Chip(
     unselectedTextColor: Color = MaterialTheme.colorScheme.onSurface,
     selectedColor: Color = MaterialTheme.colorScheme.secondary,
     unselectedColor: Color = MaterialTheme.colorScheme.surface,
-    onChipClick: () -> Unit
+    onChipClick: () -> Unit = {}
 ) {
     Text(
         text = text,

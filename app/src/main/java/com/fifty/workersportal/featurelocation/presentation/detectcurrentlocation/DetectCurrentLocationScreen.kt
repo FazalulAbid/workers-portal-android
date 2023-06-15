@@ -3,7 +3,6 @@ package com.fifty.workersportal.featurelocation.presentation.detectcurrentlocati
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.IntentSender
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -68,10 +67,7 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.maps.android.compose.rememberCameraPositionState
 import kotlinx.coroutines.flow.collectLatest
 
-@OptIn(
-    ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class,
-    ExperimentalComposeUiApi::class
-)
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("MissingPermission")
 @Composable
 fun DetectCurrentLocationScreen(
@@ -82,15 +78,13 @@ fun DetectCurrentLocationScreen(
     var showSheet by remember { mutableStateOf(false) }
     val state = viewModel.state.value
     val context = LocalContext.current
-    val initialZoom = 1f
     val finalZoom = 18f
 
-    val coroutineScope = rememberCoroutineScope()
     val cameraPositionState = rememberCameraPositionState()
-    val focusManager = LocalFocusManager.current
     val addressTitleFocusRequester = remember { FocusRequester() }
     val completeAddressFocusRequester = remember { FocusRequester() }
-    val keyboardController = LocalSoftwareKeyboardController.current
+    val floorFocusRequester = remember { FocusRequester() }
+    val landmarkFocusRequester = remember { FocusRequester() }
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
@@ -105,6 +99,11 @@ fun DetectCurrentLocationScreen(
                         ),
                         durationMs = 1000
                     )
+                }
+
+                UiEvent.NavigateUp -> {
+                    showSheet = false
+                    onNavigateUp()
                 }
 
                 else -> Unit
@@ -284,13 +283,11 @@ fun DetectCurrentLocationScreen(
                     onSaveAddressClick = {
                         viewModel.onEvent(DetectCurrentLocationEvent.SaveAddress)
                     },
-                    onDone = {
-                        Toast.makeText(context, "Hello", Toast.LENGTH_SHORT).show()
-                        keyboardController?.hide()
-                    },
-                    focusManager = focusManager,
                     completeAddressFocusRequester = completeAddressFocusRequester,
                     addressTitleFocusRequester = addressTitleFocusRequester,
+                    floorFocusRequester = floorFocusRequester,
+                    landmarkFocusRequester = landmarkFocusRequester,
+                    isLoading = viewModel.state.value.isAddressLoading
                 )
             }
         }

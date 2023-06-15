@@ -2,6 +2,7 @@ package com.fifty.workersportal.featureworker.presentation.workerprofile
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,10 +22,17 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,9 +45,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.presentation.component.SecondaryHeader
 import com.fifty.workersportal.core.presentation.component.StandardAppBar
+import com.fifty.workersportal.core.presentation.component.StandardBottomSheet
 import com.fifty.workersportal.core.presentation.ui.theme.ExtraExtraLargeProfilePictureHeight
 import com.fifty.workersportal.core.presentation.ui.theme.SizeExtraSmall
 import com.fifty.workersportal.core.presentation.ui.theme.SizeLarge
@@ -48,17 +58,30 @@ import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
 import com.fifty.workersportal.core.presentation.ui.theme.SkyBlueColor
 import com.fifty.workersportal.core.presentation.ui.theme.SmallStrokeThickness
 import com.fifty.workersportal.featureworker.presentation.component.ButtonBetweenLines
+import com.fifty.workersportal.featureworker.presentation.component.Chip
 import com.fifty.workersportal.featureworker.presentation.component.RatingAndRatingCount
 import com.fifty.workersportal.featureworker.presentation.component.WorkerWageText
+import com.google.accompanist.flowlayout.FlowRow
+import com.google.accompanist.flowlayout.MainAxisAlignment
 import kotlin.random.Random
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WorkerProfileScreen(
+    workerUserId: String? = null,
     isVerified: Boolean = true,
     onNavigate: (String) -> Unit = {},
-    onNavigateUp: () -> Unit = {}
+    onNavigateUp: () -> Unit = {},
+    viewModel: WorkerProfileViewModel = hiltViewModel()
 ) {
+    val state = viewModel.state.value
     val screenWidth = with(LocalConfiguration.current) { screenWidthDp.dp }
+    var showRatingSheet by remember { mutableStateOf(false) }
+
+    LaunchedEffect(key1 = true) {
+        viewModel.getProfile(workerUserId)
+    }
+
     Column(
         Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -106,7 +129,7 @@ fun WorkerProfileScreen(
                     ) {
                         Text(
                             modifier = Modifier.widthIn(max = screenWidth * 0.75f),
-                            text = "Fazalul Abid",
+                            text = "${state.profile?.firstName} ${state.profile?.lastName}",
                             style = MaterialTheme.typography.titleLarge.copy(
                                 fontWeight = FontWeight.Bold,
                                 textAlign = TextAlign.Center,
@@ -126,28 +149,76 @@ fun WorkerProfileScreen(
                         }
                     }
                     Spacer(modifier = Modifier.height(SizeExtraSmall))
-                    Text(
-                        modifier = Modifier.widthIn(max = screenWidth * 0.75f),
-                        text = "Plumber",
-                        style = MaterialTheme.typography.bodyLarge.copy(
-                            color = MaterialTheme.colorScheme.onSurface,
-                            textAlign = TextAlign.Center,
-                            fontWeight = FontWeight.Normal
-                        ),
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                    Spacer(modifier = Modifier.height(SizeSmall))
-                    Text(
-                        modifier = Modifier.widthIn(max = screenWidth * 0.75f),
-                        text = "A plumber installs, repairs, and maintains plumbing systems, fixtures, and pipes to ensure proper water flow and drainage.",
-                        style = MaterialTheme.typography.bodyMedium.copy(
-                            color = MaterialTheme.colorScheme.onSurface,
-                            textAlign = TextAlign.Center,
-                            fontWeight = FontWeight.Light
-                        ),
-                    )
+                    val primarySkill = state.profile?.categoryList?.find {
+                        it.id == state.profile.primaryCategory
+                    }
+                    primarySkill?.skill?.let { primarySkillName ->
+                        Text(
+                            modifier = Modifier.widthIn(max = screenWidth * 0.75f),
+                            text = primarySkillName,
+                            style = MaterialTheme.typography.bodyLarge.copy(
+                                color = MaterialTheme.colorScheme.onSurface,
+                                textAlign = TextAlign.Center,
+                                fontWeight = FontWeight.Normal
+                            ),
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                        Spacer(modifier = Modifier.height(SizeSmall))
+                    }
+                    state.profile?.bio?.let { bio ->
+                        Text(
+                            modifier = Modifier.widthIn(max = screenWidth * 0.75f),
+                            text = bio,
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                color = MaterialTheme.colorScheme.onSurface,
+                                textAlign = TextAlign.Center,
+                                fontWeight = FontWeight.Light
+                            ),
+                        )
+                        Spacer(modifier = Modifier.height(SizeLarge))
+                    }
+                    FlowRow(
+                        modifier = Modifier.fillMaxWidth(),
+                        mainAxisAlignment = MainAxisAlignment.Center,
+                        mainAxisSpacing = SizeMedium,
+                        crossAxisSpacing = SizeMedium
+                    ) {
+                        state.profile?.categoryList?.forEach { workerCategory ->
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Chip(
+                                    text = workerCategory.skill ?: ""
+                                )
+                            }
+                        }
+                    }
                     Spacer(modifier = Modifier.height(SizeLarge))
+                    if ((state.profile?.categoryList?.size ?: 0) > 0) {
+                        Column(
+                            modifier = Modifier
+                                .background(
+                                    MaterialTheme.colorScheme.surface,
+                                    MaterialTheme.shapes.medium
+                                )
+                                .padding(SizeMedium)
+                        ) {
+                            state.profile?.categoryList?.forEach { workerCategory ->
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Text(text = workerCategory.skill ?: "")
+                                    Text(text = workerCategory.dailyWage)
+                                    Text(text = workerCategory.hourlyWage)
+                                }
+
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(SizeLarge))
+                    }
                     ButtonBetweenLines(text = stringResource(R.string.hire_now))
                     Spacer(modifier = Modifier.height(SizeLarge))
                     Row(
@@ -155,7 +226,13 @@ fun WorkerProfileScreen(
                         horizontalArrangement = Arrangement.SpaceEvenly,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        RatingAndRatingCount(rating = "4.5", ratingCount = 123)
+                        RatingAndRatingCount(
+                            modifier = Modifier.clickable {
+                                showRatingSheet = true
+                            },
+                            rating = "4.5",
+                            ratingCount = 123
+                        )
                         Divider(
                             modifier = Modifier
                                 .height(50.dp)
@@ -193,6 +270,17 @@ fun WorkerProfileScreen(
                         .aspectRatio(1f)
                         .background(randomColor)
                 )
+            }
+        }
+
+        if (showRatingSheet) {
+            StandardBottomSheet(
+                sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+                onDismiss = {
+                    showRatingSheet = false
+                }
+            ) {
+                RatingSheetContent()
             }
         }
     }

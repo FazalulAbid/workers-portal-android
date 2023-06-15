@@ -1,16 +1,22 @@
 package com.fifty.workersportal.featurelocation.data.remote
 
 import com.fifty.workersportal.core.data.dto.response.BasicApiResponse
+import com.fifty.workersportal.featurelocation.data.remote.dto.LocalAddressDto
 import com.fifty.workersportal.featurelocation.domain.model.LocalAddress
-import com.fifty.workersportal.featureuser.data.remote.dto.ProfileDto
-import com.fifty.workersportal.featureworker.data.remote.request.UpdateProfileForWorkerRequest
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface LocationApiService {
 
-    @POST("locatin/asfd")
+    @POST("address/add-address")
     suspend fun saveAddress(
         @Body localAddress: LocalAddress
     ): BasicApiResponse<Unit>
+
+    @GET("address/get-all-addresses")
+    suspend fun getAddressesOfUser(
+        @Query("userId") userId: String
+    ): BasicApiResponse<List<LocalAddressDto>>
 }
