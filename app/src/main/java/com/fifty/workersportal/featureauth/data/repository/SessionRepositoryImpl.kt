@@ -1,6 +1,7 @@
 package com.fifty.workersportal.featureauth.data.repository
 
 import android.content.Context
+import android.util.Log
 import androidx.datastore.preferences.core.edit
 import com.fifty.workersportal.core.domain.model.UserSession
 import com.fifty.workersportal.core.domain.util.Session
@@ -71,6 +72,7 @@ class SessionRepositoryImpl(
         Session.firstName = userSession.firstName
         Session.lastName = userSession.lastName
         Session.isWorker = userSession.isWorker
+        Log.d("Hello", "saveUserSession: Saved new one ${Session.isWorker}")
     }
 
     override suspend fun deleteTokens() {

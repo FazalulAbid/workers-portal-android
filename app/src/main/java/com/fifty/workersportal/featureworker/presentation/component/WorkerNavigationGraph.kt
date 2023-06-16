@@ -24,8 +24,9 @@ fun NavGraphBuilder.workerNavGraph(
     imageLoader: ImageLoader,
     isWorker: Boolean
 ) {
+    Log.d("Hello", "is Worker = ${Session.isWorker}")
     navigation(
-        startDestination = if (isWorker) {
+        startDestination = if (Session.isWorker) {
             Screen.WorkerDashboardScreen.route
         } else Screen.RegisterAsWorkerScreen.route,
         route = NavigationParent.Work.route

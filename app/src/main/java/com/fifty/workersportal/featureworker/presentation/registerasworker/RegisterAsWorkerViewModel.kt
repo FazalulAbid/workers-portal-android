@@ -110,11 +110,6 @@ class RegisterAsWorkerViewModel @Inject constructor(
     }
 
     private suspend fun getWorkerProfileDetails(id: String) {
-        _eventFlow.emit(
-            UiEvent.MakeToast(
-                UiText.DynamicString(id)
-            )
-        )
         when (val result = getUserProfileDetails(id)) {
             is Resource.Success -> {
                 val profile = result.data ?: kotlin.run {

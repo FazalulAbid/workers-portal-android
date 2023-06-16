@@ -56,7 +56,7 @@ fun ReviewItem(
                     contentDescription = null,
                     contentScale = ContentScale.Crop
                 )
-                Spacer(modifier = Modifier.width(SizeLarge))
+                Spacer(modifier = Modifier.width(SizeMedium))
                 Column(verticalArrangement = Arrangement.Bottom) {
                     Text(
                         text = "Fazalul Abid",

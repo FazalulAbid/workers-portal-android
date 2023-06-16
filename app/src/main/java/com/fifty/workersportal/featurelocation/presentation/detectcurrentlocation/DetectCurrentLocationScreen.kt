@@ -8,18 +8,9 @@ import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -30,32 +21,24 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.fifty.workersportal.R
-import com.fifty.workersportal.core.presentation.component.PrimaryButton
 import com.fifty.workersportal.core.presentation.component.StandardAppBar
 import com.fifty.workersportal.core.presentation.component.StandardBottomSheet
 import com.fifty.workersportal.core.presentation.ui.theme.LargeButtonHeight
-import com.fifty.workersportal.core.presentation.ui.theme.SizeLarge
-import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
-import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
 import com.fifty.workersportal.core.presentation.util.UiEvent
 import com.fifty.workersportal.core.presentation.util.makeToast
 import com.fifty.workersportal.core.util.Constants
 import com.fifty.workersportal.featurelocation.presentation.component.CurrentLocationMapSection
+import com.fifty.workersportal.featurelocation.presentation.component.PlaceAndAddressButtonSection
 import com.fifty.workersportal.featurelocation.util.AddressError
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.LocationRequest
@@ -222,53 +205,17 @@ fun DetectCurrentLocationScreen(
                 )
             }
         }
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(SizeMedium)
-                .clip(RoundedCornerShape(topStart = SizeSmall, topEnd = SizeSmall))
+        PlaceAndAddressButtonSection(
+            cameraPositionState = cameraPositionState,
+            state = state
         ) {
-            if (state.isLoading || cameraPositionState.isMoving) {
-                CircularProgressIndicator()
-            } else {
-                Row() {
-                    Icon(
-                        modifier = Modifier.size(SizeLarge),
-                        painter = painterResource(id = R.drawable.ic_location_mark),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                    Spacer(modifier = Modifier.width(SizeSmall))
-                    Column {
-                        Text(
-                            text = if (state.localAddress?.place?.isBlank() == true) {
-                                state.localAddress.subLocality ?: state.localAddress.city ?: ""
-                            } else state.localAddress?.place ?: "",
-                            style = MaterialTheme.typography.titleMedium.copy(
-                                color = MaterialTheme.colorScheme.onBackground,
-                                fontWeight = FontWeight.SemiBold
-                            )
-                        )
-                        Text(
-                            text = ("${state.localAddress?.subLocality}, " +
-                                    "${state.localAddress?.city}"),
-                            style = MaterialTheme.typography.bodyMedium.copy(
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                        )
-                    }
-                }
-                Spacer(modifier = Modifier.height(SizeMedium))
-                PrimaryButton(text = stringResource(R.string.enter_complete_address)) {
-                    viewModel.onEvent(
-                        DetectCurrentLocationEvent.SelectCurrentCameraPosition(
-                            lat = cameraPositionState.position.target.latitude,
-                            lng = cameraPositionState.position.target.longitude
-                        )
-                    )
-                    showSheet = true
-                }
-            }
+            viewModel.onEvent(
+                DetectCurrentLocationEvent.SelectCurrentCameraPosition(
+                    lat = cameraPositionState.position.target.latitude,
+                    lng = cameraPositionState.position.target.longitude
+                )
+            )
+            showSheet = true
         }
 
         if (showSheet) {

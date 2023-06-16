@@ -68,7 +68,6 @@ class AuthRepositoryImpl(
                 val accessToken = response.headers()[ACCESS_TOKEN_KEY]
                 val refreshToken = response.headers()[REFRESH_TOKEN_KEY]
                 val user = response.body()?.data
-                Log.d("Hello", "user = $user")
                 return if (accessToken != null && refreshToken != null && user != null) {
                     Resource.Success(
                         data = OtpVerification(

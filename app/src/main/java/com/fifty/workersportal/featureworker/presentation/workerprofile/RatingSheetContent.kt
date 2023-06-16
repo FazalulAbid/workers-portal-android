@@ -36,7 +36,6 @@ import com.fifty.workersportal.featureworker.presentation.component.ReviewItem
 fun RatingSheetContent(
     modifier: Modifier = Modifier
 ) {
-
     LazyColumn {
         item {
             Column(

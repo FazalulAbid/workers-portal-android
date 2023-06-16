@@ -195,30 +195,6 @@ fun WorkerProfileScreen(
                         }
                     }
                     Spacer(modifier = Modifier.height(SizeLarge))
-                    if ((state.profile?.categoryList?.size ?: 0) > 0) {
-                        Column(
-                            modifier = Modifier
-                                .background(
-                                    MaterialTheme.colorScheme.surface,
-                                    MaterialTheme.shapes.medium
-                                )
-                                .padding(SizeMedium)
-                        ) {
-                            state.profile?.categoryList?.forEach { workerCategory ->
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.SpaceBetween
-                                ) {
-                                    Text(text = workerCategory.skill ?: "")
-                                    Text(text = workerCategory.dailyWage)
-                                    Text(text = workerCategory.hourlyWage)
-                                }
-
-                            }
-                        }
-                        Spacer(modifier = Modifier.height(SizeLarge))
-                    }
                     ButtonBetweenLines(text = stringResource(R.string.hire_now))
                     Spacer(modifier = Modifier.height(SizeLarge))
                     Row(
