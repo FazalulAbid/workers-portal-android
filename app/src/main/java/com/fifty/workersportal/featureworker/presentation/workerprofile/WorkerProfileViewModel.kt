@@ -1,5 +1,6 @@
 package com.fifty.workersportal.featureworker.presentation.workerprofile
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -37,6 +38,7 @@ class WorkerProfileViewModel @Inject constructor(
             )
             when (result) {
                 is Resource.Success -> {
+                    Log.d("Hello", "getProfile: ${result.data}")
                     _state.value = state.value.copy(
                         profile = result.data,
                         isLoading = false

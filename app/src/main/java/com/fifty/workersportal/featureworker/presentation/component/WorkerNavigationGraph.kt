@@ -1,6 +1,5 @@
 package com.fifty.workersportal.featureworker.presentation.component
 
-import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material3.SnackbarHostState
 import androidx.navigation.NavController
@@ -11,6 +10,7 @@ import com.fifty.workersportal.core.domain.util.Session
 import com.fifty.workersportal.core.util.NavigationParent
 import com.fifty.workersportal.core.util.Screen
 import com.fifty.workersportal.featureworker.presentation.registerasworker.RegisterAsWorkerScreen
+import com.fifty.workersportal.featureworker.presentation.reviewandrating.ReviewAndRatingScreen
 import com.fifty.workersportal.featureworker.presentation.selectworkercategory.SelectWorkerCategoryScreen
 import com.fifty.workersportal.featureworker.presentation.workerdashboard.WorkerDashboardScreen
 import com.fifty.workersportal.featureworker.presentation.workerlist.WorkerListScreen
@@ -24,7 +24,6 @@ fun NavGraphBuilder.workerNavGraph(
     imageLoader: ImageLoader,
     isWorker: Boolean
 ) {
-    Log.d("Hello", "is Worker = ${Session.isWorker}")
     navigation(
         startDestination = if (Session.isWorker) {
             Screen.WorkerDashboardScreen.route
@@ -52,6 +51,12 @@ fun NavGraphBuilder.workerNavGraph(
         }
         composable(Screen.WorkerProfileScreen.route) {
             WorkerProfileScreen(
+                onNavigate = navController::navigate,
+                onNavigateUp = navController::navigateUp
+            )
+        }
+        composable(Screen.ReviewAndRatingScreen.route) {
+            ReviewAndRatingScreen(
                 onNavigate = navController::navigate,
                 onNavigateUp = navController::navigateUp
             )

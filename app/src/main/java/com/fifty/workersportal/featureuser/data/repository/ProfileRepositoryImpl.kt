@@ -44,7 +44,6 @@ class ProfileRepositoryImpl(
     override suspend fun updateProfileForWorker(
         updateProfileForWorkerRequest: UpdateProfileForWorkerRequest
     ): Resource<Profile> {
-        Log.d("Hello", "updateProfileForWorker: $updateProfileForWorkerRequest")
         return try {
             val response = api.updateProfileForWorker(updateProfileForWorkerRequest)
             if (response.successful) {

@@ -14,6 +14,7 @@ data class Profile(
     val gender: String,
     val hourlyWage: Float,
     val isWorker: Boolean,
+    val isVerifiedWorker: Boolean,
     val lastName: String,
     val openToWork: Boolean,
     val primaryCategory: String?,

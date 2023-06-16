@@ -18,6 +18,8 @@ data class ProfileDto(
     val gender: String,
     val hourlyWage: Float,
     val isWorker: Boolean,
+    @SerializedName("isVerified")
+    val isVerifiedWorker: Boolean,
     val lastName: String,
     val openToWork: Boolean,
     val primaryCategory: String?,
@@ -50,6 +52,7 @@ data class ProfileDto(
             gender = gender,
             hourlyWage = hourlyWage,
             isWorker = isWorker,
+            isVerifiedWorker = isVerifiedWorker,
             lastName = lastName,
             openToWork = openToWork,
             primaryCategory = primaryCategory,

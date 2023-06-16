@@ -26,13 +26,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -49,7 +44,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.presentation.component.SecondaryHeader
 import com.fifty.workersportal.core.presentation.component.StandardAppBar
-import com.fifty.workersportal.core.presentation.component.StandardBottomSheet
 import com.fifty.workersportal.core.presentation.ui.theme.ExtraExtraLargeProfilePictureHeight
 import com.fifty.workersportal.core.presentation.ui.theme.SizeExtraSmall
 import com.fifty.workersportal.core.presentation.ui.theme.SizeLarge
@@ -57,6 +51,7 @@ import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
 import com.fifty.workersportal.core.presentation.ui.theme.SkyBlueColor
 import com.fifty.workersportal.core.presentation.ui.theme.SmallStrokeThickness
+import com.fifty.workersportal.core.util.Screen
 import com.fifty.workersportal.featureworker.presentation.component.ButtonBetweenLines
 import com.fifty.workersportal.featureworker.presentation.component.Chip
 import com.fifty.workersportal.featureworker.presentation.component.RatingAndRatingCount
@@ -76,7 +71,6 @@ fun WorkerProfileScreen(
 ) {
     val state = viewModel.state.value
     val screenWidth = with(LocalConfiguration.current) { screenWidthDp.dp }
-    var showRatingSheet by remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = true) {
         viewModel.getProfile(workerUserId)
@@ -204,7 +198,7 @@ fun WorkerProfileScreen(
                     ) {
                         RatingAndRatingCount(
                             modifier = Modifier.clickable {
-                                showRatingSheet = true
+                                onNavigate(Screen.ReviewAndRatingScreen.route)
                             },
                             rating = "4.5",
                             ratingCount = 123
@@ -246,17 +240,6 @@ fun WorkerProfileScreen(
                         .aspectRatio(1f)
                         .background(randomColor)
                 )
-            }
-        }
-
-        if (showRatingSheet) {
-            StandardBottomSheet(
-                sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
-                onDismiss = {
-                    showRatingSheet = false
-                }
-            ) {
-                RatingSheetContent()
             }
         }
     }

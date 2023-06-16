@@ -120,5 +120,11 @@
     <string name="below_average">Below average</string>
     <string name="poor">Poor</string>
     <string name="tap_here_to_detect_your_current_location_and_save_it_as_a_new_address">Tap here to detect your current location and save it as a new address.</string>
+    <string name="ratings">Ratings</string>
+    <string name="reviews_and_ratings">Reviews and ratings</string>
+    <string name="write_a_review">Write a review</string>
+    <string name="how_was_your_experience">How was your experience?</string>
+    <string name="post_review">Post review</string>
+    <string name="write_your_review_here">Write your review here...</string>
 
 </resources>

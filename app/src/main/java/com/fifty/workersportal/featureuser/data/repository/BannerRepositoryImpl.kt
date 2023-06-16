@@ -59,7 +59,6 @@ class BannerRepositoryImpl(
                     Resource.Error(UiText.DynamicString(message))
                 } ?: Resource.Error(UiText.unknownError())
             }
-//            Resource.Success(data = banners)
         } catch (e: IOException) {
             Resource.Error(
                 uiText = UiText.StringResource(R.string.error_could_not_reach_server)
