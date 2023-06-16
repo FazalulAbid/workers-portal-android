@@ -2,9 +2,11 @@ package com.fifty.workersportal.featureuser.presentation.userdashboard
 
 import android.Manifest
 import android.app.Activity
+import android.os.Build
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -18,7 +20,10 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.rememberBottomSheetState
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -52,9 +57,12 @@ import com.fifty.workersportal.featureuser.presentation.component.AutoSlidingCar
 import com.fifty.workersportal.featureuser.presentation.component.DashboardGreetingText
 import com.fifty.workersportal.featureuser.presentation.component.SuggestedCategoryItem
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
+import com.maxkeppeler.sheets.calendar.CalendarDialog
+import com.maxkeppeler.sheets.calendar.models.CalendarSelection
 import kotlinx.coroutines.flow.collectLatest
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalPagerApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun UserDashboardScreen(
     onNavigate: (String) -> Unit = {},
@@ -62,6 +70,7 @@ fun UserDashboardScreen(
     viewModel: UserDashboardViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
+    val calenderState = rememberUseCaseState()
 
     val permissionsToRequest = arrayOf(
         Manifest.permission.ACCESS_FINE_LOCATION
@@ -168,7 +177,9 @@ fun UserDashboardScreen(
                             category = it,
                             imageLoader = imageLoader,
                             imageSize = MediumProfilePictureHeight
-                        )
+                        ) {
+                            calenderState.show()
+                        }
                     }
                 }
                 Spacer(modifier = Modifier.height(SizeSmall))
@@ -228,4 +239,11 @@ fun UserDashboardScreen(
             }
         )
     }
+
+    CalendarDialog(
+        state = calenderState,
+        selection = CalendarSelection.Date { date ->
+            Toast.makeText(context, "${date.toString()}", Toast.LENGTH_SHORT).show()
+        }
+    )
 }

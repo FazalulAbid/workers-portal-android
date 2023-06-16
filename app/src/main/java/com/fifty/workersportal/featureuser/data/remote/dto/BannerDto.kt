@@ -11,12 +11,11 @@ data class BannerDto(
     val imageUrl: String,
     val deeplinkUrl: String,
     @SerializedName("__v")
-    val versionKey: String
+    val versionKey: Int
 ) {
 
     fun toBanner(): Banner =
         Banner(
-            id = id,
             title = title,
             description = description,
             imageUrl = imageUrl,

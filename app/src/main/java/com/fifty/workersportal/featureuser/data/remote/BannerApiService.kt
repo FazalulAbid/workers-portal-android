@@ -7,6 +7,6 @@ import retrofit2.http.GET
 
 interface BannerApiService {
 
-    @GET("profile/hello")
+    @GET("banner/get-banners")
     suspend fun getUserDashboardBanners(): BasicApiResponse<List<BannerDto>>
 }
