@@ -3,6 +3,7 @@ package com.fifty.workersportal.featurelocation.presentation.detectcurrentlocati
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.IntentSender
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -91,6 +92,20 @@ fun DetectCurrentLocationScreen(
 
                 else -> Unit
             }
+        }
+    }
+
+    LaunchedEffect(key1 = cameraPositionState.position) {
+        if ((!cameraPositionState.isMoving) &&
+            state.currentLatLong.latitude != 0.0 &&
+            state.currentLatLong.longitude != 0.0
+        ) {
+            viewModel.onEvent(
+                DetectCurrentLocationEvent.SelectCurrentCameraPosition(
+                    lat = cameraPositionState.position.target.latitude,
+                    lng = cameraPositionState.position.target.longitude
+                )
+            )
         }
     }
 
@@ -209,12 +224,6 @@ fun DetectCurrentLocationScreen(
             cameraPositionState = cameraPositionState,
             state = state
         ) {
-            viewModel.onEvent(
-                DetectCurrentLocationEvent.SelectCurrentCameraPosition(
-                    lat = cameraPositionState.position.target.latitude,
-                    lng = cameraPositionState.position.target.longitude
-                )
-            )
             showSheet = true
         }
 

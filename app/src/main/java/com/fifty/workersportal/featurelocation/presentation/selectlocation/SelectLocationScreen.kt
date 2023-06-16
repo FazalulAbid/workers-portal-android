@@ -53,7 +53,7 @@ fun SelectLocationScreen(
                 Column {
                     DetectLocationButton(
                         text = stringResource(R.string.detect_your_current_location),
-                        description = stringResource(R.string.detect_your_current_location),
+                        description = stringResource(R.string.tap_here_to_detect_your_current_location_and_save_it_as_a_new_address),
                         onClick = {
                             onNavigate(Screen.DetectCurrentLocationScreen.route)
                         }

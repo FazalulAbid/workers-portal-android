@@ -23,6 +23,9 @@ import androidx.compose.ui.text.font.FontWeight
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.presentation.component.PrimaryButton
 import com.fifty.workersportal.core.presentation.ui.theme.LargeButtonHeight
+import com.fifty.workersportal.core.presentation.ui.theme.SizeExtraExtraLarge
+import com.fifty.workersportal.core.presentation.ui.theme.SizeExtraExtraSmall
+import com.fifty.workersportal.core.presentation.ui.theme.SizeExtraSmall
 import com.fifty.workersportal.core.presentation.ui.theme.SizeLarge
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
@@ -53,7 +56,7 @@ fun PlaceAndAddressButtonSection(
                     fontWeight = FontWeight.SemiBold
                 )
             )
-            Spacer(modifier = Modifier.height(SizeSmall))
+            Spacer(modifier = Modifier.height(SizeExtraExtraSmall))
             Text(
                 modifier = Modifier
                     .fillMaxWidth(0.4f)
@@ -87,7 +90,7 @@ fun PlaceAndAddressButtonSection(
                             fontWeight = FontWeight.SemiBold
                         )
                     )
-                    Spacer(modifier = Modifier.height(SizeSmall))
+                    Spacer(modifier = Modifier.height(SizeExtraExtraSmall))
                     Text(
                         text = ("${state.localAddress?.subLocality}, " +
                                 "${state.localAddress?.city}"),

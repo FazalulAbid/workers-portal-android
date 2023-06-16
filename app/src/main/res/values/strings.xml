@@ -119,5 +119,6 @@
     <string name="average">Average</string>
     <string name="below_average">Below average</string>
     <string name="poor">Poor</string>
+    <string name="tap_here_to_detect_your_current_location_and_save_it_as_a_new_address">Tap here to detect your current location and save it as a new address.</string>
 
 </resources>

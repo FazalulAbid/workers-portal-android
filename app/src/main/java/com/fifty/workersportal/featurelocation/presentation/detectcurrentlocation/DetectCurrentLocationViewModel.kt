@@ -20,6 +20,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import java.util.function.DoubleUnaryOperator
 import javax.inject.Inject
 
 @HiltViewModel
@@ -56,7 +57,9 @@ class DetectCurrentLocationViewModel @Inject constructor(
 
     init {
         if (checkIfDeviceLocationEnabled()) {
+            changeLoadingState(true)
             getCurrentDeviceLocation()
+            changeLoadingState(false)
         } else {
             viewModelScope.launch {
                 _eventFlow.emit(
@@ -69,7 +72,9 @@ class DetectCurrentLocationViewModel @Inject constructor(
     fun onEvent(event: DetectCurrentLocationEvent) {
         when (event) {
             DetectCurrentLocationEvent.CurrentLocation -> {
+                changeLoadingState(true)
                 getCurrentDeviceLocation()
+                changeLoadingState(false)
             }
 
             is DetectCurrentLocationEvent.EnterAddressTitle -> {
@@ -97,9 +102,9 @@ class DetectCurrentLocationViewModel @Inject constructor(
             }
 
             is DetectCurrentLocationEvent.SelectCurrentCameraPosition -> {
-                _state.value = state.value.copy(
-                    currentLatLong = LatLng(event.lat, event.lng)
-                )
+                changeLoadingState(true)
+                changeLocation(event.lat, event.lng)
+                changeLoadingState(false)
             }
 
             DetectCurrentLocationEvent.SaveAddress -> {
@@ -181,9 +186,6 @@ class DetectCurrentLocationViewModel @Inject constructor(
     }
 
     private fun getCurrentDeviceLocation() {
-        _state.value = _state.value.copy(
-            isLoading = true
-        )
         viewModelScope.launch {
             val currentLocation = getCurrentLocation()
             currentLocation?.let {
@@ -192,17 +194,35 @@ class DetectCurrentLocationViewModel @Inject constructor(
                     address = getAddressFromLatLng(LatLng(it.latitude, it.longitude))
                 )
             }
+            getLocationAddress()
             _eventFlow.emit(UiEvent.OnCurrentLocation)
-            _state.value.address?.let {
-                val localAddress = getLocalAddressFromAddress(it)
-                _state.value = _state.value.copy(
-                    localAddress = localAddress
-                )
-            }
+        }
+    }
+
+    private fun changeLocation(lat: Double, lng: Double) {
+        try {
+            _state.value = state.value.copy(
+                currentLatLong = LatLng(lat, lng),
+                address = getAddressFromLatLng(LatLng(lat, lng))
+            )
+            getLocationAddress()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun getLocationAddress() {
+        _state.value.address?.let {
+            val localAddress = getLocalAddressFromAddress(it)
             _state.value = _state.value.copy(
-                isLoading = false
+                localAddress = localAddress
             )
         }
     }
 
+    private fun changeLoadingState(isLoading: Boolean) {
+        _state.value = state.value.copy(
+            isLoading = isLoading
+        )
+    }
 }
