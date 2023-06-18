@@ -124,4 +124,7 @@ dependencies {
 
     // Lottie
     implementation "com.airbnb.android:lottie-compose:6.0.0"
+
+    //uCrop
+    implementation 'com.github.yalantis:ucrop:2.2.6'
 }

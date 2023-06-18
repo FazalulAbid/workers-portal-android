@@ -8,11 +8,13 @@ import androidx.navigation.navigation
 import coil.ImageLoader
 import com.fifty.workersportal.core.util.NavigationParent
 import com.fifty.workersportal.core.util.Screen
+import com.fifty.workersportal.featureuser.presentation.edituserprofile.EditUserProfileScreen
 import com.fifty.workersportal.featureuser.presentation.userdashboard.UserDashboardScreen
+import com.fifty.workersportal.featureuser.presentation.userprofile.UserProfileScreen
 import com.google.accompanist.navigation.animation.composable
 
 @OptIn(ExperimentalAnimationApi::class)
-fun NavGraphBuilder.homeNavGraph(
+fun NavGraphBuilder.userNavGraph(
     navController: NavController,
     snackbarHostState: SnackbarHostState,
     imageLoader: ImageLoader
@@ -25,6 +27,23 @@ fun NavGraphBuilder.homeNavGraph(
             UserDashboardScreen(
                 onNavigate = navController::navigate,
                 imageLoader
+            )
+        }
+        composable(Screen.UserProfileScreen.route) {
+            UserProfileScreen(
+                onNavigate = navController::navigate,
+                onNavigateUp = navController::navigateUp,
+                onNavigateWithPopBackStack = { route ->
+                    navController.navigate(route) {
+                        popUpTo(0)
+                    }
+                }
+            )
+        }
+        composable(Screen.EditUserProfileScreen.route) {
+            EditUserProfileScreen(
+                onNavigate = navController::navigate,
+                onNavigateUp = navController::navigateUp,
             )
         }
     }

@@ -5,31 +5,19 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavHostController
-import androidx.navigation.navigation
 import coil.ImageLoader
 import com.fifty.workersportal.core.presentation.util.enterTransitionHorizontal
 import com.fifty.workersportal.core.presentation.util.exitTransitionHorizontal
 import com.fifty.workersportal.core.presentation.util.popEnterTransitionHorizontal
 import com.fifty.workersportal.core.presentation.util.popExitTransitionHorizontal
-import com.fifty.workersportal.core.util.NavigationParent
-import com.fifty.workersportal.core.util.Screen
 import com.fifty.workersportal.featureauth.presentation.component.authNavGraph
 import com.fifty.workersportal.featurechat.presentation.component.chatNavGraph
-import com.fifty.workersportal.featurechat.presentation.message.MessageScreen
 import com.fifty.workersportal.featurefavorites.presentation.component.favouriteNavGraph
 import com.fifty.workersportal.featurehistory.presentation.component.historyNavGraph
 import com.fifty.workersportal.featurelocation.presentation.component.locationNavGraph
-import com.fifty.workersportal.featureworker.presentation.workerprofile.WorkerProfileScreen
-import com.fifty.workersportal.featureuser.presentation.component.homeNavGraph
-import com.fifty.workersportal.featureuser.presentation.testscreen.FavoriteScreen
-import com.fifty.workersportal.featureuser.presentation.testscreen.HistoryScreen
+import com.fifty.workersportal.featureuser.presentation.component.userNavGraph
 import com.fifty.workersportal.featureworker.presentation.component.workerNavGraph
-import com.fifty.workersportal.featureworker.presentation.registerasworker.RegisterAsWorkerScreen
-import com.fifty.workersportal.featureworker.presentation.selectworkercategory.SelectWorkerCategoryScreen
-import com.fifty.workersportal.featureworker.presentation.workerdashboard.WorkerDashboardScreen
-import com.fifty.workersportal.featureworker.presentation.workerlist.WorkerListScreen
 import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.accompanist.navigation.animation.composable
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -53,7 +41,7 @@ fun Navigation(
         popExitTransition = { popExitTransitionHorizontal },
     ) {
         authNavGraph(navController, snackbarHostState, imageLoader)
-        homeNavGraph(navController, snackbarHostState, imageLoader)
+        userNavGraph(navController, snackbarHostState, imageLoader)
         workerNavGraph(navController, snackbarHostState, imageLoader, isWorker)
         favouriteNavGraph(navController, snackbarHostState)
         historyNavGraph(navController, snackbarHostState)

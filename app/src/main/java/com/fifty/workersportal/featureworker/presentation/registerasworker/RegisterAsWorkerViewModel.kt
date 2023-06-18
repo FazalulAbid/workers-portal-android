@@ -1,5 +1,6 @@
 package com.fifty.workersportal.featureworker.presentation.registerasworker
 
+import android.net.Uri
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
@@ -64,6 +65,9 @@ class RegisterAsWorkerViewModel @Inject constructor(
     private val _primaryCategory = mutableStateOf<WorkerCategory?>(null)
     val primaryCategory: State<WorkerCategory?> = _primaryCategory
 
+    private val _profileImageUri = mutableStateOf<Uri?>(null)
+    val profileImageUri: State<Uri?> = _profileImageUri
+
     private val _updateWorkerState = mutableStateOf(UpdateWorkerState())
     val updateWorkerState: State<UpdateWorkerState> = _updateWorkerState
 
@@ -84,94 +88,14 @@ class RegisterAsWorkerViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getWorkerCategories() {
-        when (val result = getCategories()) {
-            is Resource.Success -> {
-                _skillsState.value = _skillsState.value.copy(
-                    skills = result.data?.map { it.toWorkerCategory() } ?: kotlin.run {
-                        _eventFlow.emit(
-                            UiEvent.MakeToast(
-                                UiText.StringResource(R.string.oops_couldn_t_load_worker_categories)
-                            )
-                        )
-                        return
-                    }
-                )
-            }
-
-            is Resource.Error -> {
-                _eventFlow.emit(
-                    UiEvent.MakeToast(
-                        result.uiText ?: UiText.unknownError()
-                    )
-                )
-            }
-        }
-    }
-
-    private suspend fun getWorkerProfileDetails(id: String) {
-        when (val result = getUserProfileDetails(id)) {
-            is Resource.Success -> {
-                val profile = result.data ?: kotlin.run {
-                    _eventFlow.emit(
-                        UiEvent.MakeToast(
-                            UiText.StringResource(R.string.oops_couldn_t_load_profile)
-                        )
-                    )
-                    return
-                }
-                _openToWorkState.value = profile.openToWork
-                _firstNameState.value = firstNameState.value.copy(
-                    text = profile.firstName
-                )
-                _lastNameState.value = lastNameState.value.copy(
-                    text = profile.lastName
-                )
-                _emailState.value = emailState.value.copy(
-                    text = profile.email
-                )
-                _bioState.value = bioState.value.copy(
-                    text = profile.bio
-                )
-                _genderState.value =
-                    profile.gender.replaceFirstChar {
-                        if (it.isLowerCase())
-                            it.titlecase(java.util.Locale.ROOT)
-                        else it.toString()
-                    }
-                _ageState.value = ageState.value.copy(
-                    text = profile.age.toString()
-                )
-                _skillsState.value = skillsState.value.copy(
-                    selectedSkills = profile.categoryList?.map { workerCategory ->
-                        val categoryId = workerCategory.id
-                        val matchingSkill =
-                            _skillsState.value.skills.firstOrNull { it.id == categoryId }
-                        workerCategory.copy(
-                            title = matchingSkill?.title,
-                            skill = matchingSkill?.skill,
-                            dailyMinWage = matchingSkill?.dailyMinWage,
-                            hourlyMinWage = matchingSkill?.hourlyMinWage,
-                        )
-                    } ?: emptyList()
-                )
-                _primaryCategory.value = _skillsState.value.skills.find {
-                    it.id == profile.primaryCategory
-                }
-            }
-
-            is Resource.Error -> {
-                _eventFlow.emit(
-                    UiEvent.MakeToast(result.uiText ?: UiText.unknownError())
-                )
-            }
-        }
-    }
-
     fun onEvent(event: RegisterAsWorkerEvent) {
         when (event) {
             is RegisterAsWorkerEvent.ToggleOpenToWork -> {
                 _openToWorkState.value = !openToWorkState.value
+            }
+
+            is RegisterAsWorkerEvent.CropProfilePicture -> {
+                _profileImageUri.value = event.uri
             }
 
             is RegisterAsWorkerEvent.EnterAge -> {
@@ -273,6 +197,97 @@ class RegisterAsWorkerViewModel @Inject constructor(
 
             RegisterAsWorkerEvent.UpdateWorker -> {
                 updateWorker()
+            }
+        }
+    }
+
+    private suspend fun getWorkerCategories() {
+        when (val result = getCategories()) {
+            is Resource.Success -> {
+                _skillsState.value = _skillsState.value.copy(
+                    skills = result.data?.map { it.toWorkerCategory() } ?: kotlin.run {
+                        _eventFlow.emit(
+                            UiEvent.MakeToast(
+                                UiText.StringResource(R.string.oops_couldn_t_load_worker_categories)
+                            )
+                        )
+                        return
+                    }
+                )
+            }
+
+            is Resource.Error -> {
+                _eventFlow.emit(
+                    UiEvent.MakeToast(
+                        result.uiText ?: UiText.unknownError()
+                    )
+                )
+            }
+        }
+    }
+
+    private suspend fun getWorkerProfileDetails(id: String) {
+        _updateWorkerState.value = updateWorkerState.value.copy(
+            isLoading = true
+        )
+        when (val result = getUserProfileDetails(id)) {
+            is Resource.Success -> {
+                val profile = result.data ?: kotlin.run {
+                    _eventFlow.emit(
+                        UiEvent.MakeToast(
+                            UiText.StringResource(R.string.oops_couldn_t_load_profile)
+                        )
+                    )
+                    return
+                }
+                _openToWorkState.value = profile.openToWork
+                _firstNameState.value = firstNameState.value.copy(
+                    text = profile.firstName
+                )
+                _lastNameState.value = lastNameState.value.copy(
+                    text = profile.lastName
+                )
+                _emailState.value = emailState.value.copy(
+                    text = profile.email
+                )
+                _bioState.value = bioState.value.copy(
+                    text = profile.bio
+                )
+                _genderState.value =
+                    profile.gender.replaceFirstChar {
+                        if (it.isLowerCase())
+                            it.titlecase(java.util.Locale.ROOT)
+                        else it.toString()
+                    }
+                _ageState.value = ageState.value.copy(
+                    text = profile.age.toString()
+                )
+                _skillsState.value = skillsState.value.copy(
+                    selectedSkills = profile.categoryList?.map { workerCategory ->
+                        val categoryId = workerCategory.id
+                        val matchingSkill =
+                            _skillsState.value.skills.firstOrNull { it.id == categoryId }
+                        workerCategory.copy(
+                            title = matchingSkill?.title,
+                            skill = matchingSkill?.skill,
+                            dailyMinWage = matchingSkill?.dailyMinWage,
+                            hourlyMinWage = matchingSkill?.hourlyMinWage,
+                        )
+                    } ?: emptyList()
+                )
+                _primaryCategory.value = _skillsState.value.skills.find {
+                    it.id == profile.primaryCategory
+                }
+                _updateWorkerState.value = updateWorkerState.value.copy(
+                    isLoading = false,
+                    profile = profile
+                )
+            }
+
+            is Resource.Error -> {
+                _eventFlow.emit(
+                    UiEvent.MakeToast(result.uiText ?: UiText.unknownError())
+                )
             }
         }
     }

@@ -1,5 +1,9 @@
 package com.fifty.workersportal.featureworker.presentation.registerasworker
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,8 +13,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,31 +29,39 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.SoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.times
+import coil.annotation.ExperimentalCoilApi
+import coil.compose.rememberImagePainter
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.presentation.component.SecondaryHeader
 import com.fifty.workersportal.core.presentation.component.StandardDropDownMenu
 import com.fifty.workersportal.core.presentation.component.StandardTextField
+import com.fifty.workersportal.core.presentation.ui.theme.ExtraExtraLargeProfilePictureHeight
 import com.fifty.workersportal.core.presentation.ui.theme.MediumButtonHeight
 import com.fifty.workersportal.core.presentation.ui.theme.SizeExtraSmall
+import com.fifty.workersportal.core.presentation.ui.theme.SizeLarge
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
+import com.fifty.workersportal.core.presentation.util.CropActivityResultContract
 import com.fifty.workersportal.core.util.Constants
 import com.fifty.workersportal.core.util.Constants.genderOptions
 import com.fifty.workersportal.featureworker.presentation.component.OpenToWorkSwitch
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalCoilApi::class)
 @Composable
 fun PersonalDetailsSection(
     modifier: Modifier = Modifier,
@@ -61,6 +75,18 @@ fun PersonalDetailsSection(
 ) {
 
     var genderDropDownExpanded by remember { mutableStateOf(false) }
+
+    val cropProfilePictureLauncher = rememberLauncherForActivityResult(
+        contract = CropActivityResultContract(1f, 1f)
+    ) {
+        viewModel.onEvent(RegisterAsWorkerEvent.CropProfilePicture(it))
+    }
+    val profilePictureGalleryLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) {
+        if (it == null) return@rememberLauncherForActivityResult
+        cropProfilePictureLauncher.launch(it)
+    }
 
     LazyColumn(
         modifier = modifier.fillMaxSize()
@@ -79,7 +105,27 @@ fun PersonalDetailsSection(
                         viewModel.onEvent(RegisterAsWorkerEvent.ToggleOpenToWork)
                     }
                 )
-                Spacer(modifier = Modifier.height(SizeExtraSmall))
+                Spacer(modifier = Modifier.height(SizeLarge))
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Image(
+                        painter = rememberImagePainter(
+                            data = viewModel.profileImageUri.value
+                                ?: viewModel.updateWorkerState.value.profile?.profilePicture
+                        ),
+                        contentDescription = null,
+                        Modifier
+                            .size(ExtraExtraLargeProfilePictureHeight)
+                            .clip(CircleShape)
+                            .clickable {
+                                profilePictureGalleryLauncher.launch("image/*")
+                            },
+                        contentScale = ContentScale.Crop
+                    )
+                }
+                Spacer(modifier = Modifier.height(SizeLarge))
                 SecondaryHeader(
                     modifier = Modifier.padding(vertical = SizeMedium),
                     text = stringResource(R.string.enter_your_personal_info),

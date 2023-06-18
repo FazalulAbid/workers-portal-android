@@ -52,9 +52,7 @@ fun NavGraphBuilder.authNavGraph(
             OtpVerificationScreen(
                 onNavigateWithPopBackStack = { route ->
                     navController.navigate(route) {
-                        popUpTo(NavigationParent.Auth.route) {
-                            inclusive = true
-                        }
+                        popUpTo(0)
                     }
                 },
                 onNavigate = navController::navigate,

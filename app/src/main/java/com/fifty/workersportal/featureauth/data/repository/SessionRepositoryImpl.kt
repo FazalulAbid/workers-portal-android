@@ -72,7 +72,6 @@ class SessionRepositoryImpl(
         Session.firstName = userSession.firstName
         Session.lastName = userSession.lastName
         Session.isWorker = userSession.isWorker
-        Log.d("Hello", "saveUserSession: Saved new one ${Session.isWorker}")
     }
 
     override suspend fun deleteTokens() {
@@ -89,5 +88,9 @@ class SessionRepositoryImpl(
             preferences.remove(KEY_USER_LAST_NAME)
             preferences.remove(KEY_USER_IS_WORKER)
         }
+//        Session.userId = null
+//        Session.firstName = null
+//        Session.lastName = null
+//        Session.isWorker = false
     }
 }

@@ -88,12 +88,6 @@ class OtpVerificationViewModel @Inject constructor(
                     _eventFlow.emit(
                         UiEvent.OnLogin
                     )
-                    val userId = getOwnUserId()
-                    _eventFlow.emit(
-                        UiEvent.MakeToast(
-                            UiText.DynamicString(userId)
-                        )
-                    )
                 }
 
                 is Resource.Error -> {

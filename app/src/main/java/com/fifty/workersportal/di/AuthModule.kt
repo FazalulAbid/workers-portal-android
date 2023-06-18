@@ -10,6 +10,7 @@ import com.fifty.workersportal.featureauth.domain.repository.SessionRepository
 import com.fifty.workersportal.featureauth.domain.usecase.AuthUseCases
 import com.fifty.workersportal.featureauth.domain.usecase.AuthenticateUseCase
 import com.fifty.workersportal.featureauth.domain.usecase.GetOtpUseCase
+import com.fifty.workersportal.featureauth.domain.usecase.LogoutUseCase
 import com.fifty.workersportal.featureauth.domain.usecase.VerifyOtpUseCase
 import com.fifty.workersportal.featureauth.utils.AuthAuthenticator
 import com.fifty.workersportal.featureauth.utils.AuthInterceptor
@@ -20,6 +21,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
+import retrofit2.http.POST
 import javax.inject.Singleton
 
 @Module
@@ -88,4 +90,10 @@ object AuthModule {
         sessionRepository: SessionRepository
     ): AuthenticateUseCase =
         AuthenticateUseCase(authRepository, sessionRepository)
+
+    @Provides
+    @Singleton
+    fun provideLogoutUseCase(
+        sessionRepository: SessionRepository
+    ): LogoutUseCase = LogoutUseCase(sessionRepository)
 }

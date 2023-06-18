@@ -24,6 +24,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -91,6 +92,19 @@ fun WorkerProfileScreen(
                     ),
                     color = MaterialTheme.colorScheme.onBackground
                 )
+            },
+            navActions = {
+                if (true) {
+                    IconButton(onClick = {
+                        onNavigate(Screen.RegisterAsWorkerScreen.route)
+                    }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_edit),
+                            contentDescription = stringResource(R.string.edit_worker_profile),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
             }
         )
         LazyVerticalGrid(

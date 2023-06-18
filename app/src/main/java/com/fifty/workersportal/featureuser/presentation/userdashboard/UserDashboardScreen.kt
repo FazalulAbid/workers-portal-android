@@ -115,7 +115,7 @@ fun UserDashboardScreen(
                 Spacer(Modifier.height(SizeExtraSmall))
                 DashboardNavigationAndProfile(
                     onProfileClick = {
-                        onNavigate(Screen.WorkerProfileScreen.route)
+                        onNavigate(Screen.UserProfileScreen.route)
                     },
                     onLocationClick = {
                         multiplePermissionResultLauncher.launch(

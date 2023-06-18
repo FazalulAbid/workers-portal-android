@@ -1,5 +1,6 @@
 package com.fifty.workersportal.featureworker.presentation.registerasworker
 
+import android.net.Uri
 import com.fifty.workersportal.featureworker.domain.model.WorkerCategory
 
 sealed class RegisterAsWorkerEvent {
@@ -11,6 +12,7 @@ sealed class RegisterAsWorkerEvent {
     data class EnterAge(val age: String) : RegisterAsWorkerEvent()
     data class SetSkillSelected(val workerCategory: WorkerCategory) : RegisterAsWorkerEvent()
     data class PrimarySkillSelected(val workerCategory: WorkerCategory) : RegisterAsWorkerEvent()
+    data class CropProfilePicture(val uri: Uri?) : RegisterAsWorkerEvent()
     data class EnterSelectedSkillDailyWage(val index: Int, val dailyWage: String) :
         RegisterAsWorkerEvent()
 

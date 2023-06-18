@@ -1,8 +1,5 @@
 package com.fifty.workersportal.core.util
 
-import androidx.compose.ui.res.stringResource
-import com.fifty.workersportal.R
-
 object Constants {
 
     const val DEFAULT_PHONE_NUMBER_LENGTH = 10

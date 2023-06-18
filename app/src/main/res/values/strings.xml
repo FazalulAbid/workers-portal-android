@@ -126,5 +126,9 @@
     <string name="how_was_your_experience">How was your experience?</string>
     <string name="post_review">Post review</string>
     <string name="write_your_review_here">Write your review here...</string>
+    <string name="edit_worker_profile">Edit worker profile</string>
+    <string name="profile">Profile</string>
+    <string name="edit_user_profile">Edit user profile</string>
+    <string name="are_you_sure_you_want_to_log_out">Are you sure you want to log out?</string>
 
 </resources>
