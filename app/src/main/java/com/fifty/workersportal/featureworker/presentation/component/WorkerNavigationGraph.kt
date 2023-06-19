@@ -31,10 +31,15 @@ fun NavGraphBuilder.workerNavGraph(
         route = NavigationParent.Work.route
     ) {
         composable(Screen.RegisterAsWorkerScreen.route) {
-            RegisterAsWorkerScreen()
+            RegisterAsWorkerScreen(
+                onNavigateUp = navController::navigateUp
+            )
         }
         composable(Screen.WorkerDashboardScreen.route) {
-            WorkerDashboardScreen()
+            WorkerDashboardScreen(
+                onNavigateUp = navController::navigateUp,
+                onNavigate = navController::navigate
+            )
         }
         composable(Screen.SearchCategoryScreen.route) {
             SelectWorkerCategoryScreen(

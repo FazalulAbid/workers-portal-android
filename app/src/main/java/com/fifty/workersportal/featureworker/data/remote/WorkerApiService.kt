@@ -16,7 +16,7 @@ interface WorkerApiService {
     @GET("worker/get-suggested-categories")
     suspend fun getSuggestedCategories(): BasicApiResponse<List<CategoryDto>>
 
-    @POST("hello/sadfasd")
+    @POST("rating/add-rating")
     suspend fun postReviewAndRating(
         @Body reviewAndRating: ReviewAndRating
     ): BasicApiResponse<ReviewAndRating>

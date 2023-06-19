@@ -45,7 +45,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun WriteAReviewScreenContent(
     modifier: Modifier = Modifier,
-    viewModel: ReviewAndRatingViewModel
+    viewModel: ReviewAndRatingViewModel,
+    onSubmitClick: () -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
@@ -115,7 +116,7 @@ fun WriteAReviewScreenContent(
             modifier = Modifier.bringIntoViewRequester(bringIntoViewRequester),
             text = stringResource(R.string.post_review)
         ) {
-
+            onSubmitClick()
         }
     }
 }

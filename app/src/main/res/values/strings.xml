@@ -130,5 +130,9 @@
     <string name="profile">Profile</string>
     <string name="edit_user_profile">Edit user profile</string>
     <string name="are_you_sure_you_want_to_log_out">Are you sure you want to log out?</string>
+    <string name="drag_through_rating_stars_to_select_your_rating">Drag through rating stars to select your rating</string>
+    <string name="review_filed_can_t_be_empty">Review filed can\'t be empty</string>
+    <string name="most_booked_services">Most booked services</string>
+    <string name="explore_more">Explore more</string>
 
 </resources>

@@ -43,6 +43,7 @@ import com.fifty.workersportal.core.presentation.util.makeToast
 import com.fifty.workersportal.core.util.UiText
 import com.fifty.workersportal.featureworker.presentation.component.RatingsDetailedCountBars
 import com.fifty.workersportal.featureworker.presentation.component.ReviewItem
+import com.fifty.workersportal.featureworker.util.ReviewAndRatingError
 import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -64,7 +65,25 @@ fun ReviewAndRatingScreen(
                     makeToast(event.uiText.asString(context), context)
                 }
 
+                UiEvent.ReviewAndRatingPosted -> {
+                    showWriteReviewSheet = false
+                }
+
                 else -> {}
+            }
+        }
+    }
+
+    LaunchedEffect(key1 = true) {
+        viewModel.errorFlow.collectLatest { error ->
+            when (error) {
+                ReviewAndRatingError.EmptyField -> {
+                    makeToast(R.string.review_filed_can_t_be_empty, context)
+                }
+
+                ReviewAndRatingError.RatingError -> {
+                    makeToast(R.string.drag_through_rating_stars_to_select_your_rating, context)
+                }
             }
         }
     }
@@ -154,13 +173,11 @@ fun ReviewAndRatingScreen(
             }
         }
 
-        Box(
+        PrimaryButton(
             modifier = Modifier.padding(SizeMedium),
-            contentAlignment = Alignment.Center
+            text = stringResource(R.string.write_a_review)
         ) {
-            PrimaryButton(text = stringResource(R.string.write_a_review)) {
-                showWriteReviewSheet = true
-            }
+            showWriteReviewSheet = true
         }
 
         if (showWriteReviewSheet) {
@@ -171,7 +188,10 @@ fun ReviewAndRatingScreen(
                 }
             ) {
                 WriteAReviewScreenContent(
-                    viewModel = viewModel
+                    viewModel = viewModel,
+                    onSubmitClick = {
+                        viewModel.onEvent(ReviewAndRatingEvent.PostReviewAndRating)
+                    }
                 )
             }
         }

@@ -7,8 +7,10 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,17 +18,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.rememberBottomSheetState
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -34,8 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.DialogProperties
+import androidx.compose.ui.text.font.FontWeight
 import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.ImageLoader
@@ -56,14 +50,18 @@ import com.fifty.workersportal.core.util.Screen
 import com.fifty.workersportal.core.util.openAppSettings
 import com.fifty.workersportal.featureuser.presentation.component.AutoSlidingCarousal
 import com.fifty.workersportal.featureuser.presentation.component.DashboardGreetingText
+import com.fifty.workersportal.featureuser.presentation.component.MostBookedServicesItem
 import com.fifty.workersportal.featureuser.presentation.component.SuggestedCategoryItem
+import com.fifty.workersportal.featureworker.presentation.component.WorkerListItem
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig
 import com.maxkeppeler.sheets.calendar.models.CalendarSelection
 import kotlinx.coroutines.flow.collectLatest
+import java.time.LocalDate
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalPagerApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun UserDashboardScreen(
@@ -160,8 +158,9 @@ fun UserDashboardScreen(
             Column(Modifier.padding(horizontal = SizeMedium)) {
                 SecondaryHeader(
                     text = stringResource(R.string.suggested_categories),
-                    modifier = Modifier.padding(vertical = SizeMedium),
+                    modifier = Modifier.padding(top = SizeMedium, bottom = SizeSmall),
                     style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold,
                     moreOption = true,
                     moreOptionText = stringResource(R.string.all_categories),
                     onMoreOptionClick = {
@@ -184,35 +183,47 @@ fun UserDashboardScreen(
                         }
                     }
                 }
-                Spacer(modifier = Modifier.height(SizeSmall))
-                Spacer(modifier = Modifier.height(SizeSmall))
-                Spacer(modifier = Modifier.height(SizeSmall))
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-//                    val list = listOf(
-//                        Screen.WorkerDashboardScreen.route,
-//                        Screen.SearchCategoryScreen.route,
-//                        Screen.WorkerListScreen.route,
-//                        Screen.WorkerProfileScreen.route,
-//                        Screen.RegisterAsWorkerScreen.route,
-//                        Screen.MessageScreen.route,
-//                    )
-//                    LazyHorizontalGrid(
-//                        rows = GridCells.Adaptive(minSize = 70.dp),
-//                        modifier = Modifier.fillMaxWidth()
-//                    ) {
-//                        items(list) {
-//                            Button(onClick = {
-//                                onNavigate(it)
-//                            }, Modifier.padding(SizeMedium)) {
-//                                Text(text = it)
-//                            }
-//                        }
-//                    }
-                }
+                HorizontalDivider()
             }
+        }
+        item {
+            Column(Modifier.padding(horizontal = SizeMedium)) {
+                SecondaryHeader(
+                    text = stringResource(R.string.most_booked_services),
+                    modifier = Modifier.padding(top = SizeMedium, bottom = SizeSmall),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold,
+                )
+            }
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                LazyRow(
+                    Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(SizeSmall),
+                    contentPadding = PaddingValues(horizontal = SizeSmall)
+                ) {
+                    items(10) {
+                        MostBookedServicesItem()
+                    }
+                }
+                Spacer(modifier = Modifier.height(SizeMedium))
+                HorizontalDivider()
+            }
+        }
+        item {
+            Column(Modifier.padding(horizontal = SizeMedium)) {
+                SecondaryHeader(
+                    text = stringResource(R.string.explore_more),
+                    modifier = Modifier.padding(top = SizeMedium, bottom = SizeSmall),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold,
+                )
+            }
+        }
+        items(10) {
+            WorkerListItem()
         }
     }
 
@@ -242,8 +253,19 @@ fun UserDashboardScreen(
         )
     }
 
+    val rangeStartDate = LocalDate.now().plusDays(1)
+    val rangeEndYearOffset = 1L
+    val rangeEndDate = LocalDate.now().plusYears(rangeEndYearOffset)
+        .withMonth(1)
+        .withDayOfMonth(15)
+    val range = rangeStartDate..rangeEndDate
+
     CalendarDialog(
         state = calenderState,
+        config = CalendarConfig(
+            monthSelection = true,
+            boundary = range
+        ),
         selection = CalendarSelection.Date { date ->
             Toast.makeText(context, "${date.toString()}", Toast.LENGTH_SHORT).show()
         }

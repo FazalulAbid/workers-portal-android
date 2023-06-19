@@ -1,10 +1,13 @@
 package com.fifty.workersportal.di
 
 import com.fifty.workersportal.featureworker.data.remote.WorkerApiService
+import com.fifty.workersportal.featureworker.data.repository.ReviewAndRatingRepositoryImpl
 import com.fifty.workersportal.featureworker.data.repository.WorkerRepositoryImpl
+import com.fifty.workersportal.featureworker.domain.repository.ReviewAndRatingRepository
 import com.fifty.workersportal.featureworker.domain.repository.WorkerRepository
 import com.fifty.workersportal.featureworker.domain.usecase.GetCategoriesUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.GetSuggestedCategoriesUseCase
+import com.fifty.workersportal.featureworker.domain.usecase.PostReviewAndRatingUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -35,6 +38,11 @@ object WorkerModule {
 
     @Provides
     @Singleton
+    fun provideReviewAndRatingRepository(api: WorkerApiService): ReviewAndRatingRepository =
+        ReviewAndRatingRepositoryImpl(api)
+
+    @Provides
+    @Singleton
     fun provideGetCategoriesUseCase(
         workerRepository: WorkerRepository
     ): GetCategoriesUseCase =
@@ -47,4 +55,10 @@ object WorkerModule {
     ): GetSuggestedCategoriesUseCase =
         GetSuggestedCategoriesUseCase(repository)
 
+    @Provides
+    @Singleton
+    fun providePostReviewAndRatingUseCase(
+        repository: ReviewAndRatingRepository
+    ): PostReviewAndRatingUseCase =
+        PostReviewAndRatingUseCase(repository)
 }

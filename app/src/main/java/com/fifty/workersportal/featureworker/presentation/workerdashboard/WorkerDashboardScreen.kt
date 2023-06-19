@@ -1,36 +1,28 @@
 package com.fifty.workersportal.featureworker.presentation.workerdashboard
 
-import androidx.compose.foundation.Image
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.presentation.component.DashboardNavigationAndProfile
 import com.fifty.workersportal.core.presentation.component.HorizontalDivider
 import com.fifty.workersportal.core.presentation.component.PrimaryHeader
 import com.fifty.workersportal.core.presentation.component.SecondaryHeader
 import com.fifty.workersportal.core.presentation.ui.theme.SizeExtraSmall
-import com.fifty.workersportal.core.presentation.ui.theme.SizeLarge
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
-import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
-import com.fifty.workersportal.core.presentation.ui.theme.SmallProfilePictureHeight
 import com.fifty.workersportal.core.presentation.ui.theme.SmallStrokeThickness
+import com.fifty.workersportal.core.util.Screen
 import com.fifty.workersportal.featureworker.presentation.component.OpenToWorkSwitch
 import com.fifty.workersportal.featureworker.presentation.component.WorkProposalListItem
 
@@ -39,6 +31,7 @@ fun WorkerDashboardScreen(
     onNavigate: (String) -> Unit = {},
     onNavigateUp: () -> Unit = {}
 ) {
+    val context = LocalContext.current
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -51,7 +44,14 @@ fun WorkerDashboardScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            DashboardNavigationAndProfile()
+            DashboardNavigationAndProfile(
+                onProfileClick = {
+                    onNavigate(Screen.WorkerProfileScreen.route)
+                },
+                onLocationClick = {
+                    onNavigate(Screen.SelectLocationScreen.route)
+                }
+            )
             PrimaryHeader(text = stringResource(R.string.worker_dashboard))
             HorizontalDivider()
             Spacer(modifier = Modifier.height(SizeExtraSmall))

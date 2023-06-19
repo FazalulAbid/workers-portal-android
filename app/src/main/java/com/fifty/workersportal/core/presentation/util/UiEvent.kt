@@ -13,4 +13,5 @@ sealed class UiEvent : Event() {
     object OnLogout : UiEvent()
     object OnCurrentLocation : UiEvent()
     object HideKeyboard : UiEvent()
+    object ReviewAndRatingPosted : UiEvent()
 }

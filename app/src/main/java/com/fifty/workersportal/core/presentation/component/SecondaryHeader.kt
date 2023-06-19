@@ -38,10 +38,10 @@ fun SecondaryHeader(
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth()
     ) {
         Text(
-            modifier = modifier
+            modifier = Modifier
                 .weight(1f),
             text = text,
             style = style.copy(
