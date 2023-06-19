@@ -51,6 +51,7 @@ import com.fifty.workersportal.core.util.openAppSettings
 import com.fifty.workersportal.featureuser.presentation.component.AutoSlidingCarousal
 import com.fifty.workersportal.featureuser.presentation.component.DashboardGreetingText
 import com.fifty.workersportal.featureuser.presentation.component.MostBookedServicesItem
+import com.fifty.workersportal.featureuser.presentation.component.SearchWorkerButton
 import com.fifty.workersportal.featureuser.presentation.component.SuggestedCategoryItem
 import com.fifty.workersportal.featureworker.presentation.component.WorkerListItem
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -124,22 +125,13 @@ fun UserDashboardScreen(
                 Spacer(modifier = Modifier.height(SizeMedium))
                 HorizontalDivider()
                 Spacer(modifier = Modifier.height(SizeMedium))
-                StandardTextField(
-                    basicTextFieldModifier = Modifier
+                SearchWorkerButton(
+                    modifier = Modifier
                         .fillMaxWidth()
                         .height(MediumButtonHeight),
-                    leadingIcon = {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_search),
-                            contentDescription = stringResource(R.string.search_for_worker_category),
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                    },
-                    trailingIcon = null,
-                    hint = stringResource(R.string.search_plumber),
-                    value = "",
-                    onValueChange = {
-
+                    text = stringResource(id = R.string.search_aryan),
+                    onClick = {
+                        onNavigate(Screen.SearchWorkerScreen.route)
                     }
                 )
             }

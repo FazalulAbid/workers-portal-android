@@ -55,8 +55,8 @@ fun StandardTextField(
                     color = textColor
                 )
             )
+            Spacer(modifier = Modifier.height(SizeSmall))
         }
-        Spacer(modifier = Modifier.height(SizeSmall))
         BasicTextField(
             modifier = basicTextFieldModifier
                 .background(backgroundColor, MaterialTheme.shapes.medium)

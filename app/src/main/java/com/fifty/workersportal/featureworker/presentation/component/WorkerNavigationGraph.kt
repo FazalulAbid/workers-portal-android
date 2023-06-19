@@ -11,6 +11,7 @@ import com.fifty.workersportal.core.util.NavigationParent
 import com.fifty.workersportal.core.util.Screen
 import com.fifty.workersportal.featureworker.presentation.registerasworker.RegisterAsWorkerScreen
 import com.fifty.workersportal.featureworker.presentation.reviewandrating.ReviewAndRatingScreen
+import com.fifty.workersportal.featureworker.presentation.searchworker.SearchWorkerScreen
 import com.fifty.workersportal.featureworker.presentation.selectworkercategory.SelectWorkerCategoryScreen
 import com.fifty.workersportal.featureworker.presentation.workerdashboard.WorkerDashboardScreen
 import com.fifty.workersportal.featureworker.presentation.workerlist.WorkerListScreen
@@ -62,6 +63,12 @@ fun NavGraphBuilder.workerNavGraph(
         }
         composable(Screen.ReviewAndRatingScreen.route) {
             ReviewAndRatingScreen(
+                onNavigate = navController::navigate,
+                onNavigateUp = navController::navigateUp
+            )
+        }
+        composable(Screen.SearchWorkerScreen.route) {
+            SearchWorkerScreen(
                 onNavigate = navController::navigate,
                 onNavigateUp = navController::navigateUp
             )

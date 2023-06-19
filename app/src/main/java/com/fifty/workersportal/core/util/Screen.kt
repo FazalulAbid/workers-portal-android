@@ -20,4 +20,5 @@ sealed class Screen(val route: String) {
     object DetectCurrentLocationScreen : Screen("detect_current_location_screen")
     object UserProfileScreen : Screen("user_profile_screen")
     object EditUserProfileScreen : Screen("edit_user_profile_screen")
+    object SearchWorkerScreen : Screen("search_worker_screen")
 }
