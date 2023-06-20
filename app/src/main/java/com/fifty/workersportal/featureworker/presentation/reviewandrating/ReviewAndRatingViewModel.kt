@@ -5,7 +5,6 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fifty.workersportal.R
 import com.fifty.workersportal.core.domain.state.StandardTextFieldState
 import com.fifty.workersportal.core.domain.util.Session
 import com.fifty.workersportal.core.presentation.util.UiEvent
@@ -19,7 +18,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.math.ceil
 
 @HiltViewModel
 class ReviewAndRatingViewModel @Inject constructor(
@@ -70,7 +68,7 @@ class ReviewAndRatingViewModel @Inject constructor(
             isLoading = true
         )
         val reviewAndRating = ReviewAndRating(
-            userId = Session.userId ?: "",
+            ratedUserId = Session.userId ?: "",
             rating = _ratingState.value,
             review = reviewTextFieldState.value.text,
             isWorker = Session.isWorker

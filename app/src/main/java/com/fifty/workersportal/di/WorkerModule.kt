@@ -8,6 +8,7 @@ import com.fifty.workersportal.featureworker.domain.repository.WorkerRepository
 import com.fifty.workersportal.featureworker.domain.usecase.GetCategoriesUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.GetSuggestedCategoriesUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.PostReviewAndRatingUseCase
+import com.fifty.workersportal.featureworker.domain.usecase.ToggleOpenToWorkUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -61,4 +62,11 @@ object WorkerModule {
         repository: ReviewAndRatingRepository
     ): PostReviewAndRatingUseCase =
         PostReviewAndRatingUseCase(repository)
+
+    @Provides
+    @Singleton
+    fun provideToggleOpenToWorkUseCase(
+        repository: WorkerRepository
+    ): ToggleOpenToWorkUseCase =
+        ToggleOpenToWorkUseCase(repository)
 }

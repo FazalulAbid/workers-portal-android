@@ -1,6 +1,9 @@
 package com.fifty.workersportal.featureworker.domain.model
 
+import com.google.gson.annotations.SerializedName
+
 data class WorkerCategory(
+    @SerializedName("_id")
     val id: String,
     val title: String?,
     val skill: String?,

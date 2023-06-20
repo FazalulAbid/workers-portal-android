@@ -90,7 +90,7 @@ fun SelectWorkerCategoryScreen(
         }
         LazyVerticalGrid(
             horizontalArrangement = Arrangement.SpaceEvenly,
-            columns = GridCells.Adaptive(minSize = 110.dp)
+            columns = GridCells.Adaptive(minSize = 100.dp)
         ) {
             items(state.workerCategories) {
                 CategoryItem(

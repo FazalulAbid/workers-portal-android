@@ -1,6 +1,7 @@
 package com.fifty.workersportal.featureworker.presentation.registerasworker
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
@@ -232,6 +233,7 @@ class RegisterAsWorkerViewModel @Inject constructor(
         )
         when (val result = getUserProfileDetails(id)) {
             is Resource.Success -> {
+                Log.d("Hello", "getWorkerProfileDetails: ${result.data}")
                 val profile = result.data ?: kotlin.run {
                     _eventFlow.emit(
                         UiEvent.MakeToast(

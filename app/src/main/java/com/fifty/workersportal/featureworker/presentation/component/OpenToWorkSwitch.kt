@@ -18,7 +18,7 @@ import com.fifty.workersportal.core.presentation.ui.theme.DarkGreenColor
 fun OpenToWorkSwitch(
     modifier: Modifier = Modifier,
     checked: Boolean,
-    onCheckedChange: () -> Unit = {}
+    onCheckedChange: (Boolean) -> Unit = {}
 ) {
     Row(
         modifier = modifier,
@@ -34,7 +34,9 @@ fun OpenToWorkSwitch(
         )
         Switch(
             checked = checked,
-            onCheckedChange = { onCheckedChange() },
+            onCheckedChange = {
+                onCheckedChange(it)
+            },
             colors = SwitchDefaults.colors(
                 uncheckedThumbColor = MaterialTheme.colorScheme.primary,
                 uncheckedBorderColor = MaterialTheme.colorScheme.outline,

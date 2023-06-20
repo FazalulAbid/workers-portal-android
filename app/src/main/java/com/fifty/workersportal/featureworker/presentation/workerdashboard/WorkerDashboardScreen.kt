@@ -10,10 +10,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.presentation.component.DashboardNavigationAndProfile
 import com.fifty.workersportal.core.presentation.component.HorizontalDivider
@@ -25,13 +27,25 @@ import com.fifty.workersportal.core.presentation.ui.theme.SmallStrokeThickness
 import com.fifty.workersportal.core.util.Screen
 import com.fifty.workersportal.featureworker.presentation.component.OpenToWorkSwitch
 import com.fifty.workersportal.featureworker.presentation.component.WorkProposalListItem
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun WorkerDashboardScreen(
     onNavigate: (String) -> Unit = {},
-    onNavigateUp: () -> Unit = {}
+    onNavigateUp: () -> Unit = {},
+    viewModel: WorkerDashboardViewModel = hiltViewModel()
 ) {
+    val state = viewModel.state.value
     val context = LocalContext.current
+
+    LaunchedEffect(key1 = true) {
+        viewModel.eventFlow.collectLatest { event ->
+            when (event) {
+                else -> Unit
+            }
+        }
+    }
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -57,8 +71,10 @@ fun WorkerDashboardScreen(
             Spacer(modifier = Modifier.height(SizeExtraSmall))
             OpenToWorkSwitch(
                 modifier = Modifier.fillMaxWidth(),
-                checked = false,
-                onCheckedChange = {}
+                checked = state.openToWork,
+                onCheckedChange = {
+                    viewModel.onEvent(WorkerDashboardEvent.ToggleOpenToWork(it))
+                }
             )
             Spacer(modifier = Modifier.height(SizeExtraSmall))
             HorizontalDivider()
