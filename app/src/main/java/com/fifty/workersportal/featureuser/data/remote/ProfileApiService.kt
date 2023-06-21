@@ -24,4 +24,11 @@ interface ProfileApiService {
         @Part profilePicture: MultipartBody.Part?,
         @Part updateProfileForWorkerRequest: MultipartBody.Part
     ): BasicApiResponse<ProfileDto>
+
+    @Multipart
+    @PUT("profile/edit-user-profile")
+    suspend fun updateUserProfile(
+        @Part profilePicture: MultipartBody.Part?,
+        @Part updateUserProfile: MultipartBody.Part
+    ): BasicApiResponse<ProfileDto>
 }

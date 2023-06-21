@@ -2,9 +2,12 @@ package com.fifty.workersportal.featureauth.presentation.splash
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fifty.workersportal.core.domain.model.UserSession
+import com.fifty.workersportal.core.domain.util.Session
 import com.fifty.workersportal.core.presentation.util.UiEvent
 import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.featureauth.domain.usecase.AuthenticateUseCase
+import com.fifty.workersportal.featureauth.domain.usecase.SaveUserSessionUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
-    private val authenticate: AuthenticateUseCase
+    private val authenticate: AuthenticateUseCase,
+    private val saveUserSession: SaveUserSessionUseCase
 ) : ViewModel() {
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
@@ -29,9 +33,24 @@ class SplashViewModel @Inject constructor(
         when (event) {
             SplashEvent.CheckAuthentication -> {
                 viewModelScope.launch {
-                    when (authenticate()) {
+                    when (val result = authenticate()) {
                         is Resource.Success -> {
-                            _isAuthenticated.emit(UserAuthState.AUTHENTICATED)
+                            val userSession = result.data
+                            userSession?.let {
+                                saveUserSession(
+                                    userId = userSession.userId,
+                                    firstName = userSession.firstName,
+                                    lastName = userSession.lastName,
+                                    isWorker = userSession.isWorker
+                                )
+                                Session.userSession.value = UserSession(
+                                    userId = it.userId,
+                                    firstName = it.firstName,
+                                    lastName = it.lastName,
+                                    isWorker = it.isWorker
+                                )
+                                _isAuthenticated.emit(UserAuthState.AUTHENTICATED)
+                            } ?: _isAuthenticated.emit(UserAuthState.UNAUTHENTICATED)
                         }
 
                         is Resource.Error -> {

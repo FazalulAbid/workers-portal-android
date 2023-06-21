@@ -18,33 +18,37 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.IntSize
 
-fun Modifier.shimmerEffect(): Modifier = composed {
-    var size by remember {
-        mutableStateOf(IntSize.Zero)
-    }
-    val transition = rememberInfiniteTransition()
-    val startOffsetX by transition.animateFloat(
-        initialValue = -2 * size.width.toFloat(),
-        targetValue = 2 * size.width.toFloat(),
-        animationSpec = infiniteRepeatable(
-            animation = tween(
-                durationMillis = 1000
+fun Modifier.shimmerEffect(isVisible: Boolean = true): Modifier = composed {
+    if (isVisible) {
+        var size by remember {
+            mutableStateOf(IntSize.Zero)
+        }
+        val transition = rememberInfiniteTransition()
+        val startOffsetX by transition.animateFloat(
+            initialValue = -2 * size.width.toFloat(),
+            targetValue = 2 * size.width.toFloat(),
+            animationSpec = infiniteRepeatable(
+                animation = tween(
+                    durationMillis = 1000
+                )
             )
         )
-    )
-    background(
-        brush = Brush.linearGradient(
-            colors = listOf(
-                Color(0xFFE4E4E4),
-                Color(0xFFCCCCCC),
-                Color(0xFFE4E4E4),
+        background(
+            brush = Brush.linearGradient(
+                colors = listOf(
+                    Color(0xFFE4E4E4),
+                    Color(0xFFCCCCCC),
+                    Color(0xFFE4E4E4),
+                ),
+                start = Offset(startOffsetX, 0f),
+                end = Offset(startOffsetX + size.width.toFloat(), size.height.toFloat())
             ),
-            start = Offset(startOffsetX, 0f),
-            end = Offset(startOffsetX + size.width.toFloat(), size.height.toFloat())
-        ),
-        shape = MaterialTheme.shapes.small
-    )
-        .onGloballyPositioned {
-            size = it.size
-        }
+            shape = MaterialTheme.shapes.small
+        )
+            .onGloballyPositioned {
+                size = it.size
+            }
+    } else {
+        this // Return the unmodified Modifier when isVisible is false
+    }
 }

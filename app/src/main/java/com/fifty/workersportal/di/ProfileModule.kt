@@ -5,6 +5,7 @@ import com.fifty.workersportal.featureauth.domain.repository.SessionRepository
 import com.fifty.workersportal.featureuser.data.remote.ProfileApiService
 import com.fifty.workersportal.featureuser.data.repository.ProfileRepositoryImpl
 import com.fifty.workersportal.featureuser.domain.repository.ProfileRepository
+import com.fifty.workersportal.featureuser.domain.usecase.UpdateUserProfileUseCase
 import com.fifty.workersportal.featureworker.domain.repository.WorkerRepository
 import com.fifty.workersportal.featureworker.domain.usecase.GetCategoriesUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.SetSkillSelectedUseCase
@@ -41,10 +42,16 @@ object ProfileModule {
     @Provides
     @Singleton
     fun provideUpdateUserAsWorkerUseCase(
-        profileRepository: ProfileRepository,
-        sessionRepository: SessionRepository
+        profileRepository: ProfileRepository
     ): UpdateUserAsWorkerUseCase =
-        UpdateUserAsWorkerUseCase(profileRepository, sessionRepository)
+        UpdateUserAsWorkerUseCase(profileRepository)
+
+    @Provides
+    @Singleton
+    fun provideUpdateUserProfileUseCase(
+        profileRepository: ProfileRepository
+    ): UpdateUserProfileUseCase =
+        UpdateUserProfileUseCase(profileRepository)
 
     @Provides
     @Singleton

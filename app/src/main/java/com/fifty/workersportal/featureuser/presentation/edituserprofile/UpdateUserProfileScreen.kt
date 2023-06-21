@@ -63,14 +63,15 @@ import com.fifty.workersportal.core.util.Constants
 import kotlinx.coroutines.launch
 
 @OptIn(
-    ExperimentalCoilApi::class, ExperimentalComposeUiApi::class,
+    ExperimentalCoilApi::class,
+    ExperimentalComposeUiApi::class,
     ExperimentalFoundationApi::class
 )
 @Composable
-fun EditUserProfileScreen(
+fun UpdateUserProfileScreen(
     onNavigate: (String) -> Unit,
     onNavigateUp: () -> Unit,
-    viewModel: EditUserProfileViewModel = hiltViewModel()
+    viewModel: UpdateUserProfileViewModel = hiltViewModel()
 ) {
     val firstNameFocusRequester = remember { FocusRequester() }
     val emailFocusRequester = remember { FocusRequester() }
@@ -86,7 +87,7 @@ fun EditUserProfileScreen(
     val cropProfilePictureLauncher = rememberLauncherForActivityResult(
         contract = CropActivityResultContract(1f, 1f)
     ) {
-        viewModel.onEvent(EditUserProfileEvent.CropProfilePicture(it))
+        viewModel.onEvent(UpdateUserProfileEvent.CropProfilePicture(it))
     }
     val profilePictureGalleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
@@ -131,7 +132,7 @@ fun EditUserProfileScreen(
                             Image(
                                 painter = rememberImagePainter(
                                     data = viewModel.profileImageUri.value
-                                        ?: viewModel.editUserProfileState.value.userProfile?.profilePicture
+                                        ?: viewModel.updateUserProfileState.value.userProfile?.profilePicture
                                 ),
                                 contentDescription = null,
                                 Modifier
@@ -165,7 +166,7 @@ fun EditUserProfileScreen(
                             value = viewModel.firstNameState.value.text,
                             onValueChange = {
                                 viewModel.onEvent(
-                                    EditUserProfileEvent.EnterFirstName(it)
+                                    UpdateUserProfileEvent.EnterFirstName(it)
                                 )
                             },
                             maxLength = Constants.MAXIMUM_NAME_LENGTH,
@@ -197,7 +198,7 @@ fun EditUserProfileScreen(
                             value = viewModel.lastNameState.value.text,
                             onValueChange = {
                                 viewModel.onEvent(
-                                    EditUserProfileEvent.EnterLastName(it)
+                                    UpdateUserProfileEvent.EnterLastName(it)
                                 )
                             },
                             titleHint = true,
@@ -226,7 +227,7 @@ fun EditUserProfileScreen(
                             value = viewModel.emailState.value.text,
                             onValueChange = {
                                 viewModel.onEvent(
-                                    EditUserProfileEvent.EnterEmail(it)
+                                    UpdateUserProfileEvent.EnterEmail(it)
                                 )
                             },
                             titleHint = true,
@@ -255,7 +256,7 @@ fun EditUserProfileScreen(
                                     selectedOption = viewModel.genderState.value,
                                     onOptionSelected = {
                                         viewModel.onEvent(
-                                            EditUserProfileEvent.GenderSelectedChanged(it)
+                                            UpdateUserProfileEvent.GenderSelectedChanged(it)
                                         )
                                     }
                                 )
@@ -278,7 +279,7 @@ fun EditUserProfileScreen(
                                     value = viewModel.ageState.value.text,
                                     onValueChange = {
                                         viewModel.onEvent(
-                                            EditUserProfileEvent.EnterAge(it)
+                                            UpdateUserProfileEvent.EnterAge(it)
                                         )
                                     },
                                     titleHint = true,

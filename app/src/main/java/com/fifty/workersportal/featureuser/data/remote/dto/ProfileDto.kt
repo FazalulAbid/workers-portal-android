@@ -32,7 +32,7 @@ data class ProfileDto(
 ) {
     fun toUser(): UserSession {
         return UserSession(
-            id = id,
+            userId = id,
             firstName = firstName,
             isWorker = isWorker,
             lastName = lastName

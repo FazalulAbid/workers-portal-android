@@ -1,15 +1,14 @@
 package com.fifty.workersportal.featureworker.presentation.reviewandrating
 
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fifty.workersportal.core.domain.state.StandardTextFieldState
-import com.fifty.workersportal.core.domain.util.Session
 import com.fifty.workersportal.core.presentation.util.UiEvent
 import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.UiText
+import com.fifty.workersportal.featureauth.domain.usecase.GetUserSessionUseCase
 import com.fifty.workersportal.featureworker.domain.model.ReviewAndRating
 import com.fifty.workersportal.featureworker.domain.usecase.PostReviewAndRatingUseCase
 import com.fifty.workersportal.featureworker.util.ReviewAndRatingError
@@ -21,7 +20,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ReviewAndRatingViewModel @Inject constructor(
-    private val postReviewAndRatingUseCase: PostReviewAndRatingUseCase
+    private val postReviewAndRatingUseCase: PostReviewAndRatingUseCase,
+    private val getUserSession: GetUserSessionUseCase
 ) : ViewModel() {
 
     private val _reviewTextFieldState = mutableStateOf(StandardTextFieldState())
@@ -63,18 +63,17 @@ class ReviewAndRatingViewModel @Inject constructor(
     }
 
     private fun postReviewAndRating() {
-        Log.d("Hello", "Function worked")
         _state.value = state.value.copy(
             isLoading = true
         )
-        val reviewAndRating = ReviewAndRating(
-            ratedUserId = Session.userId ?: "",
-            rating = _ratingState.value,
-            review = reviewTextFieldState.value.text,
-            isWorker = Session.isWorker
-        )
         viewModelScope.launch {
-            Log.d("Hello", "postReviewAndRating: viewModelScope launched")
+            val userSession = getUserSession()
+            val reviewAndRating = ReviewAndRating(
+                ratedUserId = userSession.userId,
+                rating = _ratingState.value,
+                review = reviewTextFieldState.value.text,
+                isWorker = userSession.isWorker
+            )
             val postReviewAndRatingResult = postReviewAndRatingUseCase(reviewAndRating)
             if (postReviewAndRatingResult.ratingError != null) {
                 _errorFlow.emit(

@@ -8,7 +8,7 @@ import androidx.navigation.navigation
 import coil.ImageLoader
 import com.fifty.workersportal.core.util.NavigationParent
 import com.fifty.workersportal.core.util.Screen
-import com.fifty.workersportal.featureuser.presentation.edituserprofile.EditUserProfileScreen
+import com.fifty.workersportal.featureuser.presentation.edituserprofile.UpdateUserProfileScreen
 import com.fifty.workersportal.featureuser.presentation.userdashboard.UserDashboardScreen
 import com.fifty.workersportal.featureuser.presentation.userprofile.UserProfileScreen
 import com.google.accompanist.navigation.animation.composable
@@ -40,8 +40,8 @@ fun NavGraphBuilder.userNavGraph(
                 }
             )
         }
-        composable(Screen.EditUserProfileScreen.route) {
-            EditUserProfileScreen(
+        composable(Screen.UpdateUserProfileScreen.route) {
+            UpdateUserProfileScreen(
                 onNavigate = navController::navigate,
                 onNavigateUp = navController::navigateUp,
             )

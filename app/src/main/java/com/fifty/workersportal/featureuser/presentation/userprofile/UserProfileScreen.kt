@@ -159,7 +159,7 @@ fun UserProfileScreen(
                             text = "Edit profile",
                             description = "Tap the Edit Profile button to modify and update your personal information"
                         ) {
-                            onNavigate(Screen.EditUserProfileScreen.route)
+                            onNavigate(Screen.UpdateUserProfileScreen.route)
                         }
                         HorizontalDivider(
                             color = MaterialTheme.colorScheme.background,

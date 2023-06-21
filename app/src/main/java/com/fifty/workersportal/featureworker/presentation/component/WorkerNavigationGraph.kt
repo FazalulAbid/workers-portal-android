@@ -23,17 +23,19 @@ fun NavGraphBuilder.workerNavGraph(
     navController: NavController,
     snackbarHostState: SnackbarHostState,
     imageLoader: ImageLoader,
-    isWorker: Boolean
+    isWorker: Boolean = false
 ) {
+    val ishello = false
     navigation(
-        startDestination = if (Session.isWorker) {
+        startDestination = if (ishello) {
             Screen.WorkerDashboardScreen.route
         } else Screen.RegisterAsWorkerScreen.route,
         route = NavigationParent.Work.route
     ) {
         composable(Screen.RegisterAsWorkerScreen.route) {
             RegisterAsWorkerScreen(
-                onNavigateUp = navController::navigateUp
+                onNavigateUp = navController::navigateUp,
+                imageLoader = imageLoader
             )
         }
         composable(Screen.WorkerDashboardScreen.route) {

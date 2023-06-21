@@ -7,17 +7,17 @@ import com.fifty.workersportal.core.domain.util.ValidationUtil
 import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.UiText
 import com.fifty.workersportal.featureauth.domain.repository.SessionRepository
+import com.fifty.workersportal.featureuser.domain.model.UpdateUserProfileResult
 import com.fifty.workersportal.featureuser.domain.repository.ProfileRepository
 import com.fifty.workersportal.featureworker.data.remote.request.WorkerCategoryRequest
 import com.fifty.workersportal.featureworker.data.remote.request.UpdateProfileForWorkerRequest
 import com.fifty.workersportal.featureworker.domain.model.UpdateWorkerData
 import com.fifty.workersportal.featureworker.domain.model.UpdateWorkerResult
-import com.fifty.workersportal.featureworker.util.WorkerError
+import com.fifty.workersportal.featureworker.util.ProfileError
 import java.util.Locale
 
 class UpdateUserAsWorkerUseCase(
-    private val profileRepository: ProfileRepository,
-    private val sessionRepository: SessionRepository
+    private val profileRepository: ProfileRepository
 ) {
     suspend operator fun invoke(
         updateWorkerData: UpdateWorkerData,
@@ -26,14 +26,14 @@ class UpdateUserAsWorkerUseCase(
         val firstNameError = ValidationUtil.validateFirstName(updateWorkerData.firstName)
         val emailError = ValidationUtil.validateEmail(updateWorkerData.email)
         val ageError = ValidationUtil.validateWorkerAge(updateWorkerData.age)
-        val bioError = if (updateWorkerData.bio.isBlank()) WorkerError.InvalidBio else null
+        val bioError = if (updateWorkerData.bio.isBlank()) ProfileError.InvalidBio else null
         val skillsError =
-            if (updateWorkerData.categoryList.isEmpty()) WorkerError.NoSkillSelected else null
+            if (updateWorkerData.categoryList.isEmpty()) ProfileError.NoSkillSelected else null
         val primarySkillError =
             if (updateWorkerData.primarySkill == null ||
                 !updateWorkerData.categoryList.any { it == updateWorkerData.primarySkill }
             ) {
-                WorkerError.NoPrimarySkillSelected
+                ProfileError.NoPrimarySkillSelected
             } else null
 
         if (firstNameError != null || emailError != null ||
@@ -50,7 +50,7 @@ class UpdateUserAsWorkerUseCase(
         } else {
             val result = profileRepository.updateProfileForWorker(
                 UpdateProfileForWorkerRequest(
-                    userId = Session.userId ?: "",
+                    userId = updateWorkerData.userId,
                     openToWork = updateWorkerData.openToWork,
                     firstName = updateWorkerData.firstName,
                     lastName = updateWorkerData.lastName,
@@ -71,15 +71,7 @@ class UpdateUserAsWorkerUseCase(
             ).data
 
             result?.let { profile ->
-                sessionRepository.saveUserSession(
-                    UserSession(
-                        id = profile.id,
-                        firstName = profile.firstName,
-                        lastName = profile.lastName,
-                        isWorker = profile.isWorker
-                    )
-                )
-                return UpdateWorkerResult(result = Resource.Success(Unit))
+                return UpdateWorkerResult(result = Resource.Success(data = profile))
             } ?: return UpdateWorkerResult(result = Resource.Error(UiText.unknownError()))
         }
     }

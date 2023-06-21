@@ -6,19 +6,19 @@ import com.fifty.workersportal.core.util.Constants
 import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.SimpleResource
 import com.fifty.workersportal.core.util.UiText
+import com.fifty.workersportal.featureauth.domain.model.OtpVerification
 import com.fifty.workersportal.featureauth.domain.repository.AuthRepository
 import com.fifty.workersportal.featureauth.domain.repository.SessionRepository
 
 class VerifyOtpUseCase(
-    private val authRepository: AuthRepository,
-    private val sessionRepository: SessionRepository
+    private val authRepository: AuthRepository
 ) {
 
     suspend operator fun invoke(
         countryCode: String,
         phoneNumber: String,
         otpCode: String
-    ): SimpleResource {
+    ): Resource<OtpVerification> {
         if (otpCode.length != Constants.OTP_LENGTH || !otpCode.matches(Regex("\\d+"))) {
             return Resource.Error(UiText.StringResource(R.string.please_enter_a_valid_otp))
         }
@@ -30,17 +30,7 @@ class VerifyOtpUseCase(
 
 
         otpVerification?.let {
-            sessionRepository.saveAccessToken(it.accessToken)
-            sessionRepository.saveRefreshToken(it.refreshToken)
-            sessionRepository.saveUserSession(
-                UserSession(
-                    id = it.user.id,
-                    firstName = it.user.firstName,
-                    lastName = it.user.lastName,
-                    isWorker = it.user.isWorker
-                )
-            )
-            return Resource.Success(Unit)
+            return Resource.Success(data = it)
         } ?: return Resource.Error(UiText.unknownError())
     }
 }

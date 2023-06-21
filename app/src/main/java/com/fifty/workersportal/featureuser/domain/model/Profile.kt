@@ -22,4 +22,15 @@ data class Profile(
     val sampleWorkImages: List<String>?,
     val categoryList: List<WorkerCategory>?,
     val status: Boolean,
-)
+) {
+    fun toUserProfile(): UserProfile =
+        UserProfile(
+            id = id,
+            age = age,
+            email = email,
+            firstName = firstName,
+            gender = gender,
+            lastName = lastName,
+            profilePicture = profilePicture
+        )
+}

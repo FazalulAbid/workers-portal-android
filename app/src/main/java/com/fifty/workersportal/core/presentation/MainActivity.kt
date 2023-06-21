@@ -1,8 +1,6 @@
 package com.fifty.workersportal.core.presentation
 
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -16,34 +14,38 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updatePadding
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.currentBackStackEntryAsState
 import coil.ImageLoader
+import com.fifty.workersportal.core.domain.model.UserSession
 import com.fifty.workersportal.core.domain.util.Session
 import com.fifty.workersportal.core.presentation.component.Navigation
 import com.fifty.workersportal.core.presentation.component.StandardScaffold
 import com.fifty.workersportal.core.presentation.ui.theme.WorkersPortalTheme
+import com.fifty.workersportal.core.presentation.viewmodel.SessionViewModel
 import com.fifty.workersportal.core.util.NavigationParent
 import com.fifty.workersportal.core.util.Screen
+import com.fifty.workersportal.featureauth.domain.usecase.GetUserSessionUseCase
 import com.fifty.workersportal.featureauth.presentation.splash.SplashEvent
 import com.fifty.workersportal.featureauth.presentation.splash.SplashViewModel
 import com.fifty.workersportal.featureauth.presentation.splash.UserAuthState
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-import com.google.android.gms.location.LocationServices
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @Inject
     lateinit var imageLoader: ImageLoader
+
+    @Inject
+    lateinit var getUserSession: GetUserSessionUseCase
+
     private var keepSplashScreenOn = true
     private val splashScreenViewModel: SplashViewModel by viewModels()
     private var userAuthState = mutableStateOf(UserAuthState.UNKNOWN)
@@ -62,11 +64,11 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        setContent {
-            val isWorker = remember {
-                mutableStateOf(Session.isWorker)
-            }
+        runBlocking {
+            Session.userSession.value = getUserSession()
+        }
 
+        setContent {
             WorkersPortalTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
@@ -95,7 +97,7 @@ class MainActivity : ComponentActivity() {
                                     startDestination = NavigationParent.Auth.route,
                                     onDataLoaded = { keepSplashScreenOn = false },
                                     imageLoader = imageLoader,
-                                    isWorker = isWorker.value
+                                    isWorker = Session.userSession.value?.isWorker ?: false
                                 )
                             }
 
@@ -106,7 +108,7 @@ class MainActivity : ComponentActivity() {
                                     startDestination = NavigationParent.Home.route,
                                     onDataLoaded = { keepSplashScreenOn = false },
                                     imageLoader = imageLoader,
-                                    isWorker = isWorker.value
+                                    isWorker = Session.userSession.value?.isWorker ?: false
                                 )
                             }
 

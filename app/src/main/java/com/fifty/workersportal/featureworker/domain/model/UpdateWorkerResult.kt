@@ -1,16 +1,18 @@
 package com.fifty.workersportal.featureworker.domain.model
 
+import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.SimpleResource
-import com.fifty.workersportal.featureworker.util.WorkerError
+import com.fifty.workersportal.featureuser.domain.model.Profile
+import com.fifty.workersportal.featureworker.util.ProfileError
 
 data class UpdateWorkerResult(
-    val firstNameError: WorkerError? = null,
-    val emailError: WorkerError? = null,
-    val bioError: WorkerError? = null,
-    val ageError: WorkerError? = null,
-    val skillsError: WorkerError? = null,
-    val primarySkillError: WorkerError? = null,
-    val skillsWageError: WorkerError? = null,
-    val unknownError: WorkerError? = null,
-    val result: SimpleResource? = null
+    val firstNameError: ProfileError? = null,
+    val emailError: ProfileError? = null,
+    val bioError: ProfileError? = null,
+    val ageError: ProfileError? = null,
+    val skillsError: ProfileError? = null,
+    val primarySkillError: ProfileError? = null,
+    val skillsWageError: ProfileError? = null,
+    val unknownError: ProfileError? = null,
+    val result: Resource<Profile>? = null
 )

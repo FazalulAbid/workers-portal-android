@@ -1,8 +1,8 @@
 package com.fifty.workersportal.core.domain.util
 
+import androidx.compose.runtime.mutableStateOf
+import com.fifty.workersportal.core.domain.model.UserSession
+
 object Session {
-    var userId: String? = null
-    var firstName: String? = null
-    var isWorker: Boolean = false
-    var lastName: String? = null
+    val userSession = mutableStateOf<UserSession?>(null)
 }

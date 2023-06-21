@@ -15,7 +15,12 @@ interface SessionRepository {
 
     suspend fun saveRefreshToken(refreshToken: String)
 
-    suspend fun saveUserSession(userSession: UserSession)
+    suspend fun saveUserSession(
+        userId: String? = null,
+        firstName: String? = null,
+        lastName: String? = null,
+        isWorker: Boolean? = null
+    )
 
     suspend fun deleteTokens()
 

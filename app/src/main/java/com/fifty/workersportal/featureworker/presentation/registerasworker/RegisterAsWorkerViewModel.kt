@@ -8,21 +8,26 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fifty.workersportal.R
+import com.fifty.workersportal.core.domain.model.UserSession
 import com.fifty.workersportal.core.domain.state.StandardTextFieldState
 import com.fifty.workersportal.core.domain.usecase.GetOwnUserIdUseCase
 import com.fifty.workersportal.core.domain.usecase.GetUserProfileDetailsUseCase
+import com.fifty.workersportal.core.domain.util.Session
 import com.fifty.workersportal.core.domain.util.ValidationUtil
 import com.fifty.workersportal.core.presentation.util.UiEvent
 import com.fifty.workersportal.core.util.Constants.genderOptions
 import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.UiText
+import com.fifty.workersportal.featureauth.domain.usecase.SaveUserSessionUseCase
+import com.fifty.workersportal.featureuser.presentation.edituserprofile.UpdateUserProfileState
 import com.fifty.workersportal.featureworker.domain.model.UpdateWorkerData
 import com.fifty.workersportal.featureworker.domain.model.WorkerCategory
 import com.fifty.workersportal.featureworker.domain.usecase.GetCategoriesUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.SetSkillSelectedUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.UpdateUserAsWorkerUseCase
-import com.fifty.workersportal.featureworker.util.WorkerError
+import com.fifty.workersportal.featureworker.util.ProfileError
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
@@ -35,6 +40,7 @@ class RegisterAsWorkerViewModel @Inject constructor(
     private val getUserProfileDetails: GetUserProfileDetailsUseCase,
     private val setSkillSelected: SetSkillSelectedUseCase,
     private val updateUserAsWorker: UpdateUserAsWorkerUseCase,
+    private val saveUserSession: SaveUserSessionUseCase
 ) : ViewModel() {
 
     val isRegisterCompleteDialogDisplayed = MutableLiveData(false)
@@ -75,7 +81,7 @@ class RegisterAsWorkerViewModel @Inject constructor(
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
-    private val _errorFlow = MutableSharedFlow<WorkerError>()
+    private val _errorFlow = MutableSharedFlow<ProfileError>()
     val errorFlow = _errorFlow.asSharedFlow()
 
     private val _onUpdate = MutableSharedFlow<Unit>(replay = 1)
@@ -229,11 +235,12 @@ class RegisterAsWorkerViewModel @Inject constructor(
 
     private suspend fun getWorkerProfileDetails(id: String) {
         _updateWorkerState.value = updateWorkerState.value.copy(
-            isLoading = true
+            isLoading = true,
+            loadingText = R.string.fetching_user_data
         )
+        delay(2000L)
         when (val result = getUserProfileDetails(id)) {
             is Resource.Success -> {
-                Log.d("Hello", "getWorkerProfileDetails: ${result.data}")
                 val profile = result.data ?: kotlin.run {
                     _eventFlow.emit(
                         UiEvent.MakeToast(
@@ -290,6 +297,9 @@ class RegisterAsWorkerViewModel @Inject constructor(
                 _eventFlow.emit(
                     UiEvent.MakeToast(result.uiText ?: UiText.unknownError())
                 )
+                _updateWorkerState.value = updateWorkerState.value.copy(
+                    isLoading = false,
+                )
             }
         }
     }
@@ -299,6 +309,10 @@ class RegisterAsWorkerViewModel @Inject constructor(
     }
 
     private fun updateWorker() {
+        _updateWorkerState.value = UpdateWorkerState(
+            isLoading = true,
+            loadingText = R.string.updating_worker_data
+        )
         if (_skillsState.value.selectedSkills.size == 1) {
             setWorkerCategoryAsPrimary(_skillsState.value.selectedSkills.first())
         }
@@ -308,11 +322,11 @@ class RegisterAsWorkerViewModel @Inject constructor(
             _bioState.value = bioState.value.copy(error = null)
             _ageState.value = ageState.value.copy(error = null)
             _skillsState.value = skillsState.value.copy(error = null)
-            _updateWorkerState.value = UpdateWorkerState(isLoading = true)
             validateCategoryWages()
 
             val updateWorkerResult = updateUserAsWorker(
                 UpdateWorkerData(
+                    userId = getOwnUserId(),
                     openToWork = _openToWorkState.value,
                     firstName = _firstNameState.value.text,
                     lastName = _lastNameState.value.text,
@@ -354,25 +368,40 @@ class RegisterAsWorkerViewModel @Inject constructor(
                 _errorFlow.emit(
                     updateWorkerResult.primarySkillError
                 )
-            }
+            } else {
+                when (updateWorkerResult.result) {
+                    is Resource.Success -> {
+                        val profile = updateWorkerResult.result.data
+                        profile?.let {
+                            saveUserSession(
+                                userId = it.id,
+                                firstName = it.firstName,
+                                lastName = it.lastName,
+                                isWorker = it.isWorker
+                            )
+                            Session.userSession.value = UserSession(
+                                userId = it.id,
+                                firstName = it.firstName,
+                                lastName = it.lastName,
+                                isWorker = it.isWorker
+                            )
+                            _onUpdate.emit(Unit)
+                        }
+                        _updateWorkerState.value = UpdateWorkerState(isLoading = false)
+                    }
 
-            when (updateWorkerResult.result) {
-                is Resource.Success -> {
-                    _onUpdate.emit(Unit)
-                    _updateWorkerState.value = UpdateWorkerState(isLoading = false)
-                }
-
-                is Resource.Error -> {
-                    _eventFlow.emit(
-                        UiEvent.MakeToast(
-                            uiText = updateWorkerResult.result.uiText ?: UiText.unknownError()
+                    is Resource.Error -> {
+                        _eventFlow.emit(
+                            UiEvent.MakeToast(
+                                uiText = updateWorkerResult.result.uiText ?: UiText.unknownError()
+                            )
                         )
-                    )
-                    _updateWorkerState.value = UpdateWorkerState(isLoading = false)
-                }
+                        _updateWorkerState.value = UpdateWorkerState(isLoading = false)
+                    }
 
-                null -> {
-                    _updateWorkerState.value = UpdateWorkerState(isLoading = false)
+                    null -> {
+                        _updateWorkerState.value = UpdateWorkerState(isLoading = false)
+                    }
                 }
             }
         }

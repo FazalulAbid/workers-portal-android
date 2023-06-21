@@ -1,6 +1,7 @@
 package com.fifty.workersportal.featureworker.domain.model
 
 data class UpdateWorkerData(
+    val userId: String,
     val openToWork: Boolean,
     val firstName: String,
     val lastName: String,

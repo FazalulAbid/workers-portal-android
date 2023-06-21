@@ -1,5 +1,7 @@
 package com.fifty.workersportal.featureworker.presentation.registerasworker
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,7 +33,9 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.ImageLoader
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.presentation.component.StandardAppBar
 import com.fifty.workersportal.core.presentation.component.StandardBottomSheet
@@ -42,7 +46,12 @@ import com.fifty.workersportal.core.presentation.util.UiEvent
 import com.fifty.workersportal.core.presentation.util.asString
 import com.fifty.workersportal.core.presentation.util.makeToast
 import com.fifty.workersportal.featureworker.presentation.component.RegisterPagerNavItem
-import com.fifty.workersportal.featureworker.util.WorkerError
+import com.fifty.workersportal.featureworker.util.ProfileError
+import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
+import com.maxkeppeler.sheets.state.StateDialog
+import com.maxkeppeler.sheets.state.models.ProgressIndicator
+import com.maxkeppeler.sheets.state.models.State
+import com.maxkeppeler.sheets.state.models.StateConfig
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -53,8 +62,10 @@ import kotlinx.coroutines.launch
 @Composable
 fun RegisterAsWorkerScreen(
     onNavigateUp: () -> Unit = {},
+    imageLoader: ImageLoader,
     viewModel: RegisterAsWorkerViewModel = hiltViewModel()
 ) {
+    val state = viewModel.updateWorkerState.value
     var showSheet by remember { mutableStateOf(false) }
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
@@ -65,6 +76,11 @@ fun RegisterAsWorkerScreen(
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val context = LocalContext.current
+    val loadingProgress = remember {
+        mutableStateOf(0f)
+    }
+    val progressAnimated =
+        animateFloatAsState(targetValue = loadingProgress.value, tween(1000)).value
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
@@ -88,59 +104,58 @@ fun RegisterAsWorkerScreen(
     LaunchedEffect(key1 = true) {
         viewModel.errorFlow.collectLatest { error ->
             when (error) {
-                WorkerError.FieldEmpty -> {
+                ProfileError.FieldEmpty -> {
                     pagerState.animateScrollToPage(0)
                     makeToast(R.string.error_this_field_cant_be_empty, context)
                 }
 
-                WorkerError.InputTooShort -> {
+                ProfileError.InputTooShort -> {
                     pagerState.animateScrollToPage(0)
                     makeToast(R.string.error_input_too_short, context)
                 }
 
-                WorkerError.InvalidBio -> {
+                ProfileError.InvalidBio -> {
                     pagerState.animateScrollToPage(0)
                     makeToast(R.string.enter_a_valid_bio, context)
                     bioFocusRequester.requestFocus()
                 }
 
-                WorkerError.InvalidAge -> {
+                ProfileError.InvalidAge -> {
                     pagerState.animateScrollToPage(0)
                     makeToast(R.string.enter_a_valid_age, context)
                     ageFocusRequester.requestFocus()
                 }
 
-                WorkerError.InvalidEmail -> {
+                ProfileError.InvalidEmail -> {
                     pagerState.animateScrollToPage(0)
                     makeToast(R.string.enter_a_valid_email, context)
                     emailFocusRequester.requestFocus()
                 }
 
-                WorkerError.InvalidFirstName -> {
+                ProfileError.InvalidFirstName -> {
                     pagerState.animateScrollToPage(0)
                     makeToast(R.string.enter_a_valid_first_name, context)
                     firstNameFocusRequester.requestFocus()
                 }
 
-                WorkerError.NoSkillSelected -> {
+                ProfileError.NoSkillSelected -> {
                     makeToast(R.string.select_at_least_one_skill, context)
                     keyboardController?.hide()
                     pagerState.animateScrollToPage(1)
                 }
 
-                WorkerError.SkillWageError -> {
+                ProfileError.SkillWageError -> {
                     keyboardController?.hide()
                     pagerState.animateScrollToPage(2)
                 }
 
-                WorkerError.NoPrimarySkillSelected -> {
+                ProfileError.NoPrimarySkillSelected -> {
                     makeToast(R.string.select_your_primary_skill, context)
                     showSheet = true
                 }
             }
         }
     }
-
     Column(
         Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -184,6 +199,7 @@ fun RegisterAsWorkerScreen(
                 0 -> {
                     PersonalDetailsSection(
                         viewModel = viewModel,
+                        imageLoader = imageLoader,
                         firstNameFocusRequester = firstNameFocusRequester,
                         emailFocusRequester = emailFocusRequester,
                         bioFocusRequester = bioFocusRequester,
@@ -261,5 +277,20 @@ fun RegisterAsWorkerScreen(
                 }
             )
         }
+    }
+
+    val fetchingDataLoadingState = State.Loading(
+        stringResource(id = state.loadingText ?: R.string.loading),
+        ProgressIndicator.Circular()
+    )
+    if (state.isLoading) {
+        StateDialog(
+            properties = DialogProperties(
+                dismissOnClickOutside = false,
+                dismissOnBackPress = false
+            ),
+            state = rememberUseCaseState(visible = state.isLoading),
+            config = StateConfig(state = fetchingDataLoadingState)
+        )
     }
 }

@@ -134,5 +134,8 @@
     <string name="review_filed_can_t_be_empty">Review filed can\'t be empty</string>
     <string name="most_booked_services">Most booked services</string>
     <string name="explore_more">Explore more</string>
+    <string name="fetching_user_data">Fetching user data...</string>
+    <string name="updating_worker_data">Updating worker data...</string>
+    <string name="loading">Loading...</string>
 
 </resources>

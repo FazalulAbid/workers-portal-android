@@ -1,10 +1,8 @@
 package com.fifty.workersportal.featureauth.data.repository
 
 import android.content.Context
-import android.util.Log
 import androidx.datastore.preferences.core.edit
 import com.fifty.workersportal.core.domain.model.UserSession
-import com.fifty.workersportal.core.domain.util.Session
 import com.fifty.workersportal.core.util.dataStore
 import com.fifty.workersportal.featureauth.domain.repository.SessionRepository
 import com.fifty.workersportal.featureauth.utils.AuthConstants.KEY_JWT_ACCESS_TOKEN
@@ -35,17 +33,12 @@ class SessionRepositoryImpl(
 
     override suspend fun getUserSession(): UserSession {
         val preferences = context.dataStore.data.first()
-        val userSession = UserSession(
-            id = preferences[KEY_USER_ID] ?: "",
+        return UserSession(
+            userId = preferences[KEY_USER_ID] ?: "",
             firstName = preferences[KEY_USER_FIRST_NAME] ?: "",
             lastName = preferences[KEY_USER_LAST_NAME] ?: "",
             isWorker = preferences[KEY_USER_IS_WORKER] ?: false
         )
-        Session.userId = userSession.id
-        Session.firstName = userSession.firstName
-        Session.lastName = userSession.lastName
-        Session.isWorker = userSession.isWorker
-        return userSession
     }
 
 
@@ -61,17 +54,26 @@ class SessionRepositoryImpl(
         }
     }
 
-    override suspend fun saveUserSession(userSession: UserSession) {
+    override suspend fun saveUserSession(
+        userId: String?,
+        firstName: String?,
+        lastName: String?,
+        isWorker: Boolean?
+    ) {
         context.dataStore.edit { preferences ->
-            preferences[KEY_USER_ID] = userSession.id
-            preferences[KEY_USER_FIRST_NAME] = userSession.firstName
-            preferences[KEY_USER_LAST_NAME] = userSession.lastName
-            preferences[KEY_USER_IS_WORKER] = userSession.isWorker
+            userId?.let {
+                preferences[KEY_USER_ID] = it
+            }
+            firstName?.let {
+                preferences[KEY_USER_FIRST_NAME] = it
+            }
+            lastName?.let {
+                preferences[KEY_USER_LAST_NAME] = it
+            }
+            isWorker?.let {
+                preferences[KEY_USER_IS_WORKER] = it
+            }
         }
-        Session.userId = userSession.id
-        Session.firstName = userSession.firstName
-        Session.lastName = userSession.lastName
-        Session.isWorker = userSession.isWorker
     }
 
     override suspend fun deleteTokens() {

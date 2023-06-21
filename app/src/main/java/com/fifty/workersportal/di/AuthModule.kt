@@ -10,7 +10,11 @@ import com.fifty.workersportal.featureauth.domain.repository.SessionRepository
 import com.fifty.workersportal.featureauth.domain.usecase.AuthUseCases
 import com.fifty.workersportal.featureauth.domain.usecase.AuthenticateUseCase
 import com.fifty.workersportal.featureauth.domain.usecase.GetOtpUseCase
+import com.fifty.workersportal.featureauth.domain.usecase.GetUserSessionUseCase
 import com.fifty.workersportal.featureauth.domain.usecase.LogoutUseCase
+import com.fifty.workersportal.featureauth.domain.usecase.SaveAccessTokenUseCase
+import com.fifty.workersportal.featureauth.domain.usecase.SaveRefreshTokenUseCase
+import com.fifty.workersportal.featureauth.domain.usecase.SaveUserSessionUseCase
 import com.fifty.workersportal.featureauth.domain.usecase.VerifyOtpUseCase
 import com.fifty.workersportal.featureauth.utils.AuthAuthenticator
 import com.fifty.workersportal.featureauth.utils.AuthInterceptor
@@ -75,12 +79,11 @@ object AuthModule {
     @Provides
     @Singleton
     fun providesAuthUseCases(
-        authRepository: AuthRepository,
-        sessionRepository: SessionRepository
+        authRepository: AuthRepository
     ): AuthUseCases =
         AuthUseCases(
             getOtp = GetOtpUseCase(authRepository),
-            verifyOtp = VerifyOtpUseCase(authRepository, sessionRepository)
+            verifyOtp = VerifyOtpUseCase(authRepository)
         )
 
     @Provides
@@ -96,4 +99,28 @@ object AuthModule {
     fun provideLogoutUseCase(
         sessionRepository: SessionRepository
     ): LogoutUseCase = LogoutUseCase(sessionRepository)
+
+    @Provides
+    @Singleton
+    fun provideSaveUserSessionUseCase(
+        sessionRepository: SessionRepository
+    ): SaveUserSessionUseCase = SaveUserSessionUseCase(sessionRepository)
+
+    @Provides
+    @Singleton
+    fun provideSaveAccessTokenUseCase(
+        sessionRepository: SessionRepository
+    ): SaveAccessTokenUseCase = SaveAccessTokenUseCase(sessionRepository)
+
+    @Provides
+    @Singleton
+    fun provideSaveRefreshTokenUseCase(
+        sessionRepository: SessionRepository
+    ): SaveRefreshTokenUseCase = SaveRefreshTokenUseCase(sessionRepository)
+
+    @Provides
+    @Singleton
+    fun provideGetUserSessionUseCase(
+        sessionRepository: SessionRepository
+    ): GetUserSessionUseCase = GetUserSessionUseCase(sessionRepository)
 }
