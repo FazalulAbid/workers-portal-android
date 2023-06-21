@@ -9,6 +9,7 @@ import com.fifty.workersportal.featureworker.domain.repository.WorkerRepository
 import com.fifty.workersportal.featureworker.domain.usecase.GetCategoriesUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.SetSkillSelectedUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.UpdateUserAsWorkerUseCase
+import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -29,8 +30,8 @@ object ProfileModule {
 
     @Provides
     @Singleton
-    fun provideUserRepository(api: ProfileApiService): ProfileRepository =
-        ProfileRepositoryImpl(api)
+    fun provideUserRepository(api: ProfileApiService, gson: Gson): ProfileRepository =
+        ProfileRepositoryImpl(api, gson)
 
     @Provides
     @Singleton

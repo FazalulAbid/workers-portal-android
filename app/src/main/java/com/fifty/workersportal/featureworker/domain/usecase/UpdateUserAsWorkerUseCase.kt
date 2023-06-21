@@ -1,5 +1,6 @@
 package com.fifty.workersportal.featureworker.domain.usecase
 
+import android.net.Uri
 import com.fifty.workersportal.core.domain.model.UserSession
 import com.fifty.workersportal.core.domain.util.Session
 import com.fifty.workersportal.core.domain.util.ValidationUtil
@@ -18,7 +19,10 @@ class UpdateUserAsWorkerUseCase(
     private val profileRepository: ProfileRepository,
     private val sessionRepository: SessionRepository
 ) {
-    suspend operator fun invoke(updateWorkerData: UpdateWorkerData): UpdateWorkerResult {
+    suspend operator fun invoke(
+        updateWorkerData: UpdateWorkerData,
+        profilePictureUri: Uri?
+    ): UpdateWorkerResult {
         val firstNameError = ValidationUtil.validateFirstName(updateWorkerData.firstName)
         val emailError = ValidationUtil.validateEmail(updateWorkerData.email)
         val ageError = ValidationUtil.validateWorkerAge(updateWorkerData.age)
@@ -62,7 +66,8 @@ class UpdateUserAsWorkerUseCase(
                         )
                     },
                     primaryCategory = updateWorkerData.primarySkill?.id ?: ""
-                )
+                ),
+                profilePictureUri = profilePictureUri
             ).data
 
             result?.let { profile ->

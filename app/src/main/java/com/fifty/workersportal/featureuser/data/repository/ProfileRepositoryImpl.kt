@@ -1,6 +1,8 @@
 package com.fifty.workersportal.featureuser.data.repository
 
+import android.net.Uri
 import android.util.Log
+import androidx.core.net.toFile
 import coil.network.HttpException
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.util.Resource
@@ -10,10 +12,15 @@ import com.fifty.workersportal.featureuser.data.remote.ProfileApiService
 import com.fifty.workersportal.featureuser.domain.model.Profile
 import com.fifty.workersportal.featureuser.domain.repository.ProfileRepository
 import com.fifty.workersportal.featureworker.data.remote.request.UpdateProfileForWorkerRequest
+import com.google.gson.Gson
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import retrofit2.http.Multipart
 import java.io.IOException
 
 class ProfileRepositoryImpl(
-    private val api: ProfileApiService
+    private val api: ProfileApiService,
+    private val gson: Gson
 ) : ProfileRepository {
 
     override suspend fun getUserProfileDetails(userId: String): Resource<Profile> {
@@ -42,10 +49,27 @@ class ProfileRepositoryImpl(
     }
 
     override suspend fun updateProfileForWorker(
-        updateProfileForWorkerRequest: UpdateProfileForWorkerRequest
+        updateProfileForWorkerRequest: UpdateProfileForWorkerRequest,
+        profilePictureUri: Uri?
     ): Resource<Profile> {
+        val profilePictureFile = profilePictureUri?.toFile()
+
         return try {
-            val response = api.updateProfileForWorker(updateProfileForWorkerRequest)
+            val response = api.updateProfileForWorker(
+                profilePicture = profilePictureFile?.let {
+                    MultipartBody.Part
+                        .createFormData(
+                            "profilePicture",
+                            profilePictureFile.name,
+                            profilePictureFile.asRequestBody()
+                        )
+                },
+                updateProfileForWorkerRequest = MultipartBody.Part
+                    .createFormData(
+                        "updateProfileForWorkerRequest",
+                        gson.toJson(updateProfileForWorkerRequest)
+                    )
+            )
             if (response.successful) {
                 Resource.Success(data = response.data?.toProfile())
             } else {

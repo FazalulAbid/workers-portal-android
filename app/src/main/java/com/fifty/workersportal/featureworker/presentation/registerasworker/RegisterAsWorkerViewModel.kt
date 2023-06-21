@@ -322,7 +322,8 @@ class RegisterAsWorkerViewModel @Inject constructor(
                     age = if (_ageState.value.text.isBlank()) 0 else _ageState.value.text.toInt(),
                     categoryList = _skillsState.value.selectedSkills,
                     primarySkill = _primaryCategory.value
-                )
+                ),
+                profilePictureUri = profileImageUri.value
             )
 
             if (updateWorkerResult.firstNameError != null) {

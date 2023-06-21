@@ -11,6 +11,7 @@ import com.fifty.workersportal.featureauth.utils.AuthAuthenticator
 import com.fifty.workersportal.featureauth.utils.AuthInterceptor
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.SettingsClient
+import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -66,6 +67,10 @@ object AppModule {
         @ApplicationContext context: Context
     ): SettingsClient =
         LocationServices.getSettingsClient(context)
+
+    @Provides
+    @Singleton
+    fun provideGson(): Gson = Gson()
 
     @Provides
     @Singleton

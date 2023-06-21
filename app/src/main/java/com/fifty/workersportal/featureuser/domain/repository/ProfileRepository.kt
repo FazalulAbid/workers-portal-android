@@ -1,5 +1,6 @@
 package com.fifty.workersportal.featureuser.domain.repository
 
+import android.net.Uri
 import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.SimpleResource
 import com.fifty.workersportal.featureuser.domain.model.Profile
@@ -10,6 +11,7 @@ interface ProfileRepository {
     suspend fun getUserProfileDetails(userId: String): Resource<Profile>
 
     suspend fun updateProfileForWorker(
-        updateProfileForWorkerRequest: UpdateProfileForWorkerRequest
+        updateProfileForWorkerRequest: UpdateProfileForWorkerRequest,
+        profilePictureUri: Uri?
     ): Resource<Profile>
 }
