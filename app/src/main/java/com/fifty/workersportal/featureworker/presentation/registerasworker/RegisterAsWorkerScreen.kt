@@ -76,11 +76,6 @@ fun RegisterAsWorkerScreen(
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val context = LocalContext.current
-    val loadingProgress = remember {
-        mutableStateOf(0f)
-    }
-    val progressAnimated =
-        animateFloatAsState(targetValue = loadingProgress.value, tween(1000)).value
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->

@@ -236,9 +236,8 @@ class RegisterAsWorkerViewModel @Inject constructor(
     private suspend fun getWorkerProfileDetails(id: String) {
         _updateWorkerState.value = updateWorkerState.value.copy(
             isLoading = true,
-            loadingText = R.string.fetching_user_data
+            loadingText = R.string.fetching_worker_data
         )
-        delay(2000L)
         when (val result = getUserProfileDetails(id)) {
             is Resource.Success -> {
                 val profile = result.data ?: kotlin.run {

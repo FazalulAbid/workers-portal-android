@@ -5,9 +5,11 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fifty.workersportal.R
 import com.fifty.workersportal.core.domain.model.UserSession
 import com.fifty.workersportal.core.domain.state.StandardTextFieldState
 import com.fifty.workersportal.core.domain.usecase.GetOwnUserIdUseCase
+import com.fifty.workersportal.core.domain.usecase.GetUserProfileDetailsUseCase
 import com.fifty.workersportal.core.domain.util.Session
 import com.fifty.workersportal.core.presentation.util.UiEvent
 import com.fifty.workersportal.core.util.Constants
@@ -19,6 +21,7 @@ import com.fifty.workersportal.featureuser.domain.usecase.UpdateUserProfileUseCa
 import com.fifty.workersportal.featureworker.presentation.registerasworker.UpdateWorkerState
 import com.fifty.workersportal.featureworker.util.ProfileError
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
@@ -28,6 +31,7 @@ import javax.inject.Inject
 class UpdateUserProfileViewModel @Inject constructor(
     private val updateUserProfileUseCase: UpdateUserProfileUseCase,
     private val getOwnUserId: GetOwnUserIdUseCase,
+    private val userProfileDetailsUseCase: GetUserProfileDetailsUseCase,
     private val saveUserSession: SaveUserSessionUseCase
 ) : ViewModel() {
 
@@ -62,7 +66,10 @@ class UpdateUserProfileViewModel @Inject constructor(
     val onUpdateUserProfile = _onUpdateUserProfile.asSharedFlow()
 
     init {
-        getUserProfileDetails()
+        viewModelScope.launch {
+            val userId = getOwnUserId()
+            getUserProfileDetails(userId)
+        }
     }
 
     fun onEvent(event: UpdateUserProfileEvent) {
@@ -105,16 +112,65 @@ class UpdateUserProfileViewModel @Inject constructor(
         }
     }
 
-    private fun getUserProfileDetails() {
+    private suspend fun getUserProfileDetails(userId: String) {
+        _updateUserProfileState.value = updateUserProfileState.value.copy(
+            isLoading = true,
+            loadingText = R.string.fetching_user_data
+        )
+        when (val result = userProfileDetailsUseCase(userId)) {
+            is Resource.Success -> {
+                val profile = result.data ?: kotlin.run {
+                    _eventFlow.emit(
+                        UiEvent.MakeToast(
+                            UiText.StringResource(R.string.oops_couldn_t_load_profile)
+                        )
+                    )
+                    return
+                }
+                _firstNameState.value = firstNameState.value.copy(
+                    text = profile.firstName
+                )
+                _lastNameState.value = lastNameState.value.copy(
+                    text = profile.lastName
+                )
+                _emailState.value = emailState.value.copy(
+                    text = profile.email
+                )
+                _genderState.value =
+                    profile.gender.replaceFirstChar {
+                        if (it.isLowerCase())
+                            it.titlecase(java.util.Locale.ROOT)
+                        else it.toString()
+                    }
+                _ageState.value = ageState.value.copy(
+                    text = profile.age.toString()
+                )
+                _updateUserProfileState.value = updateUserProfileState.value.copy(
+                    isLoading = false,
+                    userProfile = profile.toUserProfile()
+                )
+            }
 
+            is Resource.Error -> {
+                _eventFlow.emit(
+                    UiEvent.MakeToast(result.uiText ?: UiText.unknownError())
+                )
+                _updateUserProfileState.value = updateUserProfileState.value.copy(
+                    isLoading = false,
+                )
+            }
+        }
     }
 
     private fun updateUserProfile() {
+        _updateUserProfileState.value = UpdateUserProfileState(
+            isLoading = true,
+            loadingText = R.string.updating_user_data
+        )
         viewModelScope.launch {
             _firstNameState.value = firstNameState.value.copy(error = null)
             _emailState.value = emailState.value.copy(error = null)
             _ageState.value = ageState.value.copy(error = null)
-            _updateUserProfileState.value = UpdateUserProfileState(isLoading = true)
 
             val updateUserProfileResult = updateUserProfileUseCase(
                 UpdateUserProfileData(

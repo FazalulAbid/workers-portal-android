@@ -22,6 +22,7 @@ import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -45,6 +46,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
@@ -60,12 +62,17 @@ import com.fifty.workersportal.core.presentation.ui.theme.SizeLarge
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.util.CropActivityResultContract
 import com.fifty.workersportal.core.util.Constants
+import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
+import com.maxkeppeler.sheets.state.StateDialog
+import com.maxkeppeler.sheets.state.models.ProgressIndicator
+import com.maxkeppeler.sheets.state.models.State
+import com.maxkeppeler.sheets.state.models.StateConfig
 import kotlinx.coroutines.launch
 
 @OptIn(
     ExperimentalCoilApi::class,
     ExperimentalComposeUiApi::class,
-    ExperimentalFoundationApi::class
+    ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class
 )
 @Composable
 fun UpdateUserProfileScreen(
@@ -73,6 +80,7 @@ fun UpdateUserProfileScreen(
     onNavigateUp: () -> Unit,
     viewModel: UpdateUserProfileViewModel = hiltViewModel()
 ) {
+    val state = viewModel.updateUserProfileState.value
     val firstNameFocusRequester = remember { FocusRequester() }
     val emailFocusRequester = remember { FocusRequester() }
     val ageFocusRequester = remember { FocusRequester() }
@@ -306,8 +314,23 @@ fun UpdateUserProfileScreen(
             PrimaryButton(
                 text = stringResource(id = R.string.save_changes)
             ) {
-
+                viewModel.onEvent(UpdateUserProfileEvent.UpdateUserProfile)
             }
         }
+    }
+
+    val fetchingDataLoadingState = State.Loading(
+        stringResource(id = state.loadingText ?: R.string.loading),
+        ProgressIndicator.Circular()
+    )
+    if (state.isLoading) {
+        StateDialog(
+            properties = DialogProperties(
+                dismissOnClickOutside = false,
+                dismissOnBackPress = false
+            ),
+            state = rememberUseCaseState(visible = state.isLoading),
+            config = StateConfig(state = fetchingDataLoadingState)
+        )
     }
 }
