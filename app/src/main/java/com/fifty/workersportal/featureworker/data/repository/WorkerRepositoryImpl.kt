@@ -6,6 +6,7 @@ import com.fifty.workersportal.R
 import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.SimpleResource
 import com.fifty.workersportal.core.util.UiText
+import com.fifty.workersportal.featureuser.data.remote.FavouriteUpdateRequest
 import com.fifty.workersportal.featureworker.data.remote.WorkerApiService
 import com.fifty.workersportal.featureworker.domain.model.Category
 import com.fifty.workersportal.featureworker.domain.repository.WorkerRepository
@@ -70,6 +71,39 @@ class WorkerRepositoryImpl(
             val response = if (value) {
                 api.openToWorkOn()
             } else api.openToWorkOff()
+            if (response.successful) {
+                Resource.Success(Unit)
+            } else {
+                response.message?.let { message ->
+                    Resource.Error(UiText.DynamicString(message))
+                } ?: Resource.Error(UiText.unknownError())
+            }
+        } catch (e: IOException) {
+            Resource.Error(
+                uiText = UiText.StringResource(
+                    R.string.error_could_not_reach_server
+                )
+            )
+        } catch (e: HttpException) {
+            Resource.Error(
+                uiText = UiText.StringResource(
+                    R.string.oops_something_went_wrong
+                )
+            )
+        }
+    }
+
+    override suspend fun toggleFavouriteWorker(userId: String, value: Boolean): SimpleResource {
+        return try {
+            val response = if (value) {
+                api.addWorkerToFavourites(
+                    FavouriteUpdateRequest(userId)
+                )
+            } else {
+                api.removeWorkerFromFavourites(
+                    FavouriteUpdateRequest(userId)
+                )
+            }
             if (response.successful) {
                 Resource.Success(Unit)
             } else {

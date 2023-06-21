@@ -1,5 +1,6 @@
 package com.fifty.workersportal.featureauth.domain.usecase
 
+import android.util.Log
 import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.UiText
 import com.fifty.workersportal.featureauth.domain.repository.AuthRepository
@@ -16,6 +17,7 @@ class AuthenticateUseCase(
         return when (val result = authRepository.authenticate()) {
             is Resource.Success -> {
                 result.data?.let {
+                    Log.d("Hello", "invoke: $it")
                     Resource.Success(data = it)
                 } ?: Resource.Error(UiText.unknownError())
             }

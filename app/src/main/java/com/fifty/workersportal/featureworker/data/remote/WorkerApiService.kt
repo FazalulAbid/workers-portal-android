@@ -2,6 +2,7 @@ package com.fifty.workersportal.featureworker.data.remote
 
 import com.fifty.workersportal.core.data.dto.response.BasicApiResponse
 import com.fifty.workersportal.core.util.SimpleResource
+import com.fifty.workersportal.featureuser.data.remote.FavouriteUpdateRequest
 import com.fifty.workersportal.featureuser.data.remote.dto.ProfileDto
 import com.fifty.workersportal.featureworker.data.remote.dto.CategoryDto
 import com.fifty.workersportal.featureworker.domain.model.ReviewAndRating
@@ -29,4 +30,14 @@ interface WorkerApiService {
 
     @PATCH("profile/open-to-work-off")
     suspend fun openToWorkOff(): BasicApiResponse<String>
+
+    @POST("favourites/add-to-favourites")
+    suspend fun addWorkerToFavourites(
+        @Body favouriteUpdateRequest: FavouriteUpdateRequest
+    ): BasicApiResponse<String>
+
+    @POST("favourites/add-to-favourites")
+    suspend fun removeWorkerFromFavourites(
+        @Body favouriteUpdateRequest: FavouriteUpdateRequest
+    ): BasicApiResponse<String>
 }

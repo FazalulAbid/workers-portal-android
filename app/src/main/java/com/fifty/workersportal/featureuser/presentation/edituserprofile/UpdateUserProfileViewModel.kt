@@ -170,7 +170,6 @@ class UpdateUserProfileViewModel @Inject constructor(
 
             val updateUserProfileResult = updateUserProfileUseCase(
                 UpdateUserProfileData(
-                    userId = getOwnUserId(),
                     firstName = firstNameState.value.text,
                     lastName = lastNameState.value.text,
                     email = emailState.value.text,

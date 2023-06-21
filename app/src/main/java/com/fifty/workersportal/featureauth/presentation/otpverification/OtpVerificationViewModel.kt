@@ -95,6 +95,7 @@ class OtpVerificationViewModel @Inject constructor(
                     result.data?.let { otpVerification ->
                         saveAccessToken(otpVerification.accessToken)
                         saveRefreshToken(otpVerification.refreshToken)
+                        saveUserSession(otpVerification.user.id)
                         Session.userSession.value = otpVerification.user.toProfile().toUserProfile()
                         _eventFlow.emit(
                             UiEvent.OnLogin

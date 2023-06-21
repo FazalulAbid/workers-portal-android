@@ -8,6 +8,7 @@ import com.fifty.workersportal.R
 import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.UiText
 import com.fifty.workersportal.core.util.SimpleResource
+import com.fifty.workersportal.featureuser.data.remote.FavouriteUpdateRequest
 import com.fifty.workersportal.featureuser.data.remote.ProfileApiService
 import com.fifty.workersportal.featureuser.domain.model.Profile
 import com.fifty.workersportal.featureuser.domain.model.UpdateUserProfileData
@@ -17,7 +18,6 @@ import com.fifty.workersportal.featureworker.data.remote.request.UpdateProfileFo
 import com.google.gson.Gson
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
-import retrofit2.http.Multipart
 import java.io.IOException
 
 class ProfileRepositoryImpl(
@@ -57,6 +57,7 @@ class ProfileRepositoryImpl(
         val profilePictureFile = profilePictureUri?.toFile()
 
         return try {
+            Log.d("Hello", "updateUserProfile: $updateUserProfileData")
             val response = api.updateUserProfile(
                 profilePicture = profilePictureFile?.let {
                     MultipartBody.Part

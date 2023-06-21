@@ -2,6 +2,7 @@ package com.fifty.workersportal.featureuser.domain.repository
 
 import android.net.Uri
 import com.fifty.workersportal.core.util.Resource
+import com.fifty.workersportal.core.util.SimpleResource
 import com.fifty.workersportal.featureuser.domain.model.Profile
 import com.fifty.workersportal.featureuser.domain.model.UpdateUserProfileData
 import com.fifty.workersportal.featureuser.domain.model.UserProfile

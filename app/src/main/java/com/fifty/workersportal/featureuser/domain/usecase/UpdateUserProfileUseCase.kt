@@ -1,6 +1,7 @@
 package com.fifty.workersportal.featureuser.domain.usecase
 
 import android.net.Uri
+import android.util.Log
 import com.fifty.workersportal.core.domain.util.Session
 import com.fifty.workersportal.core.domain.util.ValidationUtil
 import com.fifty.workersportal.core.util.Resource
@@ -29,9 +30,9 @@ class UpdateUserProfileUseCase(
                 ageError = ageError,
             )
         } else {
+            Log.d("Hello", "updateUserProfile: $updateUserProfileData")
             val result = profileRepository.updateUserProfile(
                 UpdateUserProfileData(
-                    userId = updateUserProfileData.userId,
                     firstName = updateUserProfileData.firstName,
                     lastName = updateUserProfileData.lastName,
                     email = updateUserProfileData.email,
