@@ -9,7 +9,7 @@ class LogoutUseCase(
 ) {
 
     suspend operator fun invoke(): SimpleResource {
-        sessionRepository.deleteSessions()
+        sessionRepository.deleteUserId()
         sessionRepository.deleteTokens()
         return Resource.Success(Unit)
     }

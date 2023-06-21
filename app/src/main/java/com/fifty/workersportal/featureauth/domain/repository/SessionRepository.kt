@@ -1,6 +1,6 @@
 package com.fifty.workersportal.featureauth.domain.repository
 
-import com.fifty.workersportal.core.domain.model.UserSession
+import com.fifty.workersportal.featureuser.domain.model.UserProfile
 import kotlinx.coroutines.flow.Flow
 
 interface SessionRepository {
@@ -9,20 +9,15 @@ interface SessionRepository {
 
     fun getRefreshToken(): Flow<String?>
 
-    suspend fun getUserSession(): UserSession
+    fun getUserId(): Flow<String?>
+
+    suspend fun saveUserId(userId: String)
 
     suspend fun saveAccessToken(accessToken: String)
 
     suspend fun saveRefreshToken(refreshToken: String)
 
-    suspend fun saveUserSession(
-        userId: String? = null,
-        firstName: String? = null,
-        lastName: String? = null,
-        isWorker: Boolean? = null
-    )
-
     suspend fun deleteTokens()
 
-    suspend fun deleteSessions()
+    suspend fun deleteUserId()
 }

@@ -1,6 +1,5 @@
 package com.fifty.workersportal.featureuser.data.remote.dto
 
-import com.fifty.workersportal.core.domain.model.UserSession
 import com.fifty.workersportal.featureuser.domain.model.Profile
 import com.fifty.workersportal.featureworker.domain.model.WorkerCategory
 import com.google.gson.annotations.SerializedName
@@ -30,15 +29,6 @@ data class ProfileDto(
     @SerializedName("__v")
     val versionKey: Int?,
 ) {
-    fun toUser(): UserSession {
-        return UserSession(
-            userId = id,
-            firstName = firstName,
-            isWorker = isWorker,
-            lastName = lastName
-        )
-    }
-
     fun toProfile(): Profile {
         return Profile(
             id = id,

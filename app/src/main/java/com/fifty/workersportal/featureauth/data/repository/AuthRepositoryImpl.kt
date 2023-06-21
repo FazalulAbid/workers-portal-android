@@ -1,11 +1,9 @@
 package com.fifty.workersportal.featureauth.data.repository
 
-import android.util.Log
 import coil.network.HttpException
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.data.util.ApiConstants.ACCESS_TOKEN_KEY
 import com.fifty.workersportal.core.data.util.ApiConstants.REFRESH_TOKEN_KEY
-import com.fifty.workersportal.core.domain.model.UserSession
 import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.SimpleResource
 import com.fifty.workersportal.core.util.UiText
@@ -15,6 +13,8 @@ import com.fifty.workersportal.featureauth.data.remote.request.SendOtpRequest
 import com.fifty.workersportal.featureauth.data.remote.request.VerifyOtpRequest
 import com.fifty.workersportal.featureauth.domain.model.OtpVerification
 import com.fifty.workersportal.featureauth.domain.repository.AuthRepository
+import com.fifty.workersportal.featureuser.domain.model.Profile
+import com.fifty.workersportal.featureuser.domain.model.UserProfile
 import java.io.IOException
 
 class AuthRepositoryImpl(
@@ -94,11 +94,11 @@ class AuthRepositoryImpl(
     }
 
 
-    override suspend fun authenticate(): Resource<UserSession> {
+    override suspend fun authenticate(): Resource<UserProfile> {
         return try {
             authenticateApi.authenticate().body()?.let { response ->
                 if (response.successful) {
-                    val user = response.data?.toUser()
+                    val user = response.data?.toProfile()?.toUserProfile()
                     user?.let {
                         Resource.Success(data = user)
                     } ?: return Resource.Error(UiText.unknownError())

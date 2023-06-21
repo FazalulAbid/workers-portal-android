@@ -20,15 +20,12 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.currentBackStackEntryAsState
 import coil.ImageLoader
-import com.fifty.workersportal.core.domain.model.UserSession
 import com.fifty.workersportal.core.domain.util.Session
 import com.fifty.workersportal.core.presentation.component.Navigation
 import com.fifty.workersportal.core.presentation.component.StandardScaffold
 import com.fifty.workersportal.core.presentation.ui.theme.WorkersPortalTheme
-import com.fifty.workersportal.core.presentation.viewmodel.SessionViewModel
 import com.fifty.workersportal.core.util.NavigationParent
 import com.fifty.workersportal.core.util.Screen
-import com.fifty.workersportal.featureauth.domain.usecase.GetUserSessionUseCase
 import com.fifty.workersportal.featureauth.presentation.splash.SplashEvent
 import com.fifty.workersportal.featureauth.presentation.splash.SplashViewModel
 import com.fifty.workersportal.featureauth.presentation.splash.UserAuthState
@@ -42,9 +39,6 @@ import javax.inject.Inject
 class MainActivity : ComponentActivity() {
     @Inject
     lateinit var imageLoader: ImageLoader
-
-    @Inject
-    lateinit var getUserSession: GetUserSessionUseCase
 
     private var keepSplashScreenOn = true
     private val splashScreenViewModel: SplashViewModel by viewModels()
@@ -62,10 +56,6 @@ class MainActivity : ComponentActivity() {
                     userAuthState.value = it
                 }
             }
-        }
-
-        runBlocking {
-            Session.userSession.value = getUserSession()
         }
 
         setContent {

@@ -7,7 +7,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fifty.workersportal.R
-import com.fifty.workersportal.core.domain.model.UserSession
 import com.fifty.workersportal.core.domain.state.StandardTextFieldState
 import com.fifty.workersportal.core.domain.usecase.GetOwnUserIdUseCase
 import com.fifty.workersportal.core.domain.util.Session
@@ -18,7 +17,7 @@ import com.fifty.workersportal.core.util.UiText
 import com.fifty.workersportal.featureauth.domain.usecase.AuthUseCases
 import com.fifty.workersportal.featureauth.domain.usecase.SaveAccessTokenUseCase
 import com.fifty.workersportal.featureauth.domain.usecase.SaveRefreshTokenUseCase
-import com.fifty.workersportal.featureauth.domain.usecase.SaveUserSessionUseCase
+import com.fifty.workersportal.featureauth.domain.usecase.SaveUserIdUseCase
 import com.fifty.workersportal.featureauth.presentation.component.NAV_ARG_COUNTRY_CODE
 import com.fifty.workersportal.featureauth.presentation.component.NAV_ARG_PHONE_NUMBER
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -36,7 +35,7 @@ class OtpVerificationViewModel @Inject constructor(
     private val getOwnUserId: GetOwnUserIdUseCase,
     private val saveAccessToken: SaveAccessTokenUseCase,
     private val saveRefreshToken: SaveRefreshTokenUseCase,
-    private val saveUserSession: SaveUserSessionUseCase
+    private val saveUserSession: SaveUserIdUseCase
 ) : ViewModel() {
 
     private var resendTimer: CountDownTimer? = null
@@ -96,19 +95,7 @@ class OtpVerificationViewModel @Inject constructor(
                     result.data?.let { otpVerification ->
                         saveAccessToken(otpVerification.accessToken)
                         saveRefreshToken(otpVerification.refreshToken)
-                        val userSession = UserSession(
-                            userId = otpVerification.user.id,
-                            firstName = otpVerification.user.firstName,
-                            lastName = otpVerification.user.lastName,
-                            isWorker = otpVerification.user.isWorker
-                        )
-                        saveUserSession(
-                            userId = userSession.userId,
-                            firstName = userSession.firstName,
-                            lastName = userSession.lastName,
-                            isWorker = userSession.isWorker
-                        )
-                        Session.userSession.value = userSession
+                        Session.userSession.value = otpVerification.user.toProfile().toUserProfile()
                         _eventFlow.emit(
                             UiEvent.OnLogin
                         )

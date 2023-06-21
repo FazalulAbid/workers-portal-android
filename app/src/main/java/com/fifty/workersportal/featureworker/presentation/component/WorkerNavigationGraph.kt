@@ -25,9 +25,8 @@ fun NavGraphBuilder.workerNavGraph(
     imageLoader: ImageLoader,
     isWorker: Boolean = false
 ) {
-    val ishello = false
     navigation(
-        startDestination = if (ishello) {
+        startDestination = if (Session.userSession.value?.isWorker == true) {
             Screen.WorkerDashboardScreen.route
         } else Screen.RegisterAsWorkerScreen.route,
         route = NavigationParent.Work.route

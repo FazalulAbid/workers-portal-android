@@ -1,9 +1,9 @@
 package com.fifty.workersportal.featureauth.domain.repository
 
-import com.fifty.workersportal.core.domain.model.UserSession
 import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.SimpleResource
 import com.fifty.workersportal.featureauth.domain.model.OtpVerification
+import com.fifty.workersportal.featureuser.domain.model.UserProfile
 
 interface AuthRepository {
 
@@ -18,5 +18,5 @@ interface AuthRepository {
         otpCode: String
     ): Resource<OtpVerification>
 
-    suspend fun authenticate(): Resource<UserSession>
+    suspend fun authenticate(): Resource<UserProfile>
 }

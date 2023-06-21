@@ -7,5 +7,6 @@ data class UserProfile(
     val firstName: String,
     val gender: String,
     val lastName: String,
+    val isWorker: Boolean,
     val profilePicture: String
 )

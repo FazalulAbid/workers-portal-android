@@ -1,13 +1,9 @@
 package com.fifty.workersportal.featureworker.domain.usecase
 
 import android.net.Uri
-import com.fifty.workersportal.core.domain.model.UserSession
-import com.fifty.workersportal.core.domain.util.Session
 import com.fifty.workersportal.core.domain.util.ValidationUtil
 import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.UiText
-import com.fifty.workersportal.featureauth.domain.repository.SessionRepository
-import com.fifty.workersportal.featureuser.domain.model.UpdateUserProfileResult
 import com.fifty.workersportal.featureuser.domain.repository.ProfileRepository
 import com.fifty.workersportal.featureworker.data.remote.request.WorkerCategoryRequest
 import com.fifty.workersportal.featureworker.data.remote.request.UpdateProfileForWorkerRequest

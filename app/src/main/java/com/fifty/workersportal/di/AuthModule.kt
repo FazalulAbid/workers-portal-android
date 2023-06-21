@@ -10,11 +10,10 @@ import com.fifty.workersportal.featureauth.domain.repository.SessionRepository
 import com.fifty.workersportal.featureauth.domain.usecase.AuthUseCases
 import com.fifty.workersportal.featureauth.domain.usecase.AuthenticateUseCase
 import com.fifty.workersportal.featureauth.domain.usecase.GetOtpUseCase
-import com.fifty.workersportal.featureauth.domain.usecase.GetUserSessionUseCase
 import com.fifty.workersportal.featureauth.domain.usecase.LogoutUseCase
 import com.fifty.workersportal.featureauth.domain.usecase.SaveAccessTokenUseCase
 import com.fifty.workersportal.featureauth.domain.usecase.SaveRefreshTokenUseCase
-import com.fifty.workersportal.featureauth.domain.usecase.SaveUserSessionUseCase
+import com.fifty.workersportal.featureauth.domain.usecase.SaveUserIdUseCase
 import com.fifty.workersportal.featureauth.domain.usecase.VerifyOtpUseCase
 import com.fifty.workersportal.featureauth.utils.AuthAuthenticator
 import com.fifty.workersportal.featureauth.utils.AuthInterceptor
@@ -25,7 +24,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
-import retrofit2.http.POST
 import javax.inject.Singleton
 
 @Module
@@ -102,9 +100,9 @@ object AuthModule {
 
     @Provides
     @Singleton
-    fun provideSaveUserSessionUseCase(
+    fun provideSaveUserIdUseCase(
         sessionRepository: SessionRepository
-    ): SaveUserSessionUseCase = SaveUserSessionUseCase(sessionRepository)
+    ): SaveUserIdUseCase = SaveUserIdUseCase(sessionRepository)
 
     @Provides
     @Singleton
@@ -117,10 +115,4 @@ object AuthModule {
     fun provideSaveRefreshTokenUseCase(
         sessionRepository: SessionRepository
     ): SaveRefreshTokenUseCase = SaveRefreshTokenUseCase(sessionRepository)
-
-    @Provides
-    @Singleton
-    fun provideGetUserSessionUseCase(
-        sessionRepository: SessionRepository
-    ): GetUserSessionUseCase = GetUserSessionUseCase(sessionRepository)
 }

@@ -31,6 +31,7 @@ data class Profile(
             firstName = firstName,
             gender = gender,
             lastName = lastName,
+            isWorker = isWorker,
             profilePicture = profilePicture
         )
 }

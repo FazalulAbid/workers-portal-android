@@ -5,10 +5,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fifty.workersportal.core.domain.state.StandardTextFieldState
+import com.fifty.workersportal.core.domain.util.Session
 import com.fifty.workersportal.core.presentation.util.UiEvent
 import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.UiText
-import com.fifty.workersportal.featureauth.domain.usecase.GetUserSessionUseCase
 import com.fifty.workersportal.featureworker.domain.model.ReviewAndRating
 import com.fifty.workersportal.featureworker.domain.usecase.PostReviewAndRatingUseCase
 import com.fifty.workersportal.featureworker.util.ReviewAndRatingError
@@ -21,7 +21,6 @@ import javax.inject.Inject
 @HiltViewModel
 class ReviewAndRatingViewModel @Inject constructor(
     private val postReviewAndRatingUseCase: PostReviewAndRatingUseCase,
-    private val getUserSession: GetUserSessionUseCase
 ) : ViewModel() {
 
     private val _reviewTextFieldState = mutableStateOf(StandardTextFieldState())
@@ -67,12 +66,11 @@ class ReviewAndRatingViewModel @Inject constructor(
             isLoading = true
         )
         viewModelScope.launch {
-            val userSession = getUserSession()
             val reviewAndRating = ReviewAndRating(
-                ratedUserId = userSession.userId,
+                ratedUserId = Session.userSession.value?.id ?: "",
                 rating = _ratingState.value,
                 review = reviewTextFieldState.value.text,
-                isWorker = userSession.isWorker
+                isWorker = Session.userSession.value?.isWorker ?: false
             )
             val postReviewAndRatingResult = postReviewAndRatingUseCase(reviewAndRating)
             if (postReviewAndRatingResult.ratingError != null) {

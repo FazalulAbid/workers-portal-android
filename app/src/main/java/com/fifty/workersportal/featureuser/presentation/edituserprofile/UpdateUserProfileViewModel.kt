@@ -6,7 +6,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fifty.workersportal.R
-import com.fifty.workersportal.core.domain.model.UserSession
 import com.fifty.workersportal.core.domain.state.StandardTextFieldState
 import com.fifty.workersportal.core.domain.usecase.GetOwnUserIdUseCase
 import com.fifty.workersportal.core.domain.usecase.GetUserProfileDetailsUseCase
@@ -15,13 +14,11 @@ import com.fifty.workersportal.core.presentation.util.UiEvent
 import com.fifty.workersportal.core.util.Constants
 import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.UiText
-import com.fifty.workersportal.featureauth.domain.usecase.SaveUserSessionUseCase
+import com.fifty.workersportal.featureauth.domain.usecase.SaveUserIdUseCase
 import com.fifty.workersportal.featureuser.domain.model.UpdateUserProfileData
 import com.fifty.workersportal.featureuser.domain.usecase.UpdateUserProfileUseCase
-import com.fifty.workersportal.featureworker.presentation.registerasworker.UpdateWorkerState
 import com.fifty.workersportal.featureworker.util.ProfileError
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
@@ -32,7 +29,6 @@ class UpdateUserProfileViewModel @Inject constructor(
     private val updateUserProfileUseCase: UpdateUserProfileUseCase,
     private val getOwnUserId: GetOwnUserIdUseCase,
     private val userProfileDetailsUseCase: GetUserProfileDetailsUseCase,
-    private val saveUserSession: SaveUserSessionUseCase
 ) : ViewModel() {
 
     private val _firstNameState = mutableStateOf(StandardTextFieldState())
@@ -201,16 +197,7 @@ class UpdateUserProfileViewModel @Inject constructor(
                     is Resource.Success -> {
                         val profile = updateUserProfileResult.result.data
                         profile?.let {
-                            saveUserSession(
-                                userId = profile.id,
-                                firstName = profile.firstName,
-                                lastName = profile.lastName
-                            )
-                            Session.userSession.value = Session.userSession.value?.copy(
-                                userId = profile.id,
-                                firstName = profile.firstName,
-                                lastName = profile.lastName
-                            )
+                            Session.userSession.value = it
                             _onUpdateUserProfile.emit(Unit)
                         }
                         _updateUserProfileState.value = UpdateUserProfileState(isLoading = false)

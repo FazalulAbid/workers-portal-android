@@ -11,4 +11,5 @@ object AuthConstants {
     val KEY_USER_FIRST_NAME = stringPreferencesKey("userFirstName")
     val KEY_USER_LAST_NAME = stringPreferencesKey("userLastName")
     val KEY_USER_IS_WORKER = booleanPreferencesKey("userIsWorked")
+    val KEY_USER_PROFILE_IMAGE_URL = stringPreferencesKey("userProfileImageUrl")
 }

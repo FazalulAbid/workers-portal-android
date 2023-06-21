@@ -1,19 +1,18 @@
 package com.fifty.workersportal.featureauth.domain.usecase
 
-import android.util.Log
-import com.fifty.workersportal.core.domain.model.UserSession
 import com.fifty.workersportal.core.util.Resource
-import com.fifty.workersportal.core.util.SimpleResource
 import com.fifty.workersportal.core.util.UiText
 import com.fifty.workersportal.featureauth.domain.repository.AuthRepository
 import com.fifty.workersportal.featureauth.domain.repository.SessionRepository
+import com.fifty.workersportal.featureuser.domain.model.Profile
+import com.fifty.workersportal.featureuser.domain.model.UserProfile
 
 class AuthenticateUseCase(
     private val authRepository: AuthRepository,
     private val sessionRepository: SessionRepository
 ) {
 
-    suspend operator fun invoke(): Resource<UserSession> {
+    suspend operator fun invoke(): Resource<UserProfile> {
         return when (val result = authRepository.authenticate()) {
             is Resource.Success -> {
                 result.data?.let {
