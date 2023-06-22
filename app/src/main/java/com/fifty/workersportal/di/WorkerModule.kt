@@ -9,6 +9,7 @@ import com.fifty.workersportal.featureworker.domain.repository.WorkerRepository
 import com.fifty.workersportal.featureworker.domain.usecase.GetCategoriesUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.GetSuggestedCategoriesUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.PostReviewAndRatingUseCase
+import com.fifty.workersportal.featureworker.domain.usecase.SearchCategoriesUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.ToggleOpenToWorkUseCase
 import dagger.Module
 import dagger.Provides
@@ -77,4 +78,10 @@ object WorkerModule {
         repository: WorkerRepository
     ): ToggleFavouriteWorkerUseCase =
         ToggleFavouriteWorkerUseCase(repository)
+
+    @Provides
+    @Singleton
+    fun provideSearchCategoriesUseCase(
+        repository: WorkerRepository
+    ): SearchCategoriesUseCase = SearchCategoriesUseCase(repository)
 }

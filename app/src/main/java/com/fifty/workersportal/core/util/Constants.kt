@@ -29,6 +29,9 @@ object Constants {
     // Address
     const val MINIMUM_ADDRESS_LENGTH = 10
 
+    const val DEFAULT_PAGINATION_SIZE = 20
+    const val SEARCH_DELAY = 700L
+
     val genderOptions = listOf(
         "Male", "Female", "Other"
     )

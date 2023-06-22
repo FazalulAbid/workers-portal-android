@@ -35,37 +35,32 @@ fun CategoryItem(
     imageLoader: ImageLoader,
     onClick: () -> Unit = {}
 ) {
-    Box(
-        modifier = modifier.padding(SizeSmall),
-        contentAlignment = Alignment.Center
+    Column(
+        modifier = Modifier
+            .clickable {
+                onClick()
+            }
+            .padding(SizeSmall),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Column(
+        Image(
             modifier = Modifier
-                .clickable {
-                    onClick()
-                }
-                .padding(SizeSmall),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Image(
-                modifier = Modifier
-                    .size(imageSize),
-                painter = rememberImagePainter(
-                    data = "https://cdn-icons-png.flaticon.com/512/1670/1670444.png",
-                    imageLoader = imageLoader
-                ),
-                contentDescription = null
-            )
-            Spacer(modifier = Modifier.height(SizeSmall))
-            Text(
-                text = category.title,
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    color = MaterialTheme.colorScheme.onSurface
-                ),
-                textAlign = TextAlign.Center,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis
-            )
-        }
+                .size(imageSize),
+            painter = rememberImagePainter(
+                data = "https://cdn-icons-png.flaticon.com/512/1670/1670444.png",
+                imageLoader = imageLoader
+            ),
+            contentDescription = null
+        )
+        Spacer(modifier = Modifier.height(SizeSmall))
+        Text(
+            text = category.title,
+            style = MaterialTheme.typography.bodyMedium.copy(
+                color = MaterialTheme.colorScheme.onSurface
+            ),
+            textAlign = TextAlign.Center,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis
+        )
     }
 }

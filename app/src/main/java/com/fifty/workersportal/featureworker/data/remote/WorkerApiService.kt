@@ -19,6 +19,13 @@ interface WorkerApiService {
     @GET("worker/get-worker-categories")
     suspend fun getCategories(): BasicApiResponse<List<CategoryDto>>
 
+    @GET("worker/category-search")
+    suspend fun searchCategory(
+        @Query("page") page: Int,
+        @Query("pageSize") pageSize: Int,
+        @Query("key") searchQuery: String
+    ): BasicApiResponse<List<CategoryDto>>
+
     @GET("worker/get-suggested-categories")
     suspend fun getSuggestedCategories(): BasicApiResponse<List<CategoryDto>>
 

@@ -1,39 +1,38 @@
 package com.fifty.workersportal.featureworker.presentation.selectworkercategory
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.compose.collectAsLazyPagingItems
 import coil.ImageLoader
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.presentation.component.StandardAppBar
 import com.fifty.workersportal.core.presentation.component.StandardTextField
-import com.fifty.workersportal.core.presentation.ui.theme.ExtraSmallProfilePictureHeight
+import com.fifty.workersportal.core.presentation.ui.theme.ExtraLargeProfilePictureHeight
 import com.fifty.workersportal.core.presentation.ui.theme.LargeProfilePictureHeight
 import com.fifty.workersportal.core.presentation.ui.theme.MediumButtonHeight
 import com.fifty.workersportal.core.presentation.ui.theme.MediumProfilePictureHeight
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
-import com.fifty.workersportal.core.presentation.ui.theme.SmallProfilePictureHeight
+import com.fifty.workersportal.core.presentation.util.shimmerEffect
 import com.fifty.workersportal.core.util.Screen
 import com.fifty.workersportal.featureworker.presentation.component.CategoryItem
 
@@ -45,6 +44,8 @@ fun SelectWorkerCategoryScreen(
     viewModel: SearchCategoryViewModel = hiltViewModel()
 ) {
     val state = viewModel.searchState.value
+    val searchedCategories =
+        viewModel.searchedCategories.collectAsLazyPagingItems()
     Column(
         Modifier.fillMaxSize()
     ) {
@@ -88,18 +89,51 @@ fun SelectWorkerCategoryScreen(
                 }
             )
         }
-        LazyVerticalGrid(
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            columns = GridCells.Adaptive(minSize = 100.dp)
-        ) {
-            items(state.workerCategories) {
-                CategoryItem(
-                    category = it,
-                    imageLoader = imageLoader,
-                    onClick = {
-                        onNavigate(Screen.WorkerListScreen.route)
+        if (state.isLoading) {
+            LazyVerticalGrid(
+                horizontalArrangement = Arrangement.spacedBy(SizeMedium),
+                verticalArrangement = Arrangement.spacedBy(SizeMedium),
+                contentPadding = PaddingValues(horizontal = SizeMedium),
+                columns = GridCells.Adaptive(minSize = LargeProfilePictureHeight)
+            ) {
+                items(40) {
+                    Box(
+                        modifier = Modifier
+                            .height(ExtraLargeProfilePictureHeight)
+                            .width(MediumProfilePictureHeight)
+                            .clip(MaterialTheme.shapes.medium)
+                            .shimmerEffect(state.isLoading)
+                    )
+                }
+            }
+        } else {
+            LazyVerticalGrid(
+                horizontalArrangement = Arrangement.spacedBy(SizeMedium),
+                verticalArrangement = Arrangement.spacedBy(SizeMedium),
+                contentPadding = PaddingValues(horizontal = SizeMedium),
+                columns = GridCells.Adaptive(minSize = LargeProfilePictureHeight)
+            ) {
+                items(searchedCategories.itemCount)
+                { index ->
+                    searchedCategories[index]?.let {
+                        CategoryItem(
+                            category = it,
+                            imageLoader = imageLoader,
+                            onClick = {
+                                onNavigate(Screen.WorkerListScreen.route)
+                            }
+                        )
                     }
-                )
+                }
+//                items(state.workerCategories) {
+//                    CategoryItem(
+//                        category = it,
+//                        imageLoader = imageLoader,
+//                        onClick = {
+//                            onNavigate(Screen.WorkerListScreen.route)
+//                        }
+//                    )
+//                }
             }
         }
     }
