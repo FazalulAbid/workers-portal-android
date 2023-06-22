@@ -8,5 +8,5 @@ class GetOwnUserIdUseCase(
 ) {
 
     suspend operator fun invoke(): String =
-        repository.getUserId().first() ?: ""
+        repository.getOwnUserId().first() ?: ""
 }

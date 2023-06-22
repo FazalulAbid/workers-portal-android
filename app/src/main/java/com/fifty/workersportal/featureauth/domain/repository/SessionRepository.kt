@@ -1,6 +1,5 @@
 package com.fifty.workersportal.featureauth.domain.repository
 
-import com.fifty.workersportal.featureuser.domain.model.UserProfile
 import kotlinx.coroutines.flow.Flow
 
 interface SessionRepository {
@@ -9,7 +8,7 @@ interface SessionRepository {
 
     fun getRefreshToken(): Flow<String?>
 
-    fun getUserId(): Flow<String?>
+    fun getOwnUserId(): Flow<String?>
 
     suspend fun saveUserId(userId: String)
 

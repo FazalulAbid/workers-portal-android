@@ -10,7 +10,7 @@ import com.fifty.workersportal.featureworker.data.remote.request.UpdateProfileFo
 
 interface ProfileRepository {
 
-    suspend fun getUserProfileDetails(userId: String): Resource<Profile>
+    suspend fun getUserProfileDetails(userId: String, needSampleWorks: Boolean): Resource<Profile>
 
     suspend fun updateUserProfile(
         updateUserProfileData: UpdateUserProfileData,

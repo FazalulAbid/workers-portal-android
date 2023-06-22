@@ -19,9 +19,10 @@ data class Profile(
     val openToWork: Boolean,
     val primaryCategory: String?,
     val profilePicture: String,
-    val sampleWorkImages: List<String>?,
+    val selectedAddress: String?,
     val categoryList: List<WorkerCategory>?,
     val status: Boolean,
+    val identityUrl: String?
 ) {
     fun toUserProfile(): UserProfile =
         UserProfile(
@@ -32,6 +33,7 @@ data class Profile(
             gender = gender,
             lastName = lastName,
             isWorker = isWorker,
-            profilePicture = profilePicture
+            profilePicture = profilePicture,
+            selectedAddress = selectedAddress
         )
 }

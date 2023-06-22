@@ -32,7 +32,7 @@ class SessionRepositoryImpl(
         }
     }
 
-    override fun getUserId(): Flow<String?> {
+    override fun getOwnUserId(): Flow<String?> {
         return context.dataStore.data.map { preferences ->
             preferences[KEY_USER_ID]
         }

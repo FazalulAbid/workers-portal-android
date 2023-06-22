@@ -8,5 +8,6 @@ data class UserProfile(
     val gender: String,
     val lastName: String,
     val isWorker: Boolean,
-    val profilePicture: String
+    val profilePicture: String,
+    val selectedAddress: String?,
 )

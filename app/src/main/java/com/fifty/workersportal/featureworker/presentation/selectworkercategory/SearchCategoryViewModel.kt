@@ -43,7 +43,7 @@ class SearchCategoryViewModel @Inject constructor(
     private var searchJob: Job? = null
 
     init {
-        getAllCategories()
+        searchCategories(_searchFieldState.value.text)
     }
 
     fun onEvent(event: SearchCategoryEvent) {
@@ -77,15 +77,15 @@ class SearchCategoryViewModel @Inject constructor(
     }
 
     private fun searchCategories(searchQuery: String) {
+        _searchState.value = searchState.value.copy(
+            isLoading = true
+        )
         _searchFieldState.value = searchFieldState.value.copy(
             text = searchQuery
         )
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
             delay(Constants.SEARCH_DELAY)
-            _searchState.value = searchState.value.copy(
-                isLoading = true
-            )
             searchedCategories = searchCategoriesUseCase(searchQuery).cachedIn(viewModelScope)
             _searchState.value = searchState.value.copy(
                 isLoading = false

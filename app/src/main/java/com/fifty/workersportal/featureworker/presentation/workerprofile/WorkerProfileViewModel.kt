@@ -1,8 +1,8 @@
 package com.fifty.workersportal.featureworker.presentation.workerprofile
 
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fifty.workersportal.core.domain.usecase.GetOwnUserIdUseCase
@@ -19,7 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class WorkerProfileViewModel @Inject constructor(
     private val getOwnUserId: GetOwnUserIdUseCase,
-    private val getUserProfileDetails: GetUserProfileDetailsUseCase
+    private val getUserProfileDetails: GetUserProfileDetailsUseCase,
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val _state = mutableStateOf(WorkerProfileState())
@@ -28,19 +29,27 @@ class WorkerProfileViewModel @Inject constructor(
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
-    fun getProfile(userId: String?) {
+    init {
+        viewModelScope.launch {
+            val ownUserId = getOwnUserId().trim()
+            val userId = savedStateHandle.get<String>("userId") ?: ownUserId
+            getProfile(userId, ownUserId)
+            _state.value = state.value.copy(
+                isOwnProfile = state.value.profile?.id?.equals(ownUserId) == true
+            )
+        }
+    }
+
+    private fun getProfile(userId: String, ownUserId: String) {
         viewModelScope.launch {
             _state.value = state.value.copy(
                 isLoading = true
             )
-            val result = getUserProfileDetails(
-                userId ?: getOwnUserId()
-            )
-            when (result) {
+            when (val result = getUserProfileDetails(userId)) {
                 is Resource.Success -> {
-                    Log.d("Hello", "getProfile: ${result.data}")
                     _state.value = state.value.copy(
                         profile = result.data,
+                        isOwnProfile = userId == ownUserId,
                         isLoading = false
                     )
                 }

@@ -22,7 +22,6 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -42,7 +41,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.ImageLoader
+import coil.annotation.ExperimentalCoilApi
+import coil.compose.rememberImagePainter
 import com.fifty.workersportal.R
+import com.fifty.workersportal.core.domain.util.Session
 import com.fifty.workersportal.core.presentation.component.SecondaryHeader
 import com.fifty.workersportal.core.presentation.component.StandardAppBar
 import com.fifty.workersportal.core.presentation.ui.theme.ExtraExtraLargeProfilePictureHeight
@@ -61,21 +64,18 @@ import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
 import kotlin.random.Random
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalCoilApi::class)
 @Composable
 fun WorkerProfileScreen(
-    workerUserId: String? = null,
+    userId: String? = null,
     isVerified: Boolean = true,
     onNavigate: (String) -> Unit = {},
     onNavigateUp: () -> Unit = {},
+    imageLoader: ImageLoader,
     viewModel: WorkerProfileViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.value
     val screenWidth = with(LocalConfiguration.current) { screenWidthDp.dp }
-
-    LaunchedEffect(key1 = true) {
-        viewModel.getProfile(workerUserId)
-    }
 
     Column(
         Modifier.fillMaxSize(),
@@ -94,7 +94,7 @@ fun WorkerProfileScreen(
                 )
             },
             navActions = {
-                if (true) {
+                if (state.profile?.id == Session.userSession.value?.id) {
                     IconButton(onClick = {
                         onNavigate(Screen.RegisterAsWorkerScreen.route)
                     }) {
@@ -119,8 +119,11 @@ fun WorkerProfileScreen(
                 ) {
                     Spacer(modifier = Modifier.height(SizeMedium))
                     Image(
-                        painter = painterResource(id = R.drawable.plumber_profile),
-                        contentDescription = "Plumber description",
+                        painter = rememberImagePainter(
+                            data = state.profile?.profilePicture,
+                            imageLoader = imageLoader
+                        ),
+                        contentDescription = null,
                         Modifier
                             .size(ExtraExtraLargeProfilePictureHeight)
                             .clip(CircleShape),
@@ -242,8 +245,13 @@ fun WorkerProfileScreen(
                         vertical = SizeMedium,
                         horizontal = SizeMedium
                     ),
-                    text = "Fazalul's works",
-                    style = MaterialTheme.typography.titleMedium
+                    text = stringResource(R.string.x_s_works, state.profile?.firstName ?: ""),
+                    style = MaterialTheme.typography.titleMedium,
+                    moreOption = state.isOwnProfile,
+                    moreOptionText = stringResource(id = R.string.post_your_work),
+                    onMoreOptionClick = {
+                        onNavigate(Screen.PostSampleWorkScreen.route)
+                    }
                 )
             }
             items(25) {

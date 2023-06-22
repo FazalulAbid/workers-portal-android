@@ -125,15 +125,6 @@ fun SelectWorkerCategoryScreen(
                         )
                     }
                 }
-//                items(state.workerCategories) {
-//                    CategoryItem(
-//                        category = it,
-//                        imageLoader = imageLoader,
-//                        onClick = {
-//                            onNavigate(Screen.WorkerListScreen.route)
-//                        }
-//                    )
-//                }
             }
         }
     }

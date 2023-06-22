@@ -140,5 +140,10 @@
     <string name="updating_user_data">Updating user data…</string>
     <string name="loading">Loading...</string>
     <string name="add_to_favourites">Add to favourites</string>
+    <string name="post_your_work">Post your work</string>
+    <string name="x_s_works">%s\'s works</string>
+    <string name="select_image_source">Select image source</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
 
 </resources>

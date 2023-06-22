@@ -4,11 +4,15 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material3.SnackbarHostState
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import coil.ImageLoader
 import com.fifty.workersportal.core.domain.util.Session
 import com.fifty.workersportal.core.util.NavigationParent
 import com.fifty.workersportal.core.util.Screen
+import com.fifty.workersportal.featureworker.presentation.postsamplework.PostSampleWorkEvent
+import com.fifty.workersportal.featureworker.presentation.postsamplework.PostSampleWorkScreen
 import com.fifty.workersportal.featureworker.presentation.registerasworker.RegisterAsWorkerScreen
 import com.fifty.workersportal.featureworker.presentation.reviewandrating.ReviewAndRatingScreen
 import com.fifty.workersportal.featureworker.presentation.searchworker.SearchWorkerScreen
@@ -56,10 +60,21 @@ fun NavGraphBuilder.workerNavGraph(
                 onNavigateUp = navController::navigateUp
             )
         }
-        composable(Screen.WorkerProfileScreen.route) {
+        composable(
+            route = Screen.WorkerProfileScreen.route + "?userId={userId}",
+            arguments = listOf(
+                navArgument(name = "userId") {
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = null
+                }
+            )
+        ) {
             WorkerProfileScreen(
+                userId = it.arguments?.getString("userId"),
                 onNavigate = navController::navigate,
-                onNavigateUp = navController::navigateUp
+                onNavigateUp = navController::navigateUp,
+                imageLoader = imageLoader
             )
         }
         composable(Screen.ReviewAndRatingScreen.route) {
@@ -71,6 +86,11 @@ fun NavGraphBuilder.workerNavGraph(
         composable(Screen.SearchWorkerScreen.route) {
             SearchWorkerScreen(
                 onNavigate = navController::navigate,
+                onNavigateUp = navController::navigateUp
+            )
+        }
+        composable(Screen.PostSampleWorkScreen.route) {
+            PostSampleWorkScreen(
                 onNavigateUp = navController::navigateUp
             )
         }

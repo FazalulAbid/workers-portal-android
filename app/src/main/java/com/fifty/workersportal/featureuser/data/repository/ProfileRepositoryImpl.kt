@@ -25,9 +25,15 @@ class ProfileRepositoryImpl(
     private val gson: Gson
 ) : ProfileRepository {
 
-    override suspend fun getUserProfileDetails(userId: String): Resource<Profile> {
+    override suspend fun getUserProfileDetails(
+        userId: String,
+        needSampleWorks: Boolean
+    ): Resource<Profile> {
         return try {
-            val response = api.getUserProfileDetails(userId = userId)
+            val response = api.getUserProfileDetails(
+                userId = userId,
+                needSampleWorks = needSampleWorks
+            )
             if (response.successful) {
                 Resource.Success(data = response.data?.toProfile())
             } else {

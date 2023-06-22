@@ -23,8 +23,9 @@ data class ProfileDto(
     val openToWork: Boolean,
     val primaryCategory: String?,
     val profilePicture: String,
-    val sampleWorkImages: List<String>?,
     val categoryList: List<WorkerCategory>?,
+    val selectedAddress: String?,
+    val identityUrl: String?,
     val status: Boolean,
     @SerializedName("__v")
     val versionKey: Int?,
@@ -47,9 +48,10 @@ data class ProfileDto(
             openToWork = openToWork,
             primaryCategory = primaryCategory,
             profilePicture = profilePicture,
-            sampleWorkImages = sampleWorkImages,
             categoryList = categoryList,
-            status = status
+            status = status,
+            selectedAddress = selectedAddress,
+            identityUrl = identityUrl
         )
     }
 }
