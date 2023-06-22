@@ -77,7 +77,7 @@ fun WorkerListScreen(
         }
         LazyColumn() {
             items(50) {
-                WorkerListItem()
+                WorkerListItem(true)
                 HorizontalDivider(
                     modifier = Modifier.padding(horizontal = SizeMedium),
                     color = MaterialTheme.colorScheme.surface,

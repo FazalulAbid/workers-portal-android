@@ -14,5 +14,4 @@ interface WorkerRepository {
     suspend fun toggleOpenToWork(value: Boolean): SimpleResource
 
     suspend fun toggleFavouriteWorker(userId: String, value: Boolean): SimpleResource
-
 }

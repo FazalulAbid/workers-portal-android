@@ -1,4 +1,4 @@
-package com.fifty.workersportal.featureuser.domain.usecase
+package com.fifty.workersportal.featureworker.domain.usecase
 
 import com.fifty.workersportal.core.util.SimpleResource
 import com.fifty.workersportal.featureworker.domain.repository.WorkerRepository

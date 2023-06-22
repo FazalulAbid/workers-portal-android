@@ -11,6 +11,7 @@ import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.Screen
 import com.fifty.workersportal.featureuser.domain.usecase.GetDashboardBannersUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.GetSuggestedCategoriesUseCase
+import com.fifty.workersportal.featureworker.domain.usecase.ToggleFavouriteWorkerUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -19,9 +20,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UserDashboardViewModel @Inject constructor(
-    private val getOwnUserId: GetOwnUserIdUseCase,
-    private val getDashboardBanners: GetDashboardBannersUseCase,
-    private val getCategories: GetSuggestedCategoriesUseCase
+    private val getOwnUserIdUseCase: GetOwnUserIdUseCase,
+    private val getDashboardBannersUseCase: GetDashboardBannersUseCase,
+    private val getCategoriesUseCase: GetSuggestedCategoriesUseCase,
+    private val toggleFavouriteWorkerUseCase: ToggleFavouriteWorkerUseCase
 ) : ViewModel() {
 
     val visiblePermissionDialogQueue = mutableStateListOf<String>()
@@ -38,6 +40,14 @@ class UserDashboardViewModel @Inject constructor(
     init {
         getBanners()
         getSuggestedCategories()
+    }
+
+    fun onEvent(event: UserDashboardEvent) {
+        when (event) {
+            is UserDashboardEvent.ToggleFavouriteWorker -> {
+                toggleFavouriteWorker(event.value)
+            }
+        }
     }
 
     fun dismissPermissionDialog() {
@@ -61,9 +71,24 @@ class UserDashboardViewModel @Inject constructor(
         }
     }
 
+    private fun toggleFavouriteWorker(value: Boolean) {
+        viewModelScope.launch {
+            val result = toggleFavouriteWorkerUseCase("648c4a6a9843bfdb80fb4e90", value)
+            when (result) {
+                is Resource.Success -> {
+
+                }
+
+                is Resource.Error -> {
+
+                }
+            }
+        }
+    }
+
     private fun getSuggestedCategories() {
         viewModelScope.launch {
-            when (val result = getCategories()) {
+            when (val result = getCategoriesUseCase()) {
                 is Resource.Success -> {
                     _suggestedCategoriesState.value = suggestedCategoriesState.value.copy(
                         suggestedCategories = result.data ?: emptyList()
@@ -77,7 +102,7 @@ class UserDashboardViewModel @Inject constructor(
 
     private fun getBanners() {
         viewModelScope.launch {
-            when (val result = getDashboardBanners()) {
+            when (val result = getDashboardBannersUseCase()) {
                 is Resource.Success -> {
                     _bannersState.value = _bannersState.value.copy(
                         banners = result.data ?: emptyList()

@@ -93,7 +93,7 @@ fun SearchWorkerScreen(
         Spacer(modifier = Modifier.height(SizeMedium))
         LazyColumn {
             items(20) {
-                WorkerListItem()
+                WorkerListItem(true)
             }
         }
     }

@@ -8,9 +8,11 @@ import com.fifty.workersportal.featureworker.data.remote.dto.CategoryDto
 import com.fifty.workersportal.featureworker.domain.model.ReviewAndRating
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface WorkerApiService {
 
@@ -36,8 +38,8 @@ interface WorkerApiService {
         @Body favouriteUpdateRequest: FavouriteUpdateRequest
     ): BasicApiResponse<String>
 
-    @POST("favourites/add-to-favourites")
+    @DELETE("favourites/remove-from-favourites")
     suspend fun removeWorkerFromFavourites(
-        @Body favouriteUpdateRequest: FavouriteUpdateRequest
+        @Query("removedUserId") userId: String
     ): BasicApiResponse<String>
 }

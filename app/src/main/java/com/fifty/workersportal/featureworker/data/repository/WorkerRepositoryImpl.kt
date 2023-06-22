@@ -101,7 +101,7 @@ class WorkerRepositoryImpl(
                 )
             } else {
                 api.removeWorkerFromFavourites(
-                    FavouriteUpdateRequest(userId)
+                    userId = userId
                 )
             }
             if (response.successful) {

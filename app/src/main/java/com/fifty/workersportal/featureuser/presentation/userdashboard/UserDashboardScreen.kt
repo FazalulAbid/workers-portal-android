@@ -214,7 +214,12 @@ fun UserDashboardScreen(
             }
         }
         items(10) {
-            WorkerListItem()
+            WorkerListItem(
+                false,
+                onFavouriteClick = {
+                    viewModel.onEvent(UserDashboardEvent.ToggleFavouriteWorker(it))
+                }
+            )
         }
     }
 

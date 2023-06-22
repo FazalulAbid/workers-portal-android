@@ -1,6 +1,6 @@
 package com.fifty.workersportal.di
 
-import com.fifty.workersportal.featureuser.domain.usecase.ToggleFavouriteWorkerUseCase
+import com.fifty.workersportal.featureworker.domain.usecase.ToggleFavouriteWorkerUseCase
 import com.fifty.workersportal.featureworker.data.remote.WorkerApiService
 import com.fifty.workersportal.featureworker.data.repository.ReviewAndRatingRepositoryImpl
 import com.fifty.workersportal.featureworker.data.repository.WorkerRepositoryImpl
