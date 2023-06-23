@@ -7,6 +7,8 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.LocalOverscrollConfiguration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,6 +25,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -63,13 +66,17 @@ import kotlinx.coroutines.flow.collectLatest
 import java.time.LocalDate
 
 @RequiresApi(Build.VERSION_CODES.O)
-@OptIn(ExperimentalPagerApi::class, ExperimentalMaterial3Api::class)
+@OptIn(
+    ExperimentalPagerApi::class, ExperimentalMaterial3Api::class,
+    ExperimentalFoundationApi::class
+)
 @Composable
 fun UserDashboardScreen(
     onNavigate: (String) -> Unit = {},
     imageLoader: ImageLoader,
     viewModel: UserDashboardViewModel = hiltViewModel()
 ) {
+    val state = viewModel.state.value
     val context = LocalContext.current
     val calenderState = rememberUseCaseState()
 
@@ -101,125 +108,131 @@ fun UserDashboardScreen(
         }
     }
 
-    LazyColumn {
-        item {
-            Column(
-                modifier = Modifier.padding(SizeMedium)
-            ) {
-                DashboardGreetingText(
-                    name = "Fazalul",
-                    greetingText = stringResource(R.string.dashboard_greeting_prefix)
-                )
-                Spacer(Modifier.height(SizeExtraSmall))
-                DashboardNavigationAndProfile(
-                    onProfileClick = {
-                        onNavigate(Screen.UserProfileScreen.route)
-                    },
-                    onLocationClick = {
-                        multiplePermissionResultLauncher.launch(
-                            permissionsToRequest
-                        )
-                    }
-                )
-                Spacer(modifier = Modifier.height(SizeMedium))
-                HorizontalDivider()
-                Spacer(modifier = Modifier.height(SizeMedium))
-                SearchWorkerButton(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(MediumButtonHeight),
-                    text = stringResource(id = R.string.search_aryan),
-                    onClick = {
-                        onNavigate(Screen.SearchWorkerScreen.route)
-                    }
-                )
+    CompositionLocalProvider(
+        LocalOverscrollConfiguration provides null
+    ) {
+        LazyColumn {
+            item {
+                Column(
+                    modifier = Modifier.padding(SizeMedium)
+                ) {
+                    DashboardGreetingText(
+                        name = state.userProfile?.firstName ?: stringResource(R.string.there),
+                        greetingText = stringResource(R.string.dashboard_greeting_prefix)
+                    )
+                    Spacer(Modifier.height(SizeExtraSmall))
+                    DashboardNavigationAndProfile(
+                        profileImageUrl = state.userProfile?.profilePicture ?: "",
+                        imageLoader = imageLoader,
+                        onProfileClick = {
+                            onNavigate(Screen.UserProfileScreen.route)
+                        },
+                        onLocationClick = {
+                            multiplePermissionResultLauncher.launch(
+                                permissionsToRequest
+                            )
+                        }
+                    )
+                    Spacer(modifier = Modifier.height(SizeMedium))
+                    HorizontalDivider()
+                    Spacer(modifier = Modifier.height(SizeMedium))
+                    SearchWorkerButton(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(MediumButtonHeight),
+                        text = stringResource(id = R.string.search_aryan),
+                        onClick = {
+                            onNavigate(Screen.SearchWorkerScreen.route)
+                        }
+                    )
+                }
             }
-        }
-        item {
-            Column {
-                Spacer(modifier = Modifier.height(SizeSmall))
-                AutoSlidingCarousal(
-                    banners = viewModel.bannersState.value.banners,
-                    imageLoader = imageLoader
-                )
-                Spacer(modifier = Modifier.height(SizeSmall))
+            item {
+                Column {
+                    Spacer(modifier = Modifier.height(SizeSmall))
+                    AutoSlidingCarousal(
+                        banners = state.banners,
+                        imageLoader = imageLoader
+                    )
+                    Spacer(modifier = Modifier.height(SizeSmall))
+                }
             }
-        }
-        item {
-            Column(Modifier.padding(horizontal = SizeMedium)) {
-                SecondaryHeader(
-                    text = stringResource(R.string.suggested_categories),
-                    modifier = Modifier.padding(top = SizeMedium, bottom = SizeSmall),
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    moreOption = true,
-                    moreOptionText = stringResource(R.string.all_categories),
-                    onMoreOptionClick = {
-                        onNavigate(Screen.SearchCategoryScreen.route)
-                    }
-                )
-            }
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                LazyRow(Modifier.fillMaxWidth()) {
-                    items(viewModel.suggestedCategoriesState.value.suggestedCategories) {
-                        SuggestedCategoryItem(
-                            category = it,
-                            imageLoader = imageLoader,
-                            imageSize = MediumProfilePictureHeight
-                        ) {
-                            calenderState.show()
+            item {
+                Column(Modifier.padding(horizontal = SizeMedium)) {
+                    SecondaryHeader(
+                        text = stringResource(R.string.suggested_categories),
+                        modifier = Modifier.padding(top = SizeMedium, bottom = SizeSmall),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        moreOption = true,
+                        moreOptionText = stringResource(R.string.all_categories),
+                        onMoreOptionClick = {
+                            onNavigate(Screen.SearchCategoryScreen.route)
+                        }
+                    )
+                }
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    LazyRow(Modifier.fillMaxWidth()) {
+                        items(viewModel.suggestedCategoriesState.value.suggestedCategories) {
+                            SuggestedCategoryItem(
+                                category = it,
+                                imageLoader = imageLoader,
+                                imageSize = MediumProfilePictureHeight
+                            ) {
+                                calenderState.show()
+                            }
                         }
                     }
+                    HorizontalDivider()
                 }
-                HorizontalDivider()
             }
-        }
-        item {
-            Column(Modifier.padding(horizontal = SizeMedium)) {
-                SecondaryHeader(
-                    text = stringResource(R.string.most_booked_services),
-                    modifier = Modifier.padding(top = SizeMedium, bottom = SizeSmall),
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold,
-                )
-            }
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                LazyRow(
-                    Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(SizeSmall),
-                    contentPadding = PaddingValues(horizontal = SizeSmall)
+            item {
+                Column(Modifier.padding(horizontal = SizeMedium)) {
+                    SecondaryHeader(
+                        text = stringResource(R.string.most_booked_services),
+                        modifier = Modifier.padding(top = SizeMedium, bottom = SizeSmall),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold,
+                    )
+                }
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    items(10) {
-                        MostBookedServicesItem()
+                    LazyRow(
+                        Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(SizeSmall),
+                        contentPadding = PaddingValues(horizontal = SizeSmall)
+                    ) {
+                        items(10) {
+                            MostBookedServicesItem()
+                        }
                     }
+                    Spacer(modifier = Modifier.height(SizeMedium))
+                    HorizontalDivider()
                 }
-                Spacer(modifier = Modifier.height(SizeMedium))
-                HorizontalDivider()
             }
-        }
-        item {
-            Column(Modifier.padding(horizontal = SizeMedium)) {
-                SecondaryHeader(
-                    text = stringResource(R.string.explore_more),
-                    modifier = Modifier.padding(top = SizeMedium, bottom = SizeSmall),
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold,
+            item {
+                Column(Modifier.padding(horizontal = SizeMedium)) {
+                    SecondaryHeader(
+                        text = stringResource(R.string.explore_more),
+                        modifier = Modifier.padding(top = SizeMedium, bottom = SizeSmall),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold,
+                    )
+                }
+            }
+            items(10) {
+                WorkerListItem(
+                    false,
+                    onFavouriteClick = {
+                        viewModel.onEvent(UserDashboardEvent.ToggleFavouriteWorker(it))
+                    }
                 )
             }
-        }
-        items(10) {
-            WorkerListItem(
-                false,
-                onFavouriteClick = {
-                    viewModel.onEvent(UserDashboardEvent.ToggleFavouriteWorker(it))
-                }
-            )
         }
     }
 

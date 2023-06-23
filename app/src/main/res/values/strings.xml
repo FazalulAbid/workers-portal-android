@@ -145,5 +145,6 @@
     <string name="select_image_source">Select image source</string>
     <string name="camera">Camera</string>
     <string name="gallery">Gallery</string>
+    <string name="there">there!</string>
 
 </resources>

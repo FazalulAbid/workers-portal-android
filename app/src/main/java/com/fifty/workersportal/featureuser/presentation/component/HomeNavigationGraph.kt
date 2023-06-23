@@ -33,6 +33,7 @@ fun NavGraphBuilder.userNavGraph(
             UserProfileScreen(
                 onNavigate = navController::navigate,
                 onNavigateUp = navController::navigateUp,
+                imageLoader = imageLoader,
                 onNavigateWithPopBackStack = { route ->
                     navController.navigate(route) {
                         popUpTo(0)

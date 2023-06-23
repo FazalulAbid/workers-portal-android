@@ -11,10 +11,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
@@ -74,6 +76,7 @@ fun SelectWorkerCategoryScreen(
                 basicTextFieldModifier = Modifier
                     .fillMaxWidth()
                     .height(MediumButtonHeight),
+                enabled = !state.isLoading,
                 leadingIcon = {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_search),
@@ -90,21 +93,13 @@ fun SelectWorkerCategoryScreen(
             )
         }
         if (state.isLoading) {
-            LazyVerticalGrid(
-                horizontalArrangement = Arrangement.spacedBy(SizeMedium),
-                verticalArrangement = Arrangement.spacedBy(SizeMedium),
-                contentPadding = PaddingValues(horizontal = SizeMedium),
-                columns = GridCells.Adaptive(minSize = LargeProfilePictureHeight)
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                contentAlignment = Alignment.Center
             ) {
-                items(40) {
-                    Box(
-                        modifier = Modifier
-                            .height(ExtraLargeProfilePictureHeight)
-                            .width(MediumProfilePictureHeight)
-                            .clip(MaterialTheme.shapes.medium)
-                            .shimmerEffect(state.isLoading)
-                    )
-                }
+                CircularProgressIndicator()
             }
         } else {
             LazyVerticalGrid(

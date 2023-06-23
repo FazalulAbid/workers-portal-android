@@ -43,6 +43,7 @@ fun NavGraphBuilder.workerNavGraph(
         }
         composable(Screen.WorkerDashboardScreen.route) {
             WorkerDashboardScreen(
+                imageLoader = imageLoader,
                 onNavigateUp = navController::navigateUp,
                 onNavigate = navController::navigate
             )

@@ -22,14 +22,20 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import coil.ImageLoader
+import coil.annotation.ExperimentalCoilApi
+import coil.compose.rememberImagePainter
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.presentation.ui.theme.SizeExtraSmall
 import com.fifty.workersportal.core.presentation.ui.theme.SizeLarge
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.ui.theme.SmallProfilePictureHeight
 
+@OptIn(ExperimentalCoilApi::class)
 @Composable
 fun DashboardNavigationAndProfile(
+    profileImageUrl: String,
+    imageLoader: ImageLoader,
     onProfileClick: () -> Unit = {},
     onLocationClick: () -> Unit = {}
 ) {
@@ -88,7 +94,10 @@ fun DashboardNavigationAndProfile(
                 .clip(CircleShape)
                 .clickable { onProfileClick() },
             contentScale = ContentScale.Crop,
-            painter = painterResource(id = R.drawable.test_man_profile),
+            painter = rememberImagePainter(
+                data = profileImageUrl,
+                imageLoader = imageLoader
+            ),
             contentDescription = stringResource(R.string.profile_picture)
         )
     }

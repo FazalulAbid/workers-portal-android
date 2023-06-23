@@ -1,6 +1,8 @@
 package com.fifty.workersportal.featureworker.presentation.workerprofile
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.LocalOverscrollConfiguration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -27,6 +29,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -64,7 +67,7 @@ import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
 import kotlin.random.Random
 
-@OptIn(ExperimentalCoilApi::class)
+@OptIn(ExperimentalCoilApi::class, ExperimentalFoundationApi::class)
 @Composable
 fun WorkerProfileScreen(
     userId: String? = null,
@@ -107,161 +110,165 @@ fun WorkerProfileScreen(
                 }
             }
         )
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(3)
+        CompositionLocalProvider(
+            LocalOverscrollConfiguration provides null
         ) {
-            item(span = { GridItemSpan(3) }) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = SizeMedium),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Spacer(modifier = Modifier.height(SizeMedium))
-                    Image(
-                        painter = rememberImagePainter(
-                            data = state.profile?.profilePicture,
-                            imageLoader = imageLoader
-                        ),
-                        contentDescription = null,
-                        Modifier
-                            .size(ExtraExtraLargeProfilePictureHeight)
-                            .clip(CircleShape),
-                        contentScale = ContentScale.Crop
-                    )
-                    Spacer(modifier = Modifier.height(SizeMedium))
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.offset(
-                            x = if (isVerified) {
-                                (SizeMedium / 2f)
-                            } else 0.dp
-                        )
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(3)
+            ) {
+                item(span = { GridItemSpan(3) }) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = SizeMedium),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text(
-                            modifier = Modifier.widthIn(max = screenWidth * 0.75f),
-                            text = "${state.profile?.firstName} ${state.profile?.lastName}",
-                            style = MaterialTheme.typography.titleLarge.copy(
-                                fontWeight = FontWeight.Bold,
-                                textAlign = TextAlign.Center,
-                                color = MaterialTheme.colorScheme.onBackground
+                        Spacer(modifier = Modifier.height(SizeMedium))
+                        Image(
+                            painter = rememberImagePainter(
+                                data = state.profile?.profilePicture,
+                                imageLoader = imageLoader
                             ),
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis
+                            contentDescription = null,
+                            Modifier
+                                .size(ExtraExtraLargeProfilePictureHeight)
+                                .clip(CircleShape),
+                            contentScale = ContentScale.Crop
                         )
-                        if (isVerified) {
-                            Spacer(modifier = Modifier.width(SizeExtraSmall))
-                            Icon(
-                                modifier = Modifier.size(SizeLarge),
-                                tint = SkyBlueColor,
-                                painter = painterResource(id = R.drawable.ic_verification),
-                                contentDescription = stringResource(R.string.verification_badge)
+                        Spacer(modifier = Modifier.height(SizeMedium))
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.offset(
+                                x = if (isVerified) {
+                                    (SizeMedium / 2f)
+                                } else 0.dp
                             )
-                        }
-                    }
-                    Spacer(modifier = Modifier.height(SizeExtraSmall))
-                    val primarySkill = state.profile?.categoryList?.find {
-                        it.id == state.profile.primaryCategory
-                    }
-                    primarySkill?.skill?.let { primarySkillName ->
-                        Text(
-                            modifier = Modifier.widthIn(max = screenWidth * 0.75f),
-                            text = primarySkillName,
-                            style = MaterialTheme.typography.bodyLarge.copy(
-                                color = MaterialTheme.colorScheme.onSurface,
-                                textAlign = TextAlign.Center,
-                                fontWeight = FontWeight.Normal
-                            ),
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                        Spacer(modifier = Modifier.height(SizeSmall))
-                    }
-                    state.profile?.bio?.let { bio ->
-                        Text(
-                            modifier = Modifier.widthIn(max = screenWidth * 0.75f),
-                            text = bio,
-                            style = MaterialTheme.typography.bodyMedium.copy(
-                                color = MaterialTheme.colorScheme.onSurface,
-                                textAlign = TextAlign.Center,
-                                fontWeight = FontWeight.Light
-                            ),
-                        )
-                        Spacer(modifier = Modifier.height(SizeLarge))
-                    }
-                    FlowRow(
-                        modifier = Modifier.fillMaxWidth(),
-                        mainAxisAlignment = MainAxisAlignment.Center,
-                        mainAxisSpacing = SizeMedium,
-                        crossAxisSpacing = SizeMedium
-                    ) {
-                        state.profile?.categoryList?.forEach { workerCategory ->
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Chip(
-                                    text = workerCategory.skill ?: ""
+                        ) {
+                            Text(
+                                modifier = Modifier.widthIn(max = screenWidth * 0.75f),
+                                text = "${state.profile?.firstName} ${state.profile?.lastName}",
+                                style = MaterialTheme.typography.titleLarge.copy(
+                                    fontWeight = FontWeight.Bold,
+                                    textAlign = TextAlign.Center,
+                                    color = MaterialTheme.colorScheme.onBackground
+                                ),
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                            if (isVerified) {
+                                Spacer(modifier = Modifier.width(SizeExtraSmall))
+                                Icon(
+                                    modifier = Modifier.size(SizeLarge),
+                                    tint = SkyBlueColor,
+                                    painter = painterResource(id = R.drawable.ic_verification),
+                                    contentDescription = stringResource(R.string.verification_badge)
                                 )
                             }
                         }
+                        Spacer(modifier = Modifier.height(SizeExtraSmall))
+                        val primarySkill = state.profile?.categoryList?.find {
+                            it.id == state.profile.primaryCategory
+                        }
+                        primarySkill?.skill?.let { primarySkillName ->
+                            Text(
+                                modifier = Modifier.widthIn(max = screenWidth * 0.75f),
+                                text = primarySkillName,
+                                style = MaterialTheme.typography.bodyLarge.copy(
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    textAlign = TextAlign.Center,
+                                    fontWeight = FontWeight.Normal
+                                ),
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                            Spacer(modifier = Modifier.height(SizeSmall))
+                        }
+                        state.profile?.bio?.let { bio ->
+                            Text(
+                                modifier = Modifier.widthIn(max = screenWidth * 0.75f),
+                                text = bio,
+                                style = MaterialTheme.typography.bodyMedium.copy(
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    textAlign = TextAlign.Center,
+                                    fontWeight = FontWeight.Light
+                                ),
+                            )
+                            Spacer(modifier = Modifier.height(SizeLarge))
+                        }
+                        FlowRow(
+                            modifier = Modifier.fillMaxWidth(),
+                            mainAxisAlignment = MainAxisAlignment.Center,
+                            mainAxisSpacing = SizeMedium,
+                            crossAxisSpacing = SizeMedium
+                        ) {
+                            state.profile?.categoryList?.forEach { workerCategory ->
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Chip(
+                                        text = workerCategory.skill ?: ""
+                                    )
+                                }
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(SizeLarge))
+                        ButtonBetweenLines(text = stringResource(R.string.hire_now))
+                        Spacer(modifier = Modifier.height(SizeLarge))
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceEvenly,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RatingAndRatingCount(
+                                modifier = Modifier.clickable {
+                                    onNavigate(Screen.ReviewAndRatingScreen.route)
+                                },
+                                rating = "4.5",
+                                ratingCount = 123
+                            )
+                            Divider(
+                                modifier = Modifier
+                                    .height(50.dp)
+                                    .width(SmallStrokeThickness),
+                                color = MaterialTheme.colorScheme.outline
+                            )
+                            WorkerWageText(wage = 99.0f, isHalfDay = false)
+                            Divider(
+                                modifier = Modifier
+                                    .height(50.dp)
+                                    .width(SmallStrokeThickness),
+                                color = MaterialTheme.colorScheme.outline
+                            )
+                            WorkerWageText(wage = 59.0f, isHalfDay = true)
+                        }
+                        Spacer(modifier = Modifier.height(SizeLarge))
                     }
-                    Spacer(modifier = Modifier.height(SizeLarge))
-                    ButtonBetweenLines(text = stringResource(R.string.hire_now))
-                    Spacer(modifier = Modifier.height(SizeLarge))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceEvenly,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        RatingAndRatingCount(
-                            modifier = Modifier.clickable {
-                                onNavigate(Screen.ReviewAndRatingScreen.route)
-                            },
-                            rating = "4.5",
-                            ratingCount = 123
-                        )
-                        Divider(
-                            modifier = Modifier
-                                .height(50.dp)
-                                .width(SmallStrokeThickness),
-                            color = MaterialTheme.colorScheme.outline
-                        )
-                        WorkerWageText(wage = 99.0f, isHalfDay = false)
-                        Divider(
-                            modifier = Modifier
-                                .height(50.dp)
-                                .width(SmallStrokeThickness),
-                            color = MaterialTheme.colorScheme.outline
-                        )
-                        WorkerWageText(wage = 59.0f, isHalfDay = true)
-                    }
-                    Spacer(modifier = Modifier.height(SizeLarge))
                 }
-            }
-            item(
-                span = { GridItemSpan(3) }) {
-                SecondaryHeader(
-                    modifier = Modifier.padding(
-                        vertical = SizeMedium,
-                        horizontal = SizeMedium
-                    ),
-                    text = stringResource(R.string.x_s_works, state.profile?.firstName ?: ""),
-                    style = MaterialTheme.typography.titleMedium,
-                    moreOption = state.isOwnProfile,
-                    moreOptionText = stringResource(id = R.string.post_your_work),
-                    onMoreOptionClick = {
-                        onNavigate(Screen.PostSampleWorkScreen.route)
-                    }
-                )
-            }
-            items(25) {
-                val randomColor =
-                    Color(Random.nextInt(256), Random.nextInt(256), Random.nextInt(256))
-                Box(
-                    modifier = Modifier
-                        .aspectRatio(1f)
-                        .background(randomColor)
-                )
+                item(
+                    span = { GridItemSpan(3) }) {
+                    SecondaryHeader(
+                        modifier = Modifier.padding(
+                            vertical = SizeMedium,
+                            horizontal = SizeMedium
+                        ),
+                        text = stringResource(R.string.x_s_works, state.profile?.firstName ?: ""),
+                        style = MaterialTheme.typography.titleMedium,
+                        moreOption = state.isOwnProfile,
+                        moreOptionText = stringResource(id = R.string.post_your_work),
+                        onMoreOptionClick = {
+                            onNavigate(Screen.PostSampleWorkScreen.route)
+                        }
+                    )
+                }
+                items(25) {
+                    val randomColor =
+                        Color(Random.nextInt(256), Random.nextInt(256), Random.nextInt(256))
+                    Box(
+                        modifier = Modifier
+                            .aspectRatio(1f)
+                            .background(randomColor)
+                    )
+                }
             }
         }
     }

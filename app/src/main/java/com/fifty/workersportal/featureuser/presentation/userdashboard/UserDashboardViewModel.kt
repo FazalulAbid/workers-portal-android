@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fifty.workersportal.core.domain.usecase.GetOwnUserIdUseCase
+import com.fifty.workersportal.core.domain.util.Session
 import com.fifty.workersportal.core.presentation.util.UiEvent
 import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.Screen
@@ -28,8 +29,8 @@ class UserDashboardViewModel @Inject constructor(
 
     val visiblePermissionDialogQueue = mutableStateListOf<String>()
 
-    private val _bannersState = mutableStateOf(DashboardBannerState())
-    val bannersState: State<DashboardBannerState> = _bannersState
+    private val _state = mutableStateOf(UserDashboardState())
+    val state: State<UserDashboardState> = _state
 
     private val _suggestedCategoriesState = mutableStateOf(SuggestedCategoriesState())
     val suggestedCategoriesState: State<SuggestedCategoriesState> = _suggestedCategoriesState
@@ -40,6 +41,9 @@ class UserDashboardViewModel @Inject constructor(
     init {
         getBanners()
         getSuggestedCategories()
+        _state.value = state.value.copy(
+            userProfile = Session.userSession.value
+        )
     }
 
     fun onEvent(event: UserDashboardEvent) {
@@ -73,8 +77,7 @@ class UserDashboardViewModel @Inject constructor(
 
     private fun toggleFavouriteWorker(value: Boolean) {
         viewModelScope.launch {
-            val result = toggleFavouriteWorkerUseCase("648c4a6a9843bfdb80fb4e90", value)
-            when (result) {
+            when (toggleFavouriteWorkerUseCase("648c4a6a9843bfdb80fb4e90", value)) {
                 is Resource.Success -> {
 
                 }
@@ -104,7 +107,7 @@ class UserDashboardViewModel @Inject constructor(
         viewModelScope.launch {
             when (val result = getDashboardBannersUseCase()) {
                 is Resource.Success -> {
-                    _bannersState.value = _bannersState.value.copy(
+                    _state.value = state.value.copy(
                         banners = result.data ?: emptyList()
                     )
                 }

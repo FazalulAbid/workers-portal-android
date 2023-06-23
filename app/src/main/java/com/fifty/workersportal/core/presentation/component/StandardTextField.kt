@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
+import kotlin.math.max
 
 @Composable
 fun StandardTextField(
@@ -36,6 +37,7 @@ fun StandardTextField(
     textColor: Color = MaterialTheme.colorScheme.onSurface,
     cursorColor: Color = MaterialTheme.colorScheme.primary,
     value: String,
+    enabled: Boolean = true,
     maxLength: Int = 400,
     onValueChange: (String) -> Unit,
     singleLine: Boolean = true,
@@ -68,6 +70,8 @@ fun StandardTextField(
                     onValueChange(it)
                 }
             },
+            maxLines = maxLines,
+            enabled = enabled,
             readOnly = readOnly,
             singleLine = singleLine,
             cursorBrush = SolidColor(cursorColor),

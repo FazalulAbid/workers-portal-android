@@ -36,7 +36,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.ImageLoader
+import coil.annotation.ExperimentalCoilApi
+import coil.compose.rememberImagePainter
 import com.fifty.workersportal.R
+import com.fifty.workersportal.core.domain.util.Session
 import com.fifty.workersportal.core.presentation.component.HorizontalDivider
 import com.fifty.workersportal.core.presentation.component.StandardAppBar
 import com.fifty.workersportal.core.presentation.ui.theme.ExtraExtraLargeProfilePictureHeight
@@ -57,12 +61,13 @@ import com.maxkeppeker.sheets.core.models.base.SelectionButton
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import kotlinx.coroutines.flow.collectLatest
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalCoilApi::class)
 @Composable
 fun UserProfileScreen(
     onNavigate: (String) -> Unit,
     onNavigateWithPopBackStack: (String) -> Unit,
     onNavigateUp: () -> Unit,
+    imageLoader: ImageLoader,
     viewModel: UserProfileViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
@@ -114,8 +119,11 @@ fun UserProfileScreen(
                         .padding(SizeSmall)
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.plumber_profile),
-                        contentDescription = "Plumber description",
+                        painter = rememberImagePainter(
+                            data = state.userProfile?.profilePicture,
+                            imageLoader = imageLoader
+                        ),
+                        contentDescription = null,
                         Modifier
                             .size(ExtraExtraLargeProfilePictureHeight)
                             .clip(CircleShape),
@@ -125,8 +133,7 @@ fun UserProfileScreen(
                 Spacer(modifier = Modifier.height(SizeMedium))
                 Text(
                     modifier = Modifier.widthIn(max = screenWidth * 0.75f),
-                    text = "Fazalul Abid",
-//            text = "${state.profile?.firstName} ${state.profile?.lastName}",
+                    text = "${state.userProfile?.firstName} ${state.userProfile?.lastName}",
                     style = MaterialTheme.typography.titleLarge.copy(
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,
@@ -136,15 +143,17 @@ fun UserProfileScreen(
                     overflow = TextOverflow.Ellipsis
                 )
                 Spacer(modifier = Modifier.height(SizeSmall))
-                Text(
-                    text = "fazalulabid007@gmail.com",
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        color = MaterialTheme.colorScheme.onSurface
-                    ),
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 1
-                )
-                Spacer(modifier = Modifier.height(SizeLarge))
+                state.userProfile?.email?.let { email ->
+                    Text(
+                        text = email,
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            color = MaterialTheme.colorScheme.onSurface
+                        ),
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1
+                    )
+                    Spacer(modifier = Modifier.height(SizeLarge))
+                }
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()

@@ -4,6 +4,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fifty.workersportal.core.domain.util.Session
 import com.fifty.workersportal.core.presentation.util.UiEvent
 import com.fifty.workersportal.core.util.NavigationParent
 import com.fifty.workersportal.core.util.Resource
@@ -25,6 +26,12 @@ class UserProfileViewModel @Inject constructor(
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
+
+    init {
+        _state.value = state.value.copy(
+            userProfile = Session.userSession.value
+        )
+    }
 
     fun onEvent(event: UserProfileEvent) {
         when (event) {

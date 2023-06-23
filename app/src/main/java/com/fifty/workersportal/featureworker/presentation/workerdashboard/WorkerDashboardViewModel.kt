@@ -4,8 +4,11 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fifty.workersportal.core.domain.usecase.GetOwnUserIdUseCase
+import com.fifty.workersportal.core.domain.usecase.GetUserProfileDetailsUseCase
 import com.fifty.workersportal.core.presentation.util.UiEvent
 import com.fifty.workersportal.core.util.Resource
+import com.fifty.workersportal.core.util.UiText
 import com.fifty.workersportal.featureworker.domain.usecase.ToggleOpenToWorkUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -15,7 +18,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WorkerDashboardViewModel @Inject constructor(
-    private val toggleOpenToWorkUseCase: ToggleOpenToWorkUseCase
+    private val toggleOpenToWorkUseCase: ToggleOpenToWorkUseCase,
+    private val getOwnUserIdUseCase: GetOwnUserIdUseCase,
+    private val getUserProfileDetailsUseCase: GetUserProfileDetailsUseCase
 ) : ViewModel() {
 
     private val _state = mutableStateOf(WorkerDashboardState())
@@ -23,6 +28,12 @@ class WorkerDashboardViewModel @Inject constructor(
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
+
+    init {
+        viewModelScope.launch {
+            getUserDetails(getOwnUserIdUseCase())
+        }
+    }
 
     fun onEvent(event: WorkerDashboardEvent) {
         when (event) {
@@ -32,9 +43,37 @@ class WorkerDashboardViewModel @Inject constructor(
         }
     }
 
+    private suspend fun getUserDetails(userId: String) {
+        _state.value = state.value.copy(
+            isLoading = true
+        )
+        when (val result = getUserProfileDetailsUseCase(userId)) {
+            is Resource.Success -> {
+                _state.value = state.value.copy(
+                    profile = result.data,
+                    isLoading = false
+                )
+            }
+
+            is Resource.Error -> {
+                _state.value = state.value.copy(
+                    isLoading = false
+                )
+                _eventFlow.emit(
+                    UiEvent.MakeToast(result.uiText ?: UiText.unknownError()),
+                )
+                _eventFlow.emit(
+                    UiEvent.NavigateUp
+                )
+            }
+        }
+    }
+
     private fun toggleOpenToWork(value: Boolean) {
         _state.value = state.value.copy(
-            openToWork = value
+            profile = state.value.profile?.copy(
+                openToWork = value
+            )
         )
         viewModelScope.launch {
             when (toggleOpenToWorkUseCase(value)) {
@@ -42,7 +81,9 @@ class WorkerDashboardViewModel @Inject constructor(
 
                 is Resource.Error -> {
                     _state.value = state.value.copy(
-                        openToWork = !value
+                        profile = state.value.profile?.copy(
+                            openToWork = !value
+                        )
                     )
                 }
             }
