@@ -37,6 +37,7 @@ import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.ImageLoader
 import com.fifty.workersportal.R
+import com.fifty.workersportal.core.presentation.component.CameraPermissionTextProvider
 import com.fifty.workersportal.core.presentation.component.CoarseLocationPermissionTextProvider
 import com.fifty.workersportal.core.presentation.component.DashboardNavigationAndProfile
 import com.fifty.workersportal.core.presentation.component.HorizontalDivider

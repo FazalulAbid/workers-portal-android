@@ -4,14 +4,20 @@ import com.fifty.workersportal.core.data.dto.response.BasicApiResponse
 import com.fifty.workersportal.core.util.SimpleResource
 import com.fifty.workersportal.featureuser.data.remote.FavouriteUpdateRequest
 import com.fifty.workersportal.featureuser.data.remote.dto.ProfileDto
+import com.fifty.workersportal.featureuser.data.remote.request.SampleWorkRequest
 import com.fifty.workersportal.featureworker.data.remote.dto.CategoryDto
+import com.fifty.workersportal.featureworker.data.remote.dto.SampleWorkDto
 import com.fifty.workersportal.featureworker.domain.model.ReviewAndRating
+import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.Multipart
 import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.Part
 import retrofit2.http.Query
 
 interface WorkerApiService {
@@ -49,4 +55,11 @@ interface WorkerApiService {
     suspend fun removeWorkerFromFavourites(
         @Query("removedUserId") userId: String
     ): BasicApiResponse<String>
+
+    @Multipart
+    @POST("sample-work/add-sample-work")
+    suspend fun postSampleWork(
+        @Part imageUrl: MultipartBody.Part?,
+        @Part sampleWorkRequest: MultipartBody.Part
+    ): BasicApiResponse<SampleWorkDto>
 }

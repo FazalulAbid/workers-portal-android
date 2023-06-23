@@ -1,5 +1,7 @@
 package com.fifty.workersportal.featureworker.presentation.registerasworker
 
+import android.content.ContentResolver
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -90,6 +92,7 @@ fun PersonalDetailsSection(
         contract = ActivityResultContracts.GetContent()
     ) {
         if (it == null) return@rememberLauncherForActivityResult
+        Log.d("Hello", "PersonalDetailsSection: ")
         cropProfilePictureLauncher.launch(it)
     }
 

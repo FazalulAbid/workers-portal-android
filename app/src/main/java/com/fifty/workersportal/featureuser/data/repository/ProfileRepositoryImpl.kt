@@ -61,9 +61,7 @@ class ProfileRepositoryImpl(
         profilePictureUri: Uri?
     ): Resource<UserProfile> {
         val profilePictureFile = profilePictureUri?.toFile()
-
         return try {
-            Log.d("Hello", "updateUserProfile: $updateUserProfileData")
             val response = api.updateUserProfile(
                 profilePicture = profilePictureFile?.let {
                     MultipartBody.Part
