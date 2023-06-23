@@ -57,6 +57,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.times
+import androidx.compose.ui.window.DialogProperties
 import androidx.core.app.ActivityCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.ImageLoader
@@ -79,6 +80,11 @@ import com.fifty.workersportal.core.util.contentUriToFileUri
 import com.fifty.workersportal.core.util.openAppSettings
 import com.fifty.workersportal.featureworker.presentation.component.SelectImageSourceButton
 import com.fifty.workersportal.featureworker.util.SampleWorkError
+import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
+import com.maxkeppeler.sheets.state.StateDialog
+import com.maxkeppeler.sheets.state.models.ProgressIndicator
+import com.maxkeppeler.sheets.state.models.State
+import com.maxkeppeler.sheets.state.models.StateConfig
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -134,7 +140,10 @@ fun PostSampleWorkScreen(
 
                 is UiEvent.Navigate -> {
 //                    onNavigate(event.route)
-                    makeToast("Open camera here!", context)
+                }
+
+                UiEvent.NavigateUp -> {
+                    onNavigateUp()
                 }
 
                 else -> {}
@@ -337,6 +346,21 @@ fun PostSampleWorkScreen(
                 Spacer(modifier = Modifier.height(SizeLarge))
             }
         }
+    }
+
+    val fetchingDataLoadingState = State.Loading(
+        stringResource(id = R.string.posting_your_work),
+        ProgressIndicator.Circular()
+    )
+    if (state.isLoading) {
+        StateDialog(
+            properties = DialogProperties(
+                dismissOnClickOutside = false,
+                dismissOnBackPress = false
+            ),
+            state = rememberUseCaseState(visible = true),
+            config = StateConfig(state = fetchingDataLoadingState)
+        )
     }
 
     viewModel.visiblePermissionDialogQueue.reversed().forEach { permission ->

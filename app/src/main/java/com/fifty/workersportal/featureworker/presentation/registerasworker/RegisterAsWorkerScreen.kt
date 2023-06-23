@@ -1,7 +1,5 @@
 package com.fifty.workersportal.featureworker.presentation.registerasworker
 
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -284,7 +282,7 @@ fun RegisterAsWorkerScreen(
                 dismissOnClickOutside = false,
                 dismissOnBackPress = false
             ),
-            state = rememberUseCaseState(visible = state.isLoading),
+            state = rememberUseCaseState(visible = true),
             config = StateConfig(state = fetchingDataLoadingState)
         )
     }

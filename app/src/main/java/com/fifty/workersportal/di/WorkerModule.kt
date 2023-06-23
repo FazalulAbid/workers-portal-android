@@ -40,8 +40,8 @@ object WorkerModule {
 
     @Provides
     @Singleton
-    fun provideWorkerRepository(api: WorkerApiService, gson: Gson): WorkerRepository =
-        WorkerRepositoryImpl(api, gson)
+    fun provideWorkerRepository(api: WorkerApiService): WorkerRepository =
+        WorkerRepositoryImpl(api)
 
     @Provides
     @Singleton
@@ -100,5 +100,7 @@ object WorkerModule {
         repository: SampleWorkRepository
     ): PostSampleWorkUseCase =
         PostSampleWorkUseCase(repository)
+
+
 
 }

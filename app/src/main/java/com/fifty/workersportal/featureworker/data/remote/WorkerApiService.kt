@@ -62,4 +62,21 @@ interface WorkerApiService {
         @Part imageUrl: MultipartBody.Part?,
         @Part sampleWorkRequest: MultipartBody.Part
     ): BasicApiResponse<SampleWorkDto>
+
+    @GET("sample-work/get-sample-works")
+    suspend fun getSampleWorks(
+        @Query("page") page: Int,
+        @Query("pageSize") pageSize: Int,
+        @Query("userId") userId: String
+    ): BasicApiResponse<List<SampleWorkDto>>
+
+    @GET("sample-work/get-sample-work")
+    suspend fun getSampleWork(
+        @Query("id") sampleWorkId: String
+    ): BasicApiResponse<SampleWorkDto>
+
+    @DELETE("sample-work/delete-sample-work")
+    suspend fun deleteSampleWork(
+        @Query("id") sampleWorkId: String
+    ): BasicApiResponse<String>
 }

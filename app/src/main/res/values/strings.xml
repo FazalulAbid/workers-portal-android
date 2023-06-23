@@ -151,5 +151,6 @@
     <string name="description">Description</string>
     <string name="enter_work_details">Enter work details</string>
     <string name="please_select_an_image_to_post">Please select an image to post</string>
+    <string name="posting_your_work">Your work is posting...</string>
 
 </resources>
