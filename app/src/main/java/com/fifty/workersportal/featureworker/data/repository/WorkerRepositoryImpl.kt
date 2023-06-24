@@ -5,6 +5,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import coil.network.HttpException
 import com.fifty.workersportal.R
+import com.fifty.workersportal.core.data.dto.response.BasicApiResponse
 import com.fifty.workersportal.core.util.Constants
 import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.SimpleResource

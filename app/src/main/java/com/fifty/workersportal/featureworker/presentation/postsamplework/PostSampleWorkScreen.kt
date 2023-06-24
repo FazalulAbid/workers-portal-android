@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -56,6 +57,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.app.ActivityCompat
@@ -63,6 +65,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.ImageLoader
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.presentation.component.CameraPermissionTextProvider
 import com.fifty.workersportal.core.presentation.component.PermissionDialog
@@ -103,6 +110,13 @@ fun PostSampleWorkScreen(
     val focusManager = LocalFocusManager.current
     val state = viewModel.state.value
     val imageSourceSheetState = rememberModalBottomSheetState()
+    val addImageLottieComposition by rememberLottieComposition(
+        LottieCompositionSpec.RawRes(R.raw.image_add_lottie)
+    )
+    val addImageLottieProgress by animateLottieCompositionAsState(
+        composition = addImageLottieComposition, iterations = LottieConstants.IterateForever
+    )
+
 
     val permissionsToRequest = arrayOf(
         Manifest.permission.CAMERA
@@ -127,7 +141,6 @@ fun PostSampleWorkScreen(
         val fileUri = contentUriToFileUri(context = context, it)
         fileUri?.let {
             viewModel.onEvent(PostSampleWorkEvent.PickImage(fileUri))
-            Log.d("Hello", "PostSampleWorkScreen: $fileUri")
         }
     }
 
@@ -223,9 +236,10 @@ fun PostSampleWorkScreen(
                         },
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_camera),
-                        contentDescription = null
+                    LottieAnimation(
+                        modifier = Modifier.size(200.dp),
+                        composition = addImageLottieComposition,
+                        progress = addImageLottieProgress
                     )
                 }
             }
