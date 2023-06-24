@@ -24,6 +24,7 @@ interface ProfileApiService {
     @PUT("profile/register-as-worker")
     suspend fun updateProfileForWorker(
         @Part profilePicture: MultipartBody.Part?,
+        @Part identityPicture: MultipartBody.Part?,
         @Part updateProfileForWorkerRequest: MultipartBody.Part
     ): BasicApiResponse<ProfileDto>
 

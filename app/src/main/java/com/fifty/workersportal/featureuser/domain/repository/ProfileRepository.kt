@@ -20,6 +20,7 @@ interface ProfileRepository {
 
     suspend fun updateProfileForWorker(
         updateProfileForWorkerRequest: UpdateProfileForWorkerRequest,
-        profilePictureUri: Uri?
+        profilePictureUri: Uri?,
+        identityPictureUri: Uri?
     ): Resource<Profile>
 }

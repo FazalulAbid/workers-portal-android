@@ -44,6 +44,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
@@ -92,7 +93,6 @@ fun PersonalDetailsSection(
         contract = ActivityResultContracts.GetContent()
     ) {
         if (it == null) return@rememberLauncherForActivityResult
-        Log.d("Hello", "PersonalDetailsSection: ")
         cropProfilePictureLauncher.launch(it)
     }
 
@@ -139,7 +139,10 @@ fun PersonalDetailsSection(
                 SecondaryHeader(
                     modifier = Modifier.padding(vertical = SizeMedium),
                     text = stringResource(R.string.enter_your_personal_info),
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        color = MaterialTheme.colorScheme.onBackground,
+                        fontWeight = FontWeight.SemiBold
+                    ),
                 )
                 Row(
                     modifier = Modifier.fillMaxWidth()

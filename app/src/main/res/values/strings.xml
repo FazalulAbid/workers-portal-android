@@ -154,5 +154,8 @@
     <string name="posting_your_work">Your work is posting...</string>
     <string name="chats">Chats</string>
     <string name="your_chats">Your chats</string>
+    <string name="identity">Identity</string>
+    <string name="pick_any_identity_document">Pick any identity document</string>
+    <string name="click_to_upload_you_identity_document">Click to upload you identity document</string>
 
 </resources>

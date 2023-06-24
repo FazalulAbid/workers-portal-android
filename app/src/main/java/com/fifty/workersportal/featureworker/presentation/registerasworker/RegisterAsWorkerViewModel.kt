@@ -70,6 +70,9 @@ class RegisterAsWorkerViewModel @Inject constructor(
     private val _profileImageUri = mutableStateOf<Uri?>(null)
     val profileImageUri: State<Uri?> = _profileImageUri
 
+    private val _identityImageUri = mutableStateOf<Uri?>(null)
+    val identityImageUri: State<Uri?> = _identityImageUri
+
     private val _updateWorkerState = mutableStateOf(UpdateWorkerState())
     val updateWorkerState: State<UpdateWorkerState> = _updateWorkerState
 
@@ -98,6 +101,10 @@ class RegisterAsWorkerViewModel @Inject constructor(
 
             is RegisterAsWorkerEvent.CropProfilePicture -> {
                 _profileImageUri.value = event.uri
+            }
+
+            is RegisterAsWorkerEvent.CropIdentityPicture -> {
+                _identityImageUri.value = event.uri
             }
 
             is RegisterAsWorkerEvent.EnterAge -> {

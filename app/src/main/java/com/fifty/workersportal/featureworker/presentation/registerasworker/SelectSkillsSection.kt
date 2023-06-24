@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.presentation.component.SecondaryHeader
 import com.fifty.workersportal.core.presentation.ui.theme.SizeLarge
@@ -33,9 +34,12 @@ fun SelectSkillsSection(
             .fillMaxSize()
     ) {
         SecondaryHeader(
-            modifier = Modifier.padding(SizeMedium),
+            modifier = Modifier.padding(vertical = SizeMedium),
             text = stringResource(R.string.select_your_skills),
-            style = MaterialTheme.typography.titleMedium
+            style = MaterialTheme.typography.titleMedium.copy(
+                color = MaterialTheme.colorScheme.onBackground,
+                fontWeight = FontWeight.SemiBold
+            ),
         )
         Text(
             text = stringResource(id = R.string.you_can_customize_your_wages_from_the_next_page),

@@ -17,7 +17,8 @@ class UpdateUserAsWorkerUseCase(
 ) {
     suspend operator fun invoke(
         updateWorkerData: UpdateWorkerData,
-        profilePictureUri: Uri?
+        profilePictureUri: Uri?,
+        identityPictureUri: Uri?
     ): UpdateWorkerResult {
         val firstNameError = ValidationUtil.validateFirstName(updateWorkerData.firstName)
         val emailError = ValidationUtil.validateEmail(updateWorkerData.email)
@@ -63,7 +64,8 @@ class UpdateUserAsWorkerUseCase(
                     },
                     primaryCategory = updateWorkerData.primarySkill?.id ?: ""
                 ),
-                profilePictureUri = profilePictureUri
+                profilePictureUri = profilePictureUri,
+                identityPictureUri = identityPictureUri
             ).data
 
             result?.let {

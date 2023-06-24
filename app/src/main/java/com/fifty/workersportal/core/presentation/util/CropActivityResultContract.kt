@@ -11,22 +11,25 @@ import com.yalantis.ucrop.UCropActivity
 import java.io.File
 
 class CropActivityResultContract(
-    private val aspectRatioX: Float,
-    private val aspectRatioY: Float
+    private val aspectRatioX: Float? = null,
+    private val aspectRatioY: Float? = null
 ) : ActivityResultContract<Uri, Uri?>() {
 
     override fun createIntent(context: Context, input: Uri): Intent {
-        return UCrop.of(
-            input,
-            Uri.fromFile(
-                File(
-                    context.cacheDir,
-                    context.contentResolver.getFileName(input)
-                )
+        val imageUri = Uri.fromFile(
+            File(
+                context.cacheDir,
+                context.contentResolver.getFileName(input)
             )
         )
-            .withAspectRatio(aspectRatioX, aspectRatioY)
-            .getIntent(context)
+        return if (aspectRatioX != null && aspectRatioY != null) {
+            UCrop.of(input, imageUri)
+                .withAspectRatio(aspectRatioX, aspectRatioY)
+                .getIntent(context)
+        } else {
+            UCrop.of(input, imageUri)
+                .getIntent(context)
+        }
     }
 
     override fun parseResult(resultCode: Int, intent: Intent?): Uri? {

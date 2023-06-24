@@ -65,7 +65,7 @@ fun RegisterPagerNavItem(
                 }
         ) {
             Text(
-                modifier = Modifier.padding(horizontal = SizeMedium, vertical = SizeSmall),
+                modifier = Modifier.padding(vertical = SizeSmall),
                 text = text,
                 style = MaterialTheme.typography.bodyLarge.copy(
                     color = if (selected) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onSurface,

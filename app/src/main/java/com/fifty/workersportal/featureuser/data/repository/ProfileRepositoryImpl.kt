@@ -128,7 +128,8 @@ class ProfileRepositoryImpl(
 
     override suspend fun updateProfileForWorker(
         updateProfileForWorkerRequest: UpdateProfileForWorkerRequest,
-        profilePictureUri: Uri?
+        profilePictureUri: Uri?,
+        identityPictureUri: Uri?
     ): Resource<Profile> {
         val profilePictureFile = profilePictureUri?.toFile()
 
@@ -138,6 +139,14 @@ class ProfileRepositoryImpl(
                     MultipartBody.Part
                         .createFormData(
                             "profilePicture",
+                            profilePictureFile.name,
+                            profilePictureFile.asRequestBody()
+                        )
+                },
+                identityPicture = profilePictureFile?.let {
+                    MultipartBody.Part
+                        .createFormData(
+                            "identity",
                             profilePictureFile.name,
                             profilePictureFile.asRequestBody()
                         )

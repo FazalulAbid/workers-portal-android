@@ -1,9 +1,11 @@
 package com.fifty.workersportal.featureworker.presentation.registerasworker
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -186,6 +188,7 @@ fun RegisterAsWorkerScreen(
         )
         val pages = listOf(
             stringResource(id = R.string.personal),
+            stringResource(id = R.string.identity),
             stringResource(id = R.string.skills),
             stringResource(id = R.string.wages),
         )
@@ -210,10 +213,17 @@ fun RegisterAsWorkerScreen(
                 }
 
                 1 -> {
-                    SelectSkillsSection(viewModel = viewModel)
+                    IdentitySection(
+                        viewModel = viewModel,
+                        imageLoader = imageLoader
+                    )
                 }
 
                 2 -> {
+                    SelectSkillsSection(viewModel = viewModel)
+                }
+
+                3 -> {
                     SkillWagesSection(
                         viewModel = viewModel,
                         focusManager = focusManager
@@ -221,7 +231,12 @@ fun RegisterAsWorkerScreen(
                 }
             }
         }
-        Row(modifier = Modifier.padding(SizeMedium)) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = SizeMedium),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
             repeat(pages.size) { index ->
                 RegisterPagerNavItem(
                     text = pages[index],
