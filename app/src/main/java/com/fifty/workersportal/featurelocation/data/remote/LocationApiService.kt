@@ -19,4 +19,14 @@ interface LocationApiService {
     suspend fun getAddressesOfUser(
         @Query("userId") userId: String
     ): BasicApiResponse<List<LocalAddressDto>>
+
+    @GET("address/get-address")
+    suspend fun getAddress(
+        @Query("id") addressId: String
+    ): BasicApiResponse<LocalAddressDto>
+
+    @GET("address/set-selected-address")
+    suspend fun setSelectedAddress(
+        @Query("addressId") addressId: String
+    ): BasicApiResponse<String>
 }

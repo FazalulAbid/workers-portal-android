@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fifty.workersportal.core.domain.usecase.GetOwnUserIdUseCase
-import com.fifty.workersportal.core.domain.usecase.GetUserProfileDetailsUseCase
+import com.fifty.workersportal.core.domain.usecase.GetProfileDetailsUseCase
 import com.fifty.workersportal.core.presentation.util.UiEvent
 import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.UiText
@@ -20,7 +20,7 @@ import javax.inject.Inject
 class WorkerDashboardViewModel @Inject constructor(
     private val toggleOpenToWorkUseCase: ToggleOpenToWorkUseCase,
     private val getOwnUserIdUseCase: GetOwnUserIdUseCase,
-    private val getUserProfileDetailsUseCase: GetUserProfileDetailsUseCase
+    private val getProfileDetailsUseCase: GetProfileDetailsUseCase
 ) : ViewModel() {
 
     private val _state = mutableStateOf(WorkerDashboardState())
@@ -47,7 +47,7 @@ class WorkerDashboardViewModel @Inject constructor(
         _state.value = state.value.copy(
             isLoading = true
         )
-        when (val result = getUserProfileDetailsUseCase(userId)) {
+        when (val result = getProfileDetailsUseCase(userId)) {
             is Resource.Success -> {
                 _state.value = state.value.copy(
                     profile = result.data,

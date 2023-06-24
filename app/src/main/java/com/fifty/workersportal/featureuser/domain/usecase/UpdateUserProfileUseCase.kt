@@ -1,8 +1,6 @@
 package com.fifty.workersportal.featureuser.domain.usecase
 
 import android.net.Uri
-import android.util.Log
-import com.fifty.workersportal.core.domain.util.Session
 import com.fifty.workersportal.core.domain.util.ValidationUtil
 import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.UiText
@@ -30,7 +28,6 @@ class UpdateUserProfileUseCase(
                 ageError = ageError,
             )
         } else {
-            Log.d("Hello", "updateUserProfile: $updateUserProfileData")
             val result = profileRepository.updateUserProfile(
                 UpdateUserProfileData(
                     firstName = updateUserProfileData.firstName,
@@ -42,8 +39,8 @@ class UpdateUserProfileUseCase(
                 profilePictureUri = profilePictureUri
             ).data
 
-            result?.let { profile ->
-                return UpdateUserProfileResult(result = Resource.Success(data = profile))
+            result?.let {
+                return UpdateUserProfileResult(result = Resource.Success(Unit))
             } ?: return UpdateUserProfileResult(result = Resource.Error(UiText.unknownError()))
         }
     }

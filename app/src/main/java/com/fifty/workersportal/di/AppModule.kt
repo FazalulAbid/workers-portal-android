@@ -56,6 +56,7 @@ object AppModule {
     fun provideImageLoader(app: Application): ImageLoader =
         ImageLoader.Builder(app)
             .crossfade(true)
+            .crossfade(200)
             .componentRegistry {
                 add(SvgDecoder(app))
             }

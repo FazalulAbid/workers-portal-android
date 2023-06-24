@@ -41,9 +41,6 @@ class UserDashboardViewModel @Inject constructor(
     init {
         getBanners()
         getSuggestedCategories()
-        _state.value = state.value.copy(
-            userProfile = Session.userSession.value
-        )
     }
 
     fun onEvent(event: UserDashboardEvent) {

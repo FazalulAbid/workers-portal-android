@@ -30,10 +30,12 @@ fun NavGraphBuilder.userNavGraph(
             )
         }
         composable(Screen.UserProfileScreen.route) {
+            val isUserProfileUpdated = it.savedStateHandle.get<Boolean>("isUserProfileUpdated")
             UserProfileScreen(
                 onNavigate = navController::navigate,
                 onNavigateUp = navController::navigateUp,
                 imageLoader = imageLoader,
+                isUserUpdated = isUserProfileUpdated == true,
                 onNavigateWithPopBackStack = { route ->
                     navController.navigate(route) {
                         popUpTo(0)
@@ -43,8 +45,8 @@ fun NavGraphBuilder.userNavGraph(
         }
         composable(Screen.UpdateUserProfileScreen.route) {
             UpdateUserProfileScreen(
-                onNavigate = navController::navigate,
                 onNavigateUp = navController::navigateUp,
+                previousBackStackEntry = navController.previousBackStackEntry
             )
         }
     }

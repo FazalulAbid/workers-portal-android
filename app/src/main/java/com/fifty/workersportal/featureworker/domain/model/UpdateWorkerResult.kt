@@ -14,5 +14,5 @@ data class UpdateWorkerResult(
     val primarySkillError: ProfileError? = null,
     val skillsWageError: ProfileError? = null,
     val unknownError: ProfileError? = null,
-    val result: Resource<Profile>? = null
+    val result: SimpleResource? = null
 )

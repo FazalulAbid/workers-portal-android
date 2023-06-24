@@ -53,6 +53,7 @@ import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
 import com.fifty.workersportal.core.presentation.util.UiEvent
 import com.fifty.workersportal.core.util.Screen
+import com.fifty.workersportal.featureworker.presentation.workerprofile.WorkerProfileEvent
 import com.maxkeppeker.sheets.core.CoreDialog
 import com.maxkeppeker.sheets.core.models.CoreSelection
 import com.maxkeppeker.sheets.core.models.base.ButtonStyle
@@ -67,6 +68,7 @@ fun UserProfileScreen(
     onNavigate: (String) -> Unit,
     onNavigateWithPopBackStack: (String) -> Unit,
     onNavigateUp: () -> Unit,
+    isUserUpdated: Boolean,
     imageLoader: ImageLoader,
     viewModel: UserProfileViewModel = hiltViewModel()
 ) {
@@ -74,6 +76,12 @@ fun UserProfileScreen(
     val state = viewModel.state.value
     val screenWidth = with(LocalConfiguration.current) { screenWidthDp.dp }
     val logoutDialogState = rememberUseCaseState()
+
+    LaunchedEffect(Unit) {
+        if (isUserUpdated) {
+            viewModel.onEvent(UserProfileEvent.UserProfileUpdated)
+        }
+    }
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->

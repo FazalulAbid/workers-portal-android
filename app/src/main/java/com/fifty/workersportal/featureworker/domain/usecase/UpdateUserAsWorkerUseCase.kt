@@ -5,8 +5,8 @@ import com.fifty.workersportal.core.domain.util.ValidationUtil
 import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.UiText
 import com.fifty.workersportal.featureuser.domain.repository.ProfileRepository
-import com.fifty.workersportal.featureworker.data.remote.request.WorkerCategoryRequest
 import com.fifty.workersportal.featureworker.data.remote.request.UpdateProfileForWorkerRequest
+import com.fifty.workersportal.featureworker.data.remote.request.WorkerCategoryRequest
 import com.fifty.workersportal.featureworker.domain.model.UpdateWorkerData
 import com.fifty.workersportal.featureworker.domain.model.UpdateWorkerResult
 import com.fifty.workersportal.featureworker.util.ProfileError
@@ -66,8 +66,8 @@ class UpdateUserAsWorkerUseCase(
                 profilePictureUri = profilePictureUri
             ).data
 
-            result?.let { profile ->
-                return UpdateWorkerResult(result = Resource.Success(data = profile))
+            result?.let {
+                return UpdateWorkerResult(result = Resource.Success(Unit))
             } ?: return UpdateWorkerResult(result = Resource.Error(UiText.unknownError()))
         }
     }

@@ -62,6 +62,7 @@ import androidx.compose.ui.unit.times
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.app.ActivityCompat
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavBackStackEntry
 import coil.ImageLoader
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
@@ -100,6 +101,7 @@ import kotlinx.coroutines.launch
 fun PostSampleWorkScreen(
     onNavigateUp: () -> Unit,
     imageLoader: ImageLoader,
+    previousBackStackEntry: NavBackStackEntry?,
     viewModel: PostSampleWorkViewModel = hiltViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -155,6 +157,7 @@ fun PostSampleWorkScreen(
                 }
 
                 UiEvent.NavigateUp -> {
+                    previousBackStackEntry?.savedStateHandle?.set("isSampleWorkAdded", true)
                     onNavigateUp()
                 }
 

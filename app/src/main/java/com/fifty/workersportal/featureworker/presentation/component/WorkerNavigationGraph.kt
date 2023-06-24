@@ -38,7 +38,8 @@ fun NavGraphBuilder.workerNavGraph(
         composable(Screen.RegisterAsWorkerScreen.route) {
             RegisterAsWorkerScreen(
                 onNavigateUp = navController::navigateUp,
-                imageLoader = imageLoader
+                imageLoader = imageLoader,
+                previousBackStackEntry = navController.previousBackStackEntry
             )
         }
         composable(Screen.WorkerDashboardScreen.route) {
@@ -70,10 +71,15 @@ fun NavGraphBuilder.workerNavGraph(
                     defaultValue = null
                 }
             )
-        ) {
+        ) { entry ->
+            val isSampleWorkAdded = entry.savedStateHandle.get<Boolean>("isSampleWorkAdded")
+            val isWorkerProfileUpdated =
+                entry.savedStateHandle.get<Boolean>("isWorkerProfileUpdated")
             WorkerProfileScreen(
                 onNavigate = navController::navigate,
                 onNavigateUp = navController::navigateUp,
+                isSampleWorkAdded = isSampleWorkAdded == true,
+                isWorkerProfileUpdated = isWorkerProfileUpdated == true,
                 imageLoader = imageLoader
             )
         }
@@ -92,7 +98,8 @@ fun NavGraphBuilder.workerNavGraph(
         composable(Screen.PostSampleWorkScreen.route) {
             PostSampleWorkScreen(
                 onNavigateUp = navController::navigateUp,
-                imageLoader = imageLoader
+                imageLoader = imageLoader,
+                previousBackStackEntry = navController.previousBackStackEntry
             )
         }
     }

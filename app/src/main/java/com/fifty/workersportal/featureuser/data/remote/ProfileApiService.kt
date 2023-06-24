@@ -17,8 +17,7 @@ interface ProfileApiService {
 
     @GET("profile/get-user-details")
     suspend fun getUserProfileDetails(
-        @Query("id") userId: String,
-        @Query("needSampleWorks") needSampleWorks: Boolean
+        @Query("id") userId: String
     ): BasicApiResponse<ProfileDto>
 
     @Multipart

@@ -9,14 +9,13 @@ import androidx.lifecycle.viewModelScope
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.domain.state.StandardTextFieldState
 import com.fifty.workersportal.core.domain.usecase.GetOwnUserIdUseCase
-import com.fifty.workersportal.core.domain.usecase.GetUserProfileDetailsUseCase
+import com.fifty.workersportal.core.domain.usecase.GetProfileDetailsUseCase
 import com.fifty.workersportal.core.domain.util.Session
 import com.fifty.workersportal.core.domain.util.ValidationUtil
 import com.fifty.workersportal.core.presentation.util.UiEvent
 import com.fifty.workersportal.core.util.Constants.genderOptions
 import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.UiText
-import com.fifty.workersportal.featureauth.domain.usecase.SaveUserIdUseCase
 import com.fifty.workersportal.featureworker.domain.model.UpdateWorkerData
 import com.fifty.workersportal.featureworker.domain.model.WorkerCategory
 import com.fifty.workersportal.featureworker.domain.usecase.GetCategoriesUseCase
@@ -24,6 +23,7 @@ import com.fifty.workersportal.featureworker.domain.usecase.SetSkillSelectedUseC
 import com.fifty.workersportal.featureworker.domain.usecase.UpdateUserAsWorkerUseCase
 import com.fifty.workersportal.featureworker.util.ProfileError
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
@@ -33,7 +33,7 @@ import javax.inject.Inject
 class RegisterAsWorkerViewModel @Inject constructor(
     private val getOwnUserId: GetOwnUserIdUseCase,
     private val getCategories: GetCategoriesUseCase,
-    private val getUserProfileDetails: GetUserProfileDetailsUseCase,
+    private val getUserProfileDetails: GetProfileDetailsUseCase,
     private val setSkillSelected: SetSkillSelectedUseCase,
     private val updateUserAsWorker: UpdateUserAsWorkerUseCase,
 ) : ViewModel() {
@@ -303,7 +303,7 @@ class RegisterAsWorkerViewModel @Inject constructor(
     }
 
     private fun updateWorker() {
-        _updateWorkerState.value = UpdateWorkerState(
+        _updateWorkerState.value = updateWorkerState.value.copy(
             isLoading = true,
             loadingText = R.string.updating_worker_data
         )
@@ -365,12 +365,10 @@ class RegisterAsWorkerViewModel @Inject constructor(
             } else {
                 when (updateWorkerResult.result) {
                     is Resource.Success -> {
-                        val profile = updateWorkerResult.result.data
-                        profile?.let {
-                            Session.userSession.value = it.toUserProfile()
-                            _onUpdate.emit(Unit)
-                        }
-                        _updateWorkerState.value = UpdateWorkerState(isLoading = false)
+                        _onUpdate.emit(Unit)
+                        _updateWorkerState.value = updateWorkerState.value.copy(
+                            isLoading = false
+                        )
                     }
 
                     is Resource.Error -> {
@@ -379,11 +377,15 @@ class RegisterAsWorkerViewModel @Inject constructor(
                                 uiText = updateWorkerResult.result.uiText ?: UiText.unknownError()
                             )
                         )
-                        _updateWorkerState.value = UpdateWorkerState(isLoading = false)
+                        _updateWorkerState.value = updateWorkerState.value.copy(
+                            isLoading = false
+                        )
                     }
 
                     null -> {
-                        _updateWorkerState.value = UpdateWorkerState(isLoading = false)
+                        _updateWorkerState.value = updateWorkerState.value.copy(
+                            isLoading = false
+                        )
                     }
                 }
             }

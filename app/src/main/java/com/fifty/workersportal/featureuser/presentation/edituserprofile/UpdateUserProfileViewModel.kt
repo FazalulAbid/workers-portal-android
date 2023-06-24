@@ -8,17 +8,17 @@ import androidx.lifecycle.viewModelScope
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.domain.state.StandardTextFieldState
 import com.fifty.workersportal.core.domain.usecase.GetOwnUserIdUseCase
-import com.fifty.workersportal.core.domain.usecase.GetUserProfileDetailsUseCase
+import com.fifty.workersportal.core.domain.usecase.GetProfileDetailsUseCase
 import com.fifty.workersportal.core.domain.util.Session
 import com.fifty.workersportal.core.presentation.util.UiEvent
 import com.fifty.workersportal.core.util.Constants
 import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.UiText
-import com.fifty.workersportal.featureauth.domain.usecase.SaveUserIdUseCase
 import com.fifty.workersportal.featureuser.domain.model.UpdateUserProfileData
 import com.fifty.workersportal.featureuser.domain.usecase.UpdateUserProfileUseCase
 import com.fifty.workersportal.featureworker.util.ProfileError
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
@@ -28,7 +28,7 @@ import javax.inject.Inject
 class UpdateUserProfileViewModel @Inject constructor(
     private val updateUserProfileUseCase: UpdateUserProfileUseCase,
     private val getOwnUserId: GetOwnUserIdUseCase,
-    private val userProfileDetailsUseCase: GetUserProfileDetailsUseCase,
+    private val userProfileDetailsUseCase: GetProfileDetailsUseCase,
 ) : ViewModel() {
 
     private val _firstNameState = mutableStateOf(StandardTextFieldState())
@@ -57,9 +57,6 @@ class UpdateUserProfileViewModel @Inject constructor(
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
-
-    private val _onUpdateUserProfile = MutableSharedFlow<Unit>(replay = 1)
-    val onUpdateUserProfile = _onUpdateUserProfile.asSharedFlow()
 
     init {
         viewModelScope.launch {
@@ -159,7 +156,7 @@ class UpdateUserProfileViewModel @Inject constructor(
     }
 
     private fun updateUserProfile() {
-        _updateUserProfileState.value = UpdateUserProfileState(
+        _updateUserProfileState.value = updateUserProfileState.value.copy(
             isLoading = true,
             loadingText = R.string.updating_user_data
         )
@@ -194,12 +191,11 @@ class UpdateUserProfileViewModel @Inject constructor(
             } else {
                 when (updateUserProfileResult.result) {
                     is Resource.Success -> {
-                        val profile = updateUserProfileResult.result.data
-                        profile?.let {
-                            Session.userSession.value = it
-                            _onUpdateUserProfile.emit(Unit)
-                        }
-                        _updateUserProfileState.value = UpdateUserProfileState(isLoading = false)
+                        delay(1000L)
+                        _updateUserProfileState.value = updateUserProfileState.value.copy(
+                            isLoading = false,
+                        )
+                        _eventFlow.emit(UiEvent.NavigateUp)
                     }
 
                     is Resource.Error -> {
@@ -209,11 +205,15 @@ class UpdateUserProfileViewModel @Inject constructor(
                                     ?: UiText.unknownError()
                             )
                         )
-                        _updateUserProfileState.value = UpdateUserProfileState(isLoading = false)
+                        _updateUserProfileState.value = updateUserProfileState.value.copy(
+                            isLoading = false,
+                        )
                     }
 
                     null -> {
-                        _updateUserProfileState.value = UpdateUserProfileState(isLoading = false)
+                        _updateUserProfileState.value = updateUserProfileState.value.copy(
+                            isLoading = false,
+                        )
                     }
                 }
             }

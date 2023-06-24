@@ -1,5 +1,6 @@
 package com.fifty.workersportal.featureworker.data.paging
 
+import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.fifty.workersportal.core.util.Constants
@@ -17,12 +18,15 @@ class SampleWorkSource(
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, SampleWork> {
         return try {
+            Log.d("Hello", "load: Paging source worked")
             val nextPage = params.key ?: currentPage
             val sampleWorks = api.getSampleWorks(
                 page = nextPage,
                 pageSize = Constants.DEFAULT_PAGINATION_SIZE,
                 userId = userId
             ).data ?: emptyList()
+
+            Log.d("Hello", "load: Sample Works = $sampleWorks")
 
             LoadResult.Page(
                 data = sampleWorks.map { it.toSampleWork() },

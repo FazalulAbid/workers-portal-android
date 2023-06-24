@@ -3,15 +3,13 @@ package com.fifty.workersportal.featureworker.presentation.workerprofile
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.LocalOverscrollConfiguration
-import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,7 +21,6 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
@@ -32,12 +29,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -51,10 +49,11 @@ import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.domain.util.Session
+import com.fifty.workersportal.core.presentation.component.HorizontalDivider
 import com.fifty.workersportal.core.presentation.component.SecondaryHeader
 import com.fifty.workersportal.core.presentation.component.StandardAppBar
 import com.fifty.workersportal.core.presentation.ui.theme.ExtraExtraLargeProfilePictureHeight
-import com.fifty.workersportal.core.presentation.ui.theme.LargeProfilePictureHeight
+import com.fifty.workersportal.core.presentation.ui.theme.LargeStrokeThickness
 import com.fifty.workersportal.core.presentation.ui.theme.SizeExtraSmall
 import com.fifty.workersportal.core.presentation.ui.theme.SizeLarge
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
@@ -63,14 +62,12 @@ import com.fifty.workersportal.core.presentation.ui.theme.SkyBlueColor
 import com.fifty.workersportal.core.presentation.ui.theme.SmallStrokeThickness
 import com.fifty.workersportal.core.util.Screen
 import com.fifty.workersportal.featureworker.presentation.component.ButtonBetweenLines
-import com.fifty.workersportal.featureworker.presentation.component.CategoryItem
 import com.fifty.workersportal.featureworker.presentation.component.Chip
 import com.fifty.workersportal.featureworker.presentation.component.RatingAndRatingCount
 import com.fifty.workersportal.featureworker.presentation.component.SampleWorkItem
 import com.fifty.workersportal.featureworker.presentation.component.WorkerWageText
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
-import kotlin.random.Random
 
 @OptIn(ExperimentalCoilApi::class, ExperimentalFoundationApi::class)
 @Composable
@@ -78,6 +75,8 @@ fun WorkerProfileScreen(
     isVerified: Boolean = true,
     onNavigate: (String) -> Unit = {},
     onNavigateUp: () -> Unit = {},
+    isSampleWorkAdded: Boolean,
+    isWorkerProfileUpdated: Boolean,
     imageLoader: ImageLoader,
     viewModel: WorkerProfileViewModel = hiltViewModel()
 ) {
@@ -85,6 +84,15 @@ fun WorkerProfileScreen(
     val screenWidth = with(LocalConfiguration.current) { screenWidthDp.dp }
     val sampleWorks =
         viewModel.sampleWorks.collectAsLazyPagingItems()
+
+    LaunchedEffect(Unit) {
+        if (isSampleWorkAdded) {
+            viewModel.onEvent(WorkerProfileEvent.UpdateSampleWorks)
+        }
+        if (isWorkerProfileUpdated) {
+            viewModel.onEvent(WorkerProfileEvent.UpdateWorkerProfileDetails)
+        }
+    }
 
     Column(
         Modifier.fillMaxSize(),
@@ -130,17 +138,27 @@ fun WorkerProfileScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Spacer(modifier = Modifier.height(SizeMedium))
-                        Image(
-                            painter = rememberImagePainter(
-                                data = state.profile?.profilePicture,
-                                imageLoader = imageLoader
-                            ),
-                            contentDescription = null,
-                            Modifier
-                                .size(ExtraExtraLargeProfilePictureHeight)
-                                .clip(CircleShape),
-                            contentScale = ContentScale.Crop
-                        )
+                        Box(
+                            modifier = Modifier
+                                .border(
+                                    width = LargeStrokeThickness,
+                                    shape = CircleShape,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                                .padding(SizeSmall)
+                        ) {
+                            Image(
+                                painter = rememberImagePainter(
+                                    data = state.profile?.profilePicture,
+                                    imageLoader = imageLoader
+                                ),
+                                contentDescription = null,
+                                Modifier
+                                    .size(ExtraExtraLargeProfilePictureHeight)
+                                    .clip(CircleShape),
+                                contentScale = ContentScale.Crop
+                            )
+                        }
                         Spacer(modifier = Modifier.height(SizeMedium))
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
@@ -218,7 +236,7 @@ fun WorkerProfileScreen(
                             }
                         }
                         Spacer(modifier = Modifier.height(SizeLarge))
-                        ButtonBetweenLines(text = stringResource(R.string.hire_now))
+                        HorizontalDivider()
                         Spacer(modifier = Modifier.height(SizeLarge))
                         Row(
                             modifier = Modifier.fillMaxWidth(),

@@ -1,6 +1,5 @@
 package com.fifty.workersportal.featureworker.presentation.workerdashboard
 
-import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalOverscrollConfiguration
 import androidx.compose.foundation.layout.Arrangement
@@ -21,6 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.ImageLoader
 import com.fifty.workersportal.R
+import com.fifty.workersportal.core.domain.util.Session
 import com.fifty.workersportal.core.presentation.component.DashboardNavigationAndProfile
 import com.fifty.workersportal.core.presentation.component.HorizontalDivider
 import com.fifty.workersportal.core.presentation.component.PrimaryHeader
@@ -78,7 +78,7 @@ fun WorkerDashboardScreen(
                 verticalArrangement = Arrangement.Center
             ) {
                 DashboardNavigationAndProfile(
-                    profileImageUrl = state.profile?.profilePicture ?: "",
+                    profileImageUrl = Session.userSession.value?.profilePicture ?: "",
                     imageLoader = imageLoader,
                     onProfileClick = {
                         onNavigate(Screen.WorkerProfileScreen.route)

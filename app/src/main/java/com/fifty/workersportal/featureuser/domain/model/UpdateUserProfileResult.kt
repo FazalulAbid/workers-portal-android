@@ -9,5 +9,5 @@ data class UpdateUserProfileResult(
     val emailError: ProfileError? = null,
     val ageError: ProfileError? = null,
     val unknownError: ProfileError? = null,
-    val result: Resource<UserProfile>? = null
+    val result: SimpleResource? = null
 )

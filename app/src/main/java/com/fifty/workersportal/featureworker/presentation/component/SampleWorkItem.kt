@@ -10,6 +10,7 @@ import androidx.compose.ui.layout.ContentScale
 import coil.ImageLoader
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
+import com.fifty.workersportal.R
 import com.fifty.workersportal.featureworker.domain.model.SampleWork
 
 @OptIn(ExperimentalCoilApi::class)
@@ -23,12 +24,12 @@ fun SampleWorkItem(
     Box(modifier = Modifier.aspectRatio(1f)) {
         Image(
             modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop,
             painter = rememberImagePainter(
                 data = sampleWork.imageUrl,
-                imageLoader = imageLoader
+                imageLoader = imageLoader,
             ),
-            contentDescription = null,
-            contentScale = ContentScale.Crop
+            contentDescription = null
         )
     }
 }

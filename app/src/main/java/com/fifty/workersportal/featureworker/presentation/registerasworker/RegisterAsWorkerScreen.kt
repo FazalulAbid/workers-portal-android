@@ -33,6 +33,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavBackStackEntry
 import coil.ImageLoader
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.presentation.component.StandardAppBar
@@ -61,6 +62,7 @@ import kotlinx.coroutines.launch
 fun RegisterAsWorkerScreen(
     onNavigateUp: () -> Unit = {},
     imageLoader: ImageLoader,
+    previousBackStackEntry: NavBackStackEntry?,
     viewModel: RegisterAsWorkerViewModel = hiltViewModel()
 ) {
     val state = viewModel.updateWorkerState.value
@@ -80,6 +82,11 @@ fun RegisterAsWorkerScreen(
             when (event) {
                 is UiEvent.MakeToast -> {
                     makeToast(event.uiText.asString(context), context)
+                }
+
+                UiEvent.WorkerProfileUpdated -> {
+                    previousBackStackEntry?.savedStateHandle?.set("isWorkerProfileUpdated", true)
+                    onNavigateUp()
                 }
 
                 else -> Unit
@@ -267,6 +274,8 @@ fun RegisterAsWorkerScreen(
                 buttonText = stringResource(R.string.go_to_dashboard),
                 onButtonClick = {
                     viewModel.isRegisterCompleteDialogDisplayed.postValue(false)
+                    previousBackStackEntry?.savedStateHandle?.set("isWorkerProfileUpdated", true)
+                    onNavigateUp()
                 }
             )
         }

@@ -37,6 +37,7 @@ import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.ImageLoader
 import com.fifty.workersportal.R
+import com.fifty.workersportal.core.domain.util.Session
 import com.fifty.workersportal.core.presentation.component.CameraPermissionTextProvider
 import com.fifty.workersportal.core.presentation.component.CoarseLocationPermissionTextProvider
 import com.fifty.workersportal.core.presentation.component.DashboardNavigationAndProfile
@@ -118,12 +119,13 @@ fun UserDashboardScreen(
                     modifier = Modifier.padding(SizeMedium)
                 ) {
                     DashboardGreetingText(
-                        name = state.userProfile?.firstName ?: stringResource(R.string.there),
+                        name = Session.userSession.value?.firstName
+                            ?: stringResource(R.string.there),
                         greetingText = stringResource(R.string.dashboard_greeting_prefix)
                     )
                     Spacer(Modifier.height(SizeExtraSmall))
                     DashboardNavigationAndProfile(
-                        profileImageUrl = state.userProfile?.profilePicture ?: "",
+                        profileImageUrl = Session.userSession.value?.profilePicture ?: "",
                         imageLoader = imageLoader,
                         onProfileClick = {
                             onNavigate(Screen.UserProfileScreen.route)

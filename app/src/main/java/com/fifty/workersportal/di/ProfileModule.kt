@@ -1,13 +1,11 @@
 package com.fifty.workersportal.di
 
-import com.fifty.workersportal.core.domain.usecase.GetUserProfileDetailsUseCase
-import com.fifty.workersportal.featureauth.domain.repository.SessionRepository
+import com.fifty.workersportal.core.domain.usecase.GetProfileDetailsUseCase
 import com.fifty.workersportal.featureuser.data.remote.ProfileApiService
 import com.fifty.workersportal.featureuser.data.repository.ProfileRepositoryImpl
 import com.fifty.workersportal.featureuser.domain.repository.ProfileRepository
+import com.fifty.workersportal.featureuser.domain.usecase.GetUserProfileUseCase
 import com.fifty.workersportal.featureuser.domain.usecase.UpdateUserProfileUseCase
-import com.fifty.workersportal.featureworker.domain.repository.WorkerRepository
-import com.fifty.workersportal.featureworker.domain.usecase.GetCategoriesUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.SetSkillSelectedUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.UpdateUserAsWorkerUseCase
 import com.google.gson.Gson
@@ -55,9 +53,16 @@ object ProfileModule {
 
     @Provides
     @Singleton
-    fun provideGetUserProfileDetailsUseCase(
+    fun provideGetProfileDetailsUseCase(
         profileRepository: ProfileRepository
-    ): GetUserProfileDetailsUseCase =
-        GetUserProfileDetailsUseCase(profileRepository)
+    ): GetProfileDetailsUseCase =
+        GetProfileDetailsUseCase(profileRepository)
+
+    @Provides
+    @Singleton
+    fun provideGetUserProfileUseCase(
+        profileRepository: ProfileRepository
+    ): GetUserProfileUseCase =
+        GetUserProfileUseCase(profileRepository)
 
 }

@@ -6,7 +6,6 @@ import com.fifty.workersportal.featureuser.domain.model.UserProfile
 
 data class UserDashboardState(
     val banners: List<Banner> = emptyList(),
-    val userProfile: UserProfile? = null,
     val selectedLocalAddress: LocalAddress? = null,
     val isLoading: Boolean = false
 )

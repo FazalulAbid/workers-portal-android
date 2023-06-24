@@ -67,7 +67,7 @@ interface WorkerApiService {
     suspend fun getSampleWorks(
         @Query("page") page: Int,
         @Query("pageSize") pageSize: Int,
-        @Query("userId") userId: String
+        @Query("id") userId: String
     ): BasicApiResponse<List<SampleWorkDto>>
 
     @GET("sample-work/get-sample-work")

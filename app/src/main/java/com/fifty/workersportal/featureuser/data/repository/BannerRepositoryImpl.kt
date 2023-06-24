@@ -52,7 +52,6 @@ class BannerRepositoryImpl(
         return try {
             val response = api.getUserDashboardBanners()
             if (response.successful) {
-                Log.d("Hello", "getBanners: ${response.data}")
                 Resource.Success(data = response.data?.map { it.toBanner() })
             } else {
                 response.message?.let { message ->

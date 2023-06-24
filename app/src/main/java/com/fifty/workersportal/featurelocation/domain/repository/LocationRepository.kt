@@ -9,4 +9,8 @@ interface LocationRepository {
     suspend fun saveAddress(address: LocalAddress): SimpleResource
 
     suspend fun getAddressesOfUser(userId: String): Resource<List<LocalAddress>>
+
+    suspend fun getAddress(addressId: String): Resource<LocalAddress>
+
+    suspend fun setSelectedAddress(addressId: String): SimpleResource
 }
