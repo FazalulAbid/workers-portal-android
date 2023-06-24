@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fifty.workersportal.core.domain.usecase.GetOwnUserIdUseCase
 import com.fifty.workersportal.core.domain.usecase.GetProfileDetailsUseCase
+import com.fifty.workersportal.core.domain.util.Session
 import com.fifty.workersportal.core.presentation.util.UiEvent
 import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.UiText
@@ -39,6 +40,10 @@ class WorkerDashboardViewModel @Inject constructor(
         when (event) {
             is WorkerDashboardEvent.ToggleOpenToWork -> {
                 toggleOpenToWork(event.value)
+            }
+
+            WorkerDashboardEvent.UpdateSelectedAddress -> {
+                getLocalAddress()
             }
         }
     }
@@ -88,5 +93,11 @@ class WorkerDashboardViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun getLocalAddress() {
+        _state.value = state.value.copy(
+            selectedLocalAddress = Session.selectedAddress.value
+        )
     }
 }

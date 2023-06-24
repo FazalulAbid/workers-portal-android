@@ -12,5 +12,5 @@ interface LocationRepository {
 
     suspend fun getAddress(addressId: String): Resource<LocalAddress>
 
-    suspend fun setSelectedAddress(addressId: String): SimpleResource
+    suspend fun setSelectedAddress(addressId: String): Resource<LocalAddress>
 }

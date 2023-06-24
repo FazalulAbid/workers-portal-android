@@ -10,7 +10,6 @@ import com.fifty.workersportal.R
 import com.fifty.workersportal.core.domain.state.StandardTextFieldState
 import com.fifty.workersportal.core.domain.usecase.GetOwnUserIdUseCase
 import com.fifty.workersportal.core.domain.usecase.GetProfileDetailsUseCase
-import com.fifty.workersportal.core.domain.util.Session
 import com.fifty.workersportal.core.domain.util.ValidationUtil
 import com.fifty.workersportal.core.presentation.util.UiEvent
 import com.fifty.workersportal.core.util.Constants.genderOptions
@@ -23,7 +22,6 @@ import com.fifty.workersportal.featureworker.domain.usecase.SetSkillSelectedUseC
 import com.fifty.workersportal.featureworker.domain.usecase.UpdateUserAsWorkerUseCase
 import com.fifty.workersportal.featureworker.util.ProfileError
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
@@ -338,7 +336,8 @@ class RegisterAsWorkerViewModel @Inject constructor(
                     categoryList = _skillsState.value.selectedSkills,
                     primarySkill = _primaryCategory.value
                 ),
-                profilePictureUri = profileImageUri.value
+                profilePictureUri = profileImageUri.value,
+                identityPictureUri = identityImageUri.value
             )
 
             if (updateWorkerResult.firstNameError != null) {

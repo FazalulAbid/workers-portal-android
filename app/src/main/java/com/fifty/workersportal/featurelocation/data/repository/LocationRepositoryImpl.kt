@@ -1,5 +1,6 @@
 package com.fifty.workersportal.featurelocation.data.repository
 
+import android.util.Log
 import coil.network.HttpException
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.util.Resource
@@ -81,11 +82,11 @@ class LocationRepositoryImpl(
         }
     }
 
-    override suspend fun setSelectedAddress(addressId: String): SimpleResource {
+    override suspend fun setSelectedAddress(addressId: String): Resource<LocalAddress> {
         return try {
             val response = api.setSelectedAddress(addressId)
             if (response.successful) {
-                Resource.Success(Unit)
+                Resource.Success(data = response.data?.toLocalAddress())
             } else {
                 response.message?.let { message ->
                     Resource.Error(UiText.DynamicString(message))

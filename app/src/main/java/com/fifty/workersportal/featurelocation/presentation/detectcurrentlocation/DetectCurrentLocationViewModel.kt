@@ -149,7 +149,6 @@ class DetectCurrentLocationViewModel @Inject constructor(
                 } else {
                     when (saveAddressResult.result) {
                         is Resource.Success -> {
-                            delay(3000L)
                             _state.value = state.value.copy(
                                 isAddressLoading = false
                             )

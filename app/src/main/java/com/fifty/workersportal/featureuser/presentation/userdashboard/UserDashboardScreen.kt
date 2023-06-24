@@ -10,11 +10,9 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalOverscrollConfiguration
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -22,7 +20,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -30,26 +27,25 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
 import coil.ImageLoader
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.domain.util.Session
-import com.fifty.workersportal.core.presentation.component.CameraPermissionTextProvider
 import com.fifty.workersportal.core.presentation.component.CoarseLocationPermissionTextProvider
-import com.fifty.workersportal.core.presentation.component.DashboardNavigationAndProfile
+import com.fifty.workersportal.core.presentation.component.DashboardSelectedAddressAndProfile
 import com.fifty.workersportal.core.presentation.component.HorizontalDivider
 import com.fifty.workersportal.core.presentation.component.PermissionDialog
 import com.fifty.workersportal.core.presentation.component.SecondaryHeader
-import com.fifty.workersportal.core.presentation.component.StandardTextField
 import com.fifty.workersportal.core.presentation.ui.theme.MediumButtonHeight
 import com.fifty.workersportal.core.presentation.ui.theme.MediumProfilePictureHeight
 import com.fifty.workersportal.core.presentation.ui.theme.SizeExtraSmall
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
+import com.fifty.workersportal.core.presentation.util.OnLifecycleEvent
 import com.fifty.workersportal.core.presentation.util.UiEvent
 import com.fifty.workersportal.core.util.Screen
 import com.fifty.workersportal.core.util.openAppSettings
@@ -98,6 +94,16 @@ fun UserDashboardScreen(
         }
     )
 
+    OnLifecycleEvent { owner, event ->
+        when (event) {
+            Lifecycle.Event.ON_RESUME -> {
+                viewModel.onEvent(UserDashboardEvent.UpdateSelectedAddress)
+            }
+
+            else -> Unit
+        }
+    }
+
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
@@ -124,12 +130,13 @@ fun UserDashboardScreen(
                         greetingText = stringResource(R.string.dashboard_greeting_prefix)
                     )
                     Spacer(Modifier.height(SizeExtraSmall))
-                    DashboardNavigationAndProfile(
+                    DashboardSelectedAddressAndProfile(
                         profileImageUrl = Session.userSession.value?.profilePicture ?: "",
                         imageLoader = imageLoader,
                         onProfileClick = {
                             onNavigate(Screen.UserProfileScreen.route)
                         },
+                        localAddress = state.selectedLocalAddress,
                         onLocationClick = {
                             multiplePermissionResultLauncher.launch(
                                 permissionsToRequest

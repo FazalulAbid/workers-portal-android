@@ -10,27 +10,51 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavBackStackEntry
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.presentation.component.SecondaryHeader
 import com.fifty.workersportal.core.presentation.component.StandardAppBar
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
+import com.fifty.workersportal.core.presentation.util.UiEvent
 import com.fifty.workersportal.core.util.Screen
 import com.fifty.workersportal.featurelocation.presentation.component.DetectLocationButton
 import com.fifty.workersportal.featurelocation.presentation.component.SavedAddressItem
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun SelectLocationScreen(
     onNavigate: (String) -> Unit = {},
     onNavigateUp: () -> Unit = {},
+    isRefreshNeeded: Boolean,
     viewModel: SelectLocationViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.value
+
+    LaunchedEffect(key1 = true) {
+        viewModel.eventFlow.collectLatest { event ->
+            when (event) {
+                UiEvent.NavigateUp -> {
+                    onNavigateUp()
+                }
+
+                else -> Unit
+            }
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        if (isRefreshNeeded) {
+            viewModel.onEvent(SelectLocationEvent.RefreshAddressList)
+        }
+    }
+
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -72,7 +96,9 @@ fun SelectLocationScreen(
             items(state.localAddresses) { localAddress ->
                 SavedAddressItem(
                     localAddress = localAddress,
-                    onClick = { },
+                    onClick = {
+                        viewModel.onEvent(SelectLocationEvent.SelectLocalAddress(localAddress.id))
+                    },
                     onMoreClick = { },
                     onShareClick = {}
                 )

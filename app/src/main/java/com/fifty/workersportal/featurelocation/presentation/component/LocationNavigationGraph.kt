@@ -19,15 +19,17 @@ fun NavGraphBuilder.locationNavGraph(
     snackbarHostState: SnackbarHostState
 ) {
     composable(Screen.SelectLocationScreen.route) {
+        val isRefreshNeeded = it.savedStateHandle.get<Boolean>("isRefreshNeeded")
         SelectLocationScreen(
             onNavigateUp = navController::navigateUp,
-            onNavigate = navController::navigate
+            onNavigate = navController::navigate,
+            isRefreshNeeded = isRefreshNeeded == true
         )
     }
     composable(Screen.DetectCurrentLocationScreen.route) {
         DetectCurrentLocationScreen(
             onNavigateUp = navController::navigateUp,
-            onNavigate = navController::navigate
+            previousBackStackEntry = navController.previousBackStackEntry
         )
     }
 }

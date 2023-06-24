@@ -30,11 +30,13 @@ import com.fifty.workersportal.core.presentation.ui.theme.SizeExtraSmall
 import com.fifty.workersportal.core.presentation.ui.theme.SizeLarge
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.ui.theme.SmallProfilePictureHeight
+import com.fifty.workersportal.featurelocation.domain.model.LocalAddress
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
-fun DashboardNavigationAndProfile(
+fun DashboardSelectedAddressAndProfile(
     profileImageUrl: String,
+    localAddress: LocalAddress?,
     imageLoader: ImageLoader,
     onProfileClick: () -> Unit = {},
     onLocationClick: () -> Unit = {}
@@ -67,7 +69,7 @@ fun DashboardNavigationAndProfile(
                 )
                 Spacer(modifier = Modifier.width(SizeExtraSmall))
                 Text(
-                    text = "Ernakulam",
+                    text = localAddress?.place ?: "",
                     style = MaterialTheme.typography.bodyLarge.copy(
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onBackground
@@ -80,7 +82,7 @@ fun DashboardNavigationAndProfile(
                 )
             }
             Text(
-                text = "Vikas Nagas, Maradu, Ernakulam",
+                text = "${localAddress?.subLocality}, ${localAddress?.city}, ${localAddress?.state}",
                 style = MaterialTheme.typography.bodyMedium.copy(
                     fontWeight = FontWeight.Normal,
                     color = MaterialTheme.colorScheme.onSurface

@@ -50,14 +50,6 @@ fun IdentitySection(
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        SecondaryHeader(
-            modifier = Modifier.padding(vertical = SizeMedium),
-            text = stringResource(R.string.pick_any_identity_document),
-            style = MaterialTheme.typography.titleMedium.copy(
-                color = MaterialTheme.colorScheme.onBackground,
-                fontWeight = FontWeight.SemiBold
-            ),
-        )
         if (viewModel.identityImageUri.value != null ||
             viewModel.updateWorkerState.value.profile?.identityUrl != null
         ) {

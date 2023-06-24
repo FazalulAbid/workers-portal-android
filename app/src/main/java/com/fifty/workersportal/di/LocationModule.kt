@@ -10,10 +10,13 @@ import com.fifty.workersportal.featurelocation.domain.usecase.GetAddressFromLatL
 import com.fifty.workersportal.featurelocation.domain.usecase.GetAddressesOfUserUseCase
 import com.fifty.workersportal.featurelocation.domain.usecase.GetCurrentLocationUseCase
 import com.fifty.workersportal.featurelocation.domain.usecase.GetLocalAddressFromAddressUseCase
+import com.fifty.workersportal.featurelocation.domain.usecase.GetLocalAddressUseCase
 import com.fifty.workersportal.featurelocation.domain.usecase.SaveAddressUseCase
+import com.fifty.workersportal.featurelocation.domain.usecase.SelectLocalAddressUseCase
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.SettingsClient
+import com.google.maps.android.compose.streetview.rememberStreetViewCameraPositionState
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -85,5 +88,15 @@ object LocationModule {
     @Singleton
     fun provideGetAddressesOfUserUseCase(repository: LocationRepository): GetAddressesOfUserUseCase =
         GetAddressesOfUserUseCase(repository)
+
+    @Provides
+    @Singleton
+    fun provideSelectLocalAddressUseCase(repository: LocationRepository): SelectLocalAddressUseCase =
+        SelectLocalAddressUseCase(repository)
+
+    @Provides
+    @Singleton
+    fun provideGetLocalAddressUseCase(repository: LocationRepository): GetLocalAddressUseCase =
+        GetLocalAddressUseCase(repository)
 
 }

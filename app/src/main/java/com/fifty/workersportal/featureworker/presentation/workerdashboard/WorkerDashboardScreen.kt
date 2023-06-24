@@ -18,19 +18,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
 import coil.ImageLoader
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.domain.util.Session
-import com.fifty.workersportal.core.presentation.component.DashboardNavigationAndProfile
+import com.fifty.workersportal.core.presentation.component.DashboardSelectedAddressAndProfile
 import com.fifty.workersportal.core.presentation.component.HorizontalDivider
 import com.fifty.workersportal.core.presentation.component.PrimaryHeader
 import com.fifty.workersportal.core.presentation.component.SecondaryHeader
 import com.fifty.workersportal.core.presentation.ui.theme.SizeExtraSmall
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.ui.theme.SmallStrokeThickness
+import com.fifty.workersportal.core.presentation.util.OnLifecycleEvent
 import com.fifty.workersportal.core.presentation.util.UiEvent
 import com.fifty.workersportal.core.presentation.util.makeToast
 import com.fifty.workersportal.core.util.Screen
+import com.fifty.workersportal.featureuser.presentation.userdashboard.UserDashboardEvent
 import com.fifty.workersportal.featureworker.presentation.component.OpenToWorkSwitch
 import com.fifty.workersportal.featureworker.presentation.component.WorkProposalListItem
 import kotlinx.coroutines.flow.collectLatest
@@ -62,6 +65,16 @@ fun WorkerDashboardScreen(
         }
     }
 
+    OnLifecycleEvent { owner, event ->
+        when (event) {
+            Lifecycle.Event.ON_RESUME -> {
+                viewModel.onEvent(WorkerDashboardEvent.UpdateSelectedAddress)
+            }
+
+            else -> Unit
+        }
+    }
+
     CompositionLocalProvider(
         LocalOverscrollConfiguration provides null
     ) {
@@ -77,12 +90,13 @@ fun WorkerDashboardScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                DashboardNavigationAndProfile(
+                DashboardSelectedAddressAndProfile(
                     profileImageUrl = Session.userSession.value?.profilePicture ?: "",
                     imageLoader = imageLoader,
                     onProfileClick = {
                         onNavigate(Screen.WorkerProfileScreen.route)
                     },
+                    localAddress = state.selectedLocalAddress,
                     onLocationClick = {
                         onNavigate(Screen.SelectLocationScreen.route)
                     }

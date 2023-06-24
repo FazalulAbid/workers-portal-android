@@ -31,6 +31,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavBackStackEntry
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.presentation.component.StandardAppBar
 import com.fifty.workersportal.core.presentation.component.StandardBottomSheet
@@ -55,8 +56,8 @@ import kotlinx.coroutines.flow.collectLatest
 @SuppressLint("MissingPermission")
 @Composable
 fun DetectCurrentLocationScreen(
-    onNavigate: (String) -> Unit = {},
     onNavigateUp: () -> Unit = {},
+    previousBackStackEntry: NavBackStackEntry?,
     viewModel: DetectCurrentLocationViewModel = hiltViewModel()
 ) {
     var showSheet by remember { mutableStateOf(false) }
@@ -87,6 +88,7 @@ fun DetectCurrentLocationScreen(
 
                 UiEvent.NavigateUp -> {
                     showSheet = false
+                    previousBackStackEntry?.savedStateHandle?.set("isRefreshNeeded", true)
                     onNavigateUp()
                 }
 

@@ -28,5 +28,5 @@ interface LocationApiService {
     @GET("address/set-selected-address")
     suspend fun setSelectedAddress(
         @Query("addressId") addressId: String
-    ): BasicApiResponse<String>
+    ): BasicApiResponse<LocalAddressDto>
 }

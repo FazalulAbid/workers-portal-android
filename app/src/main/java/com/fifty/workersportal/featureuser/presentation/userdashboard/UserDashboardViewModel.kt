@@ -10,6 +10,7 @@ import com.fifty.workersportal.core.domain.util.Session
 import com.fifty.workersportal.core.presentation.util.UiEvent
 import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.Screen
+import com.fifty.workersportal.featurelocation.domain.usecase.GetLocalAddressUseCase
 import com.fifty.workersportal.featureuser.domain.usecase.GetDashboardBannersUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.GetSuggestedCategoriesUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.ToggleFavouriteWorkerUseCase
@@ -24,7 +25,8 @@ class UserDashboardViewModel @Inject constructor(
     private val getOwnUserIdUseCase: GetOwnUserIdUseCase,
     private val getDashboardBannersUseCase: GetDashboardBannersUseCase,
     private val getCategoriesUseCase: GetSuggestedCategoriesUseCase,
-    private val toggleFavouriteWorkerUseCase: ToggleFavouriteWorkerUseCase
+    private val toggleFavouriteWorkerUseCase: ToggleFavouriteWorkerUseCase,
+    private val getLocalAddressUseCase: GetLocalAddressUseCase
 ) : ViewModel() {
 
     val visiblePermissionDialogQueue = mutableStateListOf<String>()
@@ -47,6 +49,10 @@ class UserDashboardViewModel @Inject constructor(
         when (event) {
             is UserDashboardEvent.ToggleFavouriteWorker -> {
                 toggleFavouriteWorker(event.value)
+            }
+
+            UserDashboardEvent.UpdateSelectedAddress -> {
+                getLocalAddress()
             }
         }
     }
@@ -112,5 +118,11 @@ class UserDashboardViewModel @Inject constructor(
                 is Resource.Error -> {}
             }
         }
+    }
+
+    private fun getLocalAddress() {
+        _state.value = state.value.copy(
+            selectedLocalAddress = Session.selectedAddress.value
+        )
     }
 }

@@ -7,6 +7,7 @@ import com.fifty.workersportal.core.presentation.util.UiEvent
 import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.featureauth.domain.usecase.AuthenticateUseCase
 import com.fifty.workersportal.featureauth.domain.usecase.SaveUserIdUseCase
+import com.fifty.workersportal.featurelocation.domain.usecase.GetLocalAddressUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,6 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SplashViewModel @Inject constructor(
     private val authenticate: AuthenticateUseCase,
+    private val getLocalAddressUseCase: GetLocalAddressUseCase
 ) : ViewModel() {
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
@@ -36,6 +38,9 @@ class SplashViewModel @Inject constructor(
                             val userSession = result.data
                             userSession?.let {
                                 Session.userSession.value = it
+                                userSession.selectedAddress?.let {
+                                    getLocalAddress(userSession.selectedAddress)
+                                }
                                 _isAuthenticated.emit(UserAuthState.AUTHENTICATED)
                             } ?: _isAuthenticated.emit(UserAuthState.UNAUTHENTICATED)
                         }
@@ -44,6 +49,20 @@ class SplashViewModel @Inject constructor(
                             _isAuthenticated.emit(UserAuthState.UNAUTHENTICATED)
                         }
                     }
+                }
+            }
+        }
+    }
+
+    private fun getLocalAddress(addressId: String) {
+        viewModelScope.launch {
+            when (val result = getLocalAddressUseCase(addressId)) {
+                is Resource.Success -> {
+                    Session.selectedAddress.value = result.data
+                }
+
+                is Resource.Error -> {
+
                 }
             }
         }
