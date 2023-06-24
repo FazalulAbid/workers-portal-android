@@ -17,8 +17,8 @@ fun NavGraphBuilder.chatNavGraph(
     snackbarHostState: SnackbarHostState
 ) {
     navigation(
-        startDestination = Screen.MessageScreen.route,
-        route = NavigationParent.Message.route
+        startDestination = Screen.ChatScreen.route,
+        route = NavigationParent.Chat.route
     ) {
         composable(Screen.ChatScreen.route) {
             ChatScreen(

@@ -6,5 +6,5 @@ sealed class NavigationParent(val route: String) {
     object Work : NavigationParent("Work")
     object Favorite : NavigationParent("Favorite")
     object History : NavigationParent("History")
-    object Message : NavigationParent("Message")
+    object Chat : NavigationParent("Chat")
 }

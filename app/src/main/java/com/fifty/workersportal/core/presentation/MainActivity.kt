@@ -115,6 +115,7 @@ class MainActivity : ComponentActivity() {
             Screen.UserDashboardScreen.route,
             Screen.WorkerDashboardScreen.route,
             Screen.FavoriteScreen.route,
+            Screen.ChatScreen.route,
             Screen.HistoryScreen.route
         )
 }
