@@ -99,7 +99,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun PostSampleWorkScreen(
     onNavigateUp: () -> Unit,
-    onNavigate: (String) -> Unit,
     imageLoader: ImageLoader,
     viewModel: PostSampleWorkViewModel = hiltViewModel()
 ) {

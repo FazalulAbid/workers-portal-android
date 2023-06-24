@@ -8,6 +8,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -22,6 +23,7 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
@@ -43,6 +45,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.compose.collectAsLazyPagingItems
 import coil.ImageLoader
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
@@ -51,6 +54,7 @@ import com.fifty.workersportal.core.domain.util.Session
 import com.fifty.workersportal.core.presentation.component.SecondaryHeader
 import com.fifty.workersportal.core.presentation.component.StandardAppBar
 import com.fifty.workersportal.core.presentation.ui.theme.ExtraExtraLargeProfilePictureHeight
+import com.fifty.workersportal.core.presentation.ui.theme.LargeProfilePictureHeight
 import com.fifty.workersportal.core.presentation.ui.theme.SizeExtraSmall
 import com.fifty.workersportal.core.presentation.ui.theme.SizeLarge
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
@@ -59,8 +63,10 @@ import com.fifty.workersportal.core.presentation.ui.theme.SkyBlueColor
 import com.fifty.workersportal.core.presentation.ui.theme.SmallStrokeThickness
 import com.fifty.workersportal.core.util.Screen
 import com.fifty.workersportal.featureworker.presentation.component.ButtonBetweenLines
+import com.fifty.workersportal.featureworker.presentation.component.CategoryItem
 import com.fifty.workersportal.featureworker.presentation.component.Chip
 import com.fifty.workersportal.featureworker.presentation.component.RatingAndRatingCount
+import com.fifty.workersportal.featureworker.presentation.component.SampleWorkItem
 import com.fifty.workersportal.featureworker.presentation.component.WorkerWageText
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
@@ -77,6 +83,8 @@ fun WorkerProfileScreen(
 ) {
     val state = viewModel.state.value
     val screenWidth = with(LocalConfiguration.current) { screenWidthDp.dp }
+    val sampleWorks =
+        viewModel.sampleWorks.collectAsLazyPagingItems()
 
     Column(
         Modifier.fillMaxSize(),
@@ -258,14 +266,16 @@ fun WorkerProfileScreen(
                         }
                     )
                 }
-                items(25) {
-                    val randomColor =
-                        Color(Random.nextInt(256), Random.nextInt(256), Random.nextInt(256))
-                    Box(
-                        modifier = Modifier
-                            .aspectRatio(1f)
-                            .background(randomColor)
-                    )
+                items(sampleWorks.itemCount) { index ->
+                    sampleWorks[index]?.let {
+                        SampleWorkItem(
+                            sampleWork = it,
+                            imageLoader = imageLoader,
+                            onClick = {
+                                onNavigate(Screen.WorkerListScreen.route)
+                            }
+                        )
+                    }
                 }
             }
         }

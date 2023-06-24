@@ -8,7 +8,10 @@ import com.fifty.workersportal.featureworker.data.repository.WorkerRepositoryImp
 import com.fifty.workersportal.featureworker.domain.repository.ReviewAndRatingRepository
 import com.fifty.workersportal.featureworker.domain.repository.SampleWorkRepository
 import com.fifty.workersportal.featureworker.domain.repository.WorkerRepository
+import com.fifty.workersportal.featureworker.domain.usecase.DeleteSampleWorkUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.GetCategoriesUseCase
+import com.fifty.workersportal.featureworker.domain.usecase.GetSampleWorkUseCase
+import com.fifty.workersportal.featureworker.domain.usecase.GetSampleWorksUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.GetSuggestedCategoriesUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.PostReviewAndRatingUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.PostSampleWorkUseCase
@@ -21,6 +24,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
+import retrofit2.http.DELETE
 import javax.inject.Singleton
 
 @Module
@@ -101,6 +105,22 @@ object WorkerModule {
     ): PostSampleWorkUseCase =
         PostSampleWorkUseCase(repository)
 
+    @Provides
+    @Singleton
+    fun provideGetSampleWorksUseCase(
+        repository: SampleWorkRepository
+    ): GetSampleWorksUseCase = GetSampleWorksUseCase(repository)
 
+    @Provides
+    @Singleton
+    fun provideGetSampleWorkUseCase(
+        repository: SampleWorkRepository
+    ): GetSampleWorkUseCase = GetSampleWorkUseCase(repository)
+
+    @Provides
+    @Singleton
+    fun provideDeleteSampleWork(
+        repository: SampleWorkRepository
+    ): DeleteSampleWorkUseCase = DeleteSampleWorkUseCase(repository)
 
 }

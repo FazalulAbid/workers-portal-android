@@ -5,14 +5,24 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.fifty.workersportal.core.domain.usecase.GetOwnUserIdUseCase
 import com.fifty.workersportal.core.domain.usecase.GetUserProfileDetailsUseCase
 import com.fifty.workersportal.core.presentation.util.UiEvent
+import com.fifty.workersportal.core.util.Constants
 import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.UiText
+import com.fifty.workersportal.featureworker.domain.model.Category
+import com.fifty.workersportal.featureworker.domain.model.SampleWork
+import com.fifty.workersportal.featureworker.domain.usecase.GetSampleWorksUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,11 +30,14 @@ import javax.inject.Inject
 class WorkerProfileViewModel @Inject constructor(
     private val getOwnUserId: GetOwnUserIdUseCase,
     private val getUserProfileDetails: GetUserProfileDetailsUseCase,
+    private val getSampleWorksUseCase: GetSampleWorksUseCase,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val _state = mutableStateOf(WorkerProfileState())
     val state: State<WorkerProfileState> = _state
+
+    var sampleWorks: Flow<PagingData<SampleWork>> = flowOf(PagingData.empty())
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
@@ -37,6 +50,7 @@ class WorkerProfileViewModel @Inject constructor(
             _state.value = state.value.copy(
                 isOwnProfile = state.value.profile?.id?.equals(ownUserId) == true
             )
+            getSampleWorksPaginated(userId)
         }
     }
 
@@ -64,5 +78,15 @@ class WorkerProfileViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun getSampleWorksPaginated(userId: String) {
+        _state.value = state.value.copy(
+            isSampleWorksLoading = true
+        )
+        sampleWorks = getSampleWorksUseCase(userId).cachedIn(viewModelScope)
+        _state.value = state.value.copy(
+            isSampleWorksLoading = false
+        )
     }
 }

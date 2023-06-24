@@ -54,28 +54,6 @@ class SearchCategoryViewModel @Inject constructor(
         }
     }
 
-    private fun getAllCategories() {
-        viewModelScope.launch {
-            _searchState.value = searchState.value.copy(
-                isLoading = true
-            )
-            when (val result = getCategoriesUseCase()) {
-                is Resource.Success -> {
-                    _searchState.value = searchState.value.copy(
-                        workerCategories = result.data ?: emptyList(),
-                        isLoading = false
-                    )
-                }
-
-                is Resource.Error -> {
-                    _searchState.value = searchState.value.copy(
-                        isLoading = false
-                    )
-                }
-            }
-        }
-    }
-
     private fun searchCategories(searchQuery: String) {
         _searchState.value = searchState.value.copy(
             isLoading = true

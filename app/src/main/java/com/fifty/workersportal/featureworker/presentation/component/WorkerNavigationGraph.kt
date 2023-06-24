@@ -92,7 +92,6 @@ fun NavGraphBuilder.workerNavGraph(
         composable(Screen.PostSampleWorkScreen.route) {
             PostSampleWorkScreen(
                 onNavigateUp = navController::navigateUp,
-                onNavigate = navController::navigate,
                 imageLoader = imageLoader
             )
         }
