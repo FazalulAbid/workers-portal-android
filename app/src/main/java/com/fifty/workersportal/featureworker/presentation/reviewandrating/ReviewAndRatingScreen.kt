@@ -1,6 +1,5 @@
 package com.fifty.workersportal.featureworker.presentation.reviewandrating
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -40,7 +39,6 @@ import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
 import com.fifty.workersportal.core.presentation.util.UiEvent
 import com.fifty.workersportal.core.presentation.util.asString
 import com.fifty.workersportal.core.presentation.util.makeToast
-import com.fifty.workersportal.core.util.UiText
 import com.fifty.workersportal.featureworker.presentation.component.RatingsDetailedCountBars
 import com.fifty.workersportal.featureworker.presentation.component.ReviewItem
 import com.fifty.workersportal.featureworker.util.ReviewAndRatingError
@@ -49,11 +47,11 @@ import kotlinx.coroutines.flow.collectLatest
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReviewAndRatingScreen(
-    onNavigate: (String) -> Unit,
     onNavigateUp: () -> Unit,
     viewModel: ReviewAndRatingViewModel = hiltViewModel()
 ) {
 
+    val writeReviewSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var showWriteReviewSheet by remember {
         mutableStateOf(false)
     }
@@ -66,7 +64,9 @@ fun ReviewAndRatingScreen(
                 }
 
                 UiEvent.ReviewAndRatingPosted -> {
+                    writeReviewSheetState.hide()
                     showWriteReviewSheet = false
+                    makeToast(R.string.your_review_is_posted, context)
                 }
 
                 else -> {}
@@ -182,7 +182,7 @@ fun ReviewAndRatingScreen(
 
         if (showWriteReviewSheet) {
             StandardBottomSheet(
-                sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+                sheetState = writeReviewSheetState,
                 onDismiss = {
                     showWriteReviewSheet = false
                 }

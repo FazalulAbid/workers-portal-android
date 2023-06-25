@@ -53,6 +53,7 @@ import coil.ImageLoader
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.fifty.workersportal.R
+import com.fifty.workersportal.core.presentation.component.LargeDisplayProfilePicture
 import com.fifty.workersportal.core.presentation.component.SecondaryHeader
 import com.fifty.workersportal.core.presentation.component.StandardDropDownMenu
 import com.fifty.workersportal.core.presentation.component.StandardTextField
@@ -118,21 +119,16 @@ fun PersonalDetailsSection(
                     modifier = Modifier.fillMaxWidth(),
                     contentAlignment = Alignment.Center
                 ) {
-                    Image(
+                    LargeDisplayProfilePicture(
                         painter = rememberImagePainter(
                             data = viewModel.profileImageUri.value
                                 ?: viewModel.updateWorkerState.value.profile?.profilePicture,
                             imageLoader = imageLoader
                         ),
-                        contentDescription = null,
-                        Modifier
-                            .size(ExtraExtraLargeProfilePictureHeight)
-                            .clip(CircleShape)
-                            .clickable {
-                                profilePictureGalleryLauncher.launch("image/*")
-                            }
-                            .shimmerEffect(viewModel.updateWorkerState.value.isLoading),
-                        contentScale = ContentScale.Crop
+                        isEditable = true,
+                        onClickEdit = {
+                            profilePictureGalleryLauncher.launch("image/*")
+                        }
                     )
                 }
                 Spacer(modifier = Modifier.height(SizeLarge))

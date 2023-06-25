@@ -31,6 +31,8 @@ import com.fifty.workersportal.core.presentation.ui.theme.SizeLarge
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.ui.theme.SmallProfilePictureHeight
 import com.fifty.workersportal.featurelocation.domain.model.LocalAddress
+import com.fifty.workersportal.featurelocation.domain.model.toDisplayAddress
+import java.lang.StringBuilder
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
@@ -69,8 +71,8 @@ fun DashboardSelectedAddressAndProfile(
                 )
                 Spacer(modifier = Modifier.width(SizeExtraSmall))
                 Text(
-                    text = localAddress?.place ?: "",
-                    style = MaterialTheme.typography.bodyLarge.copy(
+                    text = localAddress?.title ?: stringResource(id = R.string.not_available),
+                    style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onBackground
                     )
@@ -82,7 +84,8 @@ fun DashboardSelectedAddressAndProfile(
                 )
             }
             Text(
-                text = "${localAddress?.subLocality}, ${localAddress?.city}, ${localAddress?.state}",
+                text = localAddress.toDisplayAddress()
+                    ?: stringResource(id = R.string.tap_here_to_select_an_address),
                 style = MaterialTheme.typography.bodyMedium.copy(
                     fontWeight = FontWeight.Normal,
                     color = MaterialTheme.colorScheme.onSurface

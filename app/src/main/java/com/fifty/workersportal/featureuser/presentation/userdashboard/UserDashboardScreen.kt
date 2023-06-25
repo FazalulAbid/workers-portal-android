@@ -24,6 +24,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -33,6 +34,8 @@ import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import coil.ImageLoader
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.domain.util.Session
 import com.fifty.workersportal.core.presentation.component.CoarseLocationPermissionTextProvider
@@ -78,6 +81,10 @@ fun UserDashboardScreen(
     val context = LocalContext.current
     val calenderState = rememberUseCaseState()
 
+    val favouriteLottieComposition by rememberLottieComposition(
+        LottieCompositionSpec.RawRes(R.raw.favourite_button_lottie)
+    )
+
     val permissionsToRequest = arrayOf(
         Manifest.permission.ACCESS_FINE_LOCATION
     )
@@ -94,7 +101,7 @@ fun UserDashboardScreen(
         }
     )
 
-    OnLifecycleEvent { owner, event ->
+    OnLifecycleEvent { _, event ->
         when (event) {
             Lifecycle.Event.ON_RESUME -> {
                 viewModel.onEvent(UserDashboardEvent.UpdateSelectedAddress)
@@ -237,9 +244,11 @@ fun UserDashboardScreen(
             }
             items(10) {
                 WorkerListItem(
-                    false,
+                    viewModel._isFavourite.value,
+                    lottieComposition = favouriteLottieComposition,
                     onFavouriteClick = {
-                        viewModel.onEvent(UserDashboardEvent.ToggleFavouriteWorker(it))
+                        viewModel._isFavourite.value = !viewModel._isFavourite.value
+                        //viewModel.onEvent(UserDashboardEvent.ToggleFavouriteWorker(it))
                     }
                 )
             }

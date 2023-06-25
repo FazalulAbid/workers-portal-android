@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
@@ -54,16 +55,14 @@ class SplashViewModel @Inject constructor(
         }
     }
 
-    private fun getLocalAddress(addressId: String) {
-        viewModelScope.launch {
-            when (val result = getLocalAddressUseCase(addressId)) {
-                is Resource.Success -> {
-                    Session.selectedAddress.value = result.data
-                }
+    private suspend fun getLocalAddress(addressId: String) {
+        when (val result = getLocalAddressUseCase(addressId)) {
+            is Resource.Success -> {
+                Session.selectedAddress.value = result.data
+            }
 
-                is Resource.Error -> {
+            is Resource.Error -> {
 
-                }
             }
         }
     }

@@ -1,7 +1,9 @@
 package com.fifty.workersportal.featureworker.presentation.reviewandrating
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -12,7 +14,9 @@ import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -21,11 +25,15 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusEvent
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import com.airbnb.lottie.compose.LottieAnimation
@@ -33,12 +41,13 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.presentation.component.PrimaryButton
+import com.fifty.workersportal.core.presentation.component.SelectableRatingBar
 import com.fifty.workersportal.core.presentation.component.StandardMultilineTextField
-import com.fifty.workersportal.core.presentation.component.ratingbar.RatingBar
 import com.fifty.workersportal.core.presentation.ui.theme.GoldColor
+import com.fifty.workersportal.core.presentation.ui.theme.LargeButtonHeight
 import com.fifty.workersportal.core.presentation.ui.theme.MediumButtonHeight
-import com.fifty.workersportal.core.presentation.ui.theme.MediumProfilePictureHeight
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
+import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -72,17 +81,13 @@ fun WriteAReviewScreenContent(
             )
         )
         Spacer(modifier = Modifier.height(SizeMedium))
-        RatingBar(
-            rating = viewModel.ratingState.value.toFloat(),
-            tintEmpty = GoldColor,
-            tintFilled = GoldColor,
-            animationEnabled = true,
-            itemSize = MediumProfilePictureHeight,
-            onRatingChange = {
+        SelectableRatingBar(
+            rating = viewModel.ratingState.value,
+            icon = painterResource(id = R.drawable.ic_rating_star_filled),
+            onRatingChanged = {
                 viewModel.onEvent(ReviewAndRatingEvent.RatingValueChange(it))
             }
         )
-        Spacer(modifier = Modifier.height(SizeMedium))
         StandardMultilineTextField(
             basicTextFieldModifier = Modifier
                 .fillMaxWidth()

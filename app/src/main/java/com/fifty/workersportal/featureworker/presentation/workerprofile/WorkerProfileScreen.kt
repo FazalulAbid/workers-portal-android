@@ -3,6 +3,7 @@ package com.fifty.workersportal.featureworker.presentation.workerprofile
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.LocalOverscrollConfiguration
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -25,14 +26,17 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -47,12 +51,19 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import coil.ImageLoader
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.domain.util.Session
 import com.fifty.workersportal.core.presentation.component.HorizontalDivider
+import com.fifty.workersportal.core.presentation.component.LargeDisplayProfilePicture
 import com.fifty.workersportal.core.presentation.component.SecondaryHeader
 import com.fifty.workersportal.core.presentation.component.StandardAppBar
 import com.fifty.workersportal.core.presentation.ui.theme.ExtraExtraLargeProfilePictureHeight
+import com.fifty.workersportal.core.presentation.ui.theme.LargeProfilePictureHeight
 import com.fifty.workersportal.core.presentation.ui.theme.LargeStrokeThickness
 import com.fifty.workersportal.core.presentation.ui.theme.SizeExtraSmall
 import com.fifty.workersportal.core.presentation.ui.theme.SizeLarge
@@ -84,6 +95,12 @@ fun WorkerProfileScreen(
     val screenWidth = with(LocalConfiguration.current) { screenWidthDp.dp }
     val sampleWorks =
         viewModel.sampleWorks.collectAsLazyPagingItems()
+    val noSampleWorksLottieComposition by rememberLottieComposition(
+        LottieCompositionSpec.RawRes(R.raw.empty_box_lottie)
+    )
+    val noSampleWorksLottieProgress by animateLottieCompositionAsState(
+        composition = noSampleWorksLottieComposition, iterations = LottieConstants.IterateForever
+    )
 
     LaunchedEffect(Unit) {
         if (isSampleWorkAdded) {
@@ -112,9 +129,13 @@ fun WorkerProfileScreen(
             },
             navActions = {
                 if (state.profile?.id == Session.userSession.value?.id) {
-                    IconButton(onClick = {
-                        onNavigate(Screen.RegisterAsWorkerScreen.route)
-                    }) {
+                    IconButton(
+                        onClick = {
+                            onNavigate(Screen.RegisterAsWorkerScreen.route)
+                        }, colors = IconButtonDefaults.filledIconButtonColors(
+                            containerColor = MaterialTheme.colorScheme.surface
+                        )
+                    ) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_edit),
                             contentDescription = stringResource(R.string.edit_worker_profile),
@@ -128,6 +149,7 @@ fun WorkerProfileScreen(
             LocalOverscrollConfiguration provides null
         ) {
             LazyVerticalGrid(
+                modifier = Modifier.fillMaxWidth(),
                 columns = GridCells.Fixed(3)
             ) {
                 item(span = { GridItemSpan(3) }) {
@@ -138,27 +160,13 @@ fun WorkerProfileScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Spacer(modifier = Modifier.height(SizeMedium))
-                        Box(
-                            modifier = Modifier
-                                .border(
-                                    width = LargeStrokeThickness,
-                                    shape = CircleShape,
-                                    color = MaterialTheme.colorScheme.primary
-                                )
-                                .padding(SizeSmall)
-                        ) {
-                            Image(
-                                painter = rememberImagePainter(
-                                    data = state.profile?.profilePicture,
-                                    imageLoader = imageLoader
-                                ),
-                                contentDescription = null,
-                                Modifier
-                                    .size(ExtraExtraLargeProfilePictureHeight)
-                                    .clip(CircleShape),
-                                contentScale = ContentScale.Crop
+
+                        LargeDisplayProfilePicture(
+                            painter = rememberImagePainter(
+                                data = state.profile?.profilePicture,
+                                imageLoader = imageLoader
                             )
-                        }
+                        )
                         Spacer(modifier = Modifier.height(SizeMedium))
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
@@ -284,15 +292,32 @@ fun WorkerProfileScreen(
                         }
                     )
                 }
-                items(sampleWorks.itemCount) { index ->
-                    sampleWorks[index]?.let {
-                        SampleWorkItem(
-                            sampleWork = it,
-                            imageLoader = imageLoader,
-                            onClick = {
-                                onNavigate(Screen.WorkerListScreen.route)
-                            }
-                        )
+                if (sampleWorks.itemCount > 0) {
+                    items(sampleWorks.itemCount) { index ->
+                        sampleWorks[index]?.let {
+                            SampleWorkItem(
+                                sampleWork = it,
+                                imageLoader = imageLoader,
+                                onClick = {
+                                    onNavigate(Screen.WorkerListScreen.route)
+                                }
+                            )
+                        }
+                    }
+                } else {
+                    item(span = { GridItemSpan(3) }) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(SizeMedium),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            LottieAnimation(
+                                modifier = Modifier.size(ExtraExtraLargeProfilePictureHeight),
+                                composition = noSampleWorksLottieComposition,
+                                progress = noSampleWorksLottieProgress
+                            )
+                        }
                     }
                 }
             }

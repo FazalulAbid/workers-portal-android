@@ -1,6 +1,5 @@
 package com.fifty.workersportal.featureuser.presentation.edituserprofile
 
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -41,7 +40,6 @@ import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -55,6 +53,7 @@ import androidx.navigation.NavBackStackEntry
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.fifty.workersportal.R
+import com.fifty.workersportal.core.presentation.component.LargeDisplayProfilePicture
 import com.fifty.workersportal.core.presentation.component.PrimaryButton
 import com.fifty.workersportal.core.presentation.component.SecondaryHeader
 import com.fifty.workersportal.core.presentation.component.StandardAppBar
@@ -156,19 +155,15 @@ fun UpdateUserProfileScreen(
                             modifier = Modifier.fillMaxWidth(),
                             contentAlignment = Alignment.Center
                         ) {
-                            Image(
+                            LargeDisplayProfilePicture(
                                 painter = rememberImagePainter(
                                     data = viewModel.profileImageUri.value
                                         ?: viewModel.updateUserProfileState.value.userProfile?.profilePicture
                                 ),
-                                contentDescription = null,
-                                Modifier
-                                    .size(ExtraExtraLargeProfilePictureHeight)
-                                    .clip(CircleShape)
-                                    .clickable {
-                                        profilePictureGalleryLauncher.launch("image/*")
-                                    },
-                                contentScale = ContentScale.Crop
+                                isEditable = true,
+                                onClickEdit = {
+                                    profilePictureGalleryLauncher.launch("image/*")
+                                }
                             )
                         }
                         Spacer(modifier = Modifier.height(SizeLarge))
@@ -348,7 +343,7 @@ fun UpdateUserProfileScreen(
                 dismissOnClickOutside = false,
                 dismissOnBackPress = false
             ),
-            state = rememberUseCaseState(visible = state.isLoading),
+            state = rememberUseCaseState(visible = true),
             config = StateConfig(state = fetchingDataLoadingState)
         )
     }

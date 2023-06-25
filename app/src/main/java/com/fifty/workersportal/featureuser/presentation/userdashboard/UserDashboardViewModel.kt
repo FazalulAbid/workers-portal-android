@@ -25,9 +25,10 @@ class UserDashboardViewModel @Inject constructor(
     private val getOwnUserIdUseCase: GetOwnUserIdUseCase,
     private val getDashboardBannersUseCase: GetDashboardBannersUseCase,
     private val getCategoriesUseCase: GetSuggestedCategoriesUseCase,
-    private val toggleFavouriteWorkerUseCase: ToggleFavouriteWorkerUseCase,
-    private val getLocalAddressUseCase: GetLocalAddressUseCase
+    private val toggleFavouriteWorkerUseCase: ToggleFavouriteWorkerUseCase
 ) : ViewModel() {
+
+    val _isFavourite = mutableStateOf<Boolean>(false)
 
     val visiblePermissionDialogQueue = mutableStateListOf<String>()
 

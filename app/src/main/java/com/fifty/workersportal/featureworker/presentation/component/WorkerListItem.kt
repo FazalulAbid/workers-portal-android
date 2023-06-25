@@ -19,17 +19,19 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.airbnb.lottie.LottieComposition
 import com.fifty.workersportal.R
+import com.fifty.workersportal.core.presentation.component.AddToFavouriteButton
 import com.fifty.workersportal.core.presentation.ui.theme.DarkGreenColor
 import com.fifty.workersportal.core.presentation.ui.theme.LargeProfilePictureHeight
 import com.fifty.workersportal.core.presentation.ui.theme.SizeExtraExtraSmall
@@ -40,7 +42,8 @@ import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
 @Composable
 fun WorkerListItem(
     isFavourite: Boolean,
-    onFavouriteClick: (Boolean) -> Unit = {}
+    lottieComposition: LottieComposition?,
+    onFavouriteClick: () -> Unit = {}
 ) {
     Row(
         Modifier
@@ -131,25 +134,11 @@ fun WorkerListItem(
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.End
         ) {
-            IconButton(
-                onClick = {
-                    onFavouriteClick(isFavourite)
-                }
-            ) {
-                if (isFavourite) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_favorite_filled),
-                        contentDescription = stringResource(id = R.string.add_to_favourites),
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                } else {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_favorite),
-                        contentDescription = stringResource(id = R.string.add_to_favourites),
-                        tint = MaterialTheme.colorScheme.onSurface
-                    )
-                }
-            }
+            AddToFavouriteButton(
+                isFavourite = isFavourite,
+                lottieComposition = lottieComposition,
+                onClick = onFavouriteClick
+            )
             Text(
                 modifier = Modifier
                     .clip(RoundedCornerShape(50.dp))

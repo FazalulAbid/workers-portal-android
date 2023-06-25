@@ -29,8 +29,8 @@ class ReviewAndRatingViewModel @Inject constructor(
     private val _state = mutableStateOf(ReviewAndRatingState())
     val state: State<ReviewAndRatingState> = _state
 
-    private val _ratingState = mutableStateOf(0f)
-    val ratingState: State<Float> = _ratingState
+    private val _ratingState = mutableStateOf(0)
+    val ratingState: State<Int> = _ratingState
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
@@ -42,11 +42,6 @@ class ReviewAndRatingViewModel @Inject constructor(
         when (event) {
             is ReviewAndRatingEvent.RatingValueChange -> {
                 _ratingState.value = event.rating
-                viewModelScope.launch {
-                    _eventFlow.emit(
-                        UiEvent.MakeToast(UiText.DynamicString(_ratingState.value.toString()))
-                    )
-                }
             }
 
             is ReviewAndRatingEvent.ReviewChanged -> {
@@ -68,7 +63,7 @@ class ReviewAndRatingViewModel @Inject constructor(
         viewModelScope.launch {
             val reviewAndRating = ReviewAndRating(
                 ratedUserId = Session.userSession.value?.id ?: "",
-                rating = _ratingState.value,
+                rating = _ratingState.value.toFloat(),
                 review = reviewTextFieldState.value.text,
                 isWorker = Session.userSession.value?.isWorker ?: false
             )
@@ -87,6 +82,8 @@ class ReviewAndRatingViewModel @Inject constructor(
                         _state.value = state.value.copy(
                             isLoading = false
                         )
+                        _ratingState.value = 0
+                        _reviewTextFieldState.value = StandardTextFieldState()
                         _eventFlow.emit(UiEvent.ReviewAndRatingPosted)
                     }
 

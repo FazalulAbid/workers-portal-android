@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -35,7 +36,7 @@ fun ChatItem(
     onProfilePictureClick: () -> Unit
 ) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .clickable {
                 onClick()
             }
@@ -45,7 +46,7 @@ fun ChatItem(
         Image(
             modifier = Modifier
                 .size(MediumProfilePictureHeight)
-                .clip(MaterialTheme.shapes.large)
+                .clip(CircleShape)
                 .clickable {
                     onProfilePictureClick()
                 },
