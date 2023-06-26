@@ -3,6 +3,7 @@ package com.fifty.workersportal.core.domain.util
 import android.util.Patterns
 import com.fifty.workersportal.core.util.Constants
 import com.fifty.workersportal.featureworker.util.ProfileError
+import com.fifty.workersportal.featureworker.util.ReviewAndRatingError
 
 object ValidationUtil {
 
@@ -54,6 +55,20 @@ object ValidationUtil {
         } catch (e: NumberFormatException) {
             minWage
         }
+    }
+
+    fun validateReview(review: String): ReviewAndRatingError? {
+        if (review.trim().isBlank()) {
+            return ReviewAndRatingError.EmptyField
+        }
+        return null
+    }
+
+    fun validateRating(rating: Float): ReviewAndRatingError? {
+        if (rating <= 0) {
+            return ReviewAndRatingError.RatingError
+        }
+        return null
     }
 
 }

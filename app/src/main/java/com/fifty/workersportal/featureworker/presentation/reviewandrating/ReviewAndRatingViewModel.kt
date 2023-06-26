@@ -2,25 +2,34 @@ package com.fifty.workersportal.featureworker.presentation.reviewandrating
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.fifty.workersportal.core.domain.state.StandardTextFieldState
-import com.fifty.workersportal.core.domain.util.Session
+import com.fifty.workersportal.core.domain.usecase.GetOwnUserIdUseCase
 import com.fifty.workersportal.core.presentation.util.UiEvent
 import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.UiText
 import com.fifty.workersportal.featureworker.domain.model.ReviewAndRating
+import com.fifty.workersportal.featureworker.domain.usecase.GetReviewAndRatingUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.PostReviewAndRatingUseCase
 import com.fifty.workersportal.featureworker.util.ReviewAndRatingError
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ReviewAndRatingViewModel @Inject constructor(
     private val postReviewAndRatingUseCase: PostReviewAndRatingUseCase,
+    private val getReviewAndRatingUseCase: GetReviewAndRatingUseCase,
+    private val getOwnUserIdUseCase: GetOwnUserIdUseCase,
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val _reviewTextFieldState = mutableStateOf(StandardTextFieldState())
@@ -32,11 +41,20 @@ class ReviewAndRatingViewModel @Inject constructor(
     private val _ratingState = mutableStateOf(0)
     val ratingState: State<Int> = _ratingState
 
+    var reviewsAndRatings: Flow<PagingData<ReviewAndRating>> = flowOf(PagingData.empty())
+
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
     private val _errorFlow = MutableSharedFlow<ReviewAndRatingError>()
     val errorFlow = _errorFlow.asSharedFlow()
+
+    init {
+        viewModelScope.launch {
+            val userId = savedStateHandle.get<String>("userId") ?: getOwnUserIdUseCase()
+            getReviewAndRating(userId)
+        }
+    }
 
     fun onEvent(event: ReviewAndRatingEvent) {
         when (event) {
@@ -56,18 +74,23 @@ class ReviewAndRatingViewModel @Inject constructor(
         }
     }
 
+    private fun getReviewAndRating(userId: String) {
+        _state.value = state.value.copy(isLoading = true)
+        reviewsAndRatings = getReviewAndRatingUseCase(userId).cachedIn(viewModelScope)
+        _state.value = state.value.copy(isLoading = false)
+    }
+
     private fun postReviewAndRating() {
         _state.value = state.value.copy(
             isLoading = true
         )
         viewModelScope.launch {
-            val reviewAndRating = ReviewAndRating(
-                ratedUserId = Session.userSession.value?.id ?: "",
-                rating = _ratingState.value.toFloat(),
+            val postReviewAndRatingResult = postReviewAndRatingUseCase(
+                ratedUserId = savedStateHandle.get<String>("userId") ?: getOwnUserIdUseCase(),
+                rating = ratingState.value.toFloat(),
                 review = reviewTextFieldState.value.text,
-                isWorker = Session.userSession.value?.isWorker ?: false
+                isWorker = true
             )
-            val postReviewAndRatingResult = postReviewAndRatingUseCase(reviewAndRating)
             if (postReviewAndRatingResult.ratingError != null) {
                 _errorFlow.emit(
                     postReviewAndRatingResult.ratingError

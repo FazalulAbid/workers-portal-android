@@ -83,6 +83,7 @@ import com.google.accompanist.flowlayout.MainAxisAlignment
 @OptIn(ExperimentalCoilApi::class, ExperimentalFoundationApi::class)
 @Composable
 fun WorkerProfileScreen(
+    workerId: String? = null,
     isVerified: Boolean = true,
     onNavigate: (String) -> Unit = {},
     onNavigateUp: () -> Unit = {},
@@ -101,6 +102,10 @@ fun WorkerProfileScreen(
     val noSampleWorksLottieProgress by animateLottieCompositionAsState(
         composition = noSampleWorksLottieComposition, iterations = LottieConstants.IterateForever
     )
+
+    LaunchedEffect(key1 = true) {
+        viewModel.getProfile(workerId)
+    }
 
     LaunchedEffect(Unit) {
         if (isSampleWorkAdded) {

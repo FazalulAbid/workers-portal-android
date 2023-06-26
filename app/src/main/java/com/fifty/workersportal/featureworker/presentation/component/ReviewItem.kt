@@ -29,10 +29,12 @@ import com.fifty.workersportal.core.presentation.ui.theme.ExtraSmallProfilePictu
 import com.fifty.workersportal.core.presentation.ui.theme.SizeLarge
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
+import com.fifty.workersportal.featureworker.domain.model.ReviewAndRating
 
 @Composable
 fun ReviewItem(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    reviewAndRating: ReviewAndRating
 ) {
     Column(
         modifier = modifier
@@ -59,15 +61,16 @@ fun ReviewItem(
                 Spacer(modifier = Modifier.width(SizeMedium))
                 Column(verticalArrangement = Arrangement.Bottom) {
                     Text(
-                        text = "Fazalul Abid",
+                        text = reviewAndRating.ratingUsername,
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.Medium,
                             color = MaterialTheme.colorScheme.onBackground
                         )
                     )
+                    Spacer(modifier = Modifier.height(SizeSmall))
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         RatingBar(
-                            rating = 5.0f,
+                            rating = reviewAndRating.rating,
                             tintEmpty = Color(0xFFFF8D00),
                             tintFilled = Color(0xFFFF8D00),
                             animationEnabled = true,
@@ -76,7 +79,7 @@ fun ReviewItem(
                         )
                         Spacer(modifier = Modifier.width(SizeSmall))
                         Text(
-                            text = "5.0",
+                            text = reviewAndRating.rating.toString(),
                             style = MaterialTheme.typography.bodyLarge.copy(
                                 color = MaterialTheme.colorScheme.onBackground
                             )
@@ -85,7 +88,7 @@ fun ReviewItem(
                 }
             }
             Text(
-                text = "2 days ago",
+                text = "2 days ago (Pending)",
                 style = MaterialTheme.typography.bodyMedium.copy(
                     color = MaterialTheme.colorScheme.onSurface,
                     textAlign = TextAlign.Right
@@ -94,7 +97,7 @@ fun ReviewItem(
         }
         Spacer(modifier = Modifier.height(SizeMedium))
         Text(
-            text = "He provided an exceptional service. They were prompt, professional, and efficient in resolving my plumbing issue. The plumber arrived on time, assessed the problem quickly, and provided a clear explanation of the necessary repairs. Their workmanship was top-notch, and they ensured that everything was functioning perfectly before leaving.",
+            text = reviewAndRating.review,
             style = MaterialTheme.typography.bodyMedium.copy(
                 color = MaterialTheme.colorScheme.onSurface
             )

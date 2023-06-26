@@ -1,6 +1,5 @@
 package com.fifty.workersportal.di
 
-import com.fifty.workersportal.featureworker.domain.usecase.ToggleFavouriteWorkerUseCase
 import com.fifty.workersportal.featureworker.data.remote.WorkerApiService
 import com.fifty.workersportal.featureworker.data.repository.ReviewAndRatingRepositoryImpl
 import com.fifty.workersportal.featureworker.data.repository.SampleWorkRepositoryImpl
@@ -10,12 +9,14 @@ import com.fifty.workersportal.featureworker.domain.repository.SampleWorkReposit
 import com.fifty.workersportal.featureworker.domain.repository.WorkerRepository
 import com.fifty.workersportal.featureworker.domain.usecase.DeleteSampleWorkUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.GetCategoriesUseCase
+import com.fifty.workersportal.featureworker.domain.usecase.GetReviewAndRatingUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.GetSampleWorkUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.GetSampleWorksUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.GetSuggestedCategoriesUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.PostReviewAndRatingUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.PostSampleWorkUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.SearchCategoriesUseCase
+import com.fifty.workersportal.featureworker.domain.usecase.ToggleFavouriteWorkerUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.ToggleOpenToWorkUseCase
 import com.google.gson.Gson
 import dagger.Module
@@ -24,7 +25,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
-import retrofit2.http.DELETE
 import javax.inject.Singleton
 
 @Module
@@ -122,5 +122,11 @@ object WorkerModule {
     fun provideDeleteSampleWork(
         repository: SampleWorkRepository
     ): DeleteSampleWorkUseCase = DeleteSampleWorkUseCase(repository)
+
+    @Provides
+    @Singleton
+    fun provideGetReviewAndRatingUseCase(
+        repository:ReviewAndRatingRepository
+    ): GetReviewAndRatingUseCase = GetReviewAndRatingUseCase(repository)
 
 }

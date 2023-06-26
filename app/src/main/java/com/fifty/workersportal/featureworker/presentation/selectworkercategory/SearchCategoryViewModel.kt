@@ -9,9 +9,7 @@ import androidx.paging.cachedIn
 import com.fifty.workersportal.core.domain.state.StandardTextFieldState
 import com.fifty.workersportal.core.presentation.util.UiEvent
 import com.fifty.workersportal.core.util.Constants
-import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.featureworker.domain.model.Category
-import com.fifty.workersportal.featureworker.domain.usecase.GetCategoriesUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.SearchCategoriesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -25,7 +23,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchCategoryViewModel @Inject constructor(
-    private val getCategoriesUseCase: GetCategoriesUseCase,
     private val searchCategoriesUseCase: SearchCategoriesUseCase
 ) : ViewModel() {
 

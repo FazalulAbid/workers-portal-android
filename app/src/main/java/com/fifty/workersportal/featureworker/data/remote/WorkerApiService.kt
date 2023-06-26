@@ -6,7 +6,9 @@ import com.fifty.workersportal.featureuser.data.remote.FavouriteUpdateRequest
 import com.fifty.workersportal.featureuser.data.remote.dto.ProfileDto
 import com.fifty.workersportal.featureuser.data.remote.request.SampleWorkRequest
 import com.fifty.workersportal.featureworker.data.remote.dto.CategoryDto
+import com.fifty.workersportal.featureworker.data.remote.dto.ReviewAndRatingDto
 import com.fifty.workersportal.featureworker.data.remote.dto.SampleWorkDto
+import com.fifty.workersportal.featureworker.data.remote.request.ReviewAndRatingRequest
 import com.fifty.workersportal.featureworker.domain.model.ReviewAndRating
 import okhttp3.MultipartBody
 import retrofit2.Response
@@ -37,7 +39,7 @@ interface WorkerApiService {
 
     @POST("rating/add-rating")
     suspend fun postReviewAndRating(
-        @Body reviewAndRating: ReviewAndRating
+        @Body reviewAndRating: ReviewAndRatingRequest
     ): BasicApiResponse<ReviewAndRating>
 
     @PATCH("profile/open-to-work-on")
@@ -79,4 +81,11 @@ interface WorkerApiService {
     suspend fun deleteSampleWork(
         @Query("id") sampleWorkId: String
     ): BasicApiResponse<String>
+
+    @GET("rating/get-ratings")
+    suspend fun getWorkerReviewAndRatings(
+        @Query("page") page: Int,
+        @Query("pageSize") pageSize: Int,
+        @Query("ratedUserId") userId: String
+    ): BasicApiResponse<List<ReviewAndRatingDto>>
 }

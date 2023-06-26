@@ -1,5 +1,7 @@
 package com.fifty.workersportal.featureworker.domain.usecase
 
+import com.fifty.workersportal.core.domain.util.ValidationUtil.validateRating
+import com.fifty.workersportal.core.domain.util.ValidationUtil.validateReview
 import com.fifty.workersportal.featureworker.domain.model.ReviewAndRating
 import com.fifty.workersportal.featureworker.domain.repository.ReviewAndRatingRepository
 import com.fifty.workersportal.featureworker.presentation.reviewandrating.ReviewAndRatingResult
@@ -9,9 +11,14 @@ class PostReviewAndRatingUseCase(
     private val repository: ReviewAndRatingRepository
 ) {
 
-    suspend operator fun invoke(reviewAndRating: ReviewAndRating): ReviewAndRatingResult {
-        val reviewError = validateReview(reviewAndRating.review)
-        val ratingError = validateRating(reviewAndRating.rating)
+    suspend operator fun invoke(
+        ratedUserId: String,
+        rating: Float,
+        review: String,
+        isWorker: Boolean
+    ): ReviewAndRatingResult {
+        val reviewError = validateReview(review)
+        val ratingError = validateRating(rating)
 
         return if (reviewError != null || ratingError != null) {
             ReviewAndRatingResult(
@@ -20,22 +27,13 @@ class PostReviewAndRatingUseCase(
             )
         } else {
             ReviewAndRatingResult(
-                result = repository.postReviewAndRating(reviewAndRating)
+                result = repository.postReviewAndRating(
+                    ratedUserId = ratedUserId,
+                    review = review,
+                    rating = rating,
+                    isWorker = isWorker
+                )
             )
         }
-    }
-
-    private fun validateReview(review: String): ReviewAndRatingError? {
-        if (review.trim().isBlank()) {
-            return ReviewAndRatingError.EmptyField
-        }
-        return null
-    }
-
-    private fun validateRating(rating: Float): ReviewAndRatingError? {
-        if (rating <= 0) {
-            return ReviewAndRatingError.RatingError
-        }
-        return null
     }
 }

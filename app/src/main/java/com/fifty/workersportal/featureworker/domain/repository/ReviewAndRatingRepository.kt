@@ -1,9 +1,19 @@
 package com.fifty.workersportal.featureworker.domain.repository
 
+import androidx.paging.PagingData
 import com.fifty.workersportal.core.util.SimpleResource
+import com.fifty.workersportal.featureworker.domain.model.Category
 import com.fifty.workersportal.featureworker.domain.model.ReviewAndRating
+import kotlinx.coroutines.flow.Flow
 
 interface ReviewAndRatingRepository {
 
-    suspend fun postReviewAndRating(reviewAndRating: ReviewAndRating): SimpleResource
+    fun getReviewsAndRatingsForUserPaged(userId: String): Flow<PagingData<ReviewAndRating>>
+
+    suspend fun postReviewAndRating(
+        ratedUserId: String,
+        review: String,
+        rating: Float,
+        isWorker: Boolean
+    ): SimpleResource
 }

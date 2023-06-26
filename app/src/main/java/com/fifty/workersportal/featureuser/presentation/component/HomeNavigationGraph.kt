@@ -4,6 +4,8 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material3.SnackbarHostState
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import coil.ImageLoader
 import com.fifty.workersportal.core.util.NavigationParent
@@ -29,7 +31,16 @@ fun NavGraphBuilder.userNavGraph(
                 imageLoader
             )
         }
-        composable(Screen.UserProfileScreen.route) {
+        composable(
+            Screen.UserProfileScreen.route + "?userId={userId}",
+            arguments = listOf(
+                navArgument(name = "userId") {
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = null
+                }
+            )
+        ) {
             val isUserProfileUpdated = it.savedStateHandle.get<Boolean>("isUserProfileUpdated")
             UserProfileScreen(
                 onNavigate = navController::navigate,

@@ -33,7 +33,7 @@ class UserProfileViewModel @Inject constructor(
     val eventFlow = _eventFlow.asSharedFlow()
 
     init {
-        getOwnUserProfile()
+        getUserProfile(null)
     }
 
     fun onEvent(event: UserProfileEvent) {
@@ -53,18 +53,19 @@ class UserProfileViewModel @Inject constructor(
             }
 
             UserProfileEvent.UserProfileUpdated -> {
-                getOwnUserProfile()
+                getUserProfile(null)
             }
         }
     }
 
-    private fun getOwnUserProfile() {
+    private fun getUserProfile(userId: String?) {
         viewModelScope.launch {
-            val ownUserId = getOwnUserIdUseCase()
             _state.value = state.value.copy(
                 isLoading = true
             )
-            when (val result = getUserProfileUseCase(userId = ownUserId)) {
+            when (val result = getUserProfileUseCase(
+                userId = userId ?: getOwnUserIdUseCase()
+            )) {
                 is Resource.Error -> {
                     _eventFlow.emit(
                         UiEvent.MakeToast(result.uiText ?: UiText.unknownError())

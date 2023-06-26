@@ -1,12 +1,16 @@
 package com.fifty.workersportal.featureworker.presentation.reviewandrating
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.LazyItemScope
+import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.grid.LazyGridScope
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -27,6 +31,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.presentation.component.HorizontalDivider
 import com.fifty.workersportal.core.presentation.component.PrimaryButton
@@ -39,18 +45,20 @@ import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
 import com.fifty.workersportal.core.presentation.util.UiEvent
 import com.fifty.workersportal.core.presentation.util.asString
 import com.fifty.workersportal.core.presentation.util.makeToast
+import com.fifty.workersportal.core.util.items
 import com.fifty.workersportal.featureworker.presentation.component.RatingsDetailedCountBars
 import com.fifty.workersportal.featureworker.presentation.component.ReviewItem
 import com.fifty.workersportal.featureworker.util.ReviewAndRatingError
 import kotlinx.coroutines.flow.collectLatest
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun ReviewAndRatingScreen(
     onNavigateUp: () -> Unit,
     viewModel: ReviewAndRatingViewModel = hiltViewModel()
 ) {
 
+    val reviewAndRatings = viewModel.reviewsAndRatings.collectAsLazyPagingItems()
     val writeReviewSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var showWriteReviewSheet by remember {
         mutableStateOf(false)
@@ -102,7 +110,9 @@ fun ReviewAndRatingScreen(
                 )
             }
         )
-        LazyColumn(modifier = Modifier.weight(1f)) {
+        LazyColumn(
+            modifier = Modifier.weight(1f)
+        ) {
             item {
                 Column(
                     modifier = Modifier
@@ -164,11 +174,12 @@ fun ReviewAndRatingScreen(
                     HorizontalDivider()
                 }
             }
-            val numbers = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
-            items(numbers) {
-                ReviewItem()
-                if (numbers.last() != it) {
-                    HorizontalDivider(modifier = Modifier.padding(horizontal = SizeMedium))
+            items(reviewAndRatings) { reviewAndRating ->
+                reviewAndRating?.let {
+                    ReviewItem(
+                        reviewAndRating = it
+                    )
+                    HorizontalDivider()
                 }
             }
         }

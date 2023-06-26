@@ -1,23 +1,41 @@
 package com.fifty.workersportal.featureworker.data.repository
 
-import android.util.Log
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import coil.network.HttpException
 import com.fifty.workersportal.R
+import com.fifty.workersportal.core.util.Constants
 import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.SimpleResource
 import com.fifty.workersportal.core.util.UiText
+import com.fifty.workersportal.featureworker.data.paging.ReviewAndRatingSource
 import com.fifty.workersportal.featureworker.data.remote.WorkerApiService
+import com.fifty.workersportal.featureworker.data.remote.request.ReviewAndRatingRequest
 import com.fifty.workersportal.featureworker.domain.model.ReviewAndRating
 import com.fifty.workersportal.featureworker.domain.repository.ReviewAndRatingRepository
+import kotlinx.coroutines.flow.Flow
 import java.io.IOException
 
 class ReviewAndRatingRepositoryImpl(
     private val api: WorkerApiService
 ) : ReviewAndRatingRepository {
 
-    override suspend fun postReviewAndRating(reviewAndRating: ReviewAndRating): SimpleResource {
+    override suspend fun postReviewAndRating(
+        ratedUserId: String,
+        review: String,
+        rating: Float,
+        isWorker: Boolean
+    ): SimpleResource {
         return try {
-            val response = api.postReviewAndRating(reviewAndRating)
+            val response = api.postReviewAndRating(
+                ReviewAndRatingRequest(
+                    review = review,
+                    rating = rating,
+                    ratedUserId = ratedUserId,
+                    isWorker = isWorker
+                )
+            )
             if (response.successful) {
                 Resource.Success(Unit)
             } else {
@@ -38,5 +56,13 @@ class ReviewAndRatingRepositoryImpl(
                 )
             )
         }
+    }
+
+    override fun getReviewsAndRatingsForUserPaged(userId: String): Flow<PagingData<ReviewAndRating>> {
+        val pagingConfig = PagingConfig(pageSize = Constants.DEFAULT_PAGINATION_SIZE)
+
+        return Pager(pagingConfig) {
+            ReviewAndRatingSource(api, userId)
+        }.flow
     }
 }

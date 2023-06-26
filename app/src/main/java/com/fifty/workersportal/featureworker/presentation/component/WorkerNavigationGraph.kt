@@ -76,6 +76,7 @@ fun NavGraphBuilder.workerNavGraph(
             val isWorkerProfileUpdated =
                 entry.savedStateHandle.get<Boolean>("isWorkerProfileUpdated")
             WorkerProfileScreen(
+                workerId = entry.arguments?.getString("userId"),
                 onNavigate = navController::navigate,
                 onNavigateUp = navController::navigateUp,
                 isSampleWorkAdded = isSampleWorkAdded == true,

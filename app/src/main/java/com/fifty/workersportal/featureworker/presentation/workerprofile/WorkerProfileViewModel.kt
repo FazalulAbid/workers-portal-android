@@ -10,6 +10,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.fifty.workersportal.core.domain.usecase.GetOwnUserIdUseCase
 import com.fifty.workersportal.core.domain.usecase.GetProfileDetailsUseCase
+import com.fifty.workersportal.core.domain.util.Session
 import com.fifty.workersportal.core.presentation.util.UiEvent
 import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.UiText
@@ -25,14 +26,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WorkerProfileViewModel @Inject constructor(
-    private val getOwnUserId: GetOwnUserIdUseCase,
+    private val getOwnUserIdUseCase: GetOwnUserIdUseCase,
     private val getUserProfileDetails: GetProfileDetailsUseCase,
     private val getSampleWorksUseCase: GetSampleWorksUseCase,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-
-    private var userId = ""
-    private var ownUserId = ""
 
     private val _state = mutableStateOf(WorkerProfileState())
     val state: State<WorkerProfileState> = _state
@@ -44,38 +42,38 @@ class WorkerProfileViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            ownUserId = getOwnUserId().trim()
-            userId = savedStateHandle.get<String>("userId") ?: ownUserId
-            getProfile(userId, ownUserId)
-            _state.value = state.value.copy(
-                isOwnProfile = state.value.profile?.id?.equals(ownUserId) == true
-            )
-            getSampleWorksPaginated(userId)
+            getSampleWorksPaginated(savedStateHandle.get<String>("userId") ?: getOwnUserIdUseCase())
         }
     }
 
     fun onEvent(event: WorkerProfileEvent) {
         when (event) {
             WorkerProfileEvent.UpdateSampleWorks -> {
-                getSampleWorksPaginated(userId)
+                viewModelScope.launch {
+                    getSampleWorksPaginated(getOwnUserIdUseCase())
+                }
             }
 
             WorkerProfileEvent.UpdateWorkerProfileDetails -> {
-                getProfile(userId, ownUserId)
+                viewModelScope.launch {
+                    getProfile(getOwnUserIdUseCase())
+                }
             }
         }
     }
 
-    private fun getProfile(userId: String, ownUserId: String) {
+    fun getProfile(userId: String?) {
         viewModelScope.launch {
             _state.value = state.value.copy(
                 isLoading = true
             )
-            when (val result = getUserProfileDetails(userId)) {
+            when (val result = getUserProfileDetails(
+                userId = userId ?: getOwnUserIdUseCase()
+            )) {
                 is Resource.Success -> {
                     _state.value = state.value.copy(
                         profile = result.data,
-                        isOwnProfile = userId == ownUserId,
+                        isOwnProfile = userId == Session.userSession.value?.id,
                         isLoading = false
                     )
                 }
@@ -96,7 +94,6 @@ class WorkerProfileViewModel @Inject constructor(
         _state.value = state.value.copy(
             isSampleWorksLoading = true
         )
-        Log.d("Hello", "getSampleWorksPaginated: Worked")
         sampleWorks = getSampleWorksUseCase(userId).cachedIn(viewModelScope)
         _state.value = state.value.copy(
             isSampleWorksLoading = false
