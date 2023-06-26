@@ -254,7 +254,7 @@ fun PersonalDetailsSection(
                             isTitleHintNeeded = true,
                             expandedState = genderDropDownExpanded,
                             onExpandedChange = { genderDropDownExpanded = it },
-                            selectedOption = viewModel.genderState.value,
+                            selectedOption = viewModel.genderState.value.ifBlank { genderOptions.first() },
                             onOptionSelected = {
                                 viewModel.onEvent(
                                     RegisterAsWorkerEvent.GenderSelectedChanged(it)

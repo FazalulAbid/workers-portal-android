@@ -8,6 +8,8 @@ data class ReviewAndRatingDto(
     val id: String,
     val userId: String,
     val ratedUserId: String,
+    val firstName: String,
+    val lastName: String,
     val rating: Float,
     val review: String,
     val isWorker: Boolean,
@@ -17,12 +19,14 @@ data class ReviewAndRatingDto(
     fun toReviewAndRating(): ReviewAndRating {
         return ReviewAndRating(
             id = id,
-            ratingUsername = "Username Pending",
+            firstName = "Username",
+            lastName = "Pending",
             userId = userId,
             ratedUserId = ratedUserId,
             rating = rating,
             review = review,
-            isWorker = isWorker
+            isWorker = isWorker,
+            formattedTime = ""
         )
     }
 }

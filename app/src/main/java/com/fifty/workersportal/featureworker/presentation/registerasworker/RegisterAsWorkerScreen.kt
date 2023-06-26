@@ -91,6 +91,14 @@ fun RegisterAsWorkerScreen(
                     onNavigateUp()
                 }
 
+                is RegisterAsWorkerUiEvent.SelectedCategoryCount -> {
+                    if (event.count < 2) {
+                        viewModel.onEvent(RegisterAsWorkerEvent.UpdateWorker)
+                    } else {
+                        showSheet = true
+                    }
+                }
+
                 else -> Unit
             }
         }
@@ -143,12 +151,12 @@ fun RegisterAsWorkerScreen(
                 ProfileError.NoSkillSelected -> {
                     makeToast(R.string.select_at_least_one_skill, context)
                     keyboardController?.hide()
-                    pagerState.animateScrollToPage(1)
+                    pagerState.animateScrollToPage(2)
                 }
 
                 ProfileError.SkillWageError -> {
                     keyboardController?.hide()
-                    pagerState.animateScrollToPage(2)
+                    pagerState.animateScrollToPage(3)
                 }
 
                 ProfileError.NoPrimarySkillSelected -> {
@@ -176,7 +184,7 @@ fun RegisterAsWorkerScreen(
             },
             navActions = {
                 IconButton(onClick = {
-                    viewModel.onEvent(RegisterAsWorkerEvent.UpdateWorker)
+                    viewModel.onEvent(RegisterAsWorkerEvent.OnSaveCheckClick)
                 }) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_done),
@@ -259,7 +267,7 @@ fun RegisterAsWorkerScreen(
         ) {
             RegisterAsWorkerBottomSheetContent(
                 chosenSkills = viewModel.skillsState.value.selectedSkills,
-                primarySkillSelected = viewModel.primaryCategory.value,
+                primarySkillSelectedId = viewModel.primaryCategoryId.value,
                 setSelected = {
                     viewModel.onEvent(RegisterAsWorkerEvent.PrimarySkillSelected(it))
                 },

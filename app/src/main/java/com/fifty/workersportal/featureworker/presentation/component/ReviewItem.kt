@@ -1,7 +1,6 @@
 package com.fifty.workersportal.featureworker.presentation.component
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -61,7 +60,7 @@ fun ReviewItem(
                 Spacer(modifier = Modifier.width(SizeMedium))
                 Column(verticalArrangement = Arrangement.Bottom) {
                     Text(
-                        text = reviewAndRating.ratingUsername,
+                        text = "${reviewAndRating.firstName} ${reviewAndRating.lastName}",
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.Medium,
                             color = MaterialTheme.colorScheme.onBackground

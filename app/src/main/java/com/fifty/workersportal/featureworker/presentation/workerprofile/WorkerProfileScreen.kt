@@ -84,7 +84,6 @@ import com.google.accompanist.flowlayout.MainAxisAlignment
 @Composable
 fun WorkerProfileScreen(
     workerId: String? = null,
-    isVerified: Boolean = true,
     onNavigate: (String) -> Unit = {},
     onNavigateUp: () -> Unit = {},
     isSampleWorkAdded: Boolean,
@@ -133,7 +132,7 @@ fun WorkerProfileScreen(
                 )
             },
             navActions = {
-                if (state.profile?.id == Session.userSession.value?.id) {
+                if (state.isOwnProfile) {
                     IconButton(
                         onClick = {
                             onNavigate(Screen.RegisterAsWorkerScreen.route)
@@ -165,7 +164,6 @@ fun WorkerProfileScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Spacer(modifier = Modifier.height(SizeMedium))
-
                         LargeDisplayProfilePicture(
                             painter = rememberImagePainter(
                                 data = state.profile?.profilePicture,
@@ -176,7 +174,7 @@ fun WorkerProfileScreen(
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier.offset(
-                                x = if (isVerified) {
+                                x = if (state.profile?.isVerifiedWorker == true) {
                                     (SizeMedium / 2f)
                                 } else 0.dp
                             )
@@ -192,7 +190,7 @@ fun WorkerProfileScreen(
                                 maxLines = 2,
                                 overflow = TextOverflow.Ellipsis
                             )
-                            if (isVerified) {
+                            if (state.profile?.isVerifiedWorker == true) {
                                 Spacer(modifier = Modifier.width(SizeExtraSmall))
                                 Icon(
                                     modifier = Modifier.size(SizeLarge),

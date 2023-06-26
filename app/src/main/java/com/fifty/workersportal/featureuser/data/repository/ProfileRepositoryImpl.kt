@@ -1,6 +1,7 @@
 package com.fifty.workersportal.featureuser.data.repository
 
 import android.net.Uri
+import android.util.Log
 import androidx.core.net.toFile
 import coil.network.HttpException
 import com.fifty.workersportal.R
@@ -134,6 +135,7 @@ class ProfileRepositoryImpl(
         val profilePictureFile = profilePictureUri?.toFile()
 
         return try {
+            Log.d("Hello", "updateProfileForWorker: ${gson.toJson(updateProfileForWorkerRequest)}")
             val response = api.updateProfileForWorker(
                 profilePicture = profilePictureFile?.let {
                     MultipartBody.Part

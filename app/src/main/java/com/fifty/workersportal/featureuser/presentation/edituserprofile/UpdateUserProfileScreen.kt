@@ -40,6 +40,7 @@ import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -65,7 +66,9 @@ import com.fifty.workersportal.core.presentation.ui.theme.SizeLarge
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.util.CropActivityResultContract
 import com.fifty.workersportal.core.presentation.util.UiEvent
+import com.fifty.workersportal.core.presentation.util.makeToast
 import com.fifty.workersportal.core.util.Constants
+import com.fifty.workersportal.featureworker.util.ProfileError
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.state.StateDialog
 import com.maxkeppeler.sheets.state.models.ProgressIndicator
@@ -85,6 +88,7 @@ fun UpdateUserProfileScreen(
     previousBackStackEntry: NavBackStackEntry?,
     viewModel: UpdateUserProfileViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
     val state = viewModel.updateUserProfileState.value
     val firstNameFocusRequester = remember { FocusRequester() }
     val emailFocusRequester = remember { FocusRequester() }
@@ -115,6 +119,37 @@ fun UpdateUserProfileScreen(
                 UiEvent.NavigateUp -> {
                     previousBackStackEntry?.savedStateHandle?.set("isUserProfileUpdated", true)
                     onNavigateUp()
+                }
+
+                else -> Unit
+            }
+        }
+    }
+
+    LaunchedEffect(key1 = true) {
+        viewModel.errorFlow.collectLatest { error ->
+            when (error) {
+                ProfileError.FieldEmpty -> {
+                    makeToast(R.string.error_this_field_cant_be_empty, context)
+                }
+
+                ProfileError.InputTooShort -> {
+                    makeToast(R.string.error_input_too_short, context)
+                }
+
+                ProfileError.InvalidAge -> {
+                    makeToast(R.string.enter_a_valid_age, context)
+                    ageFocusRequester.requestFocus()
+                }
+
+                ProfileError.InvalidEmail -> {
+                    makeToast(R.string.enter_a_valid_email, context)
+                    emailFocusRequester.requestFocus()
+                }
+
+                ProfileError.InvalidFirstName -> {
+                    makeToast(R.string.enter_a_valid_first_name, context)
+                    firstNameFocusRequester.requestFocus()
                 }
 
                 else -> Unit
@@ -275,7 +310,7 @@ fun UpdateUserProfileScreen(
                                     isTitleHintNeeded = true,
                                     expandedState = genderDropDownExpanded,
                                     onExpandedChange = { genderDropDownExpanded = it },
-                                    selectedOption = viewModel.genderState.value,
+                                    selectedOption = viewModel.genderState.value.ifBlank { Constants.genderOptions.first() },
                                     onOptionSelected = {
                                         viewModel.onEvent(
                                             UpdateUserProfileEvent.GenderSelectedChanged(it)

@@ -10,5 +10,5 @@ data class UpdateWorkerData(
     val gender: String,
     val age: Int,
     val categoryList: List<WorkerCategory>,
-    val primarySkill: WorkerCategory?
+    val primarySkillId: String?
 )

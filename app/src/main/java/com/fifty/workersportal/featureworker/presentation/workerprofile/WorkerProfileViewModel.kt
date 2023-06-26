@@ -67,13 +67,14 @@ class WorkerProfileViewModel @Inject constructor(
             _state.value = state.value.copy(
                 isLoading = true
             )
+            val nonNullUserId = userId ?: getOwnUserIdUseCase()
             when (val result = getUserProfileDetails(
-                userId = userId ?: getOwnUserIdUseCase()
+                userId = nonNullUserId
             )) {
                 is Resource.Success -> {
                     _state.value = state.value.copy(
                         profile = result.data,
-                        isOwnProfile = userId == Session.userSession.value?.id,
+                        isOwnProfile = nonNullUserId == Session.userSession.value?.id,
                         isLoading = false
                     )
                 }

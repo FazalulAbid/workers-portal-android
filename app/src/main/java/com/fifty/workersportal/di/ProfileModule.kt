@@ -8,6 +8,7 @@ import com.fifty.workersportal.featureuser.domain.usecase.GetUserProfileUseCase
 import com.fifty.workersportal.featureuser.domain.usecase.UpdateUserProfileUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.SetSkillSelectedUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.UpdateUserAsWorkerUseCase
+import com.fifty.workersportal.featureworker.domain.usecase.ValidateUserAsWorkerUseCase
 import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
@@ -36,6 +37,11 @@ object ProfileModule {
     @Singleton
     fun provideSetSkillSelectedUseCase(): SetSkillSelectedUseCase =
         SetSkillSelectedUseCase()
+
+    @Provides
+    @Singleton
+    fun provideValidateUserAsWorkerUseCase(): ValidateUserAsWorkerUseCase =
+        ValidateUserAsWorkerUseCase()
 
     @Provides
     @Singleton

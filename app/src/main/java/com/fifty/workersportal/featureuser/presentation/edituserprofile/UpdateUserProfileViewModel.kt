@@ -192,9 +192,6 @@ class UpdateUserProfileViewModel @Inject constructor(
                 when (updateUserProfileResult.result) {
                     is Resource.Success -> {
                         delay(1000L)
-                        _updateUserProfileState.value = updateUserProfileState.value.copy(
-                            isLoading = false,
-                        )
                         _eventFlow.emit(UiEvent.NavigateUp)
                     }
 
@@ -205,18 +202,14 @@ class UpdateUserProfileViewModel @Inject constructor(
                                     ?: UiText.unknownError()
                             )
                         )
-                        _updateUserProfileState.value = updateUserProfileState.value.copy(
-                            isLoading = false,
-                        )
                     }
 
-                    null -> {
-                        _updateUserProfileState.value = updateUserProfileState.value.copy(
-                            isLoading = false,
-                        )
-                    }
+                    null -> Unit
                 }
             }
+            _updateUserProfileState.value = updateUserProfileState.value.copy(
+                isLoading = false,
+            )
         }
     }
 }

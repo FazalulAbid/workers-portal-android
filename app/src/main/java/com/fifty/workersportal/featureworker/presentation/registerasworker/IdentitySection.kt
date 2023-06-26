@@ -51,7 +51,7 @@ fun IdentitySection(
 
     Column(modifier = Modifier.fillMaxSize()) {
         if (viewModel.identityImageUri.value != null ||
-            viewModel.updateWorkerState.value.profile?.identityUrl != null
+            viewModel.updateWorkerState.value.profile?.identityUrl?.isNotBlank() == true
         ) {
             Image(
                 painter = rememberImagePainter(

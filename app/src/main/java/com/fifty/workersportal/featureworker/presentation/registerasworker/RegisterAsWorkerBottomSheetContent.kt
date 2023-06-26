@@ -29,7 +29,7 @@ import com.google.accompanist.flowlayout.MainAxisAlignment
 @Composable
 fun RegisterAsWorkerBottomSheetContent(
     chosenSkills: List<WorkerCategory>,
-    primarySkillSelected: WorkerCategory?,
+    primarySkillSelectedId: String?,
     setSelected: (WorkerCategory) -> Unit,
     onSaveChanges: () -> Unit
 ) {
@@ -52,7 +52,8 @@ fun RegisterAsWorkerBottomSheetContent(
             ) {
                 SelectPrimarySkillChips(
                     items = chosenSkills,
-                    primarySkillSelected, setSelected
+                    primarySkillSelectedId,
+                    setSelected
                 )
             }
         }
@@ -66,7 +67,7 @@ fun RegisterAsWorkerBottomSheetContent(
 @Composable
 fun SelectPrimarySkillChips(
     items: List<WorkerCategory>,
-    selected: WorkerCategory?,
+    selectedPrimarySkillId: String?,
     setSelected: (selected: WorkerCategory) -> Unit,
 ) {
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
@@ -81,7 +82,7 @@ fun SelectPrimarySkillChips(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Chip(
-                        selected = selected == workerCategory,
+                        selected = selectedPrimarySkillId == workerCategory.id,
                         onChipClick = {
                             setSelected(workerCategory)
                         },

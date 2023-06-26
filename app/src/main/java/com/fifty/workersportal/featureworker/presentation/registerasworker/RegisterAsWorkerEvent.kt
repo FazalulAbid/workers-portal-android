@@ -20,6 +20,7 @@ sealed class RegisterAsWorkerEvent {
     data class EnterSelectedSkillHourlyWage(val index: Int, val hourlyWage: String) :
         RegisterAsWorkerEvent()
 
+    object OnSaveCheckClick : RegisterAsWorkerEvent()
     object SetDefaultWages : RegisterAsWorkerEvent()
     object ToggleOpenToWork : RegisterAsWorkerEvent()
     object UpdateWorker : RegisterAsWorkerEvent()
