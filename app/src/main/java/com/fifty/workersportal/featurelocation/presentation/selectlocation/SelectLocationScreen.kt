@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -16,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavBackStackEntry
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.presentation.component.SecondaryHeader
 import com.fifty.workersportal.core.presentation.component.StandardAppBar
@@ -55,53 +55,58 @@ fun SelectLocationScreen(
         }
     }
 
-    Column(
+    Surface(
         modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        color = MaterialTheme.colorScheme.background
     ) {
-        StandardAppBar(
-            onNavigateUp = onNavigateUp,
-            showBackArrow = true,
-            title = {
-                Text(
-                    text = stringResource(R.string.select_a_location),
-                    style = MaterialTheme.typography.headlineSmall.copy(
-                        fontWeight = FontWeight.SemiBold
-                    ),
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-            }
-        )
-        LazyColumn {
-            item {
-                Column {
-                    DetectLocationButton(
-                        text = stringResource(R.string.detect_your_current_location),
-                        description = stringResource(R.string.tap_here_to_detect_your_current_location_and_save_it_as_a_new_address),
-                        onClick = {
-                            onNavigate(Screen.DetectCurrentLocationScreen.route)
-                        }
-                    )
-                    Spacer(modifier = Modifier.height(SizeMedium))
-                    SecondaryHeader(
-                        modifier = Modifier.padding(
-                            horizontal = SizeMedium,
-                            vertical = SizeSmall
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            StandardAppBar(
+                onNavigateUp = onNavigateUp,
+                showBackArrow = true,
+                title = {
+                    Text(
+                        text = stringResource(R.string.select_a_location),
+                        style = MaterialTheme.typography.headlineSmall.copy(
+                            fontWeight = FontWeight.SemiBold
                         ),
-                        text = stringResource(R.string.saved_addresses),
-                        style = MaterialTheme.typography.titleMedium
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                 }
-            }
-            items(state.localAddresses) { localAddress ->
-                SavedAddressItem(
-                    localAddress = localAddress,
-                    onClick = {
-                        viewModel.onEvent(SelectLocationEvent.SelectLocalAddress(localAddress.id))
-                    },
-                    onMoreClick = { },
-                    onShareClick = {}
-                )
+            )
+            LazyColumn {
+                item {
+                    Column {
+                        DetectLocationButton(
+                            text = stringResource(R.string.detect_your_current_location),
+                            description = stringResource(R.string.tap_here_to_detect_your_current_location_and_save_it_as_a_new_address),
+                            onClick = {
+                                onNavigate(Screen.DetectCurrentLocationScreen.route)
+                            }
+                        )
+                        Spacer(modifier = Modifier.height(SizeMedium))
+                        SecondaryHeader(
+                            modifier = Modifier.padding(
+                                horizontal = SizeMedium,
+                                vertical = SizeSmall
+                            ),
+                            text = stringResource(R.string.saved_addresses),
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                    }
+                }
+                items(state.localAddresses) { localAddress ->
+                    SavedAddressItem(
+                        localAddress = localAddress,
+                        onClick = {
+                            viewModel.onEvent(SelectLocationEvent.SelectLocalAddress(localAddress.id))
+                        },
+                        onMoreClick = { },
+                        onShareClick = {}
+                    )
+                }
             }
         }
     }

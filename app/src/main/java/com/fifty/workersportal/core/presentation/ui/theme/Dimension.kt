@@ -2,6 +2,8 @@ package com.fifty.workersportal.core.presentation.ui.theme
 
 import androidx.compose.ui.unit.dp
 
+var ScaffoldBottomPaddingValue = 56.dp
+
 val SizeExtraExtraSmall = 2.dp
 val SizeExtraSmall = 4.dp
 val SizeSmall = 8.dp

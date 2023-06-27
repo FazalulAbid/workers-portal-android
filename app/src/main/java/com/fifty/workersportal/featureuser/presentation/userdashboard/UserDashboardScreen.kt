@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -21,6 +22,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -45,6 +47,7 @@ import com.fifty.workersportal.core.presentation.component.PermissionDialog
 import com.fifty.workersportal.core.presentation.component.SecondaryHeader
 import com.fifty.workersportal.core.presentation.ui.theme.MediumButtonHeight
 import com.fifty.workersportal.core.presentation.ui.theme.MediumProfilePictureHeight
+import com.fifty.workersportal.core.presentation.ui.theme.ScaffoldBottomPaddingValue
 import com.fifty.workersportal.core.presentation.ui.theme.SizeExtraSmall
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
@@ -123,134 +126,141 @@ fun UserDashboardScreen(
         }
     }
 
-    CompositionLocalProvider(
-        LocalOverscrollConfiguration provides null
+    Surface(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(bottom = ScaffoldBottomPaddingValue),
+        color = MaterialTheme.colorScheme.background
     ) {
-        LazyColumn {
-            item {
-                Column(
-                    modifier = Modifier.padding(SizeMedium)
-                ) {
-                    DashboardGreetingText(
-                        name = Session.userSession.value?.firstName
-                            ?: stringResource(R.string.there),
-                        greetingText = stringResource(R.string.dashboard_greeting_prefix)
-                    )
-                    Spacer(Modifier.height(SizeExtraSmall))
-                    DashboardSelectedAddressAndProfile(
-                        profileImageUrl = Session.userSession.value?.profilePicture ?: "",
-                        imageLoader = imageLoader,
-                        onProfileClick = {
-                            onNavigate(Screen.UserProfileScreen.route)
-                        },
-                        localAddress = state.selectedLocalAddress,
-                        onLocationClick = {
-                            multiplePermissionResultLauncher.launch(
-                                permissionsToRequest
-                            )
-                        }
-                    )
-                    Spacer(modifier = Modifier.height(SizeMedium))
-                    HorizontalDivider()
-                    Spacer(modifier = Modifier.height(SizeMedium))
-                    SearchWorkerButton(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(MediumButtonHeight),
-                        text = stringResource(id = R.string.search_aryan),
-                        onClick = {
-                            onNavigate(Screen.SearchWorkerScreen.route)
-                        }
-                    )
+        CompositionLocalProvider(
+            LocalOverscrollConfiguration provides null
+        ) {
+            LazyColumn {
+                item {
+                    Column(
+                        modifier = Modifier.padding(SizeMedium)
+                    ) {
+                        DashboardGreetingText(
+                            name = Session.userSession.value?.firstName
+                                ?: stringResource(R.string.there),
+                            greetingText = stringResource(R.string.dashboard_greeting_prefix)
+                        )
+                        Spacer(Modifier.height(SizeExtraSmall))
+                        DashboardSelectedAddressAndProfile(
+                            profileImageUrl = Session.userSession.value?.profilePicture ?: "",
+                            imageLoader = imageLoader,
+                            onProfileClick = {
+                                onNavigate(Screen.UserProfileScreen.route)
+                            },
+                            localAddress = state.selectedLocalAddress,
+                            onLocationClick = {
+                                multiplePermissionResultLauncher.launch(
+                                    permissionsToRequest
+                                )
+                            }
+                        )
+                        Spacer(modifier = Modifier.height(SizeMedium))
+                        HorizontalDivider()
+                        Spacer(modifier = Modifier.height(SizeMedium))
+                        SearchWorkerButton(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(MediumButtonHeight),
+                            text = stringResource(id = R.string.search_aryan),
+                            onClick = {
+                                onNavigate(Screen.SearchWorkerScreen.route)
+                            }
+                        )
+                    }
                 }
-            }
-            item {
-                Column {
-                    Spacer(modifier = Modifier.height(SizeSmall))
-                    AutoSlidingCarousal(
-                        banners = state.banners,
-                        imageLoader = imageLoader
-                    )
-                    Spacer(modifier = Modifier.height(SizeSmall))
+                item {
+                    Column {
+                        Spacer(modifier = Modifier.height(SizeSmall))
+                        AutoSlidingCarousal(
+                            banners = state.banners,
+                            imageLoader = imageLoader
+                        )
+                        Spacer(modifier = Modifier.height(SizeSmall))
+                    }
                 }
-            }
-            item {
-                Column(Modifier.padding(horizontal = SizeMedium)) {
-                    SecondaryHeader(
-                        text = stringResource(R.string.suggested_categories),
-                        modifier = Modifier.padding(top = SizeMedium, bottom = SizeSmall),
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        moreOption = true,
-                        moreOptionText = stringResource(R.string.all_categories),
-                        onMoreOptionClick = {
-                            onNavigate(Screen.SearchCategoryScreen.route)
-                        }
-                    )
-                }
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    LazyRow(Modifier.fillMaxWidth()) {
-                        items(viewModel.suggestedCategoriesState.value.suggestedCategories) {
-                            SuggestedCategoryItem(
-                                category = it,
-                                imageLoader = imageLoader,
-                                imageSize = MediumProfilePictureHeight
-                            ) {
-                                calenderState.show()
+                item {
+                    Column(Modifier.padding(horizontal = SizeMedium)) {
+                        SecondaryHeader(
+                            text = stringResource(R.string.suggested_categories),
+                            modifier = Modifier.padding(top = SizeMedium, bottom = SizeSmall),
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.SemiBold,
+                            moreOption = true,
+                            moreOptionText = stringResource(R.string.all_categories),
+                            onMoreOptionClick = {
+                                onNavigate(Screen.SearchCategoryScreen.route)
+                            }
+                        )
+                    }
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        LazyRow(Modifier.fillMaxWidth()) {
+                            items(viewModel.suggestedCategoriesState.value.suggestedCategories) {
+                                SuggestedCategoryItem(
+                                    category = it,
+                                    imageLoader = imageLoader,
+                                    imageSize = MediumProfilePictureHeight
+                                ) {
+                                    calenderState.show()
+                                }
                             }
                         }
+                        HorizontalDivider()
                     }
-                    HorizontalDivider()
                 }
-            }
-            item {
-                Column(Modifier.padding(horizontal = SizeMedium)) {
-                    SecondaryHeader(
-                        text = stringResource(R.string.most_booked_services),
-                        modifier = Modifier.padding(top = SizeMedium, bottom = SizeSmall),
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold,
-                    )
-                }
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    LazyRow(
-                        Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(SizeSmall),
-                        contentPadding = PaddingValues(horizontal = SizeSmall)
+                item {
+                    Column(Modifier.padding(horizontal = SizeMedium)) {
+                        SecondaryHeader(
+                            text = stringResource(R.string.most_booked_services),
+                            modifier = Modifier.padding(top = SizeMedium, bottom = SizeSmall),
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.SemiBold,
+                        )
+                    }
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        items(10) {
-                            MostBookedServicesItem()
+                        LazyRow(
+                            Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(SizeSmall),
+                            contentPadding = PaddingValues(horizontal = SizeSmall)
+                        ) {
+                            items(10) {
+                                MostBookedServicesItem()
+                            }
                         }
+                        Spacer(modifier = Modifier.height(SizeMedium))
+                        HorizontalDivider()
                     }
-                    Spacer(modifier = Modifier.height(SizeMedium))
-                    HorizontalDivider()
                 }
-            }
-            item {
-                Column(Modifier.padding(horizontal = SizeMedium)) {
-                    SecondaryHeader(
-                        text = stringResource(R.string.explore_more),
-                        modifier = Modifier.padding(top = SizeMedium, bottom = SizeSmall),
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold,
+                item {
+                    Column(Modifier.padding(horizontal = SizeMedium)) {
+                        SecondaryHeader(
+                            text = stringResource(R.string.explore_more),
+                            modifier = Modifier.padding(top = SizeMedium, bottom = SizeSmall),
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.SemiBold,
+                        )
+                    }
+                }
+                items(10) {
+                    WorkerListItem(
+                        viewModel._isFavourite.value,
+                        lottieComposition = favouriteLottieComposition,
+                        onFavouriteClick = {
+                            viewModel._isFavourite.value = !viewModel._isFavourite.value
+                            //viewModel.onEvent(UserDashboardEvent.ToggleFavouriteWorker(it))
+                        }
                     )
                 }
-            }
-            items(10) {
-                WorkerListItem(
-                    viewModel._isFavourite.value,
-                    lottieComposition = favouriteLottieComposition,
-                    onFavouriteClick = {
-                        viewModel._isFavourite.value = !viewModel._isFavourite.value
-                        //viewModel.onEvent(UserDashboardEvent.ToggleFavouriteWorker(it))
-                    }
-                )
             }
         }
     }

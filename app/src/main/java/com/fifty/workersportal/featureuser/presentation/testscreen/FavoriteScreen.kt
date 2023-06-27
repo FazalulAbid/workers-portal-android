@@ -4,8 +4,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -24,19 +26,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.fifty.workersportal.R
+import com.fifty.workersportal.core.presentation.component.StandardAppBar
+import com.fifty.workersportal.core.presentation.ui.theme.ScaffoldBottomPaddingValue
+import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
+import com.fifty.workersportal.featureworker.presentation.component.WorkerListItem
 
 @Composable
 fun FavoriteScreen() {
-    var showSheet by remember { mutableStateOf(false) }
-
-    if (showSheet) {
-        BottomSheet() {
-            showSheet = false
-        }
-    }
     Surface(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(bottom = ScaffoldBottomPaddingValue),
         color = MaterialTheme.colorScheme.background
     ) {
         Column(
@@ -44,58 +48,25 @@ fun FavoriteScreen() {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Button(onClick = {
-                showSheet = true
-            }) {
-                Text(text = "Show BottomSheet")
-            }
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun BottomSheet(onDismiss: () -> Unit) {
-    val modalBottomSheetState = rememberModalBottomSheetState()
-
-    ModalBottomSheet(
-        onDismissRequest = { onDismiss() },
-        sheetState = modalBottomSheetState,
-        dragHandle = { BottomSheetDefaults.DragHandle() },
-    ) {
-        CountryList()
-    }
-}
-
-
-@Composable
-fun CountryList() {
-    val countries = listOf(
-        Pair("United States", "\uD83C\uDDFA\uD83C\uDDF8"),
-        Pair("Canada", "\uD83C\uDDE8\uD83C\uDDE6"),
-        Pair("India", "\uD83C\uDDEE\uD83C\uDDF3"),
-        Pair("Germany", "\uD83C\uDDE9\uD83C\uDDEA"),
-        Pair("France", "\uD83C\uDDEB\uD83C\uDDF7"),
-        Pair("Japan", "\uD83C\uDDEF\uD83C\uDDF5"),
-        Pair("China", "\uD83C\uDDE8\uD83C\uDDF3"),
-        Pair("Brazil", "\uD83C\uDDE7\uD83C\uDDF7"),
-        Pair("Australia", "\uD83C\uDDE6\uD83C\uDDFA"),
-        Pair("Russia", "\uD83C\uDDF7\uD83C\uDDFA"),
-        Pair("United Kingdom", "\uD83C\uDDEC\uD83C\uDDE7"),
-    )
-
-    LazyColumn {
-        items(countries) { (country, flag) ->
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 10.dp, horizontal = 20.dp)
-            ) {
-                Text(
-                    text = flag,
-                    modifier = Modifier.padding(end = 20.dp)
-                )
-                Text(text = country)
+            StandardAppBar(
+                showBackArrow = false,
+                title = {
+                    Text(
+                        text = stringResource(R.string.favorites),
+                        style = MaterialTheme.typography.headlineSmall.copy(
+                            fontWeight = FontWeight.SemiBold
+                        ),
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                }
+            )
+            LazyColumn {
+                items(20) {
+                    WorkerListItem(
+                        true,
+                        lottieComposition = null
+                    )
+                }
             }
         }
     }
