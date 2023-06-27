@@ -1,6 +1,7 @@
 package com.fifty.workersportal.featureworker.presentation.component
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,7 +22,13 @@ fun SampleWorkItem(
     imageLoader: ImageLoader,
     onClick: () -> Unit
 ) {
-    Box(modifier = Modifier.aspectRatio(1f)) {
+    Box(
+        modifier = Modifier
+            .aspectRatio(1f)
+            .clickable {
+                onClick()
+            }
+    ) {
         Image(
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop,

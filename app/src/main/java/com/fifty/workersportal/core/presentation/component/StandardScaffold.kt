@@ -27,7 +27,7 @@ fun StandardScaffold(
     content: @Composable () -> Unit,
 ) {
     Scaffold(
-        modifier = modifier,
+         modifier = modifier,
         bottomBar = {
             StandardBottomBar(
                 onNavigate = onNavigate,

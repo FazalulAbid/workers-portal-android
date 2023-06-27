@@ -59,6 +59,12 @@ class WorkerProfileViewModel @Inject constructor(
                     getProfile(getOwnUserIdUseCase())
                 }
             }
+
+            is WorkerProfileEvent.ClickSampleWork -> {
+                _state.value = state.value.copy(
+                    clickedSampleWork = event.sampleWork
+                )
+            }
         }
     }
 

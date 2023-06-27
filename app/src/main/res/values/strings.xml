@@ -163,5 +163,6 @@
     <string name="no_sample_works">No sample works</string>
     <string name="your_review_is_posted">Your review is posted</string>
     <string name="required_field_is_empty">Required field is empty</string>
+    <string name="edit_address">Edit address</string>
 
 </resources>

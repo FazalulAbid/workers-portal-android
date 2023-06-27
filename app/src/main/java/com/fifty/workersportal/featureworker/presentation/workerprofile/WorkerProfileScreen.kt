@@ -1,5 +1,6 @@
 package com.fifty.workersportal.featureworker.presentation.workerprofile
 
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.LocalOverscrollConfiguration
@@ -33,6 +34,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -79,6 +82,7 @@ import com.fifty.workersportal.featureworker.presentation.component.SampleWorkIt
 import com.fifty.workersportal.featureworker.presentation.component.WorkerWageText
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
+import javax.security.auth.login.LoginException
 
 @OptIn(ExperimentalCoilApi::class, ExperimentalFoundationApi::class)
 @Composable
@@ -91,6 +95,7 @@ fun WorkerProfileScreen(
     imageLoader: ImageLoader,
     viewModel: WorkerProfileViewModel = hiltViewModel()
 ) {
+    val showSampleWorkImage = remember { mutableStateOf(false) }
     val state = viewModel.state.value
     val screenWidth = with(LocalConfiguration.current) { screenWidthDp.dp }
     val sampleWorks =
@@ -302,7 +307,8 @@ fun WorkerProfileScreen(
                                 sampleWork = it,
                                 imageLoader = imageLoader,
                                 onClick = {
-                                    onNavigate(Screen.WorkerListScreen.route)
+                                    viewModel.onEvent(WorkerProfileEvent.ClickSampleWork(it))
+                                    showSampleWorkImage.value = true
                                 }
                             )
                         }
@@ -325,5 +331,17 @@ fun WorkerProfileScreen(
                 }
             }
         }
+    }
+
+    if (showSampleWorkImage.value) {
+        SampleWorkViewDialog(
+            imageUrl = state.clickedSampleWork?.imageUrl ?: "",
+            title = state.clickedSampleWork?.title ?: "",
+            description = state.clickedSampleWork?.description ?: "",
+            imageLoader = imageLoader,
+            setShowDialog = {
+                showSampleWorkImage.value = it
+            }
+        )
     }
 }
