@@ -141,8 +141,9 @@ fun UserDashboardScreen(
                         modifier = Modifier.padding(SizeMedium)
                     ) {
                         DashboardGreetingText(
-                            name = Session.userSession.value?.firstName
-                                ?: stringResource(R.string.there),
+                            name = if (Session.userSession.value?.firstName.isNullOrBlank()) {
+                                stringResource(id = R.string.there)
+                            } else Session.userSession.value?.firstName ?: "",
                             greetingText = stringResource(R.string.dashboard_greeting_prefix)
                         )
                         Spacer(Modifier.height(SizeExtraSmall))
