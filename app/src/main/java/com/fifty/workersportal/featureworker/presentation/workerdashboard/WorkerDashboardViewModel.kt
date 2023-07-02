@@ -12,9 +12,13 @@ import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.UiText
 import com.fifty.workersportal.featureworker.domain.usecase.ToggleOpenToWorkUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,6 +27,12 @@ class WorkerDashboardViewModel @Inject constructor(
     private val getOwnUserIdUseCase: GetOwnUserIdUseCase,
     private val getProfileDetailsUseCase: GetProfileDetailsUseCase
 ) : ViewModel() {
+
+    private val _cards = MutableStateFlow(listOf<CardModel>())
+    val cards: StateFlow<List<CardModel>> get() = _cards
+
+    private val _revealedCard = mutableStateOf<CardModel?>(null)
+    val revealedCard: State<CardModel?> = _revealedCard
 
     private val _state = mutableStateOf(WorkerDashboardState())
     val state: State<WorkerDashboardState> = _state
@@ -33,6 +43,17 @@ class WorkerDashboardViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             getUserDetails(getOwnUserIdUseCase())
+        }
+        getFakeData()
+    }
+
+    private fun getFakeData() {
+        viewModelScope.launch {
+            withContext(Dispatchers.Default) {
+                val testList = arrayListOf<CardModel>()
+                repeat(20) { testList += CardModel(id = it, title = "Card $it") }
+                _cards.emit(testList)
+            }
         }
     }
 
@@ -46,6 +67,14 @@ class WorkerDashboardViewModel @Inject constructor(
                 getLocalAddress()
             }
         }
+    }
+
+    fun onItemExpanded(card: CardModel) {
+        _revealedCard.value = card
+    }
+
+    fun onItemCollapsed(card: CardModel) {
+        _revealedCard.value = null
     }
 
     private suspend fun getUserDetails(userId: String) {
@@ -101,3 +130,8 @@ class WorkerDashboardViewModel @Inject constructor(
         )
     }
 }
+
+data class CardModel(
+    val id: Int,
+    val title: String
+)

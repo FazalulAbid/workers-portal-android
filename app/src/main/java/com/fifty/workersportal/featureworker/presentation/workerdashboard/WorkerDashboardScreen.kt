@@ -3,6 +3,7 @@ package com.fifty.workersportal.featureworker.presentation.workerdashboard
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalOverscrollConfiguration
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,15 +11,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import coil.ImageLoader
@@ -38,8 +42,14 @@ import com.fifty.workersportal.core.presentation.util.makeToast
 import com.fifty.workersportal.core.util.Screen
 import com.fifty.workersportal.featureuser.presentation.userdashboard.UserDashboardEvent
 import com.fifty.workersportal.featureworker.presentation.component.OpenToWorkSwitch
+import com.fifty.workersportal.featureworker.presentation.component.WorkProposalCardActionRow
+import com.fifty.workersportal.featureworker.presentation.component.WorkProposalDraggableCard
 import com.fifty.workersportal.featureworker.presentation.component.WorkProposalListItem
 import kotlinx.coroutines.flow.collectLatest
+
+const val ACTION_ITEM_SIZE = 56
+const val CARD_HEIGHT = 56
+const val CARD_OFFSET = 168f // we have 3 icons in a row, so that's 56 * 3
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -51,6 +61,7 @@ fun WorkerDashboardScreen(
 ) {
     val state = viewModel.state.value
     val context = LocalContext.current
+    val cards = viewModel.cards.collectAsState()
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
@@ -68,7 +79,7 @@ fun WorkerDashboardScreen(
         }
     }
 
-    OnLifecycleEvent { owner, event ->
+    OnLifecycleEvent { _, event ->
         when (event) {
             Lifecycle.Event.ON_RESUME -> {
                 viewModel.onEvent(WorkerDashboardEvent.UpdateSelectedAddress)
@@ -130,14 +141,25 @@ fun WorkerDashboardScreen(
                         style = MaterialTheme.typography.titleMedium
                     )
                 }
-                LazyColumn() {
-                    items(20) {
-                        WorkProposalListItem()
-                        HorizontalDivider(
-                            modifier = Modifier.padding(horizontal = SizeMedium),
-                            color = MaterialTheme.colorScheme.surface,
-                            thickness = SmallStrokeThickness
-                        )
+
+                LazyColumn {
+                    items(cards.value, CardModel::id) { card ->
+                        Box(Modifier.fillMaxWidth()) {
+                            WorkProposalCardActionRow(
+                                actionIconSize = ACTION_ITEM_SIZE.dp,
+                                onDelete = {},
+                                onEdit = {},
+                                onFavorite = {}
+                            )
+                            WorkProposalDraggableCard(
+                                card = card,
+                                isRevealed = viewModel.revealedCard.value?.id == card.id,
+                                cardHeight = CARD_HEIGHT.dp,
+                                cardOffset = CARD_OFFSET,
+                                onExpand = { viewModel.onItemExpanded(card) },
+                                onCollapse = { viewModel.onItemCollapsed(card) },
+                            )
+                        }
                     }
                 }
             }
