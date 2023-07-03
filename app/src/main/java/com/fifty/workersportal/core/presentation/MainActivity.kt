@@ -14,6 +14,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -29,6 +30,7 @@ import com.fifty.workersportal.core.util.Screen
 import com.fifty.workersportal.featureauth.presentation.splash.SplashEvent
 import com.fifty.workersportal.featureauth.presentation.splash.SplashViewModel
 import com.fifty.workersportal.featureauth.presentation.splash.UserAuthState
+import com.fifty.workersportal.featureworkproposal.presentation.workproposal.WorkProposalViewModel
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -65,6 +67,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    val workProposalViewModel = hiltViewModel<WorkProposalViewModel>()
                     val navController = rememberAnimatedNavController()
                     val navBackStackEntry by navController.currentBackStackEntryAsState()
                     val snackBarHostState = remember { SnackbarHostState() }
@@ -87,6 +90,7 @@ class MainActivity : ComponentActivity() {
                                     startDestination = NavigationParent.Auth.route,
                                     onDataLoaded = { keepSplashScreenOn = false },
                                     imageLoader = imageLoader,
+                                    workProposalViewModel = workProposalViewModel,
                                     isWorker = Session.userSession.value?.isWorker ?: false
                                 )
                             }
@@ -98,6 +102,7 @@ class MainActivity : ComponentActivity() {
                                     startDestination = NavigationParent.Home.route,
                                     onDataLoaded = { keepSplashScreenOn = false },
                                     imageLoader = imageLoader,
+                                    workProposalViewModel = workProposalViewModel,
                                     isWorker = Session.userSession.value?.isWorker ?: false
                                 )
                             }

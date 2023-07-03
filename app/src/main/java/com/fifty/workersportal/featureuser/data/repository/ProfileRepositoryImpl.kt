@@ -133,6 +133,7 @@ class ProfileRepositoryImpl(
         identityPictureUri: Uri?
     ): Resource<Profile> {
         val profilePictureFile = profilePictureUri?.toFile()
+        val identityPictureFile = identityPictureUri?.toFile()
 
         return try {
             Log.d("Hello", "updateProfileForWorker: ${gson.toJson(updateProfileForWorkerRequest)}")
@@ -145,12 +146,12 @@ class ProfileRepositoryImpl(
                             profilePictureFile.asRequestBody()
                         )
                 },
-                identityPicture = profilePictureFile?.let {
+                identityPicture = identityPictureFile?.let {
                     MultipartBody.Part
                         .createFormData(
                             "identity",
-                            profilePictureFile.name,
-                            profilePictureFile.asRequestBody()
+                            identityPictureFile.name,
+                            identityPictureFile.asRequestBody()
                         )
                 },
                 updateProfileForWorkerRequest = MultipartBody.Part

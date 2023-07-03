@@ -61,6 +61,8 @@ import com.fifty.workersportal.featureuser.presentation.component.MostBookedServ
 import com.fifty.workersportal.featureuser.presentation.component.SearchWorkerButton
 import com.fifty.workersportal.featureuser.presentation.component.SuggestedCategoryItem
 import com.fifty.workersportal.featureworker.presentation.component.WorkerListItem
+import com.fifty.workersportal.featureworkproposal.presentation.workproposal.WorkProposalEvent
+import com.fifty.workersportal.featureworkproposal.presentation.workproposal.WorkProposalViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
@@ -78,9 +80,10 @@ import java.time.LocalDate
 fun UserDashboardScreen(
     onNavigate: (String) -> Unit = {},
     imageLoader: ImageLoader,
-    viewModel: UserDashboardViewModel = hiltViewModel()
+    userDashboardViewModel: UserDashboardViewModel = hiltViewModel(),
+    workProposalViewModel: WorkProposalViewModel
 ) {
-    val state = viewModel.state.value
+    val state = userDashboardViewModel.state.value
     val context = LocalContext.current
     val calenderState = rememberUseCaseState()
 
@@ -96,7 +99,7 @@ fun UserDashboardScreen(
         contract = ActivityResultContracts.RequestMultiplePermissions(),
         onResult = { perms ->
             permissionsToRequest.forEach { permission ->
-                viewModel.onPermissionResult(
+                userDashboardViewModel.onPermissionResult(
                     permission = permission,
                     isGranted = perms[permission] == true
                 )
@@ -107,7 +110,7 @@ fun UserDashboardScreen(
     OnLifecycleEvent { _, event ->
         when (event) {
             Lifecycle.Event.ON_RESUME -> {
-                viewModel.onEvent(UserDashboardEvent.UpdateSelectedAddress)
+                userDashboardViewModel.onEvent(UserDashboardEvent.UpdateSelectedAddress)
             }
 
             else -> Unit
@@ -115,7 +118,7 @@ fun UserDashboardScreen(
     }
 
     LaunchedEffect(key1 = true) {
-        viewModel.eventFlow.collectLatest { event ->
+        userDashboardViewModel.eventFlow.collectLatest { event ->
             when (event) {
                 is UiEvent.Navigate -> {
                     onNavigate(event.route)
@@ -203,7 +206,7 @@ fun UserDashboardScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         LazyRow(Modifier.fillMaxWidth()) {
-                            items(viewModel.suggestedCategoriesState.value.suggestedCategories) {
+                            items(userDashboardViewModel.suggestedCategoriesState.value.suggestedCategories) {
                                 SuggestedCategoryItem(
                                     category = it,
                                     imageLoader = imageLoader,
@@ -254,10 +257,11 @@ fun UserDashboardScreen(
                 }
                 items(10) {
                     WorkerListItem(
-                        viewModel._isFavourite.value,
+                        userDashboardViewModel._isFavourite.value,
                         lottieComposition = favouriteLottieComposition,
                         onFavouriteClick = {
-                            viewModel._isFavourite.value = !viewModel._isFavourite.value
+                            userDashboardViewModel._isFavourite.value =
+                                !userDashboardViewModel._isFavourite.value
                             //viewModel.onEvent(UserDashboardEvent.ToggleFavouriteWorker(it))
                         }
                     )
@@ -266,7 +270,7 @@ fun UserDashboardScreen(
         }
     }
 
-    viewModel.visiblePermissionDialogQueue.reversed().forEach { permission ->
+    userDashboardViewModel.visiblePermissionDialogQueue.reversed().forEach { permission ->
         PermissionDialog(
             permissionTextProvider = when (permission) {
                 Manifest.permission.ACCESS_FINE_LOCATION -> CoarseLocationPermissionTextProvider()
@@ -278,16 +282,16 @@ fun UserDashboardScreen(
                 context as Activity,
                 permission
             ),
-            onDismiss = viewModel::dismissPermissionDialog,
+            onDismiss = userDashboardViewModel::dismissPermissionDialog,
             onOkClick = {
-                viewModel.dismissPermissionDialog()
+                userDashboardViewModel.dismissPermissionDialog()
                 multiplePermissionResultLauncher.launch(
                     arrayOf(permission)
                 )
             },
             onGotoAppSettingsClick = {
                 context.openAppSettings()
-                viewModel.dismissPermissionDialog()
+                userDashboardViewModel.dismissPermissionDialog()
             }
         )
     }
@@ -306,7 +310,8 @@ fun UserDashboardScreen(
             boundary = range
         ),
         selection = CalendarSelection.Date { date ->
-            Toast.makeText(context, "${date.toString()}", Toast.LENGTH_SHORT).show()
+            workProposalViewModel.onEvent(WorkProposalEvent.InputProposalDate(date))
+
         }
     )
 }

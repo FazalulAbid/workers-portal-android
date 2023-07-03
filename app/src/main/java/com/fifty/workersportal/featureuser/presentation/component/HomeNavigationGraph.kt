@@ -13,12 +13,14 @@ import com.fifty.workersportal.core.util.Screen
 import com.fifty.workersportal.featureuser.presentation.edituserprofile.UpdateUserProfileScreen
 import com.fifty.workersportal.featureuser.presentation.userdashboard.UserDashboardScreen
 import com.fifty.workersportal.featureuser.presentation.userprofile.UserProfileScreen
+import com.fifty.workersportal.featureworkproposal.presentation.workproposal.WorkProposalViewModel
 import com.google.accompanist.navigation.animation.composable
 
 @OptIn(ExperimentalAnimationApi::class)
 fun NavGraphBuilder.userNavGraph(
     navController: NavController,
     snackbarHostState: SnackbarHostState,
+    workProposalViewModel: WorkProposalViewModel,
     imageLoader: ImageLoader
 ) {
     navigation(
@@ -28,7 +30,8 @@ fun NavGraphBuilder.userNavGraph(
         composable(Screen.UserDashboardScreen.route) {
             UserDashboardScreen(
                 onNavigate = navController::navigate,
-                imageLoader
+                workProposalViewModel = workProposalViewModel,
+                imageLoader = imageLoader
             )
         }
         composable(

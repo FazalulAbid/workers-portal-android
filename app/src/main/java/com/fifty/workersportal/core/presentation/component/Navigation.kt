@@ -17,6 +17,7 @@ import com.fifty.workersportal.featurehistory.presentation.component.historyNavG
 import com.fifty.workersportal.featurelocation.presentation.component.locationNavGraph
 import com.fifty.workersportal.featureuser.presentation.component.userNavGraph
 import com.fifty.workersportal.featureworker.presentation.component.workerNavGraph
+import com.fifty.workersportal.featureworkproposal.presentation.workproposal.WorkProposalViewModel
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -27,6 +28,7 @@ fun Navigation(
     startDestination: String,
     imageLoader: ImageLoader,
     isWorker: Boolean,
+    workProposalViewModel: WorkProposalViewModel,
     onDataLoaded: () -> Unit
 ) {
     LaunchedEffect(key1 = Unit) {
@@ -41,7 +43,7 @@ fun Navigation(
         popExitTransition = { popExitTransitionHorizontal },
     ) {
         authNavGraph(navController, snackbarHostState, imageLoader)
-        userNavGraph(navController, snackbarHostState, imageLoader)
+        userNavGraph(navController, snackbarHostState, workProposalViewModel,imageLoader)
         workerNavGraph(navController, snackbarHostState, imageLoader, isWorker)
         favouriteNavGraph(navController, snackbarHostState)
         historyNavGraph(navController, snackbarHostState)

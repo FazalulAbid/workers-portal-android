@@ -52,9 +52,6 @@ class SearchCategoryViewModel @Inject constructor(
     }
 
     private fun searchCategories(searchQuery: String) {
-        _searchState.value = searchState.value.copy(
-            isLoading = true
-        )
         _searchFieldState.value = searchFieldState.value.copy(
             text = searchQuery
         )
@@ -62,9 +59,6 @@ class SearchCategoryViewModel @Inject constructor(
         searchJob = viewModelScope.launch {
             delay(Constants.SEARCH_DELAY)
             searchedCategories = searchCategoriesUseCase(searchQuery).cachedIn(viewModelScope)
-            _searchState.value = searchState.value.copy(
-                isLoading = false
-            )
         }
     }
 }
