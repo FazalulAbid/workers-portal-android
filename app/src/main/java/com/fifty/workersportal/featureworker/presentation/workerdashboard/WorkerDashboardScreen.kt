@@ -83,6 +83,7 @@ fun WorkerDashboardScreen(
         when (event) {
             Lifecycle.Event.ON_RESUME -> {
                 viewModel.onEvent(WorkerDashboardEvent.UpdateSelectedAddress)
+                viewModel.onEvent(WorkerDashboardEvent.UpdateUserDetails)
             }
 
             else -> Unit

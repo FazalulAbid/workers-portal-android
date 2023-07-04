@@ -311,7 +311,7 @@ fun UserDashboardScreen(
         ),
         selection = CalendarSelection.Date { date ->
             workProposalViewModel.onEvent(WorkProposalEvent.InputProposalDate(date))
-
+            onNavigate(Screen.SearchWorkerScreen.route)
         }
     )
 }

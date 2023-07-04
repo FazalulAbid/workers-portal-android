@@ -1,5 +1,6 @@
 package com.fifty.workersportal.featureworker.data.paging
 
+import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.fifty.workersportal.core.util.Constants
@@ -24,6 +25,7 @@ class CategorySource(
                 searchQuery = searchKey
             ).data ?: emptyList()
 
+            Log.d("Hello", "load: $categories")
             LoadResult.Page(
                 data = categories.map { it.toCategory() },
                 prevKey = if (nextPage == 0) null else nextPage - 1,

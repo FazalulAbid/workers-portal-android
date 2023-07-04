@@ -28,6 +28,7 @@ fun SelectImageSourceButton(
     icon: Painter,
     text: String = "",
     contentColor: Color = MaterialTheme.colorScheme.background,
+    iconColor: Color = MaterialTheme.colorScheme.onPrimary,
     containerColor: Color = MaterialTheme.colorScheme.primary,
     onClick: () -> Unit
 ) {
@@ -50,7 +51,7 @@ fun SelectImageSourceButton(
                 painter = icon,
                 contentDescription = null,
                 modifier = Modifier.size(SmallProfilePictureHeight),
-                tint = contentColor
+                tint = iconColor
             )
         }
         Spacer(modifier = Modifier.height(SizeMedium))

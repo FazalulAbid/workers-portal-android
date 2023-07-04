@@ -16,6 +16,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,6 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.ImageLoader
 import com.fifty.workersportal.R
@@ -45,9 +48,15 @@ fun SelectWorkerCategoryScreen(
     onNavigateUp: () -> Unit = {},
     viewModel: SearchCategoryViewModel = hiltViewModel()
 ) {
+    val search by viewModel.search.collectAsStateWithLifecycle()
     val state = viewModel.searchState.value
     val searchedCategories =
-        viewModel.searchedCategories.collectAsLazyPagingItems()
+        viewModel.categorySearchResults.collectAsLazyPagingItems()
+
+    LaunchedEffect(Unit) {
+        viewModel.onEvent(SearchCategoryEvent.Query(""))
+    }
+
     Column(
         Modifier.fillMaxSize()
     ) {
@@ -86,7 +95,7 @@ fun SelectWorkerCategoryScreen(
                 },
                 trailingIcon = null,
                 hint = stringResource(R.string.search_plumber),
-                value = viewModel.searchFieldState.value.text,
+                value = search,
                 onValueChange = {
                     viewModel.onEvent(SearchCategoryEvent.Query(it))
                 }

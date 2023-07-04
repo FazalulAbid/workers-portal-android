@@ -75,7 +75,9 @@ fun StandardTextField(
             readOnly = readOnly,
             singleLine = singleLine,
             cursorBrush = SolidColor(cursorColor),
-            textStyle = MaterialTheme.typography.bodyLarge,
+            textStyle = MaterialTheme.typography.bodyLarge.copy(
+                color = textColor
+            ),
             decorationBox = { innerTextField ->
                 Row(
                     basicTextFieldModifier,

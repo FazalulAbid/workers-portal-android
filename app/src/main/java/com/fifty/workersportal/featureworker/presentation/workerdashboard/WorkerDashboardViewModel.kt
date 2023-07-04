@@ -66,6 +66,12 @@ class WorkerDashboardViewModel @Inject constructor(
             WorkerDashboardEvent.UpdateSelectedAddress -> {
                 getLocalAddress()
             }
+
+            WorkerDashboardEvent.UpdateUserDetails -> {
+                viewModelScope.launch {
+                    getUserDetails(getOwnUserIdUseCase())
+                }
+            }
         }
     }
 
