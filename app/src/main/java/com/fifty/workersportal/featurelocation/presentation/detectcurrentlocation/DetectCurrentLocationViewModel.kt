@@ -8,10 +8,10 @@ import com.fifty.workersportal.core.domain.state.StandardTextFieldState
 import com.fifty.workersportal.core.presentation.util.UiEvent
 import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.UiText
-import com.fifty.workersportal.featurelocation.domain.usecase.CheckIfDeviceLocationEnabledUseCase
-import com.fifty.workersportal.featurelocation.domain.usecase.GetAddressFromLatLngUseCase
+import com.fifty.workersportal.featurelocation.domain.model.ReverseGeocodeDisplayAddress
 import com.fifty.workersportal.featurelocation.domain.usecase.GetCurrentLocationUseCase
-import com.fifty.workersportal.featurelocation.domain.usecase.GetLocalAddressFromAddressUseCase
+import com.fifty.workersportal.featurelocation.domain.usecase.GetLocalAddressFromReverseGeocodingUseCase
+import com.fifty.workersportal.featurelocation.domain.usecase.ReverseGeocodeForDisplayAddressUseCase
 import com.fifty.workersportal.featurelocation.domain.usecase.SaveAddressUseCase
 import com.fifty.workersportal.featurelocation.util.AddressError
 import com.google.android.gms.maps.model.LatLng
@@ -20,15 +20,14 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
-import java.util.function.DoubleUnaryOperator
 import javax.inject.Inject
+
 
 @HiltViewModel
 class DetectCurrentLocationViewModel @Inject constructor(
     private val getCurrentLocation: GetCurrentLocationUseCase,
-    private val getAddressFromLatLng: GetAddressFromLatLngUseCase,
-    private val getLocalAddressFromAddress: GetLocalAddressFromAddressUseCase,
-    private val checkIfDeviceLocationEnabled: CheckIfDeviceLocationEnabledUseCase,
+    private val getLocalAddressFromReverseGeocodingUseCase: GetLocalAddressFromReverseGeocodingUseCase,
+    private val reverseGeocodeForDisplayAddressUseCase: ReverseGeocodeForDisplayAddressUseCase,
     private val saveAddress: SaveAddressUseCase
 ) : ViewModel() {
 
@@ -56,25 +55,13 @@ class DetectCurrentLocationViewModel @Inject constructor(
     val errorFlow = _errorFlow.asSharedFlow()
 
     init {
-        if (checkIfDeviceLocationEnabled()) {
-            changeLoadingState(true)
-            getCurrentDeviceLocation()
-            changeLoadingState(false)
-        } else {
-            viewModelScope.launch {
-                _eventFlow.emit(
-                    UiEvent.MakeToast(UiText.DynamicString("Location is not enabled!"))
-                )
-            }
-        }
+        getCurrentDeviceLocation(true)
     }
 
     fun onEvent(event: DetectCurrentLocationEvent) {
         when (event) {
             DetectCurrentLocationEvent.CurrentLocation -> {
-                changeLoadingState(true)
                 getCurrentDeviceLocation()
-                changeLoadingState(false)
             }
 
             is DetectCurrentLocationEvent.EnterAddressTitle -> {
@@ -102,9 +89,10 @@ class DetectCurrentLocationViewModel @Inject constructor(
             }
 
             is DetectCurrentLocationEvent.SelectCurrentCameraPosition -> {
-                changeLoadingState(true)
-                changeLocation(event.lat, event.lng)
-                changeLoadingState(false)
+                viewModelScope.launch {
+                    changeLocation(event.lat, event.lng)
+                }
+
             }
 
             DetectCurrentLocationEvent.SaveAddress -> {
@@ -184,39 +172,62 @@ class DetectCurrentLocationViewModel @Inject constructor(
         }
     }
 
-    private fun getCurrentDeviceLocation() {
+    private fun getCurrentDeviceLocation(isDelayNeeded: Boolean = false) {
         viewModelScope.launch {
+            if (isDelayNeeded) delay(500L)
+            changeLoadingState(true)
             val currentLocation = getCurrentLocation()
             currentLocation?.let {
                 _state.value = state.value.copy(
                     currentLatLong = LatLng(it.latitude, it.longitude),
-                    address = getAddressFromLatLng(LatLng(it.latitude, it.longitude))
                 )
             }
-            getLocationAddress()
             _eventFlow.emit(UiEvent.OnCurrentLocation)
+            val reverseGeocodedDisplayAddress = reverseGeocode()
+            reverseGeocodedDisplayAddress?.let {
+                getLocationAddress(it)
+            }
+            changeLoadingState(false)
         }
     }
 
-    private fun changeLocation(lat: Double, lng: Double) {
+    private suspend fun changeLocation(lat: Double, lng: Double) {
         try {
+            changeLoadingState(true)
             _state.value = state.value.copy(
                 currentLatLong = LatLng(lat, lng),
-                address = getAddressFromLatLng(LatLng(lat, lng))
             )
-            getLocationAddress()
+            val reverseGeocodedDisplayAddress = reverseGeocode()
+            reverseGeocodedDisplayAddress?.let {
+                getLocationAddress(it)
+            }
+            changeLoadingState(false)
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
-    private fun getLocationAddress() {
-        _state.value.address?.let {
-            val localAddress = getLocalAddressFromAddress(it)
-            _state.value = _state.value.copy(
-                localAddress = localAddress
-            )
+    private suspend fun reverseGeocode(): ReverseGeocodeDisplayAddress? {
+        val result = reverseGeocodeForDisplayAddressUseCase(
+            _state.value.currentLatLong.latitude,
+            _state.value.currentLatLong.longitude
+        )
+        return when (result) {
+            is Resource.Success -> {
+                result.data
+            }
+
+            is Resource.Error -> {
+                null
+            }
         }
+    }
+
+    private fun getLocationAddress(reverseGeocodeDisplayAddress: ReverseGeocodeDisplayAddress) {
+        val localAddress = getLocalAddressFromReverseGeocodingUseCase(reverseGeocodeDisplayAddress)
+        _state.value = _state.value.copy(
+            localAddress = localAddress
+        )
     }
 
     private fun changeLoadingState(isLoading: Boolean) {
@@ -225,3 +236,4 @@ class DetectCurrentLocationViewModel @Inject constructor(
         )
     }
 }
+

@@ -20,6 +20,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.presentation.component.PrimaryButton
 import com.fifty.workersportal.core.presentation.ui.theme.LargeButtonHeight
@@ -83,17 +84,23 @@ fun PlaceAndAddressButtonSection(
                 Column {
                     Text(
                         text = if (state.localAddress?.place?.isBlank() == true) {
-                            state.localAddress.subLocality ?: state.localAddress.city ?: ""
-                        } else state.localAddress?.place ?: "",
+                            state.localAddress.subLocality ?: state.localAddress.city
+                            ?: stringResource(id = R.string.not_available)
+                        } else state.localAddress?.place
+                            ?: stringResource(id = R.string.not_available),
                         style = MaterialTheme.typography.titleMedium.copy(
                             color = MaterialTheme.colorScheme.onBackground,
                             fontWeight = FontWeight.SemiBold
-                        )
+                        ),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
                     Spacer(modifier = Modifier.height(SizeExtraExtraSmall))
                     Text(
-                        text = ("${state.localAddress?.subLocality}, " +
-                                "${state.localAddress?.city}"),
+                        text = concatenateWithComma(
+                            state.localAddress?.subLocality,
+                            state.localAddress?.city
+                        ),
                         style = MaterialTheme.typography.bodyMedium.copy(
                             color = MaterialTheme.colorScheme.onSurface
                         )
@@ -107,4 +114,22 @@ fun PlaceAndAddressButtonSection(
             )
         }
     }
+}
+
+fun concatenateWithComma(firstString: String?, secondString: String?): String {
+    val concatenatedString = StringBuilder()
+
+    if (!firstString.isNullOrEmpty()) {
+        concatenatedString.append(firstString)
+    }
+
+    if (!firstString.isNullOrEmpty() && !secondString.isNullOrEmpty()) {
+        concatenatedString.append(", ")
+    }
+
+    if (!secondString.isNullOrEmpty()) {
+        concatenatedString.append(secondString)
+    }
+
+    return concatenatedString.toString()
 }

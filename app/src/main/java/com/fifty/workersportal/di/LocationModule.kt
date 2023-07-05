@@ -2,6 +2,7 @@ package com.fifty.workersportal.di
 
 import android.content.Context
 import android.location.Geocoder
+import com.fifty.workersportal.featurelocation.data.remote.GeocodeApiService
 import com.fifty.workersportal.featurelocation.data.remote.LocationApiService
 import com.fifty.workersportal.featurelocation.data.repository.LocationRepositoryImpl
 import com.fifty.workersportal.featurelocation.domain.repository.LocationRepository
@@ -9,14 +10,14 @@ import com.fifty.workersportal.featurelocation.domain.usecase.CheckIfDeviceLocat
 import com.fifty.workersportal.featurelocation.domain.usecase.GetAddressFromLatLngUseCase
 import com.fifty.workersportal.featurelocation.domain.usecase.GetAddressesOfUserUseCase
 import com.fifty.workersportal.featurelocation.domain.usecase.GetCurrentLocationUseCase
-import com.fifty.workersportal.featurelocation.domain.usecase.GetLocalAddressFromAddressUseCase
+import com.fifty.workersportal.featurelocation.domain.usecase.GetLocalAddressFromReverseGeocodingUseCase
 import com.fifty.workersportal.featurelocation.domain.usecase.GetLocalAddressUseCase
+import com.fifty.workersportal.featurelocation.domain.usecase.ReverseGeocodeForDisplayAddressUseCase
 import com.fifty.workersportal.featurelocation.domain.usecase.SaveAddressUseCase
 import com.fifty.workersportal.featurelocation.domain.usecase.SelectLocalAddressUseCase
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.SettingsClient
-import com.google.maps.android.compose.streetview.rememberStreetViewCameraPositionState
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -44,8 +45,20 @@ object LocationModule {
 
     @Provides
     @Singleton
-    fun provideLocationRepository(api: LocationApiService): LocationRepository =
-        LocationRepositoryImpl(api)
+    fun provideGeocodeApiService(
+        retrofit: Retrofit.Builder
+    ): GeocodeApiService =
+        retrofit
+            .build()
+            .create(GeocodeApiService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideLocationRepository(
+        locationApi: LocationApiService,
+        geocodeApi: GeocodeApiService
+    ): LocationRepository =
+        LocationRepositoryImpl(locationApi, geocodeApi)
 
     @Provides
     fun provideFusedLocationProviderClient(
@@ -69,8 +82,8 @@ object LocationModule {
 
     @Provides
     @Singleton
-    fun provideGetLocalAddressFromAddressUseCase(): GetLocalAddressFromAddressUseCase =
-        GetLocalAddressFromAddressUseCase()
+    fun provideGetLocalAddressFromReverseGeocodingUseCase(): GetLocalAddressFromReverseGeocodingUseCase =
+        GetLocalAddressFromReverseGeocodingUseCase()
 
     @Provides
     @Singleton
@@ -98,5 +111,10 @@ object LocationModule {
     @Singleton
     fun provideGetLocalAddressUseCase(repository: LocationRepository): GetLocalAddressUseCase =
         GetLocalAddressUseCase(repository)
+
+    @Provides
+    @Singleton
+    fun provideReverseGeocodeForDisplayAddressUseCase(repository: LocationRepository): ReverseGeocodeForDisplayAddressUseCase =
+        ReverseGeocodeForDisplayAddressUseCase(repository)
 
 }

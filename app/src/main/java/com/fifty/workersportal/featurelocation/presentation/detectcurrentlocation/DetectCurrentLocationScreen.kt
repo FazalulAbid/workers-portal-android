@@ -132,52 +132,6 @@ fun DetectCurrentLocationScreen(
         }
     }
 
-    val resolutionResult =
-        rememberLauncherForActivityResult(
-            ActivityResultContracts.StartIntentSenderForResult()
-        ) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                viewModel.onEvent(DetectCurrentLocationEvent.CurrentLocation)
-            } else {
-                onNavigateUp()
-            }
-        }
-
-    val locationRequest =
-        LocationRequest
-            .Builder(
-                Priority.PRIORITY_HIGH_ACCURACY, 100
-            )
-            .setWaitForAccurateLocation(false)
-            .setMinUpdateIntervalMillis(3000)
-            .setMaxUpdateDelayMillis(100)
-            .build()
-
-    LaunchedEffect(Unit) {
-        val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
-        val task =
-            LocationServices.getSettingsClient(context).checkLocationSettings(builder.build())
-
-        task
-            .addOnSuccessListener { response ->
-                val locationState = response.locationSettingsStates
-                if (locationState!!.isLocationPresent) {
-                    viewModel.onEvent(DetectCurrentLocationEvent.CurrentLocation)
-                }
-            }
-            .addOnFailureListener { exception ->
-                if (exception is ResolvableApiException) {
-                    try {
-                        val intentSenderRequest =
-                            IntentSenderRequest.Builder(exception.resolution).build()
-                        resolutionResult.launch(intentSenderRequest)
-                    } catch (sendEx: IntentSender.SendIntentException) {
-                        // Ignore the error.
-                    }
-                }
-            }
-    }
-
     Column(
         Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
