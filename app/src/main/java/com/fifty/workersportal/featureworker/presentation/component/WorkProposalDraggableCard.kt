@@ -74,7 +74,6 @@ fun WorkProposalDraggableCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp)
-            .height(cardHeight)
             .offset { IntOffset((offsetX + offsetTransition).roundToInt(), 0) }
             .pointerInput(Unit) {
                 detectHorizontalDragGestures { change, dragAmount ->

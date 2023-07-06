@@ -49,7 +49,7 @@ import kotlinx.coroutines.flow.collectLatest
 
 const val ACTION_ITEM_SIZE = 56
 const val CARD_HEIGHT = 56
-const val CARD_OFFSET = 168f // we have 3 icons in a row, so that's 56 * 3
+const val CARD_OFFSET = 112f // we have 3 icons in a row, so that's 56 * 3
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -148,9 +148,8 @@ fun WorkerDashboardScreen(
                         Box(Modifier.fillMaxWidth()) {
                             WorkProposalCardActionRow(
                                 actionIconSize = ACTION_ITEM_SIZE.dp,
-                                onDelete = {},
-                                onEdit = {},
-                                onFavorite = {}
+                                onAccept = {},
+                                onReject = {}
                             )
                             WorkProposalDraggableCard(
                                 card = card,

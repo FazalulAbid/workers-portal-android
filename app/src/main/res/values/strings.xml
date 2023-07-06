@@ -164,5 +164,7 @@
     <string name="your_review_is_posted">Your review is posted</string>
     <string name="required_field_is_empty">Required field is empty</string>
     <string name="edit_address">Edit address</string>
+    <string name="reject_proposal">Reject proposal</string>
+    <string name="accept_proposal">Accept proposal</string>
 
 </resources>
