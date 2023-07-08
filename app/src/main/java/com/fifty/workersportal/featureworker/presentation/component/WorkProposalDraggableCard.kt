@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CardElevation
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -97,7 +99,7 @@ fun WorkProposalDraggableCard(
         },
         elevation = cardElevation,
         content = {
-            WorkerListItem(
+            WorkProposalCardItem(
                 onClick = onClick,
                 isFavourite = false,
                 lottieComposition = null

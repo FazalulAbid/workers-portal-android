@@ -30,7 +30,9 @@ fun RemoteMessage(
 ) {
     val cornerRadius = MaterialTheme.shapes.medium.bottomStart
     Row(
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = SizeSmall)
     ) {
         Spacer(modifier = Modifier.width(SizeMedium))
         Box(

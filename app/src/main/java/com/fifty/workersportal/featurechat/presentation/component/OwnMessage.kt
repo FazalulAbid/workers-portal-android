@@ -33,7 +33,8 @@ fun OwnMessage(
     val cornerRadius = MaterialTheme.shapes.medium.bottomEnd
     Row(
         modifier = modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .padding(vertical = SizeSmall),
         horizontalArrangement = Arrangement.End
     ) {
         Text(

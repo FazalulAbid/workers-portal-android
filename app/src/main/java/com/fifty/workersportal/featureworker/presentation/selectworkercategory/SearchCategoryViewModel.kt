@@ -44,18 +44,6 @@ class SearchCategoryViewModel @Inject constructor(
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
-    var searchedCategories: Flow<PagingData<Category>> = flowOf(PagingData.empty())
-
-    private var searchJob: Job? = null
-
-    fun onEvent(event: SearchCategoryEvent) {
-        when (event) {
-            is SearchCategoryEvent.Query -> {
-                _search.value = event.query
-            }
-        }
-    }
-
     private val _search = MutableStateFlow("")
 
     val search = _search.asStateFlow()
@@ -64,6 +52,18 @@ class SearchCategoryViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(),
             initialValue = ""
         )
+
+    init {
+        _search.value = ""
+    }
+
+    fun onEvent(event: SearchCategoryEvent) {
+        when (event) {
+            is SearchCategoryEvent.Query -> {
+                _search.value = event.query
+            }
+        }
+    }
 
     @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
     val categorySearchResults = search.debounce(Constants.SEARCH_DELAY).flatMapLatest { query ->

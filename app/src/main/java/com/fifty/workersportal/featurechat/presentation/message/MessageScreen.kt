@@ -91,61 +91,66 @@ fun MessageScreen(
                         color = MaterialTheme.colorScheme.surface,
                         textColor = MaterialTheme.colorScheme.onSurface
                     )
-                    Spacer(modifier = Modifier.height(SizeMedium))
                     OwnMessage(
                         message = "Hii, here I am",
                         formattedTime = "",
                         color = MaterialTheme.colorScheme.primary,
                         textColor = MaterialTheme.colorScheme.onPrimary
                     )
-                    Spacer(modifier = Modifier.height(SizeMedium))
                 }
             }
             Column(
-                modifier = Modifier.padding(SizeMedium)
+                modifier = Modifier.padding(vertical = SizeMedium)
             ) {
                 CompositionLocalProvider(
                     LocalOverscrollConfiguration provides null
                 ) {
                     LazyRow() {
                         items(5) {
-                            SuggestMessageItem(text = "Hello, there!")
                             Spacer(modifier = Modifier.width(SizeMedium))
+                            SuggestMessageItem(text = "Hello, there!")
+                            if (it == 5-1) {
+                                Spacer(modifier = Modifier.width(SizeMedium))
+                            }
                         }
                     }
                 }
-                Spacer(modifier = Modifier.height(SizeMedium))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
+                Column(
+                    Modifier.padding(horizontal = SizeMedium)
                 ) {
-                    StandardTextField(
-                        modifier = Modifier.weight(1f),
-                        basicTextFieldModifier = Modifier
-                            .heightIn(min = MediumButtonHeight)
-                            .padding(vertical = SizeExtraSmall),
-                        leadingIcon = {
+                    Spacer(modifier = Modifier.height(SizeMedium))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        StandardTextField(
+                            modifier = Modifier.weight(1f),
+                            basicTextFieldModifier = Modifier
+                                .heightIn(min = MediumButtonHeight)
+                                .padding(vertical = SizeExtraSmall),
+                            leadingIcon = {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_message_filled),
+                                    contentDescription = "",
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                            },
+                            value = "Hello",
+                            onValueChange = {
+
+                            },
+                            hint = "Type your message here...",
+                            maxLength = Constants.MESSAGE_LENGTH,
+                            singleLine = false
+                        )
+                        Spacer(modifier = Modifier.width(SizeSmall))
+                        IconButton(onClick = {}) {
                             Icon(
-                                painter = painterResource(id = R.drawable.ic_message_filled),
-                                contentDescription = "",
+                                painter = painterResource(id = R.drawable.ic_send_filled),
+                                contentDescription = stringResource(R.string.send_message),
                                 tint = MaterialTheme.colorScheme.primary
                             )
-                        },
-                        value = "Hello",
-                        onValueChange = {
-
-                        },
-                        hint = "Type your message here...",
-                        maxLength = Constants.MESSAGE_LENGTH,
-                        singleLine = false
-                    )
-                    Spacer(modifier = Modifier.width(SizeSmall))
-                    IconButton(onClick = {}) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_send_filled),
-                            contentDescription = stringResource(R.string.send_message),
-                            tint = MaterialTheme.colorScheme.primary
-                        )
+                        }
                     }
                 }
             }

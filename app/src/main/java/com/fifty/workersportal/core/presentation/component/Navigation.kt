@@ -44,7 +44,7 @@ fun Navigation(
     ) {
         authNavGraph(navController, snackbarHostState, imageLoader)
         userNavGraph(navController, snackbarHostState, workProposalViewModel,imageLoader)
-        workerNavGraph(navController, snackbarHostState, imageLoader, isWorker)
+        workerNavGraph(navController, snackbarHostState, imageLoader)
         favouriteNavGraph(navController, snackbarHostState)
         historyNavGraph(navController, snackbarHostState)
         chatNavGraph(navController, snackbarHostState)

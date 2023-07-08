@@ -1,6 +1,5 @@
 package com.fifty.workersportal.core.presentation.component
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,26 +11,31 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.fifty.workersportal.R
-import com.fifty.workersportal.core.presentation.ui.theme.ExtraExtraLargeProfilePictureHeight
 import com.fifty.workersportal.core.presentation.ui.theme.SizeLarge
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
+import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
 import com.fifty.workersportal.core.presentation.ui.theme.SuccessDialogBoxHeight
 import com.fifty.workersportal.core.presentation.ui.theme.SuccessDialogBoxWidth
 
 @Composable
-fun SuccessDialogContent(
-    painter: Painter,
+fun PrimarySuccessDialogContent(
     title: String,
     description: String,
     buttonText: String,
     onButtonClick: () -> Unit = {}
 ) {
+    val doneLottieComposition by rememberLottieComposition(
+        LottieCompositionSpec.RawRes(R.raw.done_lottie)
+    )
     Column(
         Modifier
             .background(
@@ -46,24 +50,24 @@ fun SuccessDialogContent(
     ) {
         Column(
             Modifier
-                .padding(horizontal = SizeLarge)
+                .padding(bottom = SizeLarge)
                 .weight(1f),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.checked_vector),
-                contentDescription = null,
-                Modifier
-                    .size(ExtraExtraLargeProfilePictureHeight)
+            LottieAnimation(
+                modifier = Modifier.size(140.dp),
+                composition = doneLottieComposition
             )
             Spacer(modifier = Modifier.height(SizeMedium))
             SecondaryHeader(
                 text = title,
                 style = MaterialTheme.typography.titleMedium.copy(
                     textAlign = TextAlign.Center
-                )
+                ),
+                maxLines = 2
             )
+            Spacer(modifier = Modifier.height(SizeSmall))
             Text(
                 text = description, color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.bodyMedium.copy(

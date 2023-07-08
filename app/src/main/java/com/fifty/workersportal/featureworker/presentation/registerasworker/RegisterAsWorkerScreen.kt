@@ -1,5 +1,6 @@
 package com.fifty.workersportal.featureworker.presentation.registerasworker
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -33,16 +34,16 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavBackStackEntry
 import coil.ImageLoader
 import com.fifty.workersportal.R
+import com.fifty.workersportal.core.presentation.component.PrimarySuccessDialogContent
 import com.fifty.workersportal.core.presentation.component.StandardAppBar
 import com.fifty.workersportal.core.presentation.component.StandardBottomSheet
-import com.fifty.workersportal.core.presentation.component.SuccessDialogContent
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
-import com.fifty.workersportal.core.presentation.util.AnimatedTransitionDialogEntryOnly
 import com.fifty.workersportal.core.presentation.util.UiEvent
 import com.fifty.workersportal.core.presentation.util.asString
 import com.fifty.workersportal.core.presentation.util.makeToast
@@ -284,20 +285,33 @@ fun RegisterAsWorkerScreen(
         .isRegisterCompleteDialogDisplayed
         .observeAsState(false)
 
-    if (isRegisterCompleteDialogDisplayed) {
-        AnimatedTransitionDialogEntryOnly(
+    AnimatedVisibility(
+        visible = isRegisterCompleteDialogDisplayed
+    ) {
+        Dialog(
+            properties = DialogProperties(
+                dismissOnBackPress = false,
+                dismissOnClickOutside = false
+            ),
             onDismissRequest = {
                 viewModel.isRegisterCompleteDialogDisplayed.postValue(false)
+                previousBackStackEntry?.savedStateHandle?.set(
+                    "isWorkerProfileUpdated",
+                    true
+                )
+                onNavigateUp()
             }
         ) {
-            SuccessDialogContent(
-                painter = painterResource(id = R.drawable.plumber_profile),
+            PrimarySuccessDialogContent(
                 title = stringResource(R.string.thank_you_for_registering_as_a_worker),
                 description = stringResource(R.string.your_registration_has_been_successfully_submitted),
                 buttonText = stringResource(R.string.go_to_dashboard),
                 onButtonClick = {
                     viewModel.isRegisterCompleteDialogDisplayed.postValue(false)
-                    previousBackStackEntry?.savedStateHandle?.set("isWorkerProfileUpdated", true)
+                    previousBackStackEntry?.savedStateHandle?.set(
+                        "isWorkerProfileUpdated",
+                        true
+                    )
                     onNavigateUp()
                 }
             )

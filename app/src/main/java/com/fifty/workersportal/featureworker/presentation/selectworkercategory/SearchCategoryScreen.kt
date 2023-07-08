@@ -53,10 +53,6 @@ fun SelectWorkerCategoryScreen(
     val searchedCategories =
         viewModel.categorySearchResults.collectAsLazyPagingItems()
 
-    LaunchedEffect(Unit) {
-        viewModel.onEvent(SearchCategoryEvent.Query(""))
-    }
-
     Column(
         Modifier.fillMaxSize()
     ) {

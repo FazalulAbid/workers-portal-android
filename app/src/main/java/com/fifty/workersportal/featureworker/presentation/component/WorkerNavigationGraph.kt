@@ -27,7 +27,6 @@ fun NavGraphBuilder.workerNavGraph(
     navController: NavController,
     snackbarHostState: SnackbarHostState,
     imageLoader: ImageLoader,
-    isWorker: Boolean = false
 ) {
     navigation(
         startDestination = if (Session.userSession.value?.isWorker == true) {
