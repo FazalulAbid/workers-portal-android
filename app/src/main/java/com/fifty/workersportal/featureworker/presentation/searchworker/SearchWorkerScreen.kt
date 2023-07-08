@@ -1,8 +1,6 @@
 package com.fifty.workersportal.featureworker.presentation.searchworker
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -10,34 +8,45 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.fifty.workersportal.R
+import com.fifty.workersportal.core.presentation.component.StandardBottomSheet
 import com.fifty.workersportal.core.presentation.component.StandardTextField
 import com.fifty.workersportal.core.presentation.ui.theme.MediumButtonHeight
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
-import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
+import com.fifty.workersportal.featurelocation.presentation.detectcurrentlocation.DetectCurrentLocationBottomSheetContent
+import com.fifty.workersportal.featurelocation.presentation.detectcurrentlocation.DetectCurrentLocationEvent
 import com.fifty.workersportal.featureworker.presentation.component.SearchFilterChip
 import com.fifty.workersportal.featureworker.presentation.component.WorkerListItem
 import kotlin.random.Random
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchWorkerScreen(
     onNavigate: (String) -> Unit,
     onNavigateUp: () -> Unit,
     viewModel: SearchWorkerViewModel = hiltViewModel()
 ) {
+    var showSortBottomSheet by remember { mutableStateOf(false) }
+    val sortState = viewModel.sortState.value
+    val filterState = viewModel.filterState.value
+
     Column {
         Row(
             modifier = Modifier
@@ -78,14 +87,41 @@ fun SearchWorkerScreen(
             horizontalArrangement = Arrangement.spacedBy(SizeMedium),
             contentPadding = PaddingValues(horizontal = SizeMedium)
         ) {
-            items(4) {
+            item {
                 SearchFilterChip(
                     leadingIcon = painterResource(id = R.drawable.ic_filter),
-                    trailingIcon = painterResource(id = R.drawable.ic_close),
+                    trailingIcon = painterResource(id = R.drawable.ic_drop_down),
                     isSelected = Random.nextBoolean(),
                     text = "Sort",
                     onClick = {
-
+                        showSortBottomSheet = true
+                    }
+                )
+            }
+            item {
+                SearchFilterChip(
+                    isSelected = sortState.isDistanceLowToHigh,
+                    text = "Nearest",
+                    onClick = {
+                        viewModel.onEvent(SearchWorkerEvent.ToggleNearestSort)
+                    }
+                )
+            }
+            item {
+                SearchFilterChip(
+                    isSelected = filterState.isRatingFourPlus,
+                    text = "Rating 4+",
+                    onClick = {
+                        viewModel.onEvent(SearchWorkerEvent.ToggleRatingFourPlusFilter)
+                    }
+                )
+            }
+            item {
+                SearchFilterChip(
+                    isSelected = filterState.isPreviouslyHired,
+                    text = "Previously Hired",
+                    onClick = {
+                        viewModel.onEvent(SearchWorkerEvent.TogglePreviouslyHiredFilter)
                     }
                 )
             }
@@ -98,6 +134,18 @@ fun SearchWorkerScreen(
                     lottieComposition = null
                 )
             }
+        }
+    }
+
+    if (showSortBottomSheet) {
+        StandardBottomSheet(
+            sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+            onDismiss = {
+                viewModel.onEvent(SearchWorkerEvent.OnSheetDismiss)
+                showSortBottomSheet = false
+            }
+        ) {
+            SortWorkersBottomSheetContent(viewModel = viewModel)
         }
     }
 }

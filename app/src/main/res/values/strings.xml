@@ -166,5 +166,6 @@
     <string name="edit_address">Edit address</string>
     <string name="reject_proposal">Reject proposal</string>
     <string name="accept_proposal">Accept proposal</string>
+    <string name="sort">Sort</string>
 
 </resources>

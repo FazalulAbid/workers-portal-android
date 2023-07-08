@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -15,8 +16,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.text.font.FontWeight
 import com.fifty.workersportal.core.presentation.ui.theme.PrimaryLightColor
 import com.fifty.workersportal.core.presentation.ui.theme.SizeExtraSmall
+import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
 import com.fifty.workersportal.core.presentation.ui.theme.SmallStrokeThickness
 
@@ -31,7 +34,7 @@ fun SearchFilterChip(
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
+        modifier = modifier
             .background(
                 color = if (isSelected) {
                     PrimaryLightColor
@@ -47,11 +50,12 @@ fun SearchFilterChip(
                     MaterialTheme.colorScheme.primary
                 } else MaterialTheme.colorScheme.outline
             )
-            .padding(SizeSmall)
+            .padding(horizontal = SizeMedium, vertical = SizeSmall)
     ) {
-        leadingIcon?.let { painter ->
+        leadingIcon?.let {
             Icon(
-                painter = painter,
+                modifier = Modifier.size(SizeMedium),
+                painter = it,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onBackground
             )
@@ -60,12 +64,18 @@ fun SearchFilterChip(
         Text(
             text = text,
             style = MaterialTheme.typography.bodyMedium.copy(
+                fontWeight = FontWeight.Medium,
                 color = MaterialTheme.colorScheme.onBackground
             )
         )
         Spacer(modifier = Modifier.width(SizeExtraSmall))
-        if (isSelected && trailingIcon != null) {
-            Icon(painter = trailingIcon, contentDescription = null)
+        trailingIcon?.let {
+            Icon(
+                modifier = Modifier.size(SizeMedium),
+                painter = it,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onBackground
+            )
         }
     }
 }
