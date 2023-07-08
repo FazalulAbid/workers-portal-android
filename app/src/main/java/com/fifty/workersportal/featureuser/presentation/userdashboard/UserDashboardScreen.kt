@@ -257,7 +257,7 @@ fun UserDashboardScreen(
                 }
                 items(10) {
                     WorkerListItem(
-                        userDashboardViewModel._isFavourite.value,
+                        isFavourite = userDashboardViewModel._isFavourite.value,
                         lottieComposition = favouriteLottieComposition,
                         onFavouriteClick = {
                             userDashboardViewModel._isFavourite.value =

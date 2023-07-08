@@ -94,7 +94,7 @@ fun SearchWorkerScreen(
         LazyColumn {
             items(20) {
                 WorkerListItem(
-                    true,
+                    isFavourite = true,
                     lottieComposition = null
                 )
             }

@@ -2,6 +2,7 @@ package com.fifty.workersportal.featureworker.presentation.workerdashboard
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalOverscrollConfiguration
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +21,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -35,21 +37,19 @@ import com.fifty.workersportal.core.presentation.component.SecondaryHeader
 import com.fifty.workersportal.core.presentation.ui.theme.ScaffoldBottomPaddingValue
 import com.fifty.workersportal.core.presentation.ui.theme.SizeExtraSmall
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
-import com.fifty.workersportal.core.presentation.ui.theme.SmallStrokeThickness
 import com.fifty.workersportal.core.presentation.util.OnLifecycleEvent
 import com.fifty.workersportal.core.presentation.util.UiEvent
+import com.fifty.workersportal.core.presentation.util.dp
 import com.fifty.workersportal.core.presentation.util.makeToast
 import com.fifty.workersportal.core.util.Screen
-import com.fifty.workersportal.featureuser.presentation.userdashboard.UserDashboardEvent
 import com.fifty.workersportal.featureworker.presentation.component.OpenToWorkSwitch
 import com.fifty.workersportal.featureworker.presentation.component.WorkProposalCardActionRow
 import com.fifty.workersportal.featureworker.presentation.component.WorkProposalDraggableCard
-import com.fifty.workersportal.featureworker.presentation.component.WorkProposalListItem
 import kotlinx.coroutines.flow.collectLatest
 
 const val ACTION_ITEM_SIZE = 56
 const val CARD_HEIGHT = 56
-const val CARD_OFFSET = 112f // we have 3 icons in a row, so that's 56 * 3
+const val CARD_OFFSET = 144f // we have 2 icons in a row, so that's 56 * 2 + SizeMedium
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -145,7 +145,10 @@ fun WorkerDashboardScreen(
 
                 LazyColumn {
                     items(cards.value, CardModel::id) { card ->
-                        Box(Modifier.fillMaxWidth()) {
+                        Box(
+                            Modifier.fillMaxWidth(),
+                            contentAlignment = Alignment.CenterStart
+                        ) {
                             WorkProposalCardActionRow(
                                 actionIconSize = ACTION_ITEM_SIZE.dp,
                                 onAccept = {},
@@ -154,10 +157,10 @@ fun WorkerDashboardScreen(
                             WorkProposalDraggableCard(
                                 card = card,
                                 isRevealed = viewModel.revealedCard.value?.id == card.id,
-                                cardHeight = CARD_HEIGHT.dp,
-                                cardOffset = CARD_OFFSET,
+                                cardOffset = CARD_OFFSET.dp(),
                                 onExpand = { viewModel.onItemExpanded(card) },
                                 onCollapse = { viewModel.onItemCollapsed(card) },
+                                onClick = { viewModel.onItemExpanded(card) }
                             )
                         }
                     }
@@ -165,5 +168,4 @@ fun WorkerDashboardScreen(
             }
         }
     }
-
 }

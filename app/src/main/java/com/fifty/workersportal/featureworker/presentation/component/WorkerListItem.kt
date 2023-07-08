@@ -41,13 +41,14 @@ import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
 
 @Composable
 fun WorkerListItem(
+    onClick: () -> Unit = {},
     isFavourite: Boolean,
     lottieComposition: LottieComposition?,
     onFavouriteClick: () -> Unit = {}
 ) {
     Row(
         Modifier
-            .clickable { }
+            .clickable { onClick() }
             .padding(
                 horizontal = SizeMedium,
                 vertical = SizeSmall

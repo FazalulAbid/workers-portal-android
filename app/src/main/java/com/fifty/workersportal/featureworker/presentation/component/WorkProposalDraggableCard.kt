@@ -9,9 +9,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material3.MaterialTheme
@@ -27,22 +25,21 @@ import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import com.fifty.workersportal.featureuser.domain.model.UserProfile
+import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.featureworker.presentation.workerdashboard.CardModel
 import kotlin.math.roundToInt
 
 const val ANIMATION_DURATION = 500
-const val MIN_DRAG_AMOUNT = 6
 
 @SuppressLint("UnusedTransitionTargetStateParameter")
 @Composable
 fun WorkProposalDraggableCard(
     card: CardModel,
-    cardHeight: Dp,
     isRevealed: Boolean,
     cardOffset: Float,
     onExpand: () -> Unit,
-    onCollapse: () -> Unit
+    onCollapse: () -> Unit,
+    onClick: () -> Unit,
 ) {
     var offsetX by remember { mutableStateOf(0f) }
     val transitionState = remember {
@@ -62,18 +59,21 @@ fun WorkProposalDraggableCard(
         label = "cardOffsetTransition",
         transitionSpec = { tween(durationMillis = ANIMATION_DURATION) },
         targetValueByState = { if (isRevealed) cardOffset - offsetX else -offsetX },
-
-        )
+    )
     val cardElevation by transition.animateDp(
         label = "cardElevation",
         transitionSpec = { tween(durationMillis = ANIMATION_DURATION) },
-        targetValueByState = { if (isRevealed) 40.dp else 2.dp }
+        targetValueByState = { if (isRevealed) 40.dp else 0.dp }
+    )
+    val cardPadding by transition.animateDp(
+        label = "cardPadding",
+        transitionSpec = { tween(durationMillis = ANIMATION_DURATION) },
+        targetValueByState = { if (isRevealed) SizeMedium else 0.dp }
     )
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp)
             .offset { IntOffset((offsetX + offsetTransition).roundToInt(), 0) }
             .pointerInput(Unit) {
                 detectHorizontalDragGestures { change, dragAmount ->
@@ -97,7 +97,11 @@ fun WorkProposalDraggableCard(
         },
         elevation = cardElevation,
         content = {
-            WorkerListItem(isFavourite = false, lottieComposition = null)
+            WorkerListItem(
+                onClick = onClick,
+                isFavourite = false,
+                lottieComposition = null
+            )
         }
     )
 }
