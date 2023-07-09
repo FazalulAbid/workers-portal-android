@@ -3,7 +3,7 @@ package com.fifty.workersportal.featurelocation.data.remote.dto
 import com.fifty.workersportal.featurelocation.domain.model.ReverseGeocodeDisplayAddress
 
 data class ReverseGeocodeDisplayAddressDto(
-    val address: Address,
+    val address: GeocodeAddress,
     val display_name: String,
     val lat: String,
     val licence: String,
@@ -15,7 +15,7 @@ data class ReverseGeocodeDisplayAddressDto(
 ) {
     fun toReverseGeocodeDisplayAddress(): ReverseGeocodeDisplayAddress {
         return ReverseGeocodeDisplayAddress(
-            address = address,
+            geocodeAddress = address,
             display_name = display_name,
             lat = lat,
             lon = lon
@@ -23,7 +23,7 @@ data class ReverseGeocodeDisplayAddressDto(
     }
 }
 
-data class Address(
+data class GeocodeAddress(
     val country: String?,
     val country_code: String?,
     val postcode: String?,

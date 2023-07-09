@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.fifty.workersportal.core.presentation.ui.theme.SizeExtraSmall
 import com.fifty.workersportal.core.presentation.ui.theme.SizeLarge
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
@@ -52,7 +53,7 @@ fun OwnMessage(
                     color = color,
                     shape = RoundedCornerShape(
                         topStart = SizeMedium,
-                        topEnd = 0.dp,
+                        topEnd = SizeExtraSmall,
                         bottomEnd = SizeMedium,
                         bottomStart = SizeMedium
                     ),

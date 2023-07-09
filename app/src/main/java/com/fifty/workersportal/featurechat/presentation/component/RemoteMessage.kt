@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.fifty.workersportal.core.presentation.ui.theme.SizeExtraSmall
 import com.fifty.workersportal.core.presentation.ui.theme.SizeLarge
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
@@ -41,7 +42,7 @@ fun RemoteMessage(
                 .background(
                     color = color,
                     shape = RoundedCornerShape(
-                        topStart = 0.dp,
+                        topStart = SizeExtraSmall,
                         topEnd = SizeMedium,
                         bottomEnd = SizeMedium,
                         bottomStart = SizeMedium

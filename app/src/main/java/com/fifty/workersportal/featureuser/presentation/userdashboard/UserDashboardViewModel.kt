@@ -28,8 +28,6 @@ class UserDashboardViewModel @Inject constructor(
     private val toggleFavouriteWorkerUseCase: ToggleFavouriteWorkerUseCase
 ) : ViewModel() {
 
-    val _isFavourite = mutableStateOf<Boolean>(false)
-
     val visiblePermissionDialogQueue = mutableStateListOf<String>()
 
     private val _state = mutableStateOf(UserDashboardState())

@@ -12,6 +12,7 @@ import com.fifty.workersportal.featureworker.domain.usecase.GetCategoriesUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.GetReviewAndRatingUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.GetSampleWorkUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.GetSampleWorksUseCase
+import com.fifty.workersportal.featureworker.domain.usecase.GetSearchedSortedAndFilteredWorkersUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.GetSuggestedCategoriesUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.PostReviewAndRatingUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.PostSampleWorkUseCase
@@ -126,7 +127,14 @@ object WorkerModule {
     @Provides
     @Singleton
     fun provideGetReviewAndRatingUseCase(
-        repository:ReviewAndRatingRepository
+        repository: ReviewAndRatingRepository
     ): GetReviewAndRatingUseCase = GetReviewAndRatingUseCase(repository)
+
+    @Provides
+    @Singleton
+    fun provideGetSearchedSortedAndFilteredWorkersUseCase(
+        repository: WorkerRepository
+    ): GetSearchedSortedAndFilteredWorkersUseCase =
+        GetSearchedSortedAndFilteredWorkersUseCase(repository)
 
 }

@@ -8,6 +8,7 @@ import com.fifty.workersportal.featureuser.data.remote.request.SampleWorkRequest
 import com.fifty.workersportal.featureworker.data.remote.dto.CategoryDto
 import com.fifty.workersportal.featureworker.data.remote.dto.ReviewAndRatingDto
 import com.fifty.workersportal.featureworker.data.remote.dto.SampleWorkDto
+import com.fifty.workersportal.featureworker.data.remote.dto.WorkerDto
 import com.fifty.workersportal.featureworker.data.remote.request.ReviewAndRatingRequest
 import com.fifty.workersportal.featureworker.domain.model.ReviewAndRating
 import okhttp3.MultipartBody
@@ -23,6 +24,13 @@ import retrofit2.http.Part
 import retrofit2.http.Query
 
 interface WorkerApiService {
+
+    @GET("/api/worker/get-workers-list")
+    suspend fun getSearchedSortedAndFilteredWorkers(
+        @Query("page") page: Int,
+        @Query("pageSize") pageSize: Int,
+        @Query("query") query: String
+    ): BasicApiResponse<List<WorkerDto>>
 
     @GET("worker/get-worker-categories")
     suspend fun getCategories(): BasicApiResponse<List<CategoryDto>>

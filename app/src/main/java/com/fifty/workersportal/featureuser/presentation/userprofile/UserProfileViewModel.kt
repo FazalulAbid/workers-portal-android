@@ -5,11 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fifty.workersportal.core.domain.usecase.GetOwnUserIdUseCase
-import com.fifty.workersportal.core.domain.util.Session
 import com.fifty.workersportal.core.presentation.util.UiEvent
-import com.fifty.workersportal.core.util.NavigationParent
 import com.fifty.workersportal.core.util.Resource
-import com.fifty.workersportal.core.util.Screen
 import com.fifty.workersportal.core.util.UiText
 import com.fifty.workersportal.featureauth.domain.usecase.LogoutUseCase
 import com.fifty.workersportal.featureuser.domain.usecase.GetUserProfileUseCase
@@ -23,7 +20,7 @@ import javax.inject.Inject
 class UserProfileViewModel @Inject constructor(
     private val getOwnUserIdUseCase: GetOwnUserIdUseCase,
     private val getUserProfileUseCase: GetUserProfileUseCase,
-    private val logout: LogoutUseCase
+    private val logoutUseCase: LogoutUseCase
 ) : ViewModel() {
 
     private val _state = mutableStateOf(UserProfileState())
@@ -40,7 +37,7 @@ class UserProfileViewModel @Inject constructor(
         when (event) {
             UserProfileEvent.Logout -> {
                 viewModelScope.launch {
-                    when (logout()) {
+                    when (logoutUseCase()) {
                         is Resource.Success -> {
                             _eventFlow.emit(
                                 UiEvent.OnLogout

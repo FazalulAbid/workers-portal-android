@@ -4,13 +4,24 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.fifty.workersportal.core.domain.state.StandardTextFieldState
+import com.fifty.workersportal.core.presentation.PagingState
+import com.fifty.workersportal.core.presentation.util.UiEvent
+import com.fifty.workersportal.core.util.DefaultPaginator
+import com.fifty.workersportal.featureworker.domain.model.Worker
+import com.fifty.workersportal.featureworker.domain.usecase.GetSearchedSortedAndFilteredWorkersUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SearchWorkerViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle,
+    private val getSearchedSortedAndFilteredWorkersUseCase: GetSearchedSortedAndFilteredWorkersUseCase
 ) : ViewModel() {
 
     private val _searchFieldState = mutableStateOf(StandardTextFieldState())
@@ -24,6 +35,40 @@ class SearchWorkerViewModel @Inject constructor(
 
     private val _filterState = mutableStateOf(SearchWorkerFilterState())
     val filterState: State<SearchWorkerFilterState> = _filterState
+
+    private val _pagingState = mutableStateOf(PagingState<Worker>())
+    val pagingState: State<PagingState<Worker>> = _pagingState
+
+    private val _eventFlow = MutableSharedFlow<UiEvent>()
+    val eventFlow = _eventFlow.asSharedFlow()
+
+    private val paginator = DefaultPaginator(
+        onLoadUpdated = { isLoading ->
+            _pagingState.value = pagingState.value.copy(
+                isLoading = isLoading
+            )
+        },
+        onRequest = { page ->
+            getSearchedSortedAndFilteredWorkersUseCase(
+                page = page,
+                query = _searchFieldState.value.text.trim()
+            )
+        },
+        onSuccess = { workers ->
+            _pagingState.value = pagingState.value.copy(
+                items = pagingState.value.items + workers,
+                endReached = workers.isEmpty(),
+                isLoading = false
+            )
+        },
+        onError = { uiText ->
+            _eventFlow.emit(UiEvent.MakeToast(uiText))
+        }
+    )
+
+    init {
+        loadNextWorkers()
+    }
 
     fun onEvent(event: SearchWorkerEvent) {
         when (event) {
@@ -80,6 +125,12 @@ class SearchWorkerViewModel @Inject constructor(
             SearchWorkerEvent.OnSheetDismiss -> {
                 _tempSortState.value = _sortState.value
             }
+        }
+    }
+
+    fun loadNextWorkers() {
+        viewModelScope.launch {
+            paginator.loadNextItems()
         }
     }
 }

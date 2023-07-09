@@ -256,15 +256,15 @@ fun UserDashboardScreen(
                     }
                 }
                 items(10) {
-                    WorkerListItem(
-                        isFavourite = userDashboardViewModel._isFavourite.value,
-                        lottieComposition = favouriteLottieComposition,
-                        onFavouriteClick = {
-                            userDashboardViewModel._isFavourite.value =
-                                !userDashboardViewModel._isFavourite.value
-                            //viewModel.onEvent(UserDashboardEvent.ToggleFavouriteWorker(it))
-                        }
-                    )
+//                    WorkerListItem(
+//                        isFavourite = userDashboardViewModel._isFavourite.value,
+//                        lottieComposition = favouriteLottieComposition,
+//                        onFavouriteClick = {
+//                            userDashboardViewModel._isFavourite.value =
+//                                !userDashboardViewModel._isFavourite.value
+//                            //viewModel.onEvent(UserDashboardEvent.ToggleFavouriteWorker(it))
+//                        }
+//                    )
                 }
             }
         }

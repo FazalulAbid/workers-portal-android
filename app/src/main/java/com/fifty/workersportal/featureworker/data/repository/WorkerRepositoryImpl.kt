@@ -5,7 +5,6 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import coil.network.HttpException
 import com.fifty.workersportal.R
-import com.fifty.workersportal.core.data.dto.response.BasicApiResponse
 import com.fifty.workersportal.core.util.Constants
 import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.SimpleResource
@@ -14,6 +13,7 @@ import com.fifty.workersportal.featureuser.data.remote.FavouriteUpdateRequest
 import com.fifty.workersportal.featureworker.data.paging.CategorySource
 import com.fifty.workersportal.featureworker.data.remote.WorkerApiService
 import com.fifty.workersportal.featureworker.domain.model.Category
+import com.fifty.workersportal.featureworker.domain.model.Worker
 import com.fifty.workersportal.featureworker.domain.repository.WorkerRepository
 import kotlinx.coroutines.flow.Flow
 import java.io.IOException
@@ -136,6 +136,35 @@ class WorkerRepositoryImpl(
                 uiText = UiText.StringResource(
                     R.string.oops_something_went_wrong
                 )
+            )
+        }
+    }
+
+    override suspend fun getSearchedSortedAndFilteredWorkers(
+        query: String,
+        page: Int,
+        pageSize: Int
+    ): Resource<List<Worker>> {
+        return try {
+            val response = api.getSearchedSortedAndFilteredWorkers(
+                query = query,
+                page = page,
+                pageSize = pageSize
+            )
+            if (response.successful) {
+                Resource.Success(data = response.data?.map { it.toWorker() })
+            } else {
+                response.message?.let { message ->
+                    Resource.Error(UiText.DynamicString(message))
+                } ?: Resource.Error(UiText.unknownError())
+            }
+        } catch (e: IOException) {
+            Resource.Error(
+                uiText = UiText.StringResource(R.string.error_could_not_reach_server)
+            )
+        } catch (e: retrofit2.HttpException) {
+            Resource.Error(
+                uiText = UiText.StringResource(R.string.oops_something_went_wrong)
             )
         }
     }

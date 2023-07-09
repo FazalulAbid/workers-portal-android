@@ -91,7 +91,8 @@ fun NavGraphBuilder.workerNavGraph(
         composable(Screen.SearchWorkerScreen.route) {
             SearchWorkerScreen(
                 onNavigate = navController::navigate,
-                onNavigateUp = navController::navigateUp
+                onNavigateUp = navController::navigateUp,
+                imageLoader = imageLoader
             )
         }
         composable(Screen.PostSampleWorkScreen.route) {

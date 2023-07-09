@@ -15,7 +15,6 @@ import com.fifty.workersportal.core.presentation.ui.theme.RedColor
 fun AddToFavouriteButton(
     modifier: Modifier = Modifier,
     isFavourite: Boolean,
-    lottieComposition: LottieComposition?,
     onClick: () -> Unit
 ) {
     IconButton(

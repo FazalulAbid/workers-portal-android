@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -25,13 +26,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.ImageLoader
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.presentation.component.StandardBottomSheet
 import com.fifty.workersportal.core.presentation.component.StandardTextField
 import com.fifty.workersportal.core.presentation.ui.theme.MediumButtonHeight
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
-import com.fifty.workersportal.featurelocation.presentation.detectcurrentlocation.DetectCurrentLocationBottomSheetContent
-import com.fifty.workersportal.featurelocation.presentation.detectcurrentlocation.DetectCurrentLocationEvent
+import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
+import com.fifty.workersportal.core.util.Screen
 import com.fifty.workersportal.featureworker.presentation.component.SearchFilterChip
 import com.fifty.workersportal.featureworker.presentation.component.WorkerListItem
 import kotlin.random.Random
@@ -41,13 +43,15 @@ import kotlin.random.Random
 fun SearchWorkerScreen(
     onNavigate: (String) -> Unit,
     onNavigateUp: () -> Unit,
+    imageLoader: ImageLoader,
     viewModel: SearchWorkerViewModel = hiltViewModel()
 ) {
+    val pagingState = viewModel.pagingState.value
     var showSortBottomSheet by remember { mutableStateOf(false) }
     val sortState = viewModel.sortState.value
     val filterState = viewModel.filterState.value
 
-    Column {
+    Column(Modifier.fillMaxSize()) {
         Row(
             modifier = Modifier
                 .padding(
@@ -84,7 +88,7 @@ fun SearchWorkerScreen(
             )
         }
         LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(SizeMedium),
+            horizontalArrangement = Arrangement.spacedBy(SizeSmall),
             contentPadding = PaddingValues(horizontal = SizeMedium)
         ) {
             item {
@@ -128,10 +132,20 @@ fun SearchWorkerScreen(
         }
         Spacer(modifier = Modifier.height(SizeMedium))
         LazyColumn {
-            items(20) {
+            items(pagingState.items.size) { index ->
+                val worker = pagingState.items[index]
+                if (index >= pagingState.items.size - 1 && !pagingState.endReached && !pagingState.isLoading) {
+                    viewModel.loadNextWorkers()
+                }
                 WorkerListItem(
-                    isFavourite = true,
-                    lottieComposition = null
+                    worker = worker,
+                    imageLoader = imageLoader,
+                    onFavouriteClick = {
+
+                    },
+                    onClick = {
+                        onNavigate(Screen.WorkerProfileScreen.route + "?userId=${worker.workerId}")
+                    }
                 )
             }
         }

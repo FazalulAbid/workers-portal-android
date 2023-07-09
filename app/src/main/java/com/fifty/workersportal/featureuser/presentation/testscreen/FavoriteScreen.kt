@@ -62,10 +62,10 @@ fun FavoriteScreen() {
             )
             LazyColumn {
                 items(20) {
-                    WorkerListItem(
-                        isFavourite = true,
-                        lottieComposition = null
-                    )
+//                    WorkerListItem(
+//                        isFavourite = true,
+//                        lottieComposition = null
+//                    )
                 }
             }
         }

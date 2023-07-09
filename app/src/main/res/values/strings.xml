@@ -167,5 +167,7 @@
     <string name="reject_proposal">Reject proposal</string>
     <string name="accept_proposal">Accept proposal</string>
     <string name="sort">Sort</string>
+    <string name="no_ratings">No Ratings</string>
+    <string name="no_place_found">No place found!</string>
 
 </resources>

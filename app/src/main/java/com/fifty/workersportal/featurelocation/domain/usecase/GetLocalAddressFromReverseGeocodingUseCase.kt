@@ -22,9 +22,9 @@ class GetLocalAddressFromReverseGeocodingUseCase {
                 2
             ),
             city = getSubstringBetweenCommas(reverseGeocodeDisplayAddress.display_name, 3, 3),
-            state = reverseGeocodeDisplayAddress.address?.state,
-            country = reverseGeocodeDisplayAddress.address?.country,
-            pin = reverseGeocodeDisplayAddress.address?.postcode,
+            state = reverseGeocodeDisplayAddress.geocodeAddress?.state,
+            country = reverseGeocodeDisplayAddress.geocodeAddress?.country,
+            pin = reverseGeocodeDisplayAddress.geocodeAddress?.postcode,
             location = listOf(
                 reverseGeocodeDisplayAddress.lat?.toDouble() ?: 0.0,
                 reverseGeocodeDisplayAddress.lon?.toDouble() ?: 0.0
