@@ -169,5 +169,10 @@
     <string name="sort">Sort</string>
     <string name="no_ratings">No Ratings</string>
     <string name="no_place_found">No place found!</string>
+    <string name="apply">Apply</string>
+    <string name="clear_all">Clear All</string>
+    <string name="distance">Distance</string>
+    <string name="rating">Rating</string>
+    <string name="wage">Wage</string>
 
 </resources>

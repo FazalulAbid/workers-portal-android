@@ -29,7 +29,9 @@ import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 
 @Composable
 fun SortWorkersBottomSheetContent(
-    viewModel: SearchWorkerViewModel
+    viewModel: SearchWorkerViewModel,
+    onClearAllClick: () -> Unit,
+    onApplyClick: () -> Unit
 ) {
     val sortState = viewModel.tempSortState.value
     Column(Modifier.fillMaxWidth()) {
@@ -43,7 +45,7 @@ fun SortWorkersBottomSheetContent(
             isSelected = (!sortState.isRatingHighToLow && !sortState.isWageHighToLow &&
                     !sortState.isDistanceLowToHigh && !sortState.isWageLowToHigh),
             text = "Relevance",
-            onClick = { viewModel.onEvent(SearchWorkerEvent.ClickClearAllSortAndFilters) }
+            onClick = { viewModel.onEvent(SearchWorkerEvent.SelectRelevance) }
         )
         SortWorkerRadioItem(
             isSelected = sortState.isRatingHighToLow,
@@ -72,13 +74,13 @@ fun SortWorkersBottomSheetContent(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             TextButton(
-                onClick = { viewModel.onEvent(SearchWorkerEvent.ClickClearAllSortAndFilters) },
+                onClick = onClearAllClick,
                 modifier = Modifier
                     .weight(0.5f)
                     .height(LargeButtonHeight)
             ) {
                 Text(
-                    text = "Clear All",
+                    text = stringResource(R.string.clear_all),
                     style = MaterialTheme.typography.bodyMedium.copy(
                         fontWeight = FontWeight.Medium,
                         color = MaterialTheme.colorScheme.primary
@@ -88,8 +90,8 @@ fun SortWorkersBottomSheetContent(
             Spacer(modifier = Modifier.width(SizeMedium))
             PrimaryButton(
                 modifier = Modifier.weight(1f),
-                text = "Apply",
-                onClick = { viewModel.onEvent(SearchWorkerEvent.ClickSortApply) }
+                text = stringResource(R.string.apply),
+                onClick = onApplyClick
             )
         }
     }

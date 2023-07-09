@@ -95,8 +95,17 @@ fun SearchWorkerScreen(
                 SearchFilterChip(
                     leadingIcon = painterResource(id = R.drawable.ic_filter),
                     trailingIcon = painterResource(id = R.drawable.ic_drop_down),
-                    isSelected = Random.nextBoolean(),
-                    text = "Sort",
+                    isSelected = (sortState.isRatingHighToLow || sortState.isDistanceLowToHigh ||
+                            sortState.isWageLowToHigh || sortState.isWageHighToLow),
+                    text = if (sortState.isWageHighToLow || sortState.isWageLowToHigh) {
+                        stringResource(R.string.wage)
+                    } else if (sortState.isRatingHighToLow) {
+                        stringResource(R.string.rating)
+                    } else if (sortState.isDistanceLowToHigh) {
+                        stringResource(R.string.distance)
+                    } else {
+                        stringResource(id = R.string.sort)
+                    },
                     onClick = {
                         showSortBottomSheet = true
                     }
@@ -159,7 +168,17 @@ fun SearchWorkerScreen(
                 showSortBottomSheet = false
             }
         ) {
-            SortWorkersBottomSheetContent(viewModel = viewModel)
+            SortWorkersBottomSheetContent(
+                viewModel = viewModel,
+                onClearAllClick = {
+                    viewModel.onEvent(SearchWorkerEvent.ClearAllSortAndFilters)
+                    showSortBottomSheet = false
+                },
+                onApplyClick = {
+                    viewModel.onEvent(SearchWorkerEvent.ApplySort)
+                    showSortBottomSheet = false
+                }
+            )
         }
     }
 }

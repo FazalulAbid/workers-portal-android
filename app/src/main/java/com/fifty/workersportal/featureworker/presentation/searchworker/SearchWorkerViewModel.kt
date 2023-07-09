@@ -15,7 +15,6 @@ import com.fifty.workersportal.featureworker.domain.usecase.GetSearchedSortedAnd
 import com.fifty.workersportal.featureworker.domain.usecase.ToggleFavouriteWorkerUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -86,20 +85,25 @@ class SearchWorkerViewModel @Inject constructor(
                 addWorkerToFavourites(event.workerId)
             }
 
-            SearchWorkerEvent.ClickClearAllSortAndFilters -> {
+            SearchWorkerEvent.ClearAllSortAndFilters -> {
                 _filterState.value = SearchWorkerFilterState()
                 _tempSortState.value = SearchWorkerSortState()
                 _sortState.value = SearchWorkerSortState()
             }
 
             SearchWorkerEvent.ToggleNearestSort -> {
-                _tempSortState.value = tempSortState.value.copy(
-                    isDistanceLowToHigh = !tempSortState.value.isDistanceLowToHigh
+                _sortState.value = sortState.value.copy(
+                    isDistanceLowToHigh = !_sortState.value.isDistanceLowToHigh
                 )
+                _tempSortState.value = sortState.value
             }
 
-            SearchWorkerEvent.ClickSortApply -> {
+            SearchWorkerEvent.ApplySort -> {
                 _sortState.value = _tempSortState.value
+            }
+
+            SearchWorkerEvent.SelectRelevance -> {
+                _tempSortState.value = SearchWorkerSortState()
             }
 
             SearchWorkerEvent.SelectCostHighToLowSort -> {
