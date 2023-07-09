@@ -141,7 +141,7 @@ fun SearchWorkerScreen(
                     worker = worker,
                     imageLoader = imageLoader,
                     onFavouriteClick = {
-
+                        viewModel.onEvent(SearchWorkerEvent.AddToFavourite(worker.workerId))
                     },
                     onClick = {
                         onNavigate(Screen.WorkerProfileScreen.route + "?userId=${worker.workerId}")

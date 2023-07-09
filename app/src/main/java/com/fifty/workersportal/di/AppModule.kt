@@ -6,6 +6,8 @@ import coil.ImageLoader
 import coil.decode.SvgDecoder
 import com.fifty.workersportal.core.domain.usecase.GetOwnUserIdUseCase
 import com.fifty.workersportal.core.util.Constants
+import com.fifty.workersportal.core.util.DefaultFavouriteToggle
+import com.fifty.workersportal.core.util.FavouriteToggle
 import com.fifty.workersportal.featureauth.domain.repository.SessionRepository
 import com.fifty.workersportal.featureauth.utils.AuthAuthenticator
 import com.fifty.workersportal.featureauth.utils.AuthInterceptor
@@ -72,6 +74,11 @@ object AppModule {
     @Provides
     @Singleton
     fun provideGson(): Gson = Gson()
+
+    @Provides
+    @Singleton
+    fun provideFavouriteToggle(): FavouriteToggle =
+        DefaultFavouriteToggle()
 
     @Provides
     @Singleton

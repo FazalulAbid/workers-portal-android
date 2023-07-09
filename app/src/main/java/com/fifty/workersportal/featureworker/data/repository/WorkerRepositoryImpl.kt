@@ -107,15 +107,18 @@ class WorkerRepositoryImpl(
         }
     }
 
-    override suspend fun toggleFavouriteWorker(userId: String, value: Boolean): SimpleResource {
+    override suspend fun toggleFavouriteWorker(
+        userId: String,
+        isFavourite: Boolean
+    ): SimpleResource {
         return try {
-            val response = if (value) {
-                api.addWorkerToFavourites(
-                    FavouriteUpdateRequest(userId)
-                )
-            } else {
+            val response = if (isFavourite) {
                 api.removeWorkerFromFavourites(
                     userId = userId
+                )
+            } else {
+                api.addWorkerToFavourites(
+                    FavouriteUpdateRequest(userId)
                 )
             }
             if (response.successful) {

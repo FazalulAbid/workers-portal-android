@@ -2,6 +2,7 @@ package com.fifty.workersportal.featureworker.presentation.searchworker
 
 sealed class SearchWorkerEvent {
     data class Query(val query: String) : SearchWorkerEvent()
+    data class AddToFavourite(val workerId: String) : SearchWorkerEvent()
     object ToggleNearestSort : SearchWorkerEvent()
     object ToggleRatingFourPlusFilter : SearchWorkerEvent()
     object TogglePreviouslyHiredFilter : SearchWorkerEvent()

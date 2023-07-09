@@ -9,8 +9,10 @@ import com.fifty.workersportal.core.domain.state.StandardTextFieldState
 import com.fifty.workersportal.core.presentation.PagingState
 import com.fifty.workersportal.core.presentation.util.UiEvent
 import com.fifty.workersportal.core.util.DefaultPaginator
+import com.fifty.workersportal.core.util.FavouriteToggle
 import com.fifty.workersportal.featureworker.domain.model.Worker
 import com.fifty.workersportal.featureworker.domain.usecase.GetSearchedSortedAndFilteredWorkersUseCase
+import com.fifty.workersportal.featureworker.domain.usecase.ToggleFavouriteWorkerUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,6 +23,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchWorkerViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
+    private val toggleFavouriteWorkerUseCase: ToggleFavouriteWorkerUseCase,
+    private val favouriteToggle: FavouriteToggle,
     private val getSearchedSortedAndFilteredWorkersUseCase: GetSearchedSortedAndFilteredWorkersUseCase
 ) : ViewModel() {
 
@@ -78,6 +82,10 @@ class SearchWorkerViewModel @Inject constructor(
                 )
             }
 
+            is SearchWorkerEvent.AddToFavourite -> {
+                addWorkerToFavourites(event.workerId)
+            }
+
             SearchWorkerEvent.ClickClearAllSortAndFilters -> {
                 _filterState.value = SearchWorkerFilterState()
                 _tempSortState.value = SearchWorkerSortState()
@@ -125,6 +133,23 @@ class SearchWorkerViewModel @Inject constructor(
             SearchWorkerEvent.OnSheetDismiss -> {
                 _tempSortState.value = _sortState.value
             }
+        }
+    }
+
+    private fun addWorkerToFavourites(workerId: String) {
+        viewModelScope.launch {
+            favouriteToggle.toggleFavourite(
+                workers = pagingState.value.items,
+                workerId = workerId,
+                onRequest = { isFavourite ->
+                    toggleFavouriteWorkerUseCase(userId = workerId, isFavourite = isFavourite)
+                },
+                onStateUpdated = { workers ->
+                    _pagingState.value = pagingState.value.copy(
+                        items = workers
+                    )
+                }
+            )
         }
     }
 
