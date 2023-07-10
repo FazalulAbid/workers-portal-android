@@ -54,12 +54,12 @@ fun StandardMultilineTextField(
                     color = textColor
                 )
             )
+            Spacer(modifier = Modifier.height(SizeSmall))
         }
-        Spacer(modifier = Modifier.height(SizeSmall))
         BasicTextField(
             modifier = basicTextFieldModifier
                 .background(backgroundColor, MaterialTheme.shapes.medium)
-                .padding(horizontal = SizeSmall)
+                .padding(SizeSmall)
                 .focusRequester(focusRequester),
             value = value,
             onValueChange = {

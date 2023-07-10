@@ -34,7 +34,8 @@ fun StandardTextField(
     hint: String,
     titleHint: Boolean = false,
     backgroundColor: Color = MaterialTheme.colorScheme.surface,
-    textColor: Color = MaterialTheme.colorScheme.onSurface,
+    hintColor: Color = MaterialTheme.colorScheme.onSurface,
+    textColor: Color = MaterialTheme.colorScheme.onBackground,
     cursorColor: Color = MaterialTheme.colorScheme.primary,
     value: String,
     enabled: Boolean = true,
@@ -54,7 +55,7 @@ fun StandardTextField(
             Text(
                 hint,
                 style = MaterialTheme.typography.bodyMedium.copy(
-                    color = textColor
+                    color = hintColor
                 )
             )
             Spacer(modifier = Modifier.height(SizeSmall))
@@ -89,7 +90,7 @@ fun StandardTextField(
                         if (value.isEmpty()) Text(
                             hint,
                             style = MaterialTheme.typography.bodyLarge.copy(
-                                color = textColor
+                                color = hintColor
                             )
                         )
                         innerTextField()

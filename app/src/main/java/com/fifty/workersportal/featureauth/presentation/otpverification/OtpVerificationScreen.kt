@@ -46,7 +46,6 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun OtpVerificationScreen(
     onNavigateWithPopBackStack: (String) -> Unit = {},
-    onNavigate: (String) -> Unit = {},
     onNavigateUp: () -> Unit = {},
     viewModel: OtpVerificationViewModel = hiltViewModel()
 ) {

@@ -11,7 +11,6 @@ import coil.ImageLoader
 import com.fifty.workersportal.core.domain.util.Session
 import com.fifty.workersportal.core.util.NavigationParent
 import com.fifty.workersportal.core.util.Screen
-import com.fifty.workersportal.featureworker.presentation.postsamplework.PostSampleWorkEvent
 import com.fifty.workersportal.featureworker.presentation.postsamplework.PostSampleWorkScreen
 import com.fifty.workersportal.featureworker.presentation.registerasworker.RegisterAsWorkerScreen
 import com.fifty.workersportal.featureworker.presentation.reviewandrating.ReviewAndRatingScreen
@@ -20,6 +19,8 @@ import com.fifty.workersportal.featureworker.presentation.selectworkercategory.S
 import com.fifty.workersportal.featureworker.presentation.workerdashboard.WorkerDashboardScreen
 import com.fifty.workersportal.featureworker.presentation.workerlist.WorkerListScreen
 import com.fifty.workersportal.featureworker.presentation.workerprofile.WorkerProfileScreen
+import com.fifty.workersportal.featureworkproposal.presentation.workproposal.WorkProposalScreen
+import com.fifty.workersportal.featureworkproposal.presentation.workproposal.WorkProposalViewModel
 import com.google.accompanist.navigation.animation.composable
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -27,6 +28,7 @@ fun NavGraphBuilder.workerNavGraph(
     navController: NavController,
     snackbarHostState: SnackbarHostState,
     imageLoader: ImageLoader,
+    workProposalViewModel: WorkProposalViewModel,
 ) {
     navigation(
         startDestination = if (Session.userSession.value?.isWorker == true) {
@@ -80,7 +82,8 @@ fun NavGraphBuilder.workerNavGraph(
                 onNavigateUp = navController::navigateUp,
                 isSampleWorkAdded = isSampleWorkAdded == true,
                 isWorkerProfileUpdated = isWorkerProfileUpdated == true,
-                imageLoader = imageLoader
+                imageLoader = imageLoader,
+                workProposalViewModel = workProposalViewModel
             )
         }
         composable(Screen.ReviewAndRatingScreen.route) {
@@ -100,6 +103,14 @@ fun NavGraphBuilder.workerNavGraph(
                 onNavigateUp = navController::navigateUp,
                 imageLoader = imageLoader,
                 previousBackStackEntry = navController.previousBackStackEntry
+            )
+        }
+        composable(Screen.WorkProposalScreen.route) {
+            WorkProposalScreen(
+                onNavigate = navController::navigate,
+                onNavigateUp = navController::navigateUp,
+                imageLoader = imageLoader,
+                viewModel = workProposalViewModel
             )
         }
     }

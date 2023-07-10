@@ -20,6 +20,7 @@ import com.fifty.workersportal.featureauth.domain.usecase.SaveRefreshTokenUseCas
 import com.fifty.workersportal.featureauth.domain.usecase.SaveUserIdUseCase
 import com.fifty.workersportal.featureauth.presentation.component.NAV_ARG_COUNTRY_CODE
 import com.fifty.workersportal.featureauth.presentation.component.NAV_ARG_PHONE_NUMBER
+import com.fifty.workersportal.featurelocation.domain.usecase.GetLocalAddressUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,10 +33,10 @@ import javax.inject.Inject
 class OtpVerificationViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val authUseCases: AuthUseCases,
-    private val getOwnUserId: GetOwnUserIdUseCase,
     private val saveAccessToken: SaveAccessTokenUseCase,
     private val saveRefreshToken: SaveRefreshTokenUseCase,
-    private val saveUserSession: SaveUserIdUseCase
+    private val saveUserSession: SaveUserIdUseCase,
+    private val getLocalAddressUseCase: GetLocalAddressUseCase
 ) : ViewModel() {
 
     private var resendTimer: CountDownTimer? = null
@@ -97,6 +98,9 @@ class OtpVerificationViewModel @Inject constructor(
                         saveRefreshToken(otpVerification.refreshToken)
                         saveUserSession(otpVerification.user.id)
                         Session.userSession.value = otpVerification.user.toProfile().toUserProfile()
+                        otpVerification.user.selectedAddress?.let {
+                            getLocalAddress(it)
+                        }
                         _eventFlow.emit(
                             UiEvent.OnLogin
                         )
@@ -117,6 +121,18 @@ class OtpVerificationViewModel @Inject constructor(
                         )
                     )
                 }
+            }
+        }
+    }
+
+    private suspend fun getLocalAddress(addressId: String) {
+        when (val result = getLocalAddressUseCase(addressId)) {
+            is Resource.Success -> {
+                Session.selectedAddress.value = result.data
+            }
+
+            is Resource.Error -> {
+
             }
         }
     }

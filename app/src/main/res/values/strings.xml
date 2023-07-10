@@ -174,5 +174,11 @@
     <string name="distance">Distance</string>
     <string name="rating">Rating</string>
     <string name="wage">Wage</string>
+    <string name="confirm_work_proposal">Confirm Work Proposal</string>
+    <string name="chosen_worker">Chosen Worker</string>
+    <string name="enter_work_description">Enter Work Description</string>
+    <string name="work_time">Work Time</string>
+    <string name="half_day_details">Half Day Details</string>
+    <string name="send_proposal">Send Proposal</string>
 
 </resources>

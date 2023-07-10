@@ -211,8 +211,8 @@ class RegisterAsWorkerViewModel @Inject constructor(
                         isLoading = true,
                         loadingText = R.string.updating_worker_data
                     )
-                    val validationResult = validateWorkerData()
-                    validationResult?.let {
+                    val validatedWorkerData = validateWorkerData()
+                    validatedWorkerData?.let {
                         if (skillsState.value.selectedSkills.size == 1) {
                             updateUserAsWorker(it)
                         } else {

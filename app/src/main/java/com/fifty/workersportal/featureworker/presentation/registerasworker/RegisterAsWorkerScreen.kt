@@ -93,11 +93,11 @@ fun RegisterAsWorkerScreen(
                 }
 
                 is RegisterAsWorkerUiEvent.SelectedCategoryCount -> {
-                    if (event.count < 2) {
-                        viewModel.onEvent(RegisterAsWorkerEvent.UpdateWorker)
-                    } else {
-                        showSheet = true
-                    }
+//                    if (event.count < 2) {
+//                        viewModel.onEvent(RegisterAsWorkerEvent.UpdateWorker)
+//                    } else {
+//                        showSheet = true
+//                    }
                 }
 
                 else -> Unit

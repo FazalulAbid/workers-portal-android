@@ -43,8 +43,8 @@ fun Navigation(
         popExitTransition = { popExitTransitionHorizontal },
     ) {
         authNavGraph(navController, snackbarHostState, imageLoader)
-        userNavGraph(navController, snackbarHostState, workProposalViewModel,imageLoader)
-        workerNavGraph(navController, snackbarHostState, imageLoader)
+        userNavGraph(navController, snackbarHostState, workProposalViewModel, imageLoader)
+        workerNavGraph(navController, snackbarHostState, imageLoader, workProposalViewModel)
         favouriteNavGraph(navController, snackbarHostState)
         historyNavGraph(navController, snackbarHostState)
         chatNavGraph(navController, snackbarHostState)

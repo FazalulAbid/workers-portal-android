@@ -55,7 +55,6 @@ fun NavGraphBuilder.authNavGraph(
                         popUpTo(0)
                     }
                 },
-                onNavigate = navController::navigate,
                 onNavigateUp = navController::navigateUp,
             )
         }

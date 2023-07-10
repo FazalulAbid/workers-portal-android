@@ -1,14 +1,9 @@
 package com.fifty.workersportal.featureworker.presentation.workerprofile
 
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.LocalOverscrollConfiguration
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -23,7 +18,6 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -38,11 +32,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -60,14 +50,11 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.fifty.workersportal.R
-import com.fifty.workersportal.core.domain.util.Session
 import com.fifty.workersportal.core.presentation.component.HorizontalDivider
 import com.fifty.workersportal.core.presentation.component.LargeDisplayProfilePicture
 import com.fifty.workersportal.core.presentation.component.SecondaryHeader
 import com.fifty.workersportal.core.presentation.component.StandardAppBar
 import com.fifty.workersportal.core.presentation.ui.theme.ExtraExtraLargeProfilePictureHeight
-import com.fifty.workersportal.core.presentation.ui.theme.LargeProfilePictureHeight
-import com.fifty.workersportal.core.presentation.ui.theme.LargeStrokeThickness
 import com.fifty.workersportal.core.presentation.ui.theme.SizeExtraSmall
 import com.fifty.workersportal.core.presentation.ui.theme.SizeLarge
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
@@ -75,14 +62,13 @@ import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
 import com.fifty.workersportal.core.presentation.ui.theme.SkyBlueColor
 import com.fifty.workersportal.core.presentation.ui.theme.SmallStrokeThickness
 import com.fifty.workersportal.core.util.Screen
-import com.fifty.workersportal.featureworker.presentation.component.ButtonBetweenLines
 import com.fifty.workersportal.featureworker.presentation.component.Chip
 import com.fifty.workersportal.featureworker.presentation.component.RatingAndRatingCount
 import com.fifty.workersportal.featureworker.presentation.component.SampleWorkItem
 import com.fifty.workersportal.featureworker.presentation.component.WorkerWageText
+import com.fifty.workersportal.featureworkproposal.presentation.workproposal.WorkProposalViewModel
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
-import javax.security.auth.login.LoginException
 
 @OptIn(ExperimentalCoilApi::class, ExperimentalFoundationApi::class)
 @Composable
@@ -93,13 +79,14 @@ fun WorkerProfileScreen(
     isSampleWorkAdded: Boolean,
     isWorkerProfileUpdated: Boolean,
     imageLoader: ImageLoader,
-    viewModel: WorkerProfileViewModel = hiltViewModel()
+    workerProfileViewModel: WorkerProfileViewModel = hiltViewModel(),
+    workProposalViewModel: WorkProposalViewModel
 ) {
     val showSampleWorkImage = remember { mutableStateOf(false) }
-    val state = viewModel.state.value
+    val state = workerProfileViewModel.state.value
     val screenWidth = with(LocalConfiguration.current) { screenWidthDp.dp }
     val sampleWorks =
-        viewModel.sampleWorks.collectAsLazyPagingItems()
+        workerProfileViewModel.sampleWorks.collectAsLazyPagingItems()
     val noSampleWorksLottieComposition by rememberLottieComposition(
         LottieCompositionSpec.RawRes(R.raw.empty_box_lottie)
     )
@@ -108,15 +95,15 @@ fun WorkerProfileScreen(
     )
 
     LaunchedEffect(key1 = true) {
-        viewModel.getProfile(workerId)
+        workerProfileViewModel.getProfile(workerId)
     }
 
     LaunchedEffect(Unit) {
         if (isSampleWorkAdded) {
-            viewModel.onEvent(WorkerProfileEvent.UpdateSampleWorks)
+            workerProfileViewModel.onEvent(WorkerProfileEvent.UpdateSampleWorks)
         }
         if (isWorkerProfileUpdated) {
-            viewModel.onEvent(WorkerProfileEvent.UpdateWorkerProfileDetails)
+            workerProfileViewModel.onEvent(WorkerProfileEvent.UpdateWorkerProfileDetails)
         }
     }
 
@@ -246,7 +233,13 @@ fun WorkerProfileScreen(
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Chip(
-                                        text = workerCategory.skill ?: ""
+                                        text = workerCategory.skill ?: "",
+                                        onChipClick = {
+                                            if (!state.isOwnProfile) {
+                                                workProposalViewModel.workerState
+                                                onNavigate(Screen.WorkProposalScreen.route)
+                                            }
+                                        }
                                     )
                                 }
                             }
@@ -307,7 +300,11 @@ fun WorkerProfileScreen(
                                 sampleWork = it,
                                 imageLoader = imageLoader,
                                 onClick = {
-                                    viewModel.onEvent(WorkerProfileEvent.ClickSampleWork(it))
+                                    workerProfileViewModel.onEvent(
+                                        WorkerProfileEvent.ClickSampleWork(
+                                            it
+                                        )
+                                    )
                                     showSampleWorkImage.value = true
                                 }
                             )
