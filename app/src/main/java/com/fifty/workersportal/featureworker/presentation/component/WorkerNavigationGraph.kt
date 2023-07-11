@@ -86,7 +86,16 @@ fun NavGraphBuilder.workerNavGraph(
                 imageLoader = imageLoader
             )
         }
-        composable(Screen.SearchWorkerScreen.route) {
+        composable(
+            route = Screen.SearchWorkerScreen.route + "?categoryId={categoryId}",
+            arguments = listOf(
+                navArgument(name = "categoryId") {
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = null
+                }
+            )
+        ) {
             SearchWorkerScreen(
                 onNavigate = navController::navigate,
                 onNavigateUp = navController::navigateUp,

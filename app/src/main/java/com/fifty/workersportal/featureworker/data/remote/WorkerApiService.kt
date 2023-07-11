@@ -29,7 +29,8 @@ interface WorkerApiService {
     suspend fun getSearchedSortedAndFilteredWorkers(
         @Query("page") page: Int,
         @Query("pageSize") pageSize: Int,
-        @Query("query") query: String
+        @Query("query") query: String,
+        @Query("category") category: String?
     ): BasicApiResponse<List<WorkerDto>>
 
     @GET("worker/get-worker-categories")

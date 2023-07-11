@@ -4,7 +4,9 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.fifty.workersportal.core.domain.state.StandardTextFieldState
+import com.fifty.workersportal.featureworker.domain.model.Category
 import com.fifty.workersportal.featureworker.domain.model.Worker
+import com.fifty.workersportal.featureworker.domain.model.WorkerCategory
 import java.time.LocalDate
 import java.util.Date
 import javax.inject.Inject

@@ -54,7 +54,8 @@ class SearchWorkerViewModel @Inject constructor(
         onRequest = { page ->
             getSearchedSortedAndFilteredWorkersUseCase(
                 page = page,
-                query = _searchFieldState.value.text.trim()
+                query = _searchFieldState.value.text.trim(),
+                categoryId = savedStateHandle["categoryId"]
             )
         },
         onSuccess = { workers ->

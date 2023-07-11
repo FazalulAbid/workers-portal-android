@@ -227,7 +227,7 @@ fun WorkerProfileScreen(
                     state.profile?.categoryList?.let { workerCategories ->
                         Grid(
                             modifier = Modifier
-                                .padding(horizontal = SizeMedium),
+                                .padding(SizeMedium),
                             items = workerCategories,
                             columns = 2,
                             rowSpacing = SizeMedium,
@@ -248,51 +248,44 @@ fun WorkerProfileScreen(
                     }
                 }
                 item(span = { GridItemSpan(3) }) {
-                    Column(
+                    Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = SizeMedium),
-                        horizontalAlignment = Alignment.CenterHorizontally
+                            .padding(
+                                start = SizeMedium,
+                                end = SizeMedium,
+                                top = SizeLarge,
+                                bottom = SizeMedium
+                            ),
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Spacer(modifier = Modifier.height(SizeLarge))
-                        HorizontalDivider()
-                        Spacer(modifier = Modifier.height(SizeLarge))
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceEvenly,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            RatingAndRatingCount(
-                                modifier = Modifier.clickable {
-                                    onNavigate(Screen.ReviewAndRatingScreen.route)
-                                },
-                                rating = "4.5",
-                                ratingCount = 123
-                            )
-                            Divider(
-                                modifier = Modifier
-                                    .height(50.dp)
-                                    .width(SmallStrokeThickness),
-                                color = MaterialTheme.colorScheme.outline
-                            )
-                            WorkerWageText(wage = 99.0f, isHalfDay = false)
-                            Divider(
-                                modifier = Modifier
-                                    .height(50.dp)
-                                    .width(SmallStrokeThickness),
-                                color = MaterialTheme.colorScheme.outline
-                            )
-                            WorkerWageText(wage = 59.0f, isHalfDay = true)
-                        }
-                        Spacer(modifier = Modifier.height(SizeLarge))
+                        RatingAndRatingCount(
+                            modifier = Modifier.clickable {
+                                onNavigate(Screen.ReviewAndRatingScreen.route)
+                            },
+                            rating = "4.5",
+                            ratingCount = 123
+                        )
+                        Divider(
+                            modifier = Modifier
+                                .height(50.dp)
+                                .width(SmallStrokeThickness),
+                            color = MaterialTheme.colorScheme.outline
+                        )
+                        WorkerWageText(wage = 99.0f, isHalfDay = false)
+                        Divider(
+                            modifier = Modifier
+                                .height(50.dp)
+                                .width(SmallStrokeThickness),
+                            color = MaterialTheme.colorScheme.outline
+                        )
+                        WorkerWageText(wage = 59.0f, isHalfDay = true)
                     }
                 }
                 item(span = { GridItemSpan(3) }) {
                     SecondaryHeader(
-                        modifier = Modifier.padding(
-                            vertical = SizeMedium,
-                            horizontal = SizeMedium
-                        ),
+                        modifier = Modifier.padding(SizeMedium),
                         text = stringResource(R.string.x_s_works, state.profile?.firstName ?: ""),
                         style = MaterialTheme.typography.titleMedium,
                         moreOption = state.isOwnProfile,

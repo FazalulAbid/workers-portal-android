@@ -12,8 +12,10 @@ import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.Screen
 import com.fifty.workersportal.featurelocation.domain.usecase.GetLocalAddressUseCase
 import com.fifty.workersportal.featureuser.domain.usecase.GetDashboardBannersUseCase
+import com.fifty.workersportal.featureworker.domain.model.Category
 import com.fifty.workersportal.featureworker.domain.usecase.GetSuggestedCategoriesUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.ToggleFavouriteWorkerUseCase
+import com.fifty.workersportal.featureworkproposal.presentation.workproposal.WorkProposalEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -33,6 +35,9 @@ class UserDashboardViewModel @Inject constructor(
     private val _state = mutableStateOf(UserDashboardState())
     val state: State<UserDashboardState> = _state
 
+    private val _selectedCategoryState = mutableStateOf<Category?>(null)
+    val selectedCategoryState: State<Category?> = _selectedCategoryState
+
     private val _suggestedCategoriesState = mutableStateOf(SuggestedCategoriesState())
     val suggestedCategoriesState: State<SuggestedCategoriesState> = _suggestedCategoriesState
 
@@ -48,6 +53,10 @@ class UserDashboardViewModel @Inject constructor(
         when (event) {
             is UserDashboardEvent.ToggleFavouriteWorker -> {
                 toggleFavouriteWorker(event.value)
+            }
+
+            is UserDashboardEvent.SelectWorkerCategory -> {
+                _selectedCategoryState.value = event.category
             }
 
             UserDashboardEvent.UpdateSelectedAddress -> {

@@ -17,6 +17,7 @@
     <string name="home">Home</string>
     <string name="work">Work</string>
     <string name="favorites">Favorites</string>
+    <string name="favourite_workers">Favourite Workers</string>
     <string name="history">History</string>
     <string name="notifications">Notifications</string>
     <string name="we_have_sent_a_verification_code_to">We have sent a verification code to</string>

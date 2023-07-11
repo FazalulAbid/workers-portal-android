@@ -192,10 +192,11 @@ fun AuthScreen(
                     PrimaryButton(
                         modifier = Modifier.bringIntoViewRequester(bringIntoViewRequester),
                         text = stringResource(R.string.continue_text),
-                        isLoading = state.isGetOtpLoading
-                    ) {
-                        viewModel.onEvent(AuthEvent.GetOtp)
-                    }
+                        isLoading = state.isGetOtpLoading,
+                        onClick = {
+                            viewModel.onEvent(AuthEvent.GetOtp)
+                        }
+                    )
                 }
                 if (keyboardOpenState == Keyboard.Closed) {
                     TextBetweenLines(text = stringResource(R.string.or))

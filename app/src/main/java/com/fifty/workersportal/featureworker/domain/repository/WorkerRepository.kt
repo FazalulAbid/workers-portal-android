@@ -23,6 +23,7 @@ interface WorkerRepository {
     suspend fun getSearchedSortedAndFilteredWorkers(
         query: String,
         page: Int,
-        pageSize: Int
+        pageSize: Int,
+        categoryId: String?
     ): Resource<List<Worker>>
 }

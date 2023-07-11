@@ -9,11 +9,12 @@ class GetSearchedSortedAndFilteredWorkersUseCase(
     private val repository: WorkerRepository
 ) {
 
-    suspend operator fun invoke(page: Int, query: String): Resource<List<Worker>> {
+    suspend operator fun invoke(page: Int, query: String, categoryId: String?): Resource<List<Worker>> {
         return repository.getSearchedSortedAndFilteredWorkers(
             query = query,
             page = page,
-            pageSize = Constants.DEFAULT_PAGINATION_SIZE
+            pageSize = Constants.DEFAULT_PAGINATION_SIZE,
+            categoryId = categoryId
         )
     }
 }

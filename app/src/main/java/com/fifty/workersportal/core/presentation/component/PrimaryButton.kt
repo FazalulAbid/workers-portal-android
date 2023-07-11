@@ -1,6 +1,5 @@
 package com.fifty.workersportal.core.presentation.component
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,7 +18,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.fifty.workersportal.core.presentation.ui.theme.LargeButtonHeight
-import com.fifty.workersportal.core.presentation.ui.theme.MediumButtonHeight
 import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
 import com.fifty.workersportal.core.presentation.ui.theme.SmallButtonHeight
 

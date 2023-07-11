@@ -212,6 +212,9 @@ fun UserDashboardScreen(
                                     imageLoader = imageLoader,
                                     imageSize = MediumProfilePictureHeight
                                 ) {
+                                    userDashboardViewModel.onEvent(
+                                        UserDashboardEvent.SelectWorkerCategory(it)
+                                    )
                                     calenderState.show()
                                 }
                             }
@@ -311,7 +314,7 @@ fun UserDashboardScreen(
         ),
         selection = CalendarSelection.Date { date ->
             workProposalViewModel.onEvent(WorkProposalEvent.InputProposalDate(date))
-            onNavigate(Screen.SearchWorkerScreen.route)
+            onNavigate(Screen.SearchWorkerScreen.route + "?categoryId=${userDashboardViewModel.selectedCategoryState.value?.id}")
         }
     )
 }

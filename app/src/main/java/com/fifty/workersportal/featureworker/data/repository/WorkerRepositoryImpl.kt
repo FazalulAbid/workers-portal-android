@@ -12,6 +12,7 @@ import com.fifty.workersportal.core.util.UiText
 import com.fifty.workersportal.featureuser.data.remote.FavouriteUpdateRequest
 import com.fifty.workersportal.featureworker.data.paging.CategorySource
 import com.fifty.workersportal.featureworker.data.remote.WorkerApiService
+import com.fifty.workersportal.featureworker.data.remote.request.GetWorkerCategoriesRequest
 import com.fifty.workersportal.featureworker.domain.model.Category
 import com.fifty.workersportal.featureworker.domain.model.Worker
 import com.fifty.workersportal.featureworker.domain.repository.WorkerRepository
@@ -146,13 +147,15 @@ class WorkerRepositoryImpl(
     override suspend fun getSearchedSortedAndFilteredWorkers(
         query: String,
         page: Int,
-        pageSize: Int
+        pageSize: Int,
+        categoryId: String?
     ): Resource<List<Worker>> {
         return try {
             val response = api.getSearchedSortedAndFilteredWorkers(
                 query = query,
                 page = page,
-                pageSize = pageSize
+                pageSize = pageSize,
+                category = categoryId
             )
             if (response.successful) {
                 Resource.Success(data = response.data?.map { it.toWorker() })
