@@ -180,5 +180,7 @@
     <string name="work_time">Work Time</string>
     <string name="half_day_details">Half Day Details</string>
     <string name="send_proposal">Send Proposal</string>
+    <string name="chosen_date">Chosen Date</string>
+    <string name="choose_a_date">Choose a date</string>
 
 </resources>

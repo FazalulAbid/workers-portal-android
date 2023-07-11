@@ -1,6 +1,9 @@
 package com.fifty.workersportal.featureworkproposal.presentation.workproposal
 
 import android.annotation.SuppressLint
+import android.os.Build
+import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.tween
@@ -20,6 +23,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
@@ -30,7 +36,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -46,12 +54,27 @@ import com.fifty.workersportal.core.presentation.component.StandardMultilineText
 import com.fifty.workersportal.core.presentation.ui.theme.MediumButtonHeight
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
+import com.fifty.workersportal.core.util.Screen
+import com.fifty.workersportal.core.util.toDate
 import com.fifty.workersportal.featurelocation.domain.model.LocalAddress
 import com.fifty.workersportal.featureworker.domain.model.Worker
 import com.fifty.workersportal.featureworker.presentation.component.ANIMATION_DURATION
+import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
+import com.maxkeppeler.sheets.calendar.CalendarDialog
+import com.maxkeppeler.sheets.calendar.models.CalendarConfig
+import com.maxkeppeler.sheets.calendar.models.CalendarSelection
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
+import java.time.format.TextStyle
+import java.util.Date
+import java.util.Locale
 
 @SuppressLint("UnusedTransitionTargetStateParameter")
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun WorkProposalScreen(
     onNavigate: (String) -> Unit,
@@ -59,6 +82,8 @@ fun WorkProposalScreen(
     imageLoader: ImageLoader,
     viewModel: WorkProposalViewModel
 ) {
+    val context = LocalContext.current
+    val calenderState = rememberUseCaseState()
     val keyboardController = LocalSoftwareKeyboardController.current
     val transitionState = remember {
         MutableTransitionState(viewModel.isFullDay.value).apply {
@@ -128,8 +153,47 @@ fun WorkProposalScreen(
             item {
                 Column {
                     SecondaryHeader(
-                        text = stringResource(R.string.chosen_worker),
+                        text = stringResource(R.string.chosen_date),
                         modifier = Modifier.padding(bottom = SizeMedium),
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontWeight = FontWeight.Medium
+                    )
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(
+                                MaterialTheme.colorScheme.surface,
+                                MaterialTheme.shapes.medium
+                            )
+                            .padding(SizeMedium),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = formatDateForChosenWork(viewModel.proposalDateState.value)
+                                ?: stringResource(R.string.choose_a_date),
+                            style = MaterialTheme.typography.bodyLarge.copy(
+                                color = if (viewModel.proposalDateState.value == null) {
+                                    MaterialTheme.colorScheme.onSurface
+                                } else MaterialTheme.colorScheme.onBackground,
+                                fontWeight = if (viewModel.proposalDateState.value == null) {
+                                    FontWeight.Normal
+                                } else FontWeight.SemiBold
+                            )
+                        )
+                        IconButton(onClick = {
+                            calenderState.show()
+                        }) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_calander),
+                                contentDescription = "",
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }
+                    SecondaryHeader(
+                        text = stringResource(R.string.chosen_worker),
+                        modifier = Modifier.padding(vertical = SizeMedium),
                         style = MaterialTheme.typography.bodyLarge,
                         fontWeight = FontWeight.Medium
                     )
@@ -297,5 +361,33 @@ fun WorkProposalScreen(
                 }
             )
         }
+    }
+
+    val rangeStartDate = LocalDate.now().plusDays(1)
+    val rangeEndYearOffset = 1L
+    val rangeEndDate = LocalDate.now().plusYears(rangeEndYearOffset)
+        .withMonth(1)
+        .withDayOfMonth(15)
+    val range = rangeStartDate..rangeEndDate
+
+    CalendarDialog(
+        state = calenderState,
+        config = CalendarConfig(
+            monthSelection = true,
+            boundary = range
+        ),
+        selection = CalendarSelection.Date { date ->
+            viewModel.onEvent(WorkProposalEvent.InputProposalDate(date))
+            calenderState.hide()
+        }
+    )
+}
+
+fun formatDateForChosenWork(localDate: LocalDate?): String? {
+    return localDate?.let {
+        val date = it.toDate()
+        val formattedDate = SimpleDateFormat("dd, MMMM yyyy", Locale.getDefault()).format(date)
+        val day = it.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault())
+        "$formattedDate${if (day.isNotBlank()) ", $day" else ""}"
     }
 }

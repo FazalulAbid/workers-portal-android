@@ -22,6 +22,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
+import coil.ImageLoader
+import coil.annotation.ExperimentalCoilApi
+import coil.compose.rememberImagePainter
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.presentation.component.ratingbar.RatingBar
 import com.fifty.workersportal.core.presentation.ui.theme.ExtraSmallProfilePictureHeight
@@ -30,9 +34,11 @@ import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
 import com.fifty.workersportal.featureworker.domain.model.ReviewAndRating
 
+@OptIn(ExperimentalCoilApi::class)
 @Composable
 fun ReviewItem(
     modifier: Modifier = Modifier,
+    imageLoader: ImageLoader,
     reviewAndRating: ReviewAndRating
 ) {
     Column(
@@ -53,7 +59,10 @@ fun ReviewItem(
                     modifier = Modifier
                         .size(ExtraSmallProfilePictureHeight)
                         .clip(CircleShape),
-                    painter = painterResource(id = R.drawable.plumber_profile),
+                    painter = rememberImagePainter(
+                        data = reviewAndRating.profileImageUrl,
+                        imageLoader = imageLoader
+                    ),
                     contentDescription = null,
                     contentScale = ContentScale.Crop
                 )
@@ -64,7 +73,9 @@ fun ReviewItem(
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.Medium,
                             color = MaterialTheme.colorScheme.onBackground
-                        )
+                        ),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
                     Spacer(modifier = Modifier.height(SizeSmall))
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -86,12 +97,15 @@ fun ReviewItem(
                     }
                 }
             }
+            Spacer(modifier = Modifier.width(SizeMedium))
             Text(
-                text = "2 days ago (Pending)",
+                text = reviewAndRating.formattedTime,
                 style = MaterialTheme.typography.bodyMedium.copy(
                     color = MaterialTheme.colorScheme.onSurface,
                     textAlign = TextAlign.Right
-                )
+                ),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
         Spacer(modifier = Modifier.height(SizeMedium))

@@ -7,12 +7,11 @@ fun Long.toDaysAgo(): String {
     val currentDate = Calendar.getInstance().time
     val timestampDate = Date(this)
     val diff = currentDate.time - timestampDate.time
-    val daysAgo = diff / (24 * 60 * 60 * 1000)
 
-    return when {
-        daysAgo == 1L -> "$daysAgo day ago"
-        daysAgo > 1L -> "$daysAgo days ago"
-        else -> "Today"
+    return when (val daysAgo = diff / (24 * 60 * 60 * 1000)) {
+        1L -> "Today"
+        2L -> "Yesterday"
+        else -> "$daysAgo days ago"
     }
 }
 

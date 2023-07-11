@@ -10,23 +10,26 @@ data class ReviewAndRatingDto(
     val ratedUserId: String,
     val firstName: String,
     val lastName: String,
+    val profileImageUrl: String?,
     val rating: Float,
     val review: String,
     val isWorker: Boolean,
+    val timestamp: String,
     @SerializedName("__v")
     val versionKey: Int
 ) {
     fun toReviewAndRating(): ReviewAndRating {
         return ReviewAndRating(
             id = id,
-            firstName = "Username",
-            lastName = "Pending",
+            firstName = "firstName",
+            lastName = "lastName",
+            profileImageUrl = "profileImageUrl",
             userId = userId,
             ratedUserId = ratedUserId,
             rating = rating,
             review = review,
             isWorker = isWorker,
-            formattedTime = ""
+            formattedTime = "timestamp.toDaysAgo()"
         )
     }
 }

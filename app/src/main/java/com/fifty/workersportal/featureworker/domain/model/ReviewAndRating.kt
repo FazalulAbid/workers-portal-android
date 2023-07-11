@@ -2,6 +2,7 @@ package com.fifty.workersportal.featureworker.domain.model
 
 data class ReviewAndRating(
     val id: String,
+    val profileImageUrl: String,
     val firstName: String,
     val lastName: String,
     val userId: String,

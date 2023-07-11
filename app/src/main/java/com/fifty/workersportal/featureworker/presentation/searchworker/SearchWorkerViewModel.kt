@@ -92,7 +92,7 @@ class SearchWorkerViewModel @Inject constructor(
             }
 
             SearchWorkerEvent.ToggleNearestSort -> {
-                _sortState.value = sortState.value.copy(
+                _sortState.value = SearchWorkerSortState(
                     isDistanceLowToHigh = !_sortState.value.isDistanceLowToHigh
                 )
                 _tempSortState.value = sortState.value

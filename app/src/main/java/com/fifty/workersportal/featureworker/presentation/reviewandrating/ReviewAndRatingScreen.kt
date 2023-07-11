@@ -33,6 +33,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import coil.ImageLoader
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.presentation.component.HorizontalDivider
 import com.fifty.workersportal.core.presentation.component.PrimaryButton
@@ -55,9 +56,9 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun ReviewAndRatingScreen(
     onNavigateUp: () -> Unit,
+    imageLoader: ImageLoader,
     viewModel: ReviewAndRatingViewModel = hiltViewModel()
 ) {
-
     val reviewAndRatings = viewModel.reviewsAndRatings.collectAsLazyPagingItems()
     val writeReviewSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var showWriteReviewSheet by remember {
@@ -177,6 +178,7 @@ fun ReviewAndRatingScreen(
             items(reviewAndRatings) { reviewAndRating ->
                 reviewAndRating?.let {
                     ReviewItem(
+                        imageLoader = imageLoader,
                         reviewAndRating = it
                     )
                     HorizontalDivider()

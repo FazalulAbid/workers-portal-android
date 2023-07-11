@@ -88,7 +88,8 @@ fun NavGraphBuilder.workerNavGraph(
         }
         composable(Screen.ReviewAndRatingScreen.route) {
             ReviewAndRatingScreen(
-                onNavigateUp = navController::navigateUp
+                onNavigateUp = navController::navigateUp,
+                imageLoader = imageLoader
             )
         }
         composable(Screen.SearchWorkerScreen.route) {
