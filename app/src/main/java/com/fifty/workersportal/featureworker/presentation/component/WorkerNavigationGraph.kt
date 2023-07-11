@@ -17,7 +17,6 @@ import com.fifty.workersportal.featureworker.presentation.reviewandrating.Review
 import com.fifty.workersportal.featureworker.presentation.searchworker.SearchWorkerScreen
 import com.fifty.workersportal.featureworker.presentation.selectworkercategory.SelectWorkerCategoryScreen
 import com.fifty.workersportal.featureworker.presentation.workerdashboard.WorkerDashboardScreen
-import com.fifty.workersportal.featureworker.presentation.workerlist.WorkerListScreen
 import com.fifty.workersportal.featureworker.presentation.workerprofile.WorkerProfileScreen
 import com.fifty.workersportal.featureworkproposal.presentation.workproposal.WorkProposalScreen
 import com.fifty.workersportal.featureworkproposal.presentation.workproposal.WorkProposalViewModel
@@ -54,13 +53,8 @@ fun NavGraphBuilder.workerNavGraph(
             SelectWorkerCategoryScreen(
                 onNavigate = navController::navigate,
                 onNavigateUp = navController::navigateUp,
-                imageLoader = imageLoader
-            )
-        }
-        composable(Screen.WorkerListScreen.route) {
-            WorkerListScreen(
-                onNavigate = navController::navigate,
-                onNavigateUp = navController::navigateUp
+                imageLoader = imageLoader,
+                workProposalViewModel = workProposalViewModel
             )
         }
         composable(

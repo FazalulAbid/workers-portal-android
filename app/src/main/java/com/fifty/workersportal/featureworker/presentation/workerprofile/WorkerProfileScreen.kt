@@ -62,13 +62,12 @@ import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
 import com.fifty.workersportal.core.presentation.ui.theme.SkyBlueColor
 import com.fifty.workersportal.core.presentation.ui.theme.SmallStrokeThickness
 import com.fifty.workersportal.core.util.Screen
-import com.fifty.workersportal.featureworker.presentation.component.Chip
 import com.fifty.workersportal.featureworker.presentation.component.RatingAndRatingCount
 import com.fifty.workersportal.featureworker.presentation.component.SampleWorkItem
+import com.fifty.workersportal.featureworker.presentation.component.WorkerCategoryChip
 import com.fifty.workersportal.featureworker.presentation.component.WorkerWageText
 import com.fifty.workersportal.featureworkproposal.presentation.workproposal.WorkProposalViewModel
-import com.google.accompanist.flowlayout.FlowRow
-import com.google.accompanist.flowlayout.MainAxisAlignment
+import com.maxkeppeker.sheets.core.views.Grid
 
 @OptIn(ExperimentalCoilApi::class, ExperimentalFoundationApi::class)
 @Composable
@@ -222,28 +221,39 @@ fun WorkerProfileScreen(
                             )
                             Spacer(modifier = Modifier.height(SizeLarge))
                         }
-                        FlowRow(
-                            modifier = Modifier.fillMaxWidth(),
-                            mainAxisAlignment = MainAxisAlignment.Center,
-                            mainAxisSpacing = SizeMedium,
-                            crossAxisSpacing = SizeMedium
-                        ) {
-                            state.profile?.categoryList?.forEach { workerCategory ->
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Chip(
-                                        text = workerCategory.skill ?: "",
-                                        onChipClick = {
-                                            if (!state.isOwnProfile) {
-                                                workProposalViewModel.workerState
-                                                onNavigate(Screen.WorkProposalScreen.route)
-                                            }
-                                        }
-                                    )
-                                }
-                            }
+                    }
+                }
+                item(span = { GridItemSpan(3) }) {
+                    state.profile?.categoryList?.let { workerCategories ->
+                        Grid(
+                            modifier = Modifier
+                                .padding(horizontal = SizeMedium),
+                            items = workerCategories,
+                            columns = 2,
+                            rowSpacing = SizeMedium,
+                            columnSpacing = SizeMedium
+                        ) { workerCategory ->
+                            WorkerCategoryChip(
+                                modifier = Modifier.fillMaxWidth(),
+                                workerCategory = workerCategory,
+                                imageLoader = imageLoader,
+                                onClick = if (!state.isOwnProfile) {
+                                    {
+                                        workProposalViewModel.workerState
+                                        onNavigate(Screen.WorkProposalScreen.route)
+                                    }
+                                } else null
+                            )
                         }
+                    }
+                }
+                item(span = { GridItemSpan(3) }) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = SizeMedium),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
                         Spacer(modifier = Modifier.height(SizeLarge))
                         HorizontalDivider()
                         Spacer(modifier = Modifier.height(SizeLarge))
@@ -277,8 +287,7 @@ fun WorkerProfileScreen(
                         Spacer(modifier = Modifier.height(SizeLarge))
                     }
                 }
-                item(
-                    span = { GridItemSpan(3) }) {
+                item(span = { GridItemSpan(3) }) {
                     SecondaryHeader(
                         modifier = Modifier.padding(
                             vertical = SizeMedium,

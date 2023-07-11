@@ -8,19 +8,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -32,26 +30,33 @@ import coil.ImageLoader
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.presentation.component.StandardAppBar
 import com.fifty.workersportal.core.presentation.component.StandardTextField
-import com.fifty.workersportal.core.presentation.ui.theme.ExtraLargeProfilePictureHeight
 import com.fifty.workersportal.core.presentation.ui.theme.LargeProfilePictureHeight
 import com.fifty.workersportal.core.presentation.ui.theme.MediumButtonHeight
-import com.fifty.workersportal.core.presentation.ui.theme.MediumProfilePictureHeight
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
-import com.fifty.workersportal.core.presentation.util.shimmerEffect
 import com.fifty.workersportal.core.util.Screen
 import com.fifty.workersportal.featureworker.presentation.component.CategoryItem
+import com.fifty.workersportal.featureworkproposal.presentation.workproposal.WorkProposalEvent
+import com.fifty.workersportal.featureworkproposal.presentation.workproposal.WorkProposalViewModel
+import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
+import com.maxkeppeler.sheets.calendar.CalendarDialog
+import com.maxkeppeler.sheets.calendar.models.CalendarConfig
+import com.maxkeppeler.sheets.calendar.models.CalendarSelection
+import java.time.LocalDate
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SelectWorkerCategoryScreen(
     imageLoader: ImageLoader,
     onNavigate: (String) -> Unit = {},
     onNavigateUp: () -> Unit = {},
-    viewModel: SearchCategoryViewModel = hiltViewModel()
+    searchCategoryViewModel: SearchCategoryViewModel = hiltViewModel(),
+    workProposalViewModel: WorkProposalViewModel
 ) {
-    val search by viewModel.search.collectAsStateWithLifecycle()
-    val state = viewModel.searchState.value
+    val calenderState = rememberUseCaseState()
+    val search by searchCategoryViewModel.search.collectAsStateWithLifecycle()
+    val state = searchCategoryViewModel.searchState.value
     val searchedCategories =
-        viewModel.categorySearchResults.collectAsLazyPagingItems()
+        searchCategoryViewModel.categorySearchResults.collectAsLazyPagingItems()
 
     Column(
         Modifier.fillMaxSize()
@@ -93,7 +98,7 @@ fun SelectWorkerCategoryScreen(
                 hint = stringResource(R.string.search_plumber),
                 value = search,
                 onValueChange = {
-                    viewModel.onEvent(SearchCategoryEvent.Query(it))
+                    searchCategoryViewModel.onEvent(SearchCategoryEvent.Query(it))
                 }
             )
         }
@@ -120,7 +125,7 @@ fun SelectWorkerCategoryScreen(
                             category = it,
                             imageLoader = imageLoader,
                             onClick = {
-                                onNavigate(Screen.WorkerListScreen.route)
+                                calenderState.show()
                             }
                         )
                     }
@@ -128,4 +133,23 @@ fun SelectWorkerCategoryScreen(
             }
         }
     }
+
+    val rangeStartDate = LocalDate.now().plusDays(1)
+    val rangeEndYearOffset = 1L
+    val rangeEndDate = LocalDate.now().plusYears(rangeEndYearOffset)
+        .withMonth(1)
+        .withDayOfMonth(15)
+    val range = rangeStartDate..rangeEndDate
+
+    CalendarDialog(
+        state = calenderState,
+        config = CalendarConfig(
+            monthSelection = true,
+            boundary = range
+        ),
+        selection = CalendarSelection.Date { date ->
+            workProposalViewModel.onEvent(WorkProposalEvent.InputProposalDate(date))
+            onNavigate(Screen.SearchWorkerScreen.route)
+        }
+    )
 }

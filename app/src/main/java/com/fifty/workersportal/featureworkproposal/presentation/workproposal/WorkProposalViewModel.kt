@@ -54,6 +54,14 @@ class WorkProposalViewModel @Inject constructor(
                     text = event.description
                 )
             }
+
+            WorkProposalEvent.ClearProposalData -> {
+                _workDescriptionState.value = StandardTextFieldState()
+                _isFullDay.value = true
+                _isBeforeNoon.value = true
+                _proposalDateState.value = null
+                _workProposalState.value = WorkProposalState()
+            }
         }
     }
 }

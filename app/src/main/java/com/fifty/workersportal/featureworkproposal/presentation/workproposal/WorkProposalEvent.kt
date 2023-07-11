@@ -8,4 +8,5 @@ sealed class WorkProposalEvent {
     data class InputWorkerId(val workerId: String) : WorkProposalEvent()
     data class ChangeIsFullDay(val isFullDay: Boolean) : WorkProposalEvent()
     data class ChangeIsBeforeNoon(val isBeforeNoon: Boolean) : WorkProposalEvent()
+    object ClearProposalData: WorkProposalEvent()
 }
