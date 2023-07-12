@@ -24,6 +24,7 @@ import com.fifty.workersportal.core.presentation.ui.theme.ExtraLargeProfilePictu
 import com.fifty.workersportal.core.presentation.ui.theme.LargeProfilePictureHeight
 import com.fifty.workersportal.core.presentation.ui.theme.SizeExtraSmall
 import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
+import com.fifty.workersportal.core.presentation.util.bounceClick
 import com.fifty.workersportal.featureworker.domain.model.Category
 
 @OptIn(ExperimentalCoilApi::class)
@@ -39,7 +40,7 @@ fun SuggestedCategoryItem(
         Column(
             modifier = modifier
                 .width(ExtraLargeProfilePictureHeight)
-                .clickable {
+                .bounceClick {
                     onClick()
                 }
                 .padding(SizeSmall),

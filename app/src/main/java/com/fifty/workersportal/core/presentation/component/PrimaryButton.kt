@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.fifty.workersportal.core.presentation.ui.theme.LargeButtonHeight
 import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
 import com.fifty.workersportal.core.presentation.ui.theme.SmallButtonHeight
+import com.fifty.workersportal.core.presentation.util.bounceClick
 
 @Composable
 fun PrimaryButton(
@@ -33,10 +34,11 @@ fun PrimaryButton(
     onClick: () -> Unit
 ) {
     Button(
+        onClick = { onClick() },
         modifier = modifier
             .height(height)
-            .fillMaxWidth(),
-        onClick = onClick,
+            .fillMaxWidth()
+            .bounceClick {},
         shape = RoundedCornerShape(SizeSmall),
         colors = ButtonDefaults.buttonColors(
             containerColor = containerColor,

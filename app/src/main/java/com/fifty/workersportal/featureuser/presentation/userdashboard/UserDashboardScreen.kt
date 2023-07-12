@@ -240,7 +240,14 @@ fun UserDashboardScreen(
                             contentPadding = PaddingValues(horizontal = SizeSmall)
                         ) {
                             items(10) {
-                                MostBookedServicesItem()
+                                MostBookedServicesItem(
+                                    onClick = {
+                                        Toast.makeText(context, "OnClick", Toast.LENGTH_SHORT).show()
+                                    },
+                                    onFavouriteClick =  {
+                                        Toast.makeText(context, "OnFavouriteClick", Toast.LENGTH_SHORT).show()
+                                    }
+                                )
                             }
                         }
                         Spacer(modifier = Modifier.height(SizeMedium))

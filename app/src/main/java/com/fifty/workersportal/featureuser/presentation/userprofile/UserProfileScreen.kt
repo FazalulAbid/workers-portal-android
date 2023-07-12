@@ -47,6 +47,7 @@ import com.fifty.workersportal.core.presentation.ui.theme.SizeLarge
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
 import com.fifty.workersportal.core.presentation.util.UiEvent
+import com.fifty.workersportal.core.presentation.util.bounceClick
 import com.fifty.workersportal.core.util.Screen
 import com.maxkeppeker.sheets.core.CoreDialog
 import com.maxkeppeker.sheets.core.models.CoreSelection
@@ -253,7 +254,7 @@ fun UserProfileButton(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
-            .clickable {
+            .bounceClick {
                 onClick()
             }
             .padding(SizeMedium)

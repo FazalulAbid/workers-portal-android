@@ -35,15 +35,18 @@ import com.fifty.workersportal.core.presentation.ui.theme.SizeExtraExtraSmall
 import com.fifty.workersportal.core.presentation.ui.theme.SizeExtraSmall
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
+import com.fifty.workersportal.core.presentation.util.bounceClick
 
 @Composable
 fun MostBookedServicesItem(
     modifier: Modifier = Modifier,
+    onClick: () -> Unit = {},
+    onFavouriteClick: () -> Unit = {}
 ) {
     Column(
-        modifier = Modifier
-            .clickable {
-
+        modifier = modifier
+            .bounceClick {
+                onClick()
             }
             .padding(SizeSmall)
             .width(ExtraExtraLargeProfilePictureHeight)
@@ -64,7 +67,7 @@ fun MostBookedServicesItem(
             Box(
                 contentAlignment = Alignment.Center
             ) {
-                IconButton(onClick = {}) {
+                IconButton(onClick = onFavouriteClick) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_favorite_filled),
                         contentDescription = null,

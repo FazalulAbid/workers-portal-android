@@ -24,6 +24,7 @@ import coil.compose.rememberImagePainter
 import com.fifty.workersportal.core.presentation.ui.theme.LargeProfilePictureHeight
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
+import com.fifty.workersportal.core.presentation.util.bounceClick
 import com.fifty.workersportal.featureworker.domain.model.Category
 
 @OptIn(ExperimentalCoilApi::class)
@@ -37,7 +38,7 @@ fun CategoryItem(
 ) {
     Column(
         modifier = Modifier
-            .clickable {
+            .bounceClick {
                 onClick()
             }
             .padding(SizeSmall),
