@@ -83,7 +83,7 @@ class SearchWorkerViewModel @Inject constructor(
             }
 
             is SearchWorkerEvent.AddToFavourite -> {
-                addWorkerToFavourites(event.workerId)
+                toggleFavouriteWorker(event.workerId)
             }
 
             SearchWorkerEvent.ClearAllSortAndFilters -> {
@@ -141,7 +141,7 @@ class SearchWorkerViewModel @Inject constructor(
         }
     }
 
-    private fun addWorkerToFavourites(workerId: String) {
+    private fun toggleFavouriteWorker(workerId: String) {
         viewModelScope.launch {
             favouriteToggle.toggleFavourite(
                 workers = pagingState.value.items,

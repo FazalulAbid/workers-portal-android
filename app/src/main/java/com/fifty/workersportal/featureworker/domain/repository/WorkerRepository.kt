@@ -26,4 +26,6 @@ interface WorkerRepository {
         pageSize: Int,
         categoryId: String?
     ): Resource<List<Worker>>
+
+    suspend fun getWorkerDetails(workerId: String): Resource<Worker>
 }

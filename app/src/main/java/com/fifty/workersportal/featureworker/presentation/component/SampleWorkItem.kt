@@ -23,7 +23,7 @@ fun SampleWorkItem(
     onClick: () -> Unit
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .aspectRatio(1f)
             .clickable {
                 onClick()

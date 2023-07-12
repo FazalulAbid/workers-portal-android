@@ -33,6 +33,11 @@ interface WorkerApiService {
         @Query("category") category: String?
     ): BasicApiResponse<List<WorkerDto>>
 
+    @GET("/api/worker/get-worker-details")
+    suspend fun getWorkerDetails(
+        @Query("id") workerId: String
+    ): BasicApiResponse<WorkerDto>
+
     @GET("worker/get-worker-categories")
     suspend fun getCategories(): BasicApiResponse<List<CategoryDto>>
 

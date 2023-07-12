@@ -50,6 +50,7 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.fifty.workersportal.R
+import com.fifty.workersportal.core.presentation.component.AddToFavouriteButton
 import com.fifty.workersportal.core.presentation.component.HorizontalDivider
 import com.fifty.workersportal.core.presentation.component.LargeDisplayProfilePicture
 import com.fifty.workersportal.core.presentation.component.SecondaryHeader
@@ -108,6 +109,8 @@ fun WorkerProfileScreen(
         }
     }
 
+    var isFavouriteTemp = remember { mutableStateOf(false) }
+
     Column(
         Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -139,6 +142,13 @@ fun WorkerProfileScreen(
                             tint = MaterialTheme.colorScheme.primary
                         )
                     }
+                } else {
+                    AddToFavouriteButton(
+                        isFavourite = state.worker?.isFavourite == true,
+                        onClick = {
+                            workerProfileViewModel.onEvent(WorkerProfileEvent.ToggleFavourite)
+                        }
+                    )
                 }
             }
         )

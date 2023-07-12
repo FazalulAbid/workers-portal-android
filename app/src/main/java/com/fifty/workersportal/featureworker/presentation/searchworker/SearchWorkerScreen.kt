@@ -35,6 +35,7 @@ import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
 import com.fifty.workersportal.core.util.Screen
 import com.fifty.workersportal.featureworker.presentation.component.SearchFilterChip
+import com.fifty.workersportal.featureworker.presentation.component.WorkerItem
 import com.fifty.workersportal.featureworker.presentation.component.WorkerListItem
 import kotlin.random.Random
 
@@ -156,6 +157,7 @@ fun SearchWorkerScreen(
                         onNavigate(Screen.WorkerProfileScreen.route + "?userId=${worker.workerId}")
                     }
                 )
+                WorkerItem(worker = worker, imageLoader = imageLoader)
             }
         }
     }

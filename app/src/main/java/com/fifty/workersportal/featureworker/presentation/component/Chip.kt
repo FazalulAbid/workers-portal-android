@@ -13,6 +13,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import com.fifty.workersportal.core.presentation.ui.theme.SizeExtraSmall
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
 
@@ -26,7 +27,7 @@ fun Chip(
     unselectedTextColor: Color = MaterialTheme.colorScheme.onSurface,
     selectedColor: Color = MaterialTheme.colorScheme.secondary,
     unselectedColor: Color = MaterialTheme.colorScheme.surface,
-    onChipClick: () -> Unit = {}
+    onChipClick: () -> Unit
 ) {
     Text(
         text = text,
@@ -40,8 +41,36 @@ fun Chip(
                 } else unselectedColor
             )
             .clickable {
-                onChipClick()
+                if (onChipClick != null) {
+                    onChipClick()
+                }
             }
+            .padding(vertical = SizeSmall, horizontal = SizeMedium)
+    )
+}
+
+@Composable
+fun Chip(
+    text: String,
+    modifier: Modifier = Modifier,
+    textStyle: TextStyle = MaterialTheme.typography.bodyLarge,
+    selected: Boolean = false,
+    selectedTextColor: Color = MaterialTheme.colorScheme.onSecondary,
+    unselectedTextColor: Color = MaterialTheme.colorScheme.onSurface,
+    selectedColor: Color = MaterialTheme.colorScheme.secondary,
+    unselectedColor: Color = MaterialTheme.colorScheme.surface,
+) {
+    Text(
+        text = text,
+        style = textStyle,
+        color = if (selected) selectedTextColor else unselectedTextColor,
+        modifier = modifier
+            .clip(MaterialTheme.shapes.medium)
+            .background(
+                color = if (selected) {
+                    selectedColor
+                } else unselectedColor
+            )
             .padding(vertical = SizeSmall, horizontal = SizeMedium)
     )
 }

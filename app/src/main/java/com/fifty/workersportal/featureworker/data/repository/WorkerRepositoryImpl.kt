@@ -174,4 +174,29 @@ class WorkerRepositoryImpl(
             )
         }
     }
+
+    override suspend fun getWorkerDetails(workerId: String): Resource<Worker> {
+        return try {
+            val response = api.getWorkerDetails(workerId)
+            if (response.successful) {
+                Resource.Success(data = response.data?.toWorker())
+            } else {
+                response.message?.let { message ->
+                    Resource.Error(UiText.DynamicString(message))
+                } ?: Resource.Error(UiText.unknownError())
+            }
+        } catch (e: IOException) {
+            Resource.Error(
+                uiText = UiText.StringResource(
+                    R.string.error_could_not_reach_server
+                )
+            )
+        } catch (e: HttpException) {
+            Resource.Error(
+                uiText = UiText.StringResource(
+                    R.string.oops_something_went_wrong
+                )
+            )
+        }
+    }
 }

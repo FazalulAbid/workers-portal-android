@@ -12,10 +12,12 @@ import com.fifty.workersportal.core.domain.usecase.GetOwnUserIdUseCase
 import com.fifty.workersportal.core.domain.usecase.GetProfileDetailsUseCase
 import com.fifty.workersportal.core.domain.util.Session
 import com.fifty.workersportal.core.presentation.util.UiEvent
+import com.fifty.workersportal.core.util.FavouriteToggle
 import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.UiText
 import com.fifty.workersportal.featureworker.domain.model.SampleWork
 import com.fifty.workersportal.featureworker.domain.usecase.GetSampleWorksUseCase
+import com.fifty.workersportal.featureworker.domain.usecase.ToggleFavouriteWorkerUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -29,6 +31,8 @@ class WorkerProfileViewModel @Inject constructor(
     private val getOwnUserIdUseCase: GetOwnUserIdUseCase,
     private val getUserProfileDetails: GetProfileDetailsUseCase,
     private val getSampleWorksUseCase: GetSampleWorksUseCase,
+    private val toggleFavouriteWorkerUseCase: ToggleFavouriteWorkerUseCase,
+    private val favouriteToggle: FavouriteToggle,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -51,6 +55,20 @@ class WorkerProfileViewModel @Inject constructor(
             WorkerProfileEvent.UpdateSampleWorks -> {
                 viewModelScope.launch {
                     getSampleWorksPaginated(getOwnUserIdUseCase())
+                }
+            }
+
+            is WorkerProfileEvent.ToggleFavourite -> {
+                _state.value = _state.value.copy(
+                    worker = _state.value.worker?.copy(
+                        isFavourite = _state.value.worker?.isFavourite != true
+                    )
+                )
+                state.value.worker?.let { worker ->
+                    toggleFavouriteWorker(
+                        worker.workerId,
+                        _state.value.worker?.isFavourite == true
+                    )
                 }
             }
 
@@ -105,5 +123,22 @@ class WorkerProfileViewModel @Inject constructor(
         _state.value = state.value.copy(
             isSampleWorksLoading = false
         )
+    }
+
+    private fun toggleFavouriteWorker(workerId: String, isFavourite: Boolean) {
+        viewModelScope.launch {
+            when (val result = toggleFavouriteWorkerUseCase(workerId, isFavourite)) {
+                is Resource.Success -> Unit
+
+                is Resource.Error -> {
+                    _state.value = _state.value.copy(
+                        worker = _state.value.worker?.copy(
+                            isFavourite = !isFavourite
+                        )
+                    )
+                    _eventFlow.emit(UiEvent.MakeToast(result.uiText ?: UiText.unknownError()))
+                }
+            }
+        }
     }
 }
