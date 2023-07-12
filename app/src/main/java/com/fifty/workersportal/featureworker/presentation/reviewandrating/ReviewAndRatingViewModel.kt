@@ -108,6 +108,9 @@ class ReviewAndRatingViewModel @Inject constructor(
                         _ratingState.value = 0
                         _reviewTextFieldState.value = StandardTextFieldState()
                         _eventFlow.emit(UiEvent.ReviewAndRatingPosted)
+                        getReviewAndRating(
+                            savedStateHandle.get<String>("userId") ?: getOwnUserIdUseCase()
+                        )
                     }
 
                     is Resource.Error -> {
