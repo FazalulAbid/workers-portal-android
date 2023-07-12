@@ -62,6 +62,8 @@ import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
 import com.fifty.workersportal.core.presentation.ui.theme.SkyBlueColor
 import com.fifty.workersportal.core.presentation.ui.theme.SmallStrokeThickness
 import com.fifty.workersportal.core.util.Screen
+import com.fifty.workersportal.featurelocation.domain.model.LocalAddress
+import com.fifty.workersportal.featureworker.presentation.component.LocalAddressDisplayLarge
 import com.fifty.workersportal.featureworker.presentation.component.RatingAndRatingCount
 import com.fifty.workersportal.featureworker.presentation.component.SampleWorkItem
 import com.fifty.workersportal.featureworker.presentation.component.WorkerCategoryChip
@@ -250,7 +252,7 @@ fun WorkerProfileScreen(
                 item(span = { GridItemSpan(3) }) {
                     Row(
                         modifier = Modifier
-                            .fillMaxWidth()
+                            .fillMaxWidth(.7f)
                             .padding(
                                 start = SizeMedium,
                                 end = SizeMedium,
@@ -267,20 +269,30 @@ fun WorkerProfileScreen(
                             rating = "4.5",
                             ratingCount = 123
                         )
+                        Spacer(modifier = Modifier.width(SizeMedium))
                         Divider(
                             modifier = Modifier
                                 .height(50.dp)
                                 .width(SmallStrokeThickness),
                             color = MaterialTheme.colorScheme.outline
                         )
-                        WorkerWageText(wage = 99.0f, isHalfDay = false)
-                        Divider(
-                            modifier = Modifier
-                                .height(50.dp)
-                                .width(SmallStrokeThickness),
-                            color = MaterialTheme.colorScheme.outline
+                        Spacer(modifier = Modifier.width(SizeMedium))
+                        LocalAddressDisplayLarge(
+                            localAddress = LocalAddress(
+                                id = "1",
+                                title = "Home",
+                                completeAddress = "123 Main Street",
+                                floor = "2nd Floor",
+                                landmark = "Near Central Park",
+                                place = "ABC Apartment (Pending)",
+                                subLocality = "Example Suburb",
+                                city = "New York City",
+                                state = "New York",
+                                country = "United States",
+                                pin = "12345",
+                                location = listOf(40.7128, -74.0060)
+                            )
                         )
-                        WorkerWageText(wage = 59.0f, isHalfDay = true)
                     }
                 }
                 item(span = { GridItemSpan(3) }) {

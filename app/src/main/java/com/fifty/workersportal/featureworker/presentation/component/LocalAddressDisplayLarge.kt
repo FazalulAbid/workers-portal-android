@@ -13,23 +13,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import com.fifty.workersportal.R
-import com.fifty.workersportal.core.presentation.ui.theme.DarkGreenColor
 import com.fifty.workersportal.core.presentation.ui.theme.SizeExtraExtraSmall
 import com.fifty.workersportal.core.presentation.ui.theme.SizeExtraSmall
 import com.fifty.workersportal.core.presentation.ui.theme.SizeLarge
+import com.fifty.workersportal.featurelocation.domain.model.LocalAddress
+import com.fifty.workersportal.featurelocation.domain.model.toDisplayAddress
 
 @Composable
-fun RatingAndRatingCount(
+fun LocalAddressDisplayLarge(
     modifier: Modifier = Modifier,
-    rating: String,
-    ratingCount: Int,
+    localAddress: LocalAddress
 ) {
     Column(
         modifier = modifier,
-        horizontalAlignment = Alignment.End,
+        horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Center
     ) {
         Row(
@@ -38,25 +38,30 @@ fun RatingAndRatingCount(
         ) {
             Icon(
                 modifier = Modifier.size(SizeLarge),
-                painter = painterResource(id = R.drawable.ic_star),
-                contentDescription = stringResource(id = R.string.rating_star),
-                tint = DarkGreenColor
+                painter = painterResource(id = R.drawable.ic_location_mark),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary
             )
             Spacer(modifier = Modifier.height(SizeExtraSmall))
             Text(
-                text = rating,
-                style = MaterialTheme.typography.titleLarge.copy(
-                    fontWeight = FontWeight.Bold,
-                    color = DarkGreenColor
-                )
+                text = localAddress.place ?: localAddress.subLocality ?: localAddress.city
+                ?: localAddress.state ?: localAddress.country ?: "",
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.onBackground
+                ),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
         Spacer(modifier = Modifier.height(SizeExtraExtraSmall))
         Text(
-            text = stringResource(R.string.x_ratings, ratingCount),
-            style = MaterialTheme.typography.bodyMedium.copy(
+            text = localAddress.toDisplayAddress() ?: "",
+            style = MaterialTheme.typography.bodySmall.copy(
                 color = MaterialTheme.colorScheme.onSurface
-            )
+            ),
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis
         )
     }
 }

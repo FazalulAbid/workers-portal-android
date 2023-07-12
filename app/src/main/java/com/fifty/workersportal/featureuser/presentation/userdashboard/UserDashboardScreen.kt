@@ -71,7 +71,6 @@ import com.maxkeppeler.sheets.calendar.models.CalendarSelection
 import kotlinx.coroutines.flow.collectLatest
 import java.time.LocalDate
 
-@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(
     ExperimentalPagerApi::class, ExperimentalMaterial3Api::class,
     ExperimentalFoundationApi::class

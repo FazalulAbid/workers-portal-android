@@ -122,7 +122,7 @@ fun WorkerListItem(
                         append(worker.ratingAverage)
                         append(" (")
                         append(worker.ratingCount)
-                        append(") ${stringResource(R.string.rating_star)}")
+                        append(") ${stringResource(R.string.ratings)}")
                     },
                     style = MaterialTheme.typography.bodyMedium.copy(
                         color = MaterialTheme.colorScheme.onSurface
