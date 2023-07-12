@@ -1,6 +1,5 @@
 package com.fifty.workersportal.featureworker.presentation.selectworkercategory
 
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -8,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.fifty.workersportal.core.presentation.util.UiEvent
 import com.fifty.workersportal.core.util.Constants
+import com.fifty.workersportal.featureworker.domain.model.Category
 import com.fifty.workersportal.featureworker.domain.usecase.SearchCategoriesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -30,6 +30,9 @@ class SearchCategoryViewModel @Inject constructor(
     private val _searchState = mutableStateOf(SearchCategoryState())
     val searchState: State<SearchCategoryState> = _searchState
 
+    private val _selectedCategoryState = mutableStateOf<Category?>(null)
+    val selectedCategoryState: State<Category?> = _selectedCategoryState
+
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
@@ -49,6 +52,10 @@ class SearchCategoryViewModel @Inject constructor(
         when (event) {
             is SearchCategoryEvent.Query -> {
                 _search.value = event.query
+            }
+
+            is SearchCategoryEvent.SelectCategory -> {
+                _selectedCategoryState.value = event.category
             }
         }
     }

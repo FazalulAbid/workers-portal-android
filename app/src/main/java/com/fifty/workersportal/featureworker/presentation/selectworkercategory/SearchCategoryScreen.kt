@@ -25,7 +25,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.ImageLoader
 import com.fifty.workersportal.R
@@ -103,7 +105,7 @@ fun SelectWorkerCategoryScreen(
                 }
             )
         }
-        if (state.isLoading) {
+        if (searchedCategories.loadState.refresh is LoadState.Loading) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -126,6 +128,11 @@ fun SelectWorkerCategoryScreen(
                             category = it,
                             imageLoader = imageLoader,
                             onClick = {
+                                searchCategoryViewModel.onEvent(
+                                    SearchCategoryEvent.SelectCategory(
+                                        it
+                                    )
+                                )
                                 calenderState.show()
                             }
                         )
@@ -150,7 +157,7 @@ fun SelectWorkerCategoryScreen(
         ),
         selection = CalendarSelection.Date { date ->
             workProposalViewModel.onEvent(WorkProposalEvent.InputProposalDate(date))
-            onNavigate(Screen.SearchWorkerScreen.route)
+            onNavigate(Screen.SearchWorkerScreen.route + "?categoryId=${searchCategoryViewModel.selectedCategoryState.value?.id}")
         }
     )
 }
