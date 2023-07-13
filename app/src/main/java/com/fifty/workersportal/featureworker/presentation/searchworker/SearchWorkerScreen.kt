@@ -147,7 +147,10 @@ fun SearchWorkerScreen(
         ) {
             items(pagingState.items.size) { index ->
                 val worker = pagingState.items[index]
-                if (index >= pagingState.items.size - 1 && !pagingState.endReached && !pagingState.isLoading) {
+                if (index >= pagingState.items.size - 1 &&
+                    !pagingState.endReached &&
+                    !pagingState.isLoading
+                ) {
                     viewModel.loadNextWorkers()
                 }
                 WorkerItem(

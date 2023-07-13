@@ -8,12 +8,15 @@ import androidx.lifecycle.viewModelScope
 import com.fifty.workersportal.core.domain.state.StandardTextFieldState
 import com.fifty.workersportal.core.presentation.PagingState
 import com.fifty.workersportal.core.presentation.util.UiEvent
+import com.fifty.workersportal.core.util.Constants
 import com.fifty.workersportal.core.util.DefaultPaginator
 import com.fifty.workersportal.core.util.FavouriteToggle
 import com.fifty.workersportal.featureworker.domain.model.Worker
 import com.fifty.workersportal.featureworker.domain.usecase.GetSearchedSortedAndFilteredWorkersUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.ToggleFavouriteWorkerUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
@@ -44,6 +47,8 @@ class SearchWorkerViewModel @Inject constructor(
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
+
+    private var searchJob: Job? = null
 
     private val paginator = DefaultPaginator(
         onLoadUpdated = { isLoading ->
@@ -80,6 +85,15 @@ class SearchWorkerViewModel @Inject constructor(
                 _searchFieldState.value = searchFieldState.value.copy(
                     text = event.query
                 )
+                searchJob?.cancel()
+                searchJob = viewModelScope.launch {
+                    delay(Constants.SEARCH_DELAY)
+                    paginator.resetPagination()
+                    _pagingState.value = pagingState.value.copy(
+                        items = emptyList()
+                    )
+                    loadNextWorkers()
+                }
             }
 
             is SearchWorkerEvent.AddToFavourite -> {

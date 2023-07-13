@@ -25,4 +25,8 @@ class DefaultPaginator<T>(
             }
         }
     }
+
+    override fun resetPagination() {
+        page = 0
+    }
 }
