@@ -85,15 +85,7 @@ class SearchWorkerViewModel @Inject constructor(
                 _searchFieldState.value = searchFieldState.value.copy(
                     text = event.query
                 )
-                searchJob?.cancel()
-                searchJob = viewModelScope.launch {
-                    delay(Constants.SEARCH_DELAY)
-                    paginator.resetPagination()
-                    _pagingState.value = pagingState.value.copy(
-                        items = emptyList()
-                    )
-                    loadNextWorkers()
-                }
+                searchWorkers()
             }
 
             is SearchWorkerEvent.AddToFavourite -> {
@@ -111,10 +103,12 @@ class SearchWorkerViewModel @Inject constructor(
                     isDistanceLowToHigh = !_sortState.value.isDistanceLowToHigh
                 )
                 _tempSortState.value = sortState.value
+                searchWorkers()
             }
 
             SearchWorkerEvent.ApplySort -> {
                 _sortState.value = _tempSortState.value
+                searchWorkers()
             }
 
             SearchWorkerEvent.SelectRelevance -> {
@@ -141,17 +135,31 @@ class SearchWorkerViewModel @Inject constructor(
                 _filterState.value = filterState.value.copy(
                     isPreviouslyHired = !filterState.value.isPreviouslyHired
                 )
+                searchWorkers()
             }
 
             is SearchWorkerEvent.ToggleRatingFourPlusFilter -> {
                 _filterState.value = filterState.value.copy(
                     isRatingFourPlus = !filterState.value.isRatingFourPlus
                 )
+                searchWorkers()
             }
 
             SearchWorkerEvent.OnSheetDismiss -> {
                 _tempSortState.value = _sortState.value
             }
+        }
+    }
+
+    private fun searchWorkers() {
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            delay(Constants.SEARCH_DELAY)
+            paginator.resetPagination()
+            _pagingState.value = pagingState.value.copy(
+                items = emptyList()
+            )
+            loadNextWorkers()
         }
     }
 

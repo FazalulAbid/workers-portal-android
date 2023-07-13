@@ -28,6 +28,7 @@ import com.fifty.workersportal.core.presentation.ui.theme.ExtraSmallProfilePictu
 import com.fifty.workersportal.core.presentation.ui.theme.SizeExtraLarge
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
+import com.fifty.workersportal.core.presentation.util.bounceClick
 import com.fifty.workersportal.featureworker.domain.model.WorkerCategory
 
 @OptIn(ExperimentalCoilApi::class)
@@ -40,15 +41,15 @@ fun WorkerCategoryChip(
 ) {
     Column(
         modifier = modifier
-            .clip(MaterialTheme.shapes.medium)
-            .background(MaterialTheme.colorScheme.surface,)
             .run {
                 if (onClick != null) {
-                    clickable { onClick() }
+                    bounceClick { onClick() }
                 } else this
             }
+            .clip(MaterialTheme.shapes.medium)
+            .background(MaterialTheme.colorScheme.surface)
             .padding(SizeMedium)
-        ) {
+    ) {
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {

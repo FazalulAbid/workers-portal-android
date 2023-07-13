@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,6 +38,7 @@ import com.fifty.workersportal.core.util.Screen
 import com.fifty.workersportal.featureworker.presentation.component.SearchFilterChip
 import com.fifty.workersportal.featureworker.presentation.component.WorkerItem
 import com.fifty.workersportal.featureworker.presentation.component.WorkerListItem
+import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -48,9 +50,11 @@ fun SearchWorkerScreen(
     viewModel: SearchWorkerViewModel = hiltViewModel()
 ) {
     val pagingState = viewModel.pagingState.value
+    val workerSortBottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var showSortBottomSheet by remember { mutableStateOf(false) }
     val sortState = viewModel.sortState.value
     val filterState = viewModel.filterState.value
+    val coroutineScope = rememberCoroutineScope()
 
     Column(Modifier.fillMaxSize()) {
         Row(
@@ -169,7 +173,7 @@ fun SearchWorkerScreen(
 
     if (showSortBottomSheet) {
         StandardBottomSheet(
-            sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+            sheetState = workerSortBottomSheetState,
             onDismiss = {
                 viewModel.onEvent(SearchWorkerEvent.OnSheetDismiss)
                 showSortBottomSheet = false
@@ -178,12 +182,18 @@ fun SearchWorkerScreen(
             SortWorkersBottomSheetContent(
                 viewModel = viewModel,
                 onClearAllClick = {
-                    viewModel.onEvent(SearchWorkerEvent.ClearAllSortAndFilters)
-                    showSortBottomSheet = false
+                    coroutineScope.launch {
+                        viewModel.onEvent(SearchWorkerEvent.ClearAllSortAndFilters)
+                        workerSortBottomSheetState.hide()
+                        showSortBottomSheet = false
+                    }
                 },
                 onApplyClick = {
-                    viewModel.onEvent(SearchWorkerEvent.ApplySort)
-                    showSortBottomSheet = false
+                    coroutineScope.launch {
+                        viewModel.onEvent(SearchWorkerEvent.ApplySort)
+                        workerSortBottomSheetState.hide()
+                        showSortBottomSheet = false
+                    }
                 }
             )
         }
