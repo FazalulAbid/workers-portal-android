@@ -51,7 +51,6 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.presentation.component.AddToFavouriteButton
-import com.fifty.workersportal.core.presentation.component.HorizontalDivider
 import com.fifty.workersportal.core.presentation.component.LargeDisplayProfilePicture
 import com.fifty.workersportal.core.presentation.component.SecondaryHeader
 import com.fifty.workersportal.core.presentation.component.StandardAppBar
@@ -65,10 +64,9 @@ import com.fifty.workersportal.core.presentation.ui.theme.SmallStrokeThickness
 import com.fifty.workersportal.core.util.Screen
 import com.fifty.workersportal.featurelocation.domain.model.LocalAddress
 import com.fifty.workersportal.featureworker.presentation.component.LocalAddressDisplayLarge
-import com.fifty.workersportal.featureworker.presentation.component.RatingAndRatingCount
+import com.fifty.workersportal.featureworker.presentation.component.RatingAndRatingCountVertical
 import com.fifty.workersportal.featureworker.presentation.component.SampleWorkItem
 import com.fifty.workersportal.featureworker.presentation.component.WorkerCategoryChip
-import com.fifty.workersportal.featureworker.presentation.component.WorkerWageText
 import com.fifty.workersportal.featureworkproposal.presentation.workproposal.WorkProposalViewModel
 import com.maxkeppeker.sheets.core.views.Grid
 
@@ -272,7 +270,7 @@ fun WorkerProfileScreen(
                         horizontalArrangement = Arrangement.SpaceEvenly,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        RatingAndRatingCount(
+                        RatingAndRatingCountVertical(
                             modifier = Modifier.clickable {
                                 onNavigate(Screen.ReviewAndRatingScreen.route)
                             },

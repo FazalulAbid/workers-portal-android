@@ -22,7 +22,7 @@ import com.fifty.workersportal.core.presentation.ui.theme.SizeExtraSmall
 import com.fifty.workersportal.core.presentation.ui.theme.SizeLarge
 
 @Composable
-fun RatingAndRatingCount(
+fun RatingAndRatingCountVertical(
     modifier: Modifier = Modifier,
     rating: String,
     ratingCount: Int,
@@ -44,7 +44,7 @@ fun RatingAndRatingCount(
             )
             Spacer(modifier = Modifier.height(SizeExtraSmall))
             Text(
-                text = rating,
+                text = rating.toString(),
                 style = MaterialTheme.typography.titleLarge.copy(
                     fontWeight = FontWeight.Bold,
                     color = DarkGreenColor

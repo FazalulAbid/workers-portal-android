@@ -141,13 +141,16 @@ fun SearchWorkerScreen(
             }
         }
         Spacer(modifier = Modifier.height(SizeMedium))
-        LazyColumn {
+        LazyColumn(
+            contentPadding = PaddingValues(horizontal = SizeMedium),
+            verticalArrangement = Arrangement.spacedBy(SizeMedium)
+        ) {
             items(pagingState.items.size) { index ->
                 val worker = pagingState.items[index]
                 if (index >= pagingState.items.size - 1 && !pagingState.endReached && !pagingState.isLoading) {
                     viewModel.loadNextWorkers()
                 }
-                WorkerListItem(
+                WorkerItem(
                     worker = worker,
                     imageLoader = imageLoader,
                     onFavouriteClick = {
@@ -157,7 +160,6 @@ fun SearchWorkerScreen(
                         onNavigate(Screen.WorkerProfileScreen.route + "?userId=${worker.workerId}")
                     }
                 )
-                WorkerItem(worker = worker, imageLoader = imageLoader)
             }
         }
     }
