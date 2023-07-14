@@ -1,7 +1,10 @@
 package com.fifty.workersportal.featurelocation.domain.model
 
+import android.os.Parcelable
 import java.lang.StringBuilder
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class LocalAddress(
     val id: String,
     val title: String,
@@ -15,7 +18,7 @@ data class LocalAddress(
     val country: String?,
     val pin: String?,
     val location: List<Double>
-)
+) : Parcelable
 
 fun LocalAddress?.toDisplayAddress(): String? {
     val addressBuilder = StringBuilder()

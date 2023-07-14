@@ -1,7 +1,9 @@
 package com.fifty.workersportal.featureworker.presentation.searchworker
 
 import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -42,8 +44,7 @@ class SearchWorkerViewModel @Inject constructor(
     private val _filterState = mutableStateOf(SearchWorkerFilterState())
     val filterState: State<SearchWorkerFilterState> = _filterState
 
-    private val _pagingState = mutableStateOf(PagingState<Worker>())
-    val pagingState: State<PagingState<Worker>> = _pagingState
+    var pagingState by mutableStateOf(PagingState<Worker>())
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
@@ -51,27 +52,30 @@ class SearchWorkerViewModel @Inject constructor(
     private var searchJob: Job? = null
 
     private val paginator = DefaultPaginator(
-        onLoadUpdated = { isLoading ->
-            _pagingState.value = pagingState.value.copy(
-                isLoading = isLoading
-            )
+        initialKey = pagingState.page,
+        onLoadUpdated = {
+            pagingState = pagingState.copy(isLoading = it)
         },
-        onRequest = { page ->
+        onRequest = { nextPage ->
             getSearchedSortedAndFilteredWorkersUseCase(
-                page = page,
+                page = nextPage,
                 query = _searchFieldState.value.text.trim(),
                 categoryId = savedStateHandle["categoryId"]
             )
         },
-        onSuccess = { workers ->
-            _pagingState.value = pagingState.value.copy(
-                items = pagingState.value.items + workers,
-                endReached = workers.isEmpty(),
-                isLoading = false
-            )
+        getNextKey = {
+            pagingState.page + 1
         },
-        onError = { uiText ->
-            _eventFlow.emit(UiEvent.MakeToast(uiText))
+        onError = {
+            pagingState = pagingState.copy(error = it)
+            _eventFlow.emit(UiEvent.MakeToast(it))
+        },
+        onSuccess = { items, newKey ->
+            pagingState = pagingState.copy(
+                items = pagingState.items + items,
+                page = newKey,
+                endReached = items.isEmpty()
+            )
         }
     )
 
@@ -82,10 +86,14 @@ class SearchWorkerViewModel @Inject constructor(
     fun onEvent(event: SearchWorkerEvent) {
         when (event) {
             is SearchWorkerEvent.Query -> {
-                _searchFieldState.value = searchFieldState.value.copy(
-                    text = event.query
-                )
-                searchWorkers()
+                searchJob?.cancel()
+                searchJob = viewModelScope.launch {
+                    _searchFieldState.value = searchFieldState.value.copy(
+                        text = event.query
+                    )
+                    delay(Constants.SEARCH_DELAY)
+                    loadNextWorkers(true)
+                }
             }
 
             is SearchWorkerEvent.AddToFavourite -> {
@@ -103,12 +111,12 @@ class SearchWorkerViewModel @Inject constructor(
                     isDistanceLowToHigh = !_sortState.value.isDistanceLowToHigh
                 )
                 _tempSortState.value = sortState.value
-                searchWorkers()
+                loadNextWorkers(true)
             }
 
             SearchWorkerEvent.ApplySort -> {
                 _sortState.value = _tempSortState.value
-                searchWorkers()
+                loadNextWorkers(true)
             }
 
             SearchWorkerEvent.SelectRelevance -> {
@@ -135,14 +143,14 @@ class SearchWorkerViewModel @Inject constructor(
                 _filterState.value = filterState.value.copy(
                     isPreviouslyHired = !filterState.value.isPreviouslyHired
                 )
-                searchWorkers()
+                loadNextWorkers(true)
             }
 
             is SearchWorkerEvent.ToggleRatingFourPlusFilter -> {
                 _filterState.value = filterState.value.copy(
                     isRatingFourPlus = !filterState.value.isRatingFourPlus
                 )
-                searchWorkers()
+                loadNextWorkers(true)
             }
 
             SearchWorkerEvent.OnSheetDismiss -> {
@@ -151,28 +159,16 @@ class SearchWorkerViewModel @Inject constructor(
         }
     }
 
-    private fun searchWorkers() {
-        searchJob?.cancel()
-        searchJob = viewModelScope.launch {
-            delay(Constants.SEARCH_DELAY)
-            paginator.resetPagination()
-            _pagingState.value = pagingState.value.copy(
-                items = emptyList()
-            )
-            loadNextWorkers()
-        }
-    }
-
     private fun toggleFavouriteWorker(workerId: String) {
         viewModelScope.launch {
             favouriteToggle.toggleFavourite(
-                workers = pagingState.value.items,
+                workers = pagingState.items,
                 workerId = workerId,
                 onRequest = { isFavourite ->
                     toggleFavouriteWorkerUseCase(userId = workerId, isFavourite = isFavourite)
                 },
                 onStateUpdated = { workers ->
-                    _pagingState.value = pagingState.value.copy(
+                    pagingState = pagingState.copy(
                         items = workers
                     )
                 }
@@ -180,7 +176,11 @@ class SearchWorkerViewModel @Inject constructor(
         }
     }
 
-    fun loadNextWorkers() {
+    fun loadNextWorkers(resetPaging: Boolean = false) {
+        if (resetPaging) {
+            paginator.reset()
+            pagingState = PagingState()
+        }
         viewModelScope.launch {
             paginator.loadNextItems()
         }

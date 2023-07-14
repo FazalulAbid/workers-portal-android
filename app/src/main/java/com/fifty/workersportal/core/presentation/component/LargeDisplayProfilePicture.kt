@@ -18,19 +18,18 @@ import com.fifty.workersportal.core.presentation.ui.theme.ExtraExtraLargeProfile
 import com.fifty.workersportal.core.presentation.ui.theme.LargeStrokeThickness
 import com.fifty.workersportal.core.presentation.ui.theme.SizeExtraSmall
 import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
+import com.fifty.workersportal.core.presentation.util.bounceClick
 
 @Composable
 fun LargeDisplayProfilePicture(
     modifier: Modifier = Modifier,
     painter: Painter,
     contentDescription: String? = null,
-    isEditable: Boolean = false,
     size: Dp = ExtraExtraLargeProfilePictureHeight,
-    onClickEdit: () -> Unit = {}
+    onClickEdit: (() -> Unit)? = null
 ) {
-
     Box(
-        modifier = if (!isEditable) {
+        modifier = if (onClickEdit == null) {
             modifier
                 .border(
                     width = LargeStrokeThickness,
@@ -42,9 +41,15 @@ fun LargeDisplayProfilePicture(
     ) {
         Image(
             modifier = Modifier
+                .run {
+                    if (onClickEdit != null) {
+                        bounceClick {
+                            onClickEdit()
+                        }
+                    } else this
+                }
                 .size(size)
-                .clip(CircleShape)
-                .clickable { onClickEdit() },
+                .clip(CircleShape),
             painter = painter,
             contentDescription = contentDescription,
             contentScale = ContentScale.Crop

@@ -11,6 +11,7 @@ import coil.ImageLoader
 import com.fifty.workersportal.core.domain.util.Session
 import com.fifty.workersportal.core.util.NavigationParent
 import com.fifty.workersportal.core.util.Screen
+import com.fifty.workersportal.featureworker.domain.model.Worker
 import com.fifty.workersportal.featureworker.presentation.postsamplework.PostSampleWorkScreen
 import com.fifty.workersportal.featureworker.presentation.registerasworker.RegisterAsWorkerScreen
 import com.fifty.workersportal.featureworker.presentation.reviewandrating.ReviewAndRatingScreen

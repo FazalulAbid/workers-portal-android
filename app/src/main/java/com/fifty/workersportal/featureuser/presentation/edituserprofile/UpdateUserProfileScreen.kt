@@ -195,7 +195,6 @@ fun UpdateUserProfileScreen(
                                     data = viewModel.profileImageUri.value
                                         ?: viewModel.updateUserProfileState.value.userProfile?.profilePicture
                                 ),
-                                isEditable = true,
                                 onClickEdit = {
                                     profilePictureGalleryLauncher.launch("image/*")
                                 }

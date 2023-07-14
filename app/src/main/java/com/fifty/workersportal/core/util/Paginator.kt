@@ -1,6 +1,6 @@
 package com.fifty.workersportal.core.util
 
-interface Paginator {
+interface Paginator<Key, Item> {
     suspend fun loadNextItems()
-    fun resetPagination()
+    fun reset()
 }

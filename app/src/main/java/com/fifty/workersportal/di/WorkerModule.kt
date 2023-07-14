@@ -143,5 +143,4 @@ object WorkerModule {
     fun provideGetWorkerDetails(
         repository: WorkerRepository
     ): GetWorkerDetailsUseCase = GetWorkerDetailsUseCase(repository)
-
 }

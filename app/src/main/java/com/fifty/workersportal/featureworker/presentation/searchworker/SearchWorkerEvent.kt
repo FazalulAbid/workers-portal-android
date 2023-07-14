@@ -13,5 +13,5 @@ sealed class SearchWorkerEvent {
     object SelectCostHighToLowSort : SearchWorkerEvent()
     object ApplySort : SearchWorkerEvent()
     object ClearAllSortAndFilters : SearchWorkerEvent()
-    object OnSheetDismiss: SearchWorkerEvent()
+    object OnSheetDismiss : SearchWorkerEvent()
 }

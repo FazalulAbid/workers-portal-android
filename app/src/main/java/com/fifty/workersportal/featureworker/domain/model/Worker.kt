@@ -1,7 +1,10 @@
 package com.fifty.workersportal.featureworker.domain.model
 
+import android.os.Parcelable
 import com.fifty.workersportal.featurelocation.domain.model.LocalAddress
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class Worker(
     val workerId: String,
     val firstName: String,
@@ -12,5 +15,5 @@ data class Worker(
     val ratingCount: Int,
     val primaryCategoryName: String,
     val primaryCategoryDailyWage: Float,
-    val localAddress: LocalAddress?
-)
+    val localAddress: LocalAddress? = null
+): Parcelable

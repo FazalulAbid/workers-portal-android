@@ -125,7 +125,6 @@ fun PersonalDetailsSection(
                                 ?: viewModel.updateWorkerState.value.profile?.profilePicture,
                             imageLoader = imageLoader
                         ),
-                        isEditable = true,
                         onClickEdit = {
                             profilePictureGalleryLauncher.launch("image/*")
                         }

@@ -162,28 +162,6 @@ fun UserProfileScreen(
                                 ) {
                                     onNavigate(Screen.UpdateUserProfileScreen.route)
                                 }
-//                        HorizontalDivider(
-//                            color = MaterialTheme.colorScheme.background,
-//                            thickness = MediumStrokeThickness
-//                        )
-//                        UserProfileButton(
-//                            icon = painterResource(id = R.drawable.ic_favorite_filled),
-//                            text = "Favorites",
-//                            description = "Tap the Favorite button to quickly navigate to your list of favored workers and manage them with ease."
-//                        ) {
-//                            onNavigate(Screen.FavoriteScreen.route)
-//                        }
-//                        HorizontalDivider(
-//                            color = MaterialTheme.colorScheme.background,
-//                            thickness = MediumStrokeThickness
-//                        )
-//                        UserProfileButton(
-//                            icon = painterResource(id = R.drawable.ic_history),
-//                            text = "History",
-//                            description = "Tap the Work History button to view your previous work activities or job history."
-//                        ) {
-//                            onNavigate(Screen.HistoryScreen.route)
-//                        }
                                 HorizontalDivider(
                                     color = MaterialTheme.colorScheme.background,
                                     thickness = MediumStrokeThickness

@@ -1,6 +1,8 @@
 package com.fifty.workersportal.featureworker.presentation.searchworker
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -11,12 +13,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,6 +28,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -37,9 +42,7 @@ import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
 import com.fifty.workersportal.core.util.Screen
 import com.fifty.workersportal.featureworker.presentation.component.SearchFilterChip
 import com.fifty.workersportal.featureworker.presentation.component.WorkerItem
-import com.fifty.workersportal.featureworker.presentation.component.WorkerListItem
 import kotlinx.coroutines.launch
-import kotlin.random.Random
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,12 +52,17 @@ fun SearchWorkerScreen(
     imageLoader: ImageLoader,
     viewModel: SearchWorkerViewModel = hiltViewModel()
 ) {
-    val pagingState = viewModel.pagingState.value
+    val pagingState = viewModel.pagingState
     val workerSortBottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var showSortBottomSheet by remember { mutableStateOf(false) }
     val sortState = viewModel.sortState.value
     val filterState = viewModel.filterState.value
     val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        viewModel.onEvent(SearchWorkerEvent.ApplySort)
+    }
 
     Column(Modifier.fillMaxSize()) {
         Row(
@@ -145,28 +153,48 @@ fun SearchWorkerScreen(
             }
         }
         Spacer(modifier = Modifier.height(SizeMedium))
-        LazyColumn(
-            contentPadding = PaddingValues(horizontal = SizeMedium),
-            verticalArrangement = Arrangement.spacedBy(SizeMedium)
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
+            contentAlignment = Alignment.Center
         ) {
-            items(pagingState.items.size) { index ->
-                val worker = pagingState.items[index]
-                if (index >= pagingState.items.size - 1 &&
-                    !pagingState.endReached &&
-                    !pagingState.isLoading
-                ) {
-                    viewModel.loadNextWorkers()
-                }
-                WorkerItem(
-                    worker = worker,
-                    imageLoader = imageLoader,
-                    onFavouriteClick = {
-                        viewModel.onEvent(SearchWorkerEvent.AddToFavourite(worker.workerId))
-                    },
-                    onClick = {
-                        onNavigate(Screen.WorkerProfileScreen.route + "?userId=${worker.workerId}")
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(horizontal = SizeMedium),
+                verticalArrangement = Arrangement.spacedBy(SizeMedium)
+            ) {
+                items(pagingState.items.size) { index ->
+                    val worker = pagingState.items[index]
+                    if (index >= pagingState.items.size - 1 &&
+                        !pagingState.endReached &&
+                        !pagingState.isLoading
+                    ) {
+                        viewModel.loadNextWorkers()
                     }
-                )
+                    WorkerItem(
+                        worker = worker,
+                        imageLoader = imageLoader,
+                        onFavouriteClick = {
+                            viewModel.onEvent(SearchWorkerEvent.AddToFavourite(worker.workerId))
+                        },
+                        onClick = {
+                            onNavigate(Screen.WorkerProfileScreen.route + "?userId=${worker.workerId}")
+                        }
+                    )
+                }
+                item {
+                    if (pagingState.isLoading) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(SizeMedium),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
+                    }
+                }
             }
         }
     }

@@ -1,32 +1,42 @@
 package com.fifty.workersportal.core.util
 
-class DefaultPaginator<T>(
-    private val onLoadUpdated: (Boolean) -> Unit,
-    private val onRequest: suspend (nextPage: Int) -> Resource<List<T>>,
+class DefaultPaginator<Key, Item>(
+    private val initialKey: Key,
+    private inline val onLoadUpdated: (Boolean) -> Unit,
+    private inline val onRequest: suspend (nextPage: Key) -> Resource<List<Item>>,
+    private inline val getNextKey: suspend (List<Item>) -> Key,
     private val onError: suspend (UiText) -> Unit,
-    private val onSuccess: (items: List<T>) -> Unit
-) : Paginator {
+    private val onSuccess: (items: List<Item>, newKey: Key) -> Unit
+) : Paginator<Key, Item> {
 
-    private var page = 0
+    private var currentKey: Key = initialKey
+    private var isMakingRequest = false
 
     override suspend fun loadNextItems() {
+        if (isMakingRequest) {
+            return
+        }
+        isMakingRequest = true
         onLoadUpdated(true)
-        when (val result = onRequest(page)) {
+        val result = onRequest(currentKey)
+        isMakingRequest = false
+        when (result) {
             is Resource.Success -> {
                 val items = result.data ?: emptyList()
-                page++
-                onSuccess(items)
+                currentKey = getNextKey(items)
+                onSuccess(items, currentKey)
                 onLoadUpdated(false)
             }
 
             is Resource.Error -> {
                 onError(result.uiText ?: UiText.unknownError())
                 onLoadUpdated(false)
+                return
             }
         }
     }
 
-    override fun resetPagination() {
-        page = 0
+    override fun reset() {
+        currentKey = initialKey
     }
 }
