@@ -23,13 +23,38 @@ class WorkerRepositoryImpl(
     private val api: WorkerApiService
 ) : WorkerRepository {
 
-    override fun getSearchedCategoriesPaged(searchQuery: String): Flow<PagingData<Category>> {
-        val pagingConfig = PagingConfig(pageSize = Constants.DEFAULT_PAGINATION_SIZE)
-
-        return Pager(pagingConfig) {
-            CategorySource(api, searchQuery)
-        }.flow
+    override suspend fun getSearchedCategoriesPaged(
+        page: Int,
+        searchQuery: String
+    ): Resource<List<Category>> {
+        return try {
+            val response = api.searchCategory(
+                page = page,
+                pageSize = Constants.DEFAULT_PAGINATION_SIZE,
+                searchQuery = searchQuery
+            )
+            if (response.successful) {
+                Resource.Success(data = response.data?.map { it.toCategory() })
+            } else {
+                response.message?.let { message ->
+                    Resource.Error(UiText.DynamicString(message))
+                } ?: Resource.Error(UiText.unknownError())
+            }
+        } catch (e: IOException) {
+            Resource.Error(
+                uiText = UiText.StringResource(
+                    R.string.error_could_not_reach_server
+                )
+            )
+        } catch (e: HttpException) {
+            Resource.Error(
+                uiText = UiText.StringResource(
+                    R.string.oops_something_went_wrong
+                )
+            )
+        }
     }
+
 
     override suspend fun getCategories(): Resource<List<Category>> {
         return try {
