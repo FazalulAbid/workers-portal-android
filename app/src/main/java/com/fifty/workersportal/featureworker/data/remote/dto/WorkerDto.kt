@@ -9,28 +9,39 @@ data class WorkerDto(
     val workerId: String,
     val firstName: String,
     val lastName: String,
-    val isFavourite: Boolean,
+    val isVerified: Boolean,
+    val gender: String,
+    val bio: String,
+    val categoryList: List<WorkerCategoryDto>,
+    val openToWork: Boolean,
     val userId: String,
     val profileImageUrl: String? = null,
     val ratingAverage: Float? = null,
     val ratingCount: Int,
-    val primaryCategoryName: String,
-    val primaryCategoryDailyWage: Float,
     @SerializedName("address")
-    val localAddress: LocalAddressDto? = null
+    val localAddress: LocalAddressDto? = null,
+    val isFavourite: Boolean,
+    val primaryCategoryId: String,
+    val distance: Double
 ) {
     fun toWorker(): Worker {
         return Worker(
             workerId = workerId,
             firstName = firstName,
             lastName = lastName,
-            isFavourite = isFavourite,
+            isVerified = isVerified,
+            gender = gender,
+            bio = bio,
+            categoryList = categoryList.map { it.toWorkerCategory() },
+            openToWork = openToWork,
+            userId = userId,
             profileImageUrl = profileImageUrl,
             ratingAverage = ratingAverage,
             ratingCount = ratingCount,
-            primaryCategoryName = primaryCategoryName,
-            primaryCategoryDailyWage = primaryCategoryDailyWage,
-            localAddress = localAddress?.toLocalAddress()
+            localAddress = localAddress?.toLocalAddress(),
+            isFavourite = isFavourite,
+            primaryCategoryId = primaryCategoryId,
+            distance = distance
         )
     }
 }

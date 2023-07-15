@@ -87,7 +87,7 @@ fun ChosenWorkerCard(
                 )
                 Spacer(modifier = Modifier.width(SizeExtraExtraSmall))
                 Text(
-                    text = worker.primaryCategoryName,
+                    text = "Pending",
                     style = MaterialTheme.typography.bodyMedium.copy(
                         color = MaterialTheme.colorScheme.onSurface
                     ),

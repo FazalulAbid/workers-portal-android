@@ -40,7 +40,6 @@ import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
 import com.fifty.workersportal.featurelocation.domain.model.LocalAddress
 import com.fifty.workersportal.featureworker.domain.model.Worker
-import java.lang.StringBuilder
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
@@ -96,7 +95,7 @@ fun WorkerListItem(
                 )
                 Spacer(modifier = Modifier.width(SizeExtraExtraSmall))
                 Text(
-                    text = worker.primaryCategoryName,
+                    text = "",
                     style = MaterialTheme.typography.bodyMedium.copy(
                         color = MaterialTheme.colorScheme.onSurface
                     ),
@@ -170,7 +169,7 @@ fun WorkerListItem(
                     .clip(RoundedCornerShape(50.dp))
                     .background(MaterialTheme.colorScheme.secondary)
                     .padding(horizontal = SizeSmall, vertical = SizeExtraSmall),
-                text = worker.primaryCategoryDailyWage.toString() + "/Day",
+                text = "",
                 style = MaterialTheme.typography.bodyMedium.copy(
                     color = MaterialTheme.colorScheme.onPrimary,
                     fontWeight = FontWeight.Medium

@@ -1,9 +1,6 @@
 package com.fifty.workersportal.featureworkproposal.presentation.workproposal
 
 import android.annotation.SuppressLint
-import android.os.Build
-import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.tween
@@ -53,11 +50,10 @@ import com.fifty.workersportal.core.presentation.component.StandardAppBar
 import com.fifty.workersportal.core.presentation.component.StandardMultilineTextField
 import com.fifty.workersportal.core.presentation.ui.theme.MediumButtonHeight
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
-import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
-import com.fifty.workersportal.core.util.Screen
 import com.fifty.workersportal.core.util.toDate
 import com.fifty.workersportal.featurelocation.domain.model.LocalAddress
 import com.fifty.workersportal.featureworker.domain.model.Worker
+import com.fifty.workersportal.featureworker.domain.model.WorkerCategory
 import com.fifty.workersportal.featureworker.presentation.component.ANIMATION_DURATION
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
@@ -65,12 +61,7 @@ import com.maxkeppeler.sheets.calendar.models.CalendarConfig
 import com.maxkeppeler.sheets.calendar.models.CalendarSelection
 import java.text.SimpleDateFormat
 import java.time.LocalDate
-import java.time.ZoneId
-import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
 import java.time.format.TextStyle
-import java.util.Date
 import java.util.Locale
 
 @SuppressLint("UnusedTransitionTargetStateParameter")
@@ -199,29 +190,56 @@ fun WorkProposalScreen(
                     )
                     ChosenWorkerCard(
                         worker = Worker(
-                            workerId = "",
-                            firstName = "Fazalul",
-                            lastName = "Abid",
-                            isFavourite = true,
-                            profileImageUrl = "https://play-lh.googleusercontent.com/i1qvljmS0nE43vtDhNKeGYtNlujcFxq72WAsyD2htUHOac57Z9Oiew0FrpGKlEehOvo=w240-h480-rw",
-                            ratingAverage = 4.0f,
-                            ratingCount = 10,
-                            primaryCategoryName = "Cleaner",
-                            primaryCategoryDailyWage = 150.0f,
+                            workerId = "1234567890",
+                            firstName = "John",
+                            lastName = "Doe",
+                            isVerified = true,
+                            gender = "Male",
+                            bio = "I am an experienced worker with various skills.",
+                            categoryList = listOf(
+                                WorkerCategory(
+                                    id = "1",
+                                    title = "Plumber",
+                                    skill = "Plumbing",
+                                    imageUrl = "https://example.com/plumber.jpg",
+                                    dailyMinWage = 50.0f,
+                                    hourlyMinWage = 10.0f,
+                                    dailyWage = "50 USD",
+                                    hourlyWage = "10 USD/h"
+                                ),
+                                WorkerCategory(
+                                    id = "2",
+                                    title = "Electrician",
+                                    skill = "Electrical Work",
+                                    imageUrl = "https://example.com/electrician.jpg",
+                                    dailyMinWage = 60.0f,
+                                    hourlyMinWage = 12.0f,
+                                    dailyWage = "60 USD",
+                                    hourlyWage = "12 USD/h"
+                                )
+                            ),
+                            openToWork = true,
+                            userId = "9876543210",
+                            profileImageUrl = "https://example.com/profile.jpg",
+                            ratingAverage = 4.5f,
+                            ratingCount = 100,
                             localAddress = LocalAddress(
-                                completeAddress = "Hello",
-                                location = listOf<Double>(7.077444777, 5.0444444444),
-                                id = "",
-                                title = "Title",
-                                floor = null,
-                                landmark = null,
-                                place = null,
-                                subLocality = null,
-                                city = null,
-                                state = null,
-                                country = null,
-                                pin = null
-                            )
+                                id = "abcd1234",
+                                title = "Home",
+                                completeAddress = "123 Main Street",
+                                floor = "2nd Floor",
+                                landmark = "Central Park",
+                                place = "New York",
+                                subLocality = "Manhattan",
+                                city = "New York City",
+                                state = "New York",
+                                country = "USA",
+                                pin = "12345",
+                                location = listOf(40.7128, -74.0060)
+                            ),
+                            isFavourite = false,
+                            primaryCategoryId = "1",
+                            distance = 5.3
                         ),
                         imageLoader = imageLoader
                     )
