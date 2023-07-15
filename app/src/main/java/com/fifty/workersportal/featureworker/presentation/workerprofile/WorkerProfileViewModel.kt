@@ -16,6 +16,7 @@ import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.UiText
 import com.fifty.workersportal.featureworker.domain.model.SampleWork
 import com.fifty.workersportal.featureworker.domain.usecase.GetSampleWorksUseCase
+import com.fifty.workersportal.featureworker.domain.usecase.GetWorkerDetailsUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.ToggleFavouriteWorkerUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -28,9 +29,9 @@ import javax.inject.Inject
 @HiltViewModel
 class WorkerProfileViewModel @Inject constructor(
     private val getOwnUserIdUseCase: GetOwnUserIdUseCase,
-    private val getUserProfileDetails: GetProfileDetailsUseCase,
     private val getSampleWorksUseCase: GetSampleWorksUseCase,
     private val toggleFavouriteWorkerUseCase: ToggleFavouriteWorkerUseCase,
+    private val getWorkerDetailsUseCase: GetWorkerDetailsUseCase,
     private val favouriteToggle: FavouriteToggle,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
@@ -91,12 +92,10 @@ class WorkerProfileViewModel @Inject constructor(
                 isLoading = true
             )
             val nonNullUserId = userId ?: getOwnUserIdUseCase()
-            when (val result = getUserProfileDetails(
-                userId = nonNullUserId
-            )) {
+            when (val result = getWorkerDetailsUseCase(workerId = nonNullUserId)) {
                 is Resource.Success -> {
                     _state.value = state.value.copy(
-                        profile = result.data,
+                        worker = result.data,
                         isOwnProfile = nonNullUserId == Session.userSession.value?.id,
                         isLoading = false
                     )

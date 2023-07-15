@@ -96,7 +96,7 @@ class SearchWorkerViewModel @Inject constructor(
                 }
             }
 
-            is SearchWorkerEvent.AddToFavourite -> {
+            is SearchWorkerEvent.ToggleFavouriteWorker -> {
                 toggleFavouriteWorker(event.workerId)
             }
 

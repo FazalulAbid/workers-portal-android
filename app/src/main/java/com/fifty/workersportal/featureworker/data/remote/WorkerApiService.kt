@@ -1,6 +1,7 @@
 package com.fifty.workersportal.featureworker.data.remote
 
 import com.fifty.workersportal.core.data.dto.response.BasicApiResponse
+import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.SimpleResource
 import com.fifty.workersportal.featureuser.data.remote.FavouriteUpdateRequest
 import com.fifty.workersportal.featureuser.data.remote.dto.ProfileDto
@@ -71,6 +72,12 @@ interface WorkerApiService {
     suspend fun removeWorkerFromFavourites(
         @Query("removedUserId") userId: String
     ): BasicApiResponse<String>
+
+    @GET("favourites/get-favourites")
+    suspend fun getFavourites(
+        @Query("page") page: Int,
+        @Query("pageSize") pageSize: Int
+    ): BasicApiResponse<List<WorkerDto>>
 
     @Multipart
     @POST("sample-work/add-sample-work")

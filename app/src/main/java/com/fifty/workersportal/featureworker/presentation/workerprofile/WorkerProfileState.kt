@@ -6,7 +6,6 @@ import com.fifty.workersportal.featureworker.domain.model.Worker
 
 data class WorkerProfileState(
     val clickedSampleWork: SampleWork? = null,
-    val profile: Profile? = null,
     val worker: Worker? = null,
     val isOwnProfile: Boolean = false,
     val isLoading: Boolean = false,

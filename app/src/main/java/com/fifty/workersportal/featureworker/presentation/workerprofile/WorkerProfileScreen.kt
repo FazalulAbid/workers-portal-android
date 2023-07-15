@@ -167,7 +167,7 @@ fun WorkerProfileScreen(
                         Spacer(modifier = Modifier.height(SizeMedium))
                         LargeDisplayProfilePicture(
                             painter = rememberImagePainter(
-                                data = state.profile?.profilePicture,
+                                data = state.worker?.profileImageUrl,
                                 imageLoader = imageLoader
                             )
                         )
@@ -175,14 +175,14 @@ fun WorkerProfileScreen(
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier.offset(
-                                x = if (state.profile?.isVerifiedWorker == true) {
+                                x = if (state.worker?.isVerified == true) {
                                     (SizeMedium / 2f)
                                 } else 0.dp
                             )
                         ) {
                             Text(
                                 modifier = Modifier.widthIn(max = screenWidth * 0.75f),
-                                text = "${state.profile?.firstName} ${state.profile?.lastName}",
+                                text = "${state.worker?.firstName} ${state.worker?.lastName}",
                                 style = MaterialTheme.typography.titleLarge.copy(
                                     fontWeight = FontWeight.Bold,
                                     textAlign = TextAlign.Center,
@@ -191,7 +191,7 @@ fun WorkerProfileScreen(
                                 maxLines = 2,
                                 overflow = TextOverflow.Ellipsis
                             )
-                            if (state.profile?.isVerifiedWorker == true) {
+                            if (state.worker?.isVerified == true) {
                                 Spacer(modifier = Modifier.width(SizeExtraSmall))
                                 Icon(
                                     modifier = Modifier.size(SizeLarge),
@@ -202,8 +202,8 @@ fun WorkerProfileScreen(
                             }
                         }
                         Spacer(modifier = Modifier.height(SizeExtraSmall))
-                        val primarySkill = state.profile?.categoryList?.find {
-                            it.id == state.profile.primaryCategory
+                        val primarySkill = state.worker?.categoryList?.find {
+                            it.id == state.worker.primaryCategoryId
                         }
                         primarySkill?.skill?.let { primarySkillName ->
                             Text(
@@ -219,7 +219,7 @@ fun WorkerProfileScreen(
                             )
                             Spacer(modifier = Modifier.height(SizeSmall))
                         }
-                        state.profile?.bio?.let { bio ->
+                        state.worker?.bio?.let { bio ->
                             Text(
                                 modifier = Modifier.widthIn(max = screenWidth * 0.75f),
                                 text = bio,
@@ -234,7 +234,7 @@ fun WorkerProfileScreen(
                     }
                 }
                 item(span = { GridItemSpan(3) }) {
-                    state.profile?.categoryList?.let { workerCategories ->
+                    state.worker?.categoryList?.let { workerCategories ->
                         Grid(
                             modifier = Modifier
                                 .padding(SizeMedium),
@@ -306,7 +306,7 @@ fun WorkerProfileScreen(
                 item(span = { GridItemSpan(3) }) {
                     SecondaryHeader(
                         modifier = Modifier.padding(SizeMedium),
-                        text = stringResource(R.string.x_s_works, state.profile?.firstName ?: ""),
+                        text = stringResource(R.string.x_s_works, state.worker?.firstName ?: ""),
                         style = MaterialTheme.typography.titleMedium,
                         moreOption = state.isOwnProfile,
                         moreOptionText = stringResource(id = R.string.post_your_work),

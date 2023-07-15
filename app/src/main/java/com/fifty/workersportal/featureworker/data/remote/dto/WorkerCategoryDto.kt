@@ -4,6 +4,7 @@ import com.fifty.workersportal.featureworker.domain.model.WorkerCategory
 import com.google.gson.annotations.SerializedName
 
 data class WorkerCategoryDto(
+    @SerializedName("id")
     val id: String,
     val title: String,
     val skill: String,

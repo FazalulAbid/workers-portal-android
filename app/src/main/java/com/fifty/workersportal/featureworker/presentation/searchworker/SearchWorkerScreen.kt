@@ -1,6 +1,5 @@
 package com.fifty.workersportal.featureworker.presentation.searchworker
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -161,7 +160,7 @@ fun SearchWorkerScreen(
         ) {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(horizontal = SizeMedium),
+                contentPadding = PaddingValues(horizontal = SizeMedium, vertical = SizeSmall),
                 verticalArrangement = Arrangement.spacedBy(SizeMedium)
             ) {
                 items(pagingState.items.size) { index ->
@@ -176,7 +175,7 @@ fun SearchWorkerScreen(
                         worker = worker,
                         imageLoader = imageLoader,
                         onFavouriteClick = {
-                            viewModel.onEvent(SearchWorkerEvent.AddToFavourite(worker.workerId))
+                            viewModel.onEvent(SearchWorkerEvent.ToggleFavouriteWorker(worker.workerId))
                         },
                         onClick = {
                             onNavigate(Screen.WorkerProfileScreen.route + "?userId=${worker.workerId}")

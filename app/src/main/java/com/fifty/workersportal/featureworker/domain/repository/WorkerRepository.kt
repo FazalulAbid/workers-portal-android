@@ -17,6 +17,8 @@ interface WorkerRepository {
 
     suspend fun toggleFavouriteWorker(userId: String, isFavourite: Boolean): SimpleResource
 
+    suspend fun getFavourites(page: Int): Resource<List<Worker>>
+
     suspend fun getSearchedSortedAndFilteredWorkers(
         query: String,
         page: Int,

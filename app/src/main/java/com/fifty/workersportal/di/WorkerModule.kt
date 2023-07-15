@@ -9,6 +9,7 @@ import com.fifty.workersportal.featureworker.domain.repository.SampleWorkReposit
 import com.fifty.workersportal.featureworker.domain.repository.WorkerRepository
 import com.fifty.workersportal.featureworker.domain.usecase.DeleteSampleWorkUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.GetCategoriesUseCase
+import com.fifty.workersportal.featureworker.domain.usecase.GetFavouritesUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.GetReviewAndRatingUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.GetSampleWorkUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.GetSampleWorksUseCase
@@ -143,4 +144,10 @@ object WorkerModule {
     fun provideGetWorkerDetails(
         repository: WorkerRepository
     ): GetWorkerDetailsUseCase = GetWorkerDetailsUseCase(repository)
+
+    @Provides
+    @Singleton
+    fun provideGetFavouritesUseCase(
+        repository: WorkerRepository
+    ): GetFavouritesUseCase = GetFavouritesUseCase(repository)
 }

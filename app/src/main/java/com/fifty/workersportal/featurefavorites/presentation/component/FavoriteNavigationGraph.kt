@@ -5,14 +5,16 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.navigation
+import coil.ImageLoader
 import com.fifty.workersportal.core.util.NavigationParent
 import com.fifty.workersportal.core.util.Screen
-import com.fifty.workersportal.featureuser.presentation.testscreen.FavoriteScreen
+import com.fifty.workersportal.featurefavorites.presentation.favouriteworkers.FavoriteWorkersScreen
 import com.google.accompanist.navigation.animation.composable
 
 @OptIn(ExperimentalAnimationApi::class)
 fun NavGraphBuilder.favouriteNavGraph(
     navController: NavController,
+    imageLoader: ImageLoader,
     snackbarHostState: SnackbarHostState
 ) {
     navigation(
@@ -20,7 +22,10 @@ fun NavGraphBuilder.favouriteNavGraph(
         route = NavigationParent.Favorite.route
     ) {
         composable(Screen.FavoriteScreen.route) {
-            FavoriteScreen()
+            FavoriteWorkersScreen(
+                imageLoader = imageLoader,
+                onNavigate = navController::navigate
+            )
         }
     }
 }
