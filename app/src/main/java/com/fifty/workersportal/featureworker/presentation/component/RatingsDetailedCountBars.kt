@@ -86,7 +86,7 @@ fun RatingsDetailedItem(
         )
         Spacer(modifier = Modifier.width(6.dp))
         LinearProgressIndicator(
-            progress = progressValue,
+            progress = if (progressValue.isNaN()) 0f else progressValue,
             modifier = Modifier
                 .weight(7f)
                 .height(SizeSmall),

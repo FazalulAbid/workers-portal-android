@@ -1,6 +1,5 @@
 package com.fifty.workersportal.featureworker.presentation.reviewandrating
 
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle

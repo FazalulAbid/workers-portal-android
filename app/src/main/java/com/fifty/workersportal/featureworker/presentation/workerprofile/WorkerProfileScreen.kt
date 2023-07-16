@@ -277,7 +277,7 @@ fun WorkerProfileScreen(
                         ) {
                             RatingAndRatingCountVertical(
                                 modifier = Modifier.clickable {
-                                    onNavigate(Screen.ReviewAndRatingScreen.route)
+                                    onNavigate(Screen.ReviewAndRatingScreen.route + "?userId=${state.worker?.workerId}")
                                 },
                                 rating = state.worker?.ratingAverage.toString(),
                                 ratingCount = state.worker?.ratingCount ?: 0

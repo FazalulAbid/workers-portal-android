@@ -3,6 +3,8 @@ package com.fifty.workersportal.featureworker.data.remote.dto
 import com.fifty.workersportal.featurelocation.data.remote.dto.LocalAddressDto
 import com.fifty.workersportal.featureworker.domain.model.Worker
 import com.google.gson.annotations.SerializedName
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 data class WorkerDto(
     @SerializedName("_id")
@@ -36,7 +38,9 @@ data class WorkerDto(
             openToWork = openToWork,
             userId = userId,
             profileImageUrl = profileImageUrl,
-            ratingAverage = ratingAverage,
+            ratingAverage = BigDecimal((ratingAverage ?: 0f).toDouble()).setScale(
+                1, RoundingMode.HALF_UP
+            ).toFloat(),
             ratingCount = ratingCount,
             localAddress = localAddress?.toLocalAddress(),
             isFavourite = isFavourite,

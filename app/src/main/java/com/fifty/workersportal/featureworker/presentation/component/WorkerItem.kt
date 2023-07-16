@@ -129,6 +129,24 @@ fun WorkerItem(
                             overflow = TextOverflow.Ellipsis
                         )
                     }
+                    Spacer(modifier = Modifier.height(SizeSmall))
+                    Row {
+                        Icon(
+                            modifier = Modifier.size(SizeMedium),
+                            painter = painterResource(id = R.drawable.ic_distance),
+                            contentDescription = "",
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                        Spacer(modifier = Modifier.width(SizeExtraSmall))
+                        Text(
+                            text = "2 km from Home (Pending)",
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                color = MaterialTheme.colorScheme.onSurface
+                            ),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
                 }
             }
             Spacer(modifier = Modifier.height(SizeMedium))
@@ -138,65 +156,13 @@ fun WorkerItem(
                 mainAxisSpacing = SizeSmall,
                 crossAxisSpacing = SizeSmall
             ) {
-                val workerCategories = listOf(
-                    WorkerCategory(
-                        "1",
-                        "Plumber",
-                        "Plumbing",
-                        "",
-                        500.0f,
-                        600.0f,
-                        "0.0",
-                        "0.0"
-                    ),
-                    WorkerCategory(
-                        "2",
-                        "Cleaner",
-                        "Cleaning",
-                        "",
-                        400.0f,
-                        550.0f,
-                        "0.0",
-                        "0.0"
-                    ),
-                    WorkerCategory(
-                        "3",
-                        "Electrician",
-                        "Electrical",
-                        "",
-                        600.0f,
-                        700.0f,
-                        "0.0",
-                        "0.0"
-                    ),
-                    WorkerCategory(
-                        "4",
-                        "Carpenter",
-                        "Carpentry",
-                        "",
-                        450.0f,
-                        550.0f,
-                        "0.0",
-                        "0.0"
-                    ),
-                    WorkerCategory(
-                        "5",
-                        "Gardener",
-                        "Gardening",
-                        "",
-                        550.0f,
-                        650.0f,
-                        "0.0",
-                        "0.0"
-                    ),
-                )
-                workerCategories.forEach {
+                worker.categoryList.forEach {
                     Chip(
                         text = it.title ?: "",
-                        selected = it.id == "3",
+                        selected = it.id == worker.primaryCategoryId,
                         textStyle = MaterialTheme.typography.bodySmall.copy(
                             color = MaterialTheme.colorScheme.onSurface,
-                            fontWeight = if (it.id == "3") {
+                            fontWeight = if (it.id == worker.primaryCategoryId) {
                                 FontWeight.Medium
                             } else FontWeight.Normal
                         )

@@ -2,6 +2,8 @@ package com.fifty.workersportal.featureworker.data.remote.dto
 
 import com.fifty.workersportal.featureworker.domain.model.RatingsCount
 import com.google.gson.annotations.SerializedName
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 data class RatingCountDto(
     @SerializedName("_id")
@@ -16,7 +18,7 @@ data class RatingCountDto(
     val belowAverage: Int,
     @SerializedName("one")
     val poor: Int,
-    val ratingAverage: Float,
+    val ratingAverage: Float?,
     val ratingsCount: Int
 ) {
     fun toRatingsCount(): RatingsCount =
@@ -26,7 +28,10 @@ data class RatingCountDto(
             averagePercentage = average.toFloat() / ratingsCount,
             belowAveragePercentage = belowAverage.toFloat() / ratingsCount,
             poorPercentage = poor.toFloat() / ratingsCount,
-            ratingAverage = ratingAverage,
+            ratingAverage = BigDecimal((ratingAverage ?: 0f).toDouble()).setScale(
+                1,
+                RoundingMode.HALF_UP
+            ).toFloat(),
             ratingsCount = ratingsCount
         )
 }

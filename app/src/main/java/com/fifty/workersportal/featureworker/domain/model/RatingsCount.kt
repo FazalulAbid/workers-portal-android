@@ -6,6 +6,6 @@ data class RatingsCount(
     val averagePercentage: Float,
     val belowAveragePercentage: Float,
     val poorPercentage: Float,
-    val ratingAverage: Float,
+    val ratingAverage: Float?,
     val ratingsCount: Int
 )

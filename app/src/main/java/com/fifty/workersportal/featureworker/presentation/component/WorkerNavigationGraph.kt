@@ -81,7 +81,7 @@ fun NavGraphBuilder.workerNavGraph(
                 workProposalViewModel = workProposalViewModel
             )
         }
-        composable(Screen.ReviewAndRatingScreen.route) {
+        composable(Screen.ReviewAndRatingScreen.route + "?userId={userId}") {
             ReviewAndRatingScreen(
                 onNavigateUp = navController::navigateUp,
                 imageLoader = imageLoader
