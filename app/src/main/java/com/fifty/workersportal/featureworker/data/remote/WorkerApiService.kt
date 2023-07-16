@@ -7,10 +7,12 @@ import com.fifty.workersportal.featureuser.data.remote.FavouriteUpdateRequest
 import com.fifty.workersportal.featureuser.data.remote.dto.ProfileDto
 import com.fifty.workersportal.featureuser.data.remote.request.SampleWorkRequest
 import com.fifty.workersportal.featureworker.data.remote.dto.CategoryDto
+import com.fifty.workersportal.featureworker.data.remote.dto.RatingCountDto
 import com.fifty.workersportal.featureworker.data.remote.dto.ReviewAndRatingDto
 import com.fifty.workersportal.featureworker.data.remote.dto.SampleWorkDto
 import com.fifty.workersportal.featureworker.data.remote.dto.WorkerDto
 import com.fifty.workersportal.featureworker.data.remote.request.ReviewAndRatingRequest
+import com.fifty.workersportal.featureworker.domain.model.RatingsCount
 import com.fifty.workersportal.featureworker.domain.model.ReviewAndRating
 import okhttp3.MultipartBody
 import retrofit2.Response
@@ -109,4 +111,9 @@ interface WorkerApiService {
         @Query("pageSize") pageSize: Int,
         @Query("ratedUserId") userId: String
     ): BasicApiResponse<List<ReviewAndRatingDto>>
+
+    @GET("rating/get-ratings-list")
+    suspend fun getWorkerRatingsList(
+        @Query("id") workerId: String
+    ): BasicApiResponse<RatingCountDto>
 }

@@ -12,6 +12,7 @@ import com.fifty.workersportal.core.util.UiText
 import com.fifty.workersportal.featureworker.data.paging.ReviewAndRatingSource
 import com.fifty.workersportal.featureworker.data.remote.WorkerApiService
 import com.fifty.workersportal.featureworker.data.remote.request.ReviewAndRatingRequest
+import com.fifty.workersportal.featureworker.domain.model.RatingsCount
 import com.fifty.workersportal.featureworker.domain.model.ReviewAndRating
 import com.fifty.workersportal.featureworker.domain.repository.ReviewAndRatingRepository
 import kotlinx.coroutines.flow.Flow
@@ -64,5 +65,30 @@ class ReviewAndRatingRepositoryImpl(
         return Pager(pagingConfig) {
             ReviewAndRatingSource(api, userId)
         }.flow
+    }
+
+    override suspend fun getRatingsCount(workerId: String): Resource<RatingsCount> {
+        return try {
+            val response = api.getWorkerRatingsList(workerId = workerId)
+            if (response.successful) {
+                Resource.Success(data = response.data?.toRatingsCount())
+            } else {
+                response.message?.let { message ->
+                    Resource.Error(UiText.DynamicString(message))
+                } ?: Resource.Error(UiText.unknownError())
+            }
+        } catch (e: IOException) {
+            Resource.Error(
+                uiText = UiText.StringResource(
+                    R.string.error_could_not_reach_server
+                )
+            )
+        } catch (e: HttpException) {
+            Resource.Error(
+                uiText = UiText.StringResource(
+                    R.string.oops_something_went_wrong
+                )
+            )
+        }
     }
 }

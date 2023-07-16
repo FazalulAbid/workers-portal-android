@@ -1,5 +1,6 @@
 package com.fifty.workersportal.featureworker.presentation.reviewandrating
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
@@ -14,6 +15,7 @@ import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.UiText
 import com.fifty.workersportal.featureworker.domain.model.ReviewAndRating
 import com.fifty.workersportal.featureworker.domain.usecase.GetReviewAndRatingUseCase
+import com.fifty.workersportal.featureworker.domain.usecase.GetWorkerRatingsCountUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.PostReviewAndRatingUseCase
 import com.fifty.workersportal.featureworker.util.ReviewAndRatingError
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,6 +30,7 @@ import javax.inject.Inject
 class ReviewAndRatingViewModel @Inject constructor(
     private val postReviewAndRatingUseCase: PostReviewAndRatingUseCase,
     private val getReviewAndRatingUseCase: GetReviewAndRatingUseCase,
+    private val getWorkerRatingsCountUseCase: GetWorkerRatingsCountUseCase,
     private val getOwnUserIdUseCase: GetOwnUserIdUseCase,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
@@ -51,8 +54,9 @@ class ReviewAndRatingViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val userId = savedStateHandle.get<String>("userId") ?: getOwnUserIdUseCase()
-            getReviewAndRating(userId)
+            val workerId = savedStateHandle.get<String>("userId") ?: getOwnUserIdUseCase()
+            getReviewAndRating(workerId)
+            getWorkerRatingsCount(workerId)
         }
     }
 
@@ -74,10 +78,26 @@ class ReviewAndRatingViewModel @Inject constructor(
         }
     }
 
-    private fun getReviewAndRating(userId: String) {
+    private fun getReviewAndRating(workerId: String) {
         _state.value = state.value.copy(isLoading = true)
-        reviewsAndRatings = getReviewAndRatingUseCase(userId).cachedIn(viewModelScope)
+        reviewsAndRatings = getReviewAndRatingUseCase(workerId).cachedIn(viewModelScope)
         _state.value = state.value.copy(isLoading = false)
+    }
+
+    private suspend fun getWorkerRatingsCount(workerId: String) {
+        _state.value = state.value.copy(isLoading = true)
+        when (val result = getWorkerRatingsCountUseCase(workerId = workerId)) {
+            is Resource.Success -> {
+                _state.value = state.value.copy(
+                    workerRatingsCount = result.data,
+                    isLoading = false
+                )
+            }
+
+            is Resource.Error -> {
+                _state.value = state.value.copy(isLoading = false)
+            }
+        }
     }
 
     private fun postReviewAndRating() {

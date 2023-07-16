@@ -59,6 +59,7 @@ fun ReviewAndRatingScreen(
     imageLoader: ImageLoader,
     viewModel: ReviewAndRatingViewModel = hiltViewModel()
 ) {
+    val state = viewModel.state.value
     val reviewAndRatings = viewModel.reviewsAndRatings.collectAsLazyPagingItems()
     val writeReviewSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var showWriteReviewSheet by remember {
@@ -97,7 +98,7 @@ fun ReviewAndRatingScreen(
         }
     }
 
-    Column() {
+    Column {
         StandardAppBar(
             onNavigateUp = onNavigateUp,
             showBackArrow = true,
@@ -118,29 +119,19 @@ fun ReviewAndRatingScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(SizeMedium),
+                        .padding(horizontal = SizeMedium),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    Spacer(modifier = Modifier.height(SizeMedium))
                     Text(
-                        text = stringResource(R.string.ratings),
-                        style = MaterialTheme.typography.titleMedium.copy(
-                            color = MaterialTheme.colorScheme.onBackground,
-                            fontWeight = FontWeight.Medium,
-                        )
-                    )
-                    Spacer(modifier = Modifier.height(SizeSmall))
-                    HorizontalDivider()
-                    Spacer(modifier = Modifier.height(SizeSmall))
-                    Text(
-                        text = "4.0",
+                        text = state.workerRatingsCount?.ratingAverage.toString(),
                         style = MaterialTheme.typography.headlineLarge.copy(
                             color = MaterialTheme.colorScheme.onBackground,
                             fontWeight = FontWeight.Bold
                         )
                     )
-                    var rating3 by remember { mutableStateOf(2.3f) }
                     RatingBar(
-                        rating = rating3,
+                        rating = state.workerRatingsCount?.ratingAverage ?: 0f,
                         painterEmpty = painterResource(id = R.drawable.ic_rating_star),
                         painterFilled = painterResource(id = R.drawable.ic_rating_star_filled),
                         tintEmpty = Color(0xFFFF8D00),
@@ -148,12 +139,10 @@ fun ReviewAndRatingScreen(
                         animationEnabled = true,
                         gestureEnabled = false,
                         itemSize = SizeExtraLarge
-                    ) {
-                        rating3 = it
-                    }
+                    )
                     Spacer(modifier = Modifier.height(SizeSmall))
                     Text(
-                        text = "based on 32 reviews",
+                        text = "based on ${state.workerRatingsCount?.ratingsCount} reviews",
                         style = MaterialTheme.typography.bodyLarge.copy(
                             fontWeight = FontWeight.Medium,
                             color = MaterialTheme.colorScheme.onSurface,
@@ -164,15 +153,21 @@ fun ReviewAndRatingScreen(
                     )
                     Spacer(modifier = Modifier.height(SizeMedium))
                     RatingsDetailedCountBars(
-                        excellentValue = 0.6f,
-                        goodValue = 0.7f,
-                        averageValue = 0.9f,
-                        belowAverageValue = 0.8f,
-                        poorValue = 0.5f,
-
+                        excellentValue = state.workerRatingsCount?.excellentPercentage ?: 0f,
+                        goodValue = state.workerRatingsCount?.goodPercentage ?: 0f,
+                        averageValue = state.workerRatingsCount?.averagePercentage ?: 0f,
+                        belowAverageValue = state.workerRatingsCount?.belowAveragePercentage ?: 0f,
+                        poorValue = state.workerRatingsCount?.poorPercentage ?: 0f
+                    )
+                    HorizontalDivider(verticalPadding = true)
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = stringResource(R.string.reviews),
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            color = MaterialTheme.colorScheme.onBackground,
+                            fontWeight = FontWeight.Medium,
                         )
-                    Spacer(modifier = Modifier.height(SizeMedium))
-                    HorizontalDivider()
+                    )
                 }
             }
             items(reviewAndRatings) { reviewAndRating ->
