@@ -28,6 +28,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -50,15 +51,19 @@ import com.fifty.workersportal.core.presentation.component.StandardAppBar
 import com.fifty.workersportal.core.presentation.component.StandardMultilineTextField
 import com.fifty.workersportal.core.presentation.ui.theme.MediumButtonHeight
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
+import com.fifty.workersportal.core.presentation.util.UiEvent
+import com.fifty.workersportal.core.presentation.util.makeToast
 import com.fifty.workersportal.core.util.toDate
 import com.fifty.workersportal.featurelocation.domain.model.LocalAddress
 import com.fifty.workersportal.featureworker.domain.model.Worker
 import com.fifty.workersportal.featureworker.domain.model.WorkerCategory
 import com.fifty.workersportal.featureworker.presentation.component.ANIMATION_DURATION
+import com.fifty.workersportal.featureworkproposal.data.util.WorkProposalError
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig
 import com.maxkeppeler.sheets.calendar.models.CalendarSelection
+import kotlinx.coroutines.flow.collectLatest
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.TextStyle
@@ -122,6 +127,55 @@ fun WorkProposalScreen(
                 MaterialTheme.colorScheme.onSurface
         }
     )
+
+    LaunchedEffect(key1 = true) {
+        viewModel.eventFlow.collectLatest { event ->
+            when (event) {
+                UiEvent.SentWorkProposal -> {
+                    makeToast("Work proposal sent successfully", context)
+                }
+
+                else -> Unit
+            }
+        }
+    }
+
+    LaunchedEffect(key1 = true) {
+        viewModel.errorFlow.collectLatest { error ->
+            when (error) {
+                WorkProposalError.InvalidDate -> {
+                    makeToast("Choose a date for work proposal", context)
+                }
+
+                WorkProposalError.InvalidWage -> {
+                    makeToast("Choose a valid wage", context)
+                }
+
+                WorkProposalError.InvalidWorkAddress -> {
+                    makeToast("Select an address for work", context)
+                }
+
+                WorkProposalError.InvalidWorkCategory -> {
+                    makeToast("Choose a category for work", context)
+                }
+
+                WorkProposalError.InvalidWorkDescription -> {
+                    makeToast("Enter a valid work description", context)
+                }
+
+                WorkProposalError.InvalidWorker -> {
+                    makeToast("Select a worker", context)
+                }
+
+                WorkProposalError.WorkConflict -> {
+                    makeToast(
+                        "Selected worker is not available on selected date, please choose another worker",
+                        context
+                    )
+                }
+            }
+        }
+    }
 
     Column(Modifier.fillMaxSize()) {
         StandardAppBar(
@@ -188,61 +242,16 @@ fun WorkProposalScreen(
                         style = MaterialTheme.typography.bodyLarge,
                         fontWeight = FontWeight.Medium
                     )
-                    ChosenWorkerCard(
-                        worker = Worker(
-                            workerId = "1234567890",
-                            firstName = "John",
-                            lastName = "Doe",
-                            isVerified = true,
-                            gender = "Male",
-                            bio = "I am an experienced worker with various skills.",
-                            categoryList = listOf(
-                                WorkerCategory(
-                                    id = "1",
-                                    title = "Plumber",
-                                    skill = "Plumbing",
-                                    imageUrl = "https://example.com/plumber.jpg",
-                                    dailyMinWage = 50.0f,
-                                    hourlyMinWage = 10.0f,
-                                    dailyWage = "50 USD",
-                                    hourlyWage = "10 USD/h"
-                                ),
-                                WorkerCategory(
-                                    id = "2",
-                                    title = "Electrician",
-                                    skill = "Electrical Work",
-                                    imageUrl = "https://example.com/electrician.jpg",
-                                    dailyMinWage = 60.0f,
-                                    hourlyMinWage = 12.0f,
-                                    dailyWage = "60 USD",
-                                    hourlyWage = "12 USD/h"
-                                )
-                            ),
-                            openToWork = true,
-                            userId = "9876543210",
-                            profileImageUrl = "https://example.com/profile.jpg",
-                            ratingAverage = 4.5f,
-                            ratingCount = 100,
-                            localAddress = LocalAddress(
-                                id = "abcd1234",
-                                title = "Home",
-                                completeAddress = "123 Main Street",
-                                floor = "2nd Floor",
-                                landmark = "Central Park",
-                                place = "New York",
-                                subLocality = "Manhattan",
-                                city = "New York City",
-                                state = "New York",
-                                country = "USA",
-                                pin = "12345",
-                                location = listOf(40.7128, -74.0060)
-                            ),
-                            isFavourite = false,
-                            primaryCategoryId = "1",
-                            distance = 5.3
-                        ),
-                        imageLoader = imageLoader
-                    )
+                    viewModel.workerState.value?.let { worker ->
+                        ChosenWorkerCard(
+                            worker = worker,
+                            chosenCategoryName = viewModel.workCategory.value?.title ?: "",
+                            chosenWage = if (viewModel.isFullDay.value) {
+                                viewModel.workCategory.value?.dailyWage ?: ""
+                            } else viewModel.workCategory.value?.hourlyWage ?: "",
+                            imageLoader = imageLoader
+                        )
+                    }
                     SecondaryHeader(
                         text = stringResource(R.string.enter_work_description),
                         modifier = Modifier.padding(vertical = SizeMedium),
@@ -375,7 +384,7 @@ fun WorkProposalScreen(
             PrimaryButton(
                 text = stringResource(R.string.send_proposal),
                 onClick = {
-
+                    viewModel.onEvent(WorkProposalEvent.SendProposal)
                 }
             )
         }

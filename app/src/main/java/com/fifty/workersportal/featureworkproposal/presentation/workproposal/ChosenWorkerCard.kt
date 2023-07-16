@@ -32,12 +32,15 @@ import com.fifty.workersportal.core.presentation.ui.theme.LargeProfilePictureHei
 import com.fifty.workersportal.core.presentation.ui.theme.SizeExtraExtraSmall
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.featureworker.domain.model.Worker
+import com.fifty.workersportal.featureworker.domain.model.WorkerCategory
 import com.fifty.workersportal.featureworker.presentation.component.displayPlace
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
 fun ChosenWorkerCard(
     worker: Worker,
+    chosenCategoryName: String,
+    chosenWage: String,
     imageLoader: ImageLoader
 ) {
     Row(
@@ -68,9 +71,9 @@ fun ChosenWorkerCard(
         ) {
             Text(
                 text = "${worker.firstName} ${worker.lastName}",
-                style = MaterialTheme.typography.bodyLarge.copy(
+                style = MaterialTheme.typography.titleMedium.copy(
                     color = MaterialTheme.colorScheme.onBackground,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.SemiBold
                 ),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
@@ -87,9 +90,10 @@ fun ChosenWorkerCard(
                 )
                 Spacer(modifier = Modifier.width(SizeExtraExtraSmall))
                 Text(
-                    text = "Pending",
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        color = MaterialTheme.colorScheme.onSurface
+                    text = "$chosenCategoryName (₹$chosenWage)",
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        color = MaterialTheme.colorScheme.onSurface,
+                        fontWeight = FontWeight.Medium
                     ),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis

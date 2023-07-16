@@ -136,7 +136,6 @@ class ProfileRepositoryImpl(
         val identityPictureFile = identityPictureUri?.toFile()
 
         return try {
-            Log.d("Hello", "updateProfileForWorker: ${gson.toJson(updateProfileForWorkerRequest)}")
             val response = api.updateProfileForWorker(
                 profilePicture = profilePictureFile?.let {
                     MultipartBody.Part

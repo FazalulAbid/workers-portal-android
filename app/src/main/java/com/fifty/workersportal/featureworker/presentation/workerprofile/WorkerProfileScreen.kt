@@ -68,6 +68,7 @@ import com.fifty.workersportal.featureworker.presentation.component.LocalAddress
 import com.fifty.workersportal.featureworker.presentation.component.RatingAndRatingCountVertical
 import com.fifty.workersportal.featureworker.presentation.component.SampleWorkItem
 import com.fifty.workersportal.featureworker.presentation.component.WorkerCategoryChip
+import com.fifty.workersportal.featureworkproposal.presentation.workproposal.WorkProposalEvent
 import com.fifty.workersportal.featureworkproposal.presentation.workproposal.WorkProposalViewModel
 import com.maxkeppeker.sheets.core.views.Grid
 
@@ -250,7 +251,16 @@ fun WorkerProfileScreen(
                                 imageLoader = imageLoader,
                                 onClick = if (!state.isOwnProfile) {
                                     {
-                                        workProposalViewModel.workerState
+                                        workProposalViewModel.onEvent(
+                                            WorkProposalEvent.SelectWorker(
+                                                state.worker
+                                            )
+                                        )
+                                        workProposalViewModel.onEvent(
+                                            WorkProposalEvent.SelectCategory(
+                                                workerCategory
+                                            )
+                                        )
                                         onNavigate(Screen.WorkProposalScreen.route)
                                     }
                                 } else null

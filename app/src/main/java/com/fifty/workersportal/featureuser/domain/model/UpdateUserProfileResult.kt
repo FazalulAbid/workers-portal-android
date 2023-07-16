@@ -1,6 +1,5 @@
 package com.fifty.workersportal.featureuser.domain.model
 
-import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.SimpleResource
 import com.fifty.workersportal.featureworker.util.ProfileError
 
