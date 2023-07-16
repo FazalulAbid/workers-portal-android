@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import com.fifty.workersportal.R
@@ -25,7 +26,7 @@ import com.fifty.workersportal.featurelocation.domain.model.toDisplayAddress
 @Composable
 fun LocalAddressDisplayLarge(
     modifier: Modifier = Modifier,
-    localAddress: LocalAddress
+    localAddress: LocalAddress?
 ) {
     Column(
         modifier = modifier,
@@ -44,8 +45,12 @@ fun LocalAddressDisplayLarge(
             )
             Spacer(modifier = Modifier.height(SizeExtraSmall))
             Text(
-                text = localAddress.place ?: localAddress.subLocality ?: localAddress.city
-                ?: localAddress.state ?: localAddress.country ?: "",
+                text = if (localAddress != null) {
+                    localAddress.place ?: localAddress.subLocality ?: localAddress.city
+                    ?: localAddress.state ?: localAddress.country ?: ""
+                } else {
+                    stringResource(R.string.worker_location_not_available)
+                },
                 style = MaterialTheme.typography.bodyLarge.copy(
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onBackground

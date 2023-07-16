@@ -1,5 +1,6 @@
 package com.fifty.workersportal.featureworker.data.repository
 
+import android.util.Log
 import coil.network.HttpException
 import com.fifty.workersportal.R
 import com.fifty.workersportal.core.util.Constants
@@ -20,56 +21,76 @@ class WorkerRepositoryImpl(
 ) : WorkerRepository {
 
     val worker = Worker(
-        workerId = "1234567890",
-        firstName = "John",
-        lastName = "Doe",
-        isVerified = true,
-        gender = "Male",
-        bio = "I am an experienced worker with various skills.",
+        workerId = "64aac73da1ba9b10fb30d556",
+        firstName = "Misbahul",
+        lastName = "Haq",
+        isVerified = false,
+        gender = "male",
+        bio = "This is a bio",
         categoryList = listOf(
             WorkerCategory(
-                id = "1",
-                title = "Plumber",
-                skill = "Plumbing",
-                imageUrl = "https://example.com/plumber.jpg",
-                dailyMinWage = 50.0f,
-                hourlyMinWage = 10.0f,
-                dailyWage = "50 USD",
-                hourlyWage = "10 USD/h"
+                id = "6480a0882017d2a3619674fa",
+                title = "Cleaner",
+                skill = "Cleaning",
+                imageUrl = "https://cdn-icons-png.flaticon.com/512/1670/1670444.png",
+                dailyWage = 550.0.toString(),
+                hourlyWage = 27.0.toString(),
+                dailyMinWage = null,
+                hourlyMinWage = null
             ),
             WorkerCategory(
-                id = "2",
+                id = "6480a0b42017d2a3619674fc",
                 title = "Electrician",
                 skill = "Electrical Work",
-                imageUrl = "https://example.com/electrician.jpg",
-                dailyMinWage = 60.0f,
-                hourlyMinWage = 12.0f,
-                dailyWage = "60 USD",
-                hourlyWage = "12 USD/h"
+                imageUrl = "https://cdn-icons-png.flaticon.com/512/1670/1670444.png",
+                dailyWage = 800.0.toString(),
+                hourlyWage = 45.0.toString(),
+                dailyMinWage = null,
+                hourlyMinWage = null
+            ),
+            WorkerCategory(
+                id = "6480a0882017d2a3619674fb",
+                title = "Gardener",
+                skill = "Gardening",
+                imageUrl = "https://cdn-icons-png.flaticon.com/512/1670/1670444.png",
+                dailyWage = 600.0.toString(),
+                hourlyWage = 30.0.toString(),
+                hourlyMinWage = null,
+                dailyMinWage = null
+            ),
+            WorkerCategory(
+                id = "6480a0882017d2a3619674fc",
+                title = "Security Guard",
+                skill = "Security",
+                imageUrl = "https://cdn-icons-png.flaticon.com/512/1670/1670444.png",
+                dailyWage = 700.0.toString(),
+                hourlyWage = 35.0.toString(),
+                hourlyMinWage = null,
+                dailyMinWage = null
             )
         ),
         openToWork = true,
-        userId = "9876543210",
-        profileImageUrl = "https://example.com/profile.jpg",
-        ratingAverage = 4.5f,
-        ratingCount = 100,
+        userId = "64aac73da1ba9b10fb30d556",
+        profileImageUrl = "http://res.cloudinary.com/doazsqomm/image/upload/v1688913787/main/profilePicture/64aac73da1ba9b10fb30d556.png.jpg",
+        ratingAverage = 4f,
+        ratingCount = 1,
         localAddress = LocalAddress(
-            id = "abcd1234",
-            title = "Home",
-            completeAddress = "123 Main Street",
-            floor = "2nd Floor",
-            landmark = "Central Park",
-            place = "New York",
-            subLocality = "Manhattan",
-            city = "New York City",
-            state = "New York",
-            country = "USA",
-            pin = "12345",
-            location = listOf(40.7128, -74.0060)
+            id = "649b04e338ee43f6bca5ba0c",
+            title = "Work",
+            completeAddress = "Parakkattil House",
+            floor = "",
+            landmark = "",
+            place = "Shastri Nagar",
+            subLocality = "Maradu",
+            city = "Kochi",
+            state = "Kerala",
+            country = "India",
+            pin = "682304",
+            location = listOf(10.7867, 76.6548)
         ),
-        isFavourite = false,
-        primaryCategoryId = "1",
-        distance = 5.3
+        isFavourite = true,
+        primaryCategoryId = "6480a0882017d2a3619674fa",
+        distance = 0.8807849916403581
     )
 
     override suspend fun getSearchedCategoriesPaged(
@@ -225,7 +246,8 @@ class WorkerRepositoryImpl(
                 pageSize = Constants.DEFAULT_PAGINATION_SIZE
             )
             if (response.successful) {
-                Resource.Success(data = listOf(worker, worker, worker, worker))
+                Log.d("Hello", "getFavourites: $response")
+                Resource.Success(data = response.data?.map { it.toWorker() })
             } else {
                 response.message?.let { message ->
                     Resource.Error(UiText.DynamicString(message))
@@ -281,7 +303,7 @@ class WorkerRepositoryImpl(
         return try {
             val response = api.getWorkerDetails(workerId)
             if (response.successful) {
-                Resource.Success(data = worker)
+                Resource.Success(data = response.data?.toWorker())
             } else {
                 response.message?.let { message ->
                     Resource.Error(UiText.DynamicString(message))

@@ -4,6 +4,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalOverscrollConfiguration
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -258,49 +259,42 @@ fun WorkerProfileScreen(
                     }
                 }
                 item(span = { GridItemSpan(3) }) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth(.7f)
-                            .padding(
-                                start = SizeMedium,
-                                end = SizeMedium,
-                                top = SizeLarge,
-                                bottom = SizeMedium
-                            ),
-                        horizontalArrangement = Arrangement.SpaceEvenly,
-                        verticalAlignment = Alignment.CenterVertically
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.Center
                     ) {
-                        RatingAndRatingCountVertical(
-                            modifier = Modifier.clickable {
-                                onNavigate(Screen.ReviewAndRatingScreen.route)
-                            },
-                            rating = "4.5",
-                            ratingCount = 123
-                        )
-                        Spacer(modifier = Modifier.width(SizeMedium))
-                        Divider(
+                        Row(
                             modifier = Modifier
-                                .height(50.dp)
-                                .width(SmallStrokeThickness),
-                            color = MaterialTheme.colorScheme.outline
-                        )
-                        Spacer(modifier = Modifier.width(SizeMedium))
-                        LocalAddressDisplayLarge(
-                            localAddress = LocalAddress(
-                                id = "1",
-                                title = "Home",
-                                completeAddress = "123 Main Street",
-                                floor = "2nd Floor",
-                                landmark = "Near Central Park",
-                                place = "ABC Apartment (Pending)",
-                                subLocality = "Example Suburb",
-                                city = "New York City",
-                                state = "New York",
-                                country = "United States",
-                                pin = "12345",
-                                location = listOf(40.7128, -74.0060)
+                                .fillMaxWidth(.7f)
+                                .padding(
+                                    start = SizeMedium,
+                                    end = SizeMedium,
+                                    top = SizeLarge,
+                                    bottom = SizeMedium
+                                ),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RatingAndRatingCountVertical(
+                                modifier = Modifier.clickable {
+                                    onNavigate(Screen.ReviewAndRatingScreen.route)
+                                },
+                                rating = state.worker?.ratingAverage.toString(),
+                                ratingCount = state.worker?.ratingCount ?: 0
                             )
-                        )
+                            Spacer(modifier = Modifier.width(SizeMedium))
+                            Divider(
+                                modifier = Modifier
+                                    .height(50.dp)
+                                    .width(SmallStrokeThickness),
+                                color = MaterialTheme.colorScheme.outline
+                            )
+                            Spacer(modifier = Modifier.width(SizeMedium))
+                            LocalAddressDisplayLarge(
+                                modifier = Modifier.weight(1f),
+                                localAddress = state.worker?.localAddress
+                            )
+                        }
                     }
                 }
                 item(span = { GridItemSpan(3) }) {

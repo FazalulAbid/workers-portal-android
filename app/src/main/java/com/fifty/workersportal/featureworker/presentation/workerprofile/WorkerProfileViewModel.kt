@@ -67,7 +67,7 @@ class WorkerProfileViewModel @Inject constructor(
                 state.value.worker?.let { worker ->
                     toggleFavouriteWorker(
                         worker.workerId,
-                        _state.value.worker?.isFavourite == true
+                        _state.value.worker?.isFavourite != true
                     )
                 }
             }

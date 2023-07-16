@@ -1,29 +1,21 @@
 package com.fifty.workersportal.core.util
 
-import java.util.Calendar
-import java.util.Date
+import java.time.Instant
+import java.time.LocalDate
+import java.time.Period
+import java.time.ZoneId
+import java.time.temporal.ChronoUnit
+import kotlin.time.Duration.Companion.days
+
 
 fun Long.toDaysAgo(): String {
-    val currentDate = Calendar.getInstance().time
-    val timestampDate = Date(this)
-    val diff = currentDate.time - timestampDate.time
-
-    return when (val daysAgo = diff / (24 * 60 * 60 * 1000)) {
-        1L -> "Today"
-        2L -> "Yesterday"
-        else -> "$daysAgo days ago"
+    val startDate = LocalDate.now()
+    val endDate = Instant.ofEpochMilli(this).atZone(ZoneId.systemDefault()).toLocalDate()
+    val period = Period.between(endDate, startDate)
+    val days = period.days
+    return when (period.days) {
+        0 -> "Today"
+        1 -> "Yesterday"
+        else -> "$days days ago"
     }
 }
-
-//@RequiresApi(Build.VERSION_CODES.O)
-//fun Long.toDaysAgo(): String {
-//    val now = LocalDate.now()
-//    val timestamp = Instant.ofEpochMilli(this).atZone(ZoneId.systemDefault()).toLocalDate()
-//    val daysAgo = now.toEpochDay() - timestamp.toEpochDay()
-//
-//    return when {
-//        daysAgo == 1L -> "$daysAgo day ago"
-//        daysAgo > 1L -> "$daysAgo days ago"
-//        else -> "Today"
-//    }
-//}
