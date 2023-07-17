@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">FixItNow</string>
+    <string name="google_cloud_server_client_id" translatable="false">931831824711-fht9ce88n5o09spi4qencp2vq2njfhgj.apps.googleusercontent.com</string>
     <string name="login_screen_banner">Login screen banner</string>
     <string name="kerala_s_1_workers_hiring_and_posting_app">Kerala\'s #1 Workers Hiring and Posting App</string>
     <string name="login_or_sign_up">Login or sign up</string>
@@ -185,5 +186,6 @@
     <string name="choose_a_date">Choose a date</string>
     <string name="worker_location_not_available">Worker location not available</string>
     <string name="worker_date_conflict_message">Worker is not available on the selected date</string>
+    <string name="work_history">Work History</string>
 
 </resources>

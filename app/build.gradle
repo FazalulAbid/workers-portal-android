@@ -8,11 +8,11 @@ plugins {
 }
 
 android {
-    namespace 'com.fifty.workersportal'
+    namespace 'com.fifty.fixitnow'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.fifty.workersportal"
+        applicationId "com.fifty.fixitnow"
         minSdk 26
         targetSdk 33
         versionCode 1
@@ -136,4 +136,7 @@ dependencies {
 
     //uCrop
     implementation 'com.github.yalantis:ucrop:2.2.6'
+
+    // Google authentication
+    implementation 'com.google.android.gms:play-services-auth:20.6.0'
 }
