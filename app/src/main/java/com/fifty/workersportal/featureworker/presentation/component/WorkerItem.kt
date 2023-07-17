@@ -57,7 +57,7 @@ fun WorkerItem(
             }
     ) {
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .border(
                     width = SmallStrokeThickness,
@@ -135,7 +135,7 @@ fun WorkerItem(
                             modifier = Modifier.size(SizeMedium),
                             painter = painterResource(id = R.drawable.ic_distance),
                             contentDescription = "",
-                            tint = MaterialTheme.colorScheme.primary
+                            tint = MaterialTheme.colorScheme.secondary
                         )
                         Spacer(modifier = Modifier.width(SizeExtraSmall))
                         Text(

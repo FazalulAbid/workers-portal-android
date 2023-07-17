@@ -1,18 +1,25 @@
 package com.fifty.workersportal.featureuser.presentation.userdashboard
 
 import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fifty.workersportal.core.domain.usecase.GetOwnUserIdUseCase
 import com.fifty.workersportal.core.domain.util.Session
+import com.fifty.workersportal.core.presentation.PagingState
 import com.fifty.workersportal.core.presentation.util.UiEvent
+import com.fifty.workersportal.core.util.DefaultPaginator
+import com.fifty.workersportal.core.util.FavouriteToggle
 import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.Screen
 import com.fifty.workersportal.featurelocation.domain.usecase.GetLocalAddressUseCase
 import com.fifty.workersportal.featureuser.domain.usecase.GetDashboardBannersUseCase
 import com.fifty.workersportal.featureworker.domain.model.Category
+import com.fifty.workersportal.featureworker.domain.model.Worker
+import com.fifty.workersportal.featureworker.domain.usecase.GetSearchedSortedAndFilteredWorkersUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.GetSuggestedCategoriesUseCase
 import com.fifty.workersportal.featureworker.domain.usecase.ToggleFavouriteWorkerUseCase
 import com.fifty.workersportal.featureworkproposal.presentation.workproposal.WorkProposalEvent
@@ -24,10 +31,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UserDashboardViewModel @Inject constructor(
-    private val getOwnUserIdUseCase: GetOwnUserIdUseCase,
     private val getDashboardBannersUseCase: GetDashboardBannersUseCase,
     private val getCategoriesUseCase: GetSuggestedCategoriesUseCase,
-    private val toggleFavouriteWorkerUseCase: ToggleFavouriteWorkerUseCase
+    private val toggleFavouriteWorkerUseCase: ToggleFavouriteWorkerUseCase,
+    private val favouriteToggle: FavouriteToggle,
+    private val getSearchedSortedAndFilteredWorkersUseCase: GetSearchedSortedAndFilteredWorkersUseCase
 ) : ViewModel() {
 
     val visiblePermissionDialogQueue = mutableStateListOf<String>()
@@ -41,18 +49,49 @@ class UserDashboardViewModel @Inject constructor(
     private val _suggestedCategoriesState = mutableStateOf(SuggestedCategoriesState())
     val suggestedCategoriesState: State<SuggestedCategoriesState> = _suggestedCategoriesState
 
+    var pagingState by mutableStateOf(PagingState<Worker>())
+
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
+
+    private val paginator = DefaultPaginator(
+        initialKey = pagingState.page,
+        onLoadUpdated = {
+            pagingState = pagingState.copy(isLoading = it)
+        },
+        onRequest = { nextPage ->
+            getSearchedSortedAndFilteredWorkersUseCase(
+                page = nextPage,
+                query = "",
+                categoryId = null
+            )
+        },
+        getNextKey = {
+            pagingState.page + 1
+        },
+        onError = {
+            pagingState = pagingState.copy(error = it)
+            _eventFlow.emit(UiEvent.MakeToast(it))
+        },
+        onSuccess = { items, newKey ->
+            pagingState = pagingState.copy(
+                items = pagingState.items + items,
+                page = newKey,
+                endReached = items.isEmpty()
+            )
+        }
+    )
 
     init {
         getBanners()
         getSuggestedCategories()
+        loadNextWorkers()
     }
 
     fun onEvent(event: UserDashboardEvent) {
         when (event) {
             is UserDashboardEvent.ToggleFavouriteWorker -> {
-                toggleFavouriteWorker(event.value)
+                toggleFavouriteWorker(event.workerId)
             }
 
             is UserDashboardEvent.SelectWorkerCategory -> {
@@ -86,17 +125,20 @@ class UserDashboardViewModel @Inject constructor(
         }
     }
 
-    private fun toggleFavouriteWorker(value: Boolean) {
+    private fun toggleFavouriteWorker(workerId: String) {
         viewModelScope.launch {
-            when (toggleFavouriteWorkerUseCase("648c4a6a9843bfdb80fb4e90", value)) {
-                is Resource.Success -> {
-
+            favouriteToggle.toggleFavourite(
+                workers = pagingState.items,
+                workerId = workerId,
+                onRequest = { isFavourite ->
+                    toggleFavouriteWorkerUseCase(userId = workerId, isFavourite = isFavourite)
+                },
+                onStateUpdated = { workers ->
+                    pagingState = pagingState.copy(
+                        items = workers
+                    )
                 }
-
-                is Resource.Error -> {
-
-                }
-            }
+            )
         }
     }
 
@@ -132,5 +174,15 @@ class UserDashboardViewModel @Inject constructor(
         _state.value = state.value.copy(
             selectedLocalAddress = Session.selectedAddress.value
         )
+    }
+
+    fun loadNextWorkers(resetPaging: Boolean = false) {
+        if (resetPaging) {
+            paginator.reset()
+            pagingState = PagingState()
+        }
+        viewModelScope.launch {
+            paginator.loadNextItems()
+        }
     }
 }

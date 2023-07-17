@@ -14,5 +14,5 @@ interface WorkProposalApiService {
     @POST("proposal/add-proposal")
     suspend fun sendWorkProposal(
         @Body workProposalRequest: SendWorkProposalRequest
-    ): BasicApiResponse<WorkProposalDto>
+    ): Response<BasicApiResponse<WorkProposalDto>>
 }

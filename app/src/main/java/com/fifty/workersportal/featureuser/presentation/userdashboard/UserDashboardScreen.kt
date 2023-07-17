@@ -12,6 +12,7 @@ import androidx.compose.foundation.LocalOverscrollConfiguration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,6 +21,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -60,7 +62,9 @@ import com.fifty.workersportal.featureuser.presentation.component.DashboardGreet
 import com.fifty.workersportal.featureuser.presentation.component.MostBookedServicesItem
 import com.fifty.workersportal.featureuser.presentation.component.SearchWorkerButton
 import com.fifty.workersportal.featureuser.presentation.component.SuggestedCategoryItem
+import com.fifty.workersportal.featureworker.presentation.component.WorkerItem
 import com.fifty.workersportal.featureworker.presentation.component.WorkerListItem
+import com.fifty.workersportal.featureworker.presentation.searchworker.SearchWorkerEvent
 import com.fifty.workersportal.featureworkproposal.presentation.workproposal.WorkProposalEvent
 import com.fifty.workersportal.featureworkproposal.presentation.workproposal.WorkProposalViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -82,6 +86,7 @@ fun UserDashboardScreen(
     userDashboardViewModel: UserDashboardViewModel = hiltViewModel(),
     workProposalViewModel: WorkProposalViewModel
 ) {
+    val pagingState = userDashboardViewModel.pagingState
     val state = userDashboardViewModel.state.value
     val context = LocalContext.current
     val calenderState = rememberUseCaseState()
@@ -137,7 +142,9 @@ fun UserDashboardScreen(
         CompositionLocalProvider(
             LocalOverscrollConfiguration provides null
         ) {
-            LazyColumn {
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(SizeMedium)
+            ) {
                 item {
                     Column(
                         modifier = Modifier.padding(SizeMedium)
@@ -178,19 +185,16 @@ fun UserDashboardScreen(
                 }
                 item {
                     Column {
-                        Spacer(modifier = Modifier.height(SizeSmall))
                         AutoSlidingCarousal(
                             banners = state.banners,
                             imageLoader = imageLoader
                         )
-                        Spacer(modifier = Modifier.height(SizeSmall))
                     }
                 }
                 item {
                     Column(Modifier.padding(horizontal = SizeMedium)) {
                         SecondaryHeader(
                             text = stringResource(R.string.suggested_categories),
-                            modifier = Modifier.padding(top = SizeMedium, bottom = SizeSmall),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold,
                             moreOption = true,
@@ -225,7 +229,7 @@ fun UserDashboardScreen(
                     Column(Modifier.padding(horizontal = SizeMedium)) {
                         SecondaryHeader(
                             text = stringResource(R.string.most_booked_services),
-                            modifier = Modifier.padding(top = SizeMedium, bottom = SizeSmall),
+                            modifier = Modifier.padding(bottom = SizeSmall),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold,
                         )
@@ -242,10 +246,15 @@ fun UserDashboardScreen(
                             items(10) {
                                 MostBookedServicesItem(
                                     onClick = {
-                                        Toast.makeText(context, "OnClick", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(context, "OnClick", Toast.LENGTH_SHORT)
+                                            .show()
                                     },
-                                    onFavouriteClick =  {
-                                        Toast.makeText(context, "OnFavouriteClick", Toast.LENGTH_SHORT).show()
+                                    onFavouriteClick = {
+                                        Toast.makeText(
+                                            context,
+                                            "OnFavouriteClick",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
                                     }
                                 )
                             }
@@ -258,22 +267,45 @@ fun UserDashboardScreen(
                     Column(Modifier.padding(horizontal = SizeMedium)) {
                         SecondaryHeader(
                             text = stringResource(R.string.explore_more),
-                            modifier = Modifier.padding(top = SizeMedium, bottom = SizeSmall),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold,
                         )
                     }
                 }
-                items(10) {
-//                    WorkerListItem(
-//                        isFavourite = userDashboardViewModel._isFavourite.value,
-//                        lottieComposition = favouriteLottieComposition,
-//                        onFavouriteClick = {
-//                            userDashboardViewModel._isFavourite.value =
-//                                !userDashboardViewModel._isFavourite.value
-//                            //viewModel.onEvent(UserDashboardEvent.ToggleFavouriteWorker(it))
-//                        }
-//                    )
+
+                items(pagingState.items.size) { index ->
+                    val worker = pagingState.items[index]
+                    if (index >= pagingState.items.size - 1 &&
+                        !pagingState.endReached &&
+                        !pagingState.isLoading
+                    ) {
+                        userDashboardViewModel.loadNextWorkers()
+                    }
+                    WorkerItem(
+                        modifier = Modifier.padding(horizontal = SizeMedium),
+                        worker = worker,
+                        imageLoader = imageLoader,
+                        onFavouriteClick = {
+                            userDashboardViewModel.onEvent(
+                                UserDashboardEvent.ToggleFavouriteWorker(worker.workerId)
+                            )
+                        },
+                        onClick = {
+                            onNavigate(Screen.WorkerProfileScreen.route + "?userId=${worker.workerId}")
+                        }
+                    )
+                }
+                item {
+                    if (pagingState.isLoading) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(SizeMedium),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
+                    }
                 }
             }
         }

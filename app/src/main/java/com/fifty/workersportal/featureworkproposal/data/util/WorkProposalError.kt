@@ -6,6 +6,6 @@ sealed class WorkProposalError : Error() {
     object InvalidWorkCategory : WorkProposalError()
     object InvalidWorkDescription : WorkProposalError()
     object InvalidWage : WorkProposalError()
-    object WorkConflict : WorkProposalError()
+    object WorkerDateConflict : WorkProposalError()
     object InvalidWorkAddress : WorkProposalError()
 }

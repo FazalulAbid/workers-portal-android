@@ -25,6 +25,7 @@ import com.fifty.workersportal.core.presentation.ui.theme.SizeExtraSmall
 import com.fifty.workersportal.core.presentation.ui.theme.SizeLarge
 import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.ui.theme.SizeSmall
+import com.fifty.workersportal.featurelocation.domain.model.toDisplayAddress
 
 @Composable
 fun RatingAndRatingCountHorizontal(
@@ -66,6 +67,24 @@ fun RatingAndRatingCountHorizontal(
                 text = "(${ratingCount}) Ratings",
                 style = MaterialTheme.typography.bodyMedium.copy(
                     fontWeight = FontWeight.Medium,
+                    color = MaterialTheme.colorScheme.onSurface
+                ),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+    } else {
+        Row {
+            Icon(
+                modifier = Modifier.size(SizeMedium),
+                painter = painterResource(id = R.drawable.ic_rating_star_filled),
+                contentDescription = "",
+                tint = DarkGreenColor
+            )
+            Spacer(modifier = Modifier.width(SizeExtraSmall))
+            Text(
+                text = stringResource(id = R.string.no_ratings),
+                style = MaterialTheme.typography.bodyMedium.copy(
                     color = MaterialTheme.colorScheme.onSurface
                 ),
                 maxLines = 1,

@@ -2,9 +2,8 @@ package com.fifty.workersportal.featureworkproposal.data.repository
 
 import coil.network.HttpException
 import com.fifty.workersportal.R
-import com.fifty.workersportal.core.domain.util.Session
+import com.fifty.workersportal.core.domain.util.HttpError
 import com.fifty.workersportal.core.util.Resource
-import com.fifty.workersportal.core.util.SimpleResource
 import com.fifty.workersportal.core.util.UiText
 import com.fifty.workersportal.featureworkproposal.data.remote.WorkProposalApiService
 import com.fifty.workersportal.featureworkproposal.data.remote.request.SendWorkProposalRequest
@@ -19,12 +18,20 @@ class WorkProposalRepositoryImpl(
     override suspend fun sendWorkProposal(workProposalRequest: SendWorkProposalRequest): Resource<WorkProposal> {
         return try {
             val response = api.sendWorkProposal(workProposalRequest)
-            if (response.successful) {
-                Resource.Success(data = response.data?.toWorkProposal())
+            if (response.code() == 409) {
+                Resource.Error(
+                    errorCode = HttpError.WORKER_DATE_CONFLICT,
+                    uiText = UiText.StringResource(R.string.work_proposals)
+                )
             } else {
-                response.message?.let { message ->
-                    Resource.Error(UiText.DynamicString(message))
-                } ?: Resource.Error(UiText.unknownError())
+                val responseData = response.body()
+                if (responseData?.successful == true) {
+                    Resource.Success(data = responseData.data?.toWorkProposal())
+                } else {
+                    responseData?.message?.let { message ->
+                        Resource.Error(UiText.DynamicString(message))
+                    } ?: Resource.Error(UiText.unknownError())
+                }
             }
         } catch (e: IOException) {
             Resource.Error(

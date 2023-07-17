@@ -54,9 +54,6 @@ import com.fifty.workersportal.core.presentation.ui.theme.SizeMedium
 import com.fifty.workersportal.core.presentation.util.UiEvent
 import com.fifty.workersportal.core.presentation.util.makeToast
 import com.fifty.workersportal.core.util.toDate
-import com.fifty.workersportal.featurelocation.domain.model.LocalAddress
-import com.fifty.workersportal.featureworker.domain.model.Worker
-import com.fifty.workersportal.featureworker.domain.model.WorkerCategory
 import com.fifty.workersportal.featureworker.presentation.component.ANIMATION_DURATION
 import com.fifty.workersportal.featureworkproposal.data.util.WorkProposalError
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
@@ -143,6 +140,10 @@ fun WorkProposalScreen(
     LaunchedEffect(key1 = true) {
         viewModel.errorFlow.collectLatest { error ->
             when (error) {
+                WorkProposalError.WorkerDateConflict -> {
+                    makeToast(R.string.worker_date_conflict_message, context)
+                }
+
                 WorkProposalError.InvalidDate -> {
                     makeToast("Choose a date for work proposal", context)
                 }
@@ -167,7 +168,7 @@ fun WorkProposalScreen(
                     makeToast("Select a worker", context)
                 }
 
-                WorkProposalError.WorkConflict -> {
+                WorkProposalError.WorkerDateConflict -> {
                     makeToast(
                         "Selected worker is not available on selected date, please choose another worker",
                         context

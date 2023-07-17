@@ -1,17 +1,15 @@
 package com.fifty.workersportal.featureworkproposal.presentation.workproposal
 
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fifty.workersportal.core.domain.state.StandardTextFieldState
+import com.fifty.workersportal.core.domain.util.HttpError
 import com.fifty.workersportal.core.domain.util.Session
 import com.fifty.workersportal.core.presentation.util.UiEvent
-import com.fifty.workersportal.core.util.Event
 import com.fifty.workersportal.core.util.Resource
 import com.fifty.workersportal.core.util.UiText
-import com.fifty.workersportal.featureworker.domain.model.Category
 import com.fifty.workersportal.featureworker.domain.model.Worker
 import com.fifty.workersportal.featureworker.domain.model.WorkerCategory
 import com.fifty.workersportal.featureworkproposal.data.util.WorkProposalError
@@ -20,9 +18,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
-import java.io.PipedReader
 import java.time.LocalDate
-import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -114,7 +110,6 @@ class WorkProposalViewModel @Inject constructor(
                 _workCategory.value?.dailyWage?.toFloat()
             } else _workCategory.value?.hourlyWage?.toFloat()
         )
-        Log.d("Hello", "sendWorkProposal $sendWorkProposalResult")
         if (sendWorkProposalResult.workDateError != null) {
             _errorFlow.emit(
                 sendWorkProposalResult.workDateError
@@ -146,7 +141,11 @@ class WorkProposalViewModel @Inject constructor(
                 }
 
                 is Resource.Error -> {
-                    _eventFlow.emit(UiEvent.MakeToast(result.uiText ?: UiText.unknownError()))
+                    if (result.errorCode == HttpError.WORKER_DATE_CONFLICT) {
+                        _errorFlow.emit(WorkProposalError.WorkerDateConflict)
+                    } else {
+                        _eventFlow.emit(UiEvent.MakeToast(result.uiText ?: UiText.unknownError()))
+                    }
                 }
 
                 null -> {

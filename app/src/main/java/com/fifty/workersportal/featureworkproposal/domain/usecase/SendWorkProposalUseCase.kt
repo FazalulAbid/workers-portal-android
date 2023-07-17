@@ -1,6 +1,5 @@
 package com.fifty.workersportal.featureworkproposal.domain.usecase
 
-import android.util.Log
 import com.fifty.workersportal.core.util.toMillis
 import com.fifty.workersportal.featurelocation.domain.model.LocalAddress
 import com.fifty.workersportal.featureworkproposal.data.remote.request.SendWorkProposalRequest
@@ -49,7 +48,6 @@ class SendWorkProposalUseCase(
                 workWageError = wageError
             )
         } else {
-            Log.d("Hello", "invoke: Send worker proposal use case worked")
             val request = SendWorkProposalRequest(
                 workerId = workerId!!,
                 chosenCategoryId = workCategoryId!!,
