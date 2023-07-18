@@ -21,6 +21,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -129,10 +130,14 @@ class UpdateUserProfileViewModel @Inject constructor(
                     text = profile.email
                 )
                 _genderState.value =
-                    profile.gender.replaceFirstChar {
-                        if (it.isLowerCase())
-                            it.titlecase(java.util.Locale.ROOT)
-                        else it.toString()
+                    if (profile.gender.trim().isBlank()) {
+                        Constants.genderOptions.first().lowercase()
+                    } else {
+                        profile.gender.replaceFirstChar {
+                            if (it.isLowerCase())
+                                it.titlecase(Locale.getDefault())
+                            else it.toString()
+                        }
                     }
                 _ageState.value = ageState.value.copy(
                     text = profile.age.toString()

@@ -302,10 +302,14 @@ class RegisterAsWorkerViewModel @Inject constructor(
                     text = profile.bio
                 )
                 _genderState.value =
-                    profile.gender.replaceFirstChar {
-                        if (it.isLowerCase())
-                            it.titlecase(java.util.Locale.ROOT)
-                        else it.toString()
+                    if (profile.gender.trim().isBlank()) {
+                        genderOptions.first().lowercase()
+                    } else {
+                        profile.gender.replaceFirstChar {
+                            if (it.isLowerCase())
+                                it.titlecase(java.util.Locale.ROOT)
+                            else it.toString()
+                        }
                     }
                 _ageState.value = ageState.value.copy(
                     text = profile.age.toString()
