@@ -37,7 +37,7 @@ class SendWorkProposalUseCase(
 
         if (dateError != null || workerError != null ||
             workerCategoryError != null || workDescriptionError != null ||
-            wageError != null
+            wageError != null || workAddressError != null
         ) {
             return WorkProposalResult(
                 workDateError = dateError,

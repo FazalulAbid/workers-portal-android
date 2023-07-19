@@ -49,7 +49,7 @@ fun LocalAddressDisplayLarge(
                     localAddress.place ?: localAddress.subLocality ?: localAddress.city
                     ?: localAddress.state ?: localAddress.country ?: ""
                 } else {
-                    stringResource(R.string.worker_location_not_available)
+                    stringResource(R.string.not_available)
                 },
                 style = MaterialTheme.typography.bodyLarge.copy(
                     fontWeight = FontWeight.SemiBold,

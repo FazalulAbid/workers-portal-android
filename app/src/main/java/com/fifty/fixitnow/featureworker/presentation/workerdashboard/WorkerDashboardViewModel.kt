@@ -45,9 +45,6 @@ class WorkerDashboardViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             getUserDetails(getOwnUserIdUseCase())
-
-            // temperery
-            getWorkProposalsForWorkerUseCase(0)
         }
         getFakeData()
     }
@@ -75,6 +72,12 @@ class WorkerDashboardViewModel @Inject constructor(
             WorkerDashboardEvent.UpdateUserDetails -> {
                 viewModelScope.launch {
                     getUserDetails(getOwnUserIdUseCase())
+                }
+            }
+
+            WorkerDashboardEvent.LoadWorkProposal -> {
+                viewModelScope.launch {
+                    getWorkProposalsForWorkerUseCase(0)
                 }
             }
         }

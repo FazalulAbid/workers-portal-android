@@ -4,4 +4,5 @@ sealed class WorkerDashboardEvent {
     data class ToggleOpenToWork(val value: Boolean) : WorkerDashboardEvent()
     object UpdateSelectedAddress : WorkerDashboardEvent()
     object UpdateUserDetails : WorkerDashboardEvent()
+    object LoadWorkProposal : WorkerDashboardEvent()
 }

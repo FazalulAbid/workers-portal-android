@@ -274,7 +274,7 @@ fun WorkerProfileScreen(
                     ) {
                         Row(
                             modifier = Modifier
-                                .fillMaxWidth(.7f)
+                                .fillMaxWidth(.9f)
                                 .padding(
                                     start = SizeMedium,
                                     end = SizeMedium,
@@ -300,7 +300,6 @@ fun WorkerProfileScreen(
                             )
                             Spacer(modifier = Modifier.width(SizeMedium))
                             LocalAddressDisplayLarge(
-                                modifier = Modifier.weight(1f),
                                 localAddress = state.worker?.localAddress
                             )
                         }

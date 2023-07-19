@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -31,6 +32,7 @@ fun SecondaryHeader(
     fontWeight: FontWeight = FontWeight.Medium,
     maxLines: Int = 1,
     moreOption: Boolean = false,
+    moreOptionPainter: Painter = painterResource(id = R.drawable.ic_alt_arrow_forward),
     moreOptionText: String = "",
     onMoreOptionClick: () -> Unit = {}
 ) {
@@ -66,7 +68,7 @@ fun SecondaryHeader(
                 )
                 Spacer(modifier = Modifier.width(SizeSmall))
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_alt_arrow_forward),
+                    painter = moreOptionPainter,
                     contentDescription = stringResource(id = R.string.show_more),
                     tint = MaterialTheme.colorScheme.primary
                 )

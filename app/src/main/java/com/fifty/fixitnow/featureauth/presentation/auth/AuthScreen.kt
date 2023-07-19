@@ -1,12 +1,12 @@
 package com.fifty.fixitnow.featureauth.presentation.auth
 
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
@@ -106,6 +105,7 @@ fun AuthScreen(
             try {
                 val gsa = task?.getResult(ApiException::class.java)
                 if (gsa != null) {
+                    Log.d("Hello", "AuthScreen: ${gsa.idToken}")
                     viewModel.onEvent(
                         AuthEvent.OnGoogleSignIn(
                             gsa.email ?: "",

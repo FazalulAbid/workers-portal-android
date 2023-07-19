@@ -7,7 +7,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.navigation
 import com.fifty.fixitnow.core.util.NavigationParent
 import com.fifty.fixitnow.core.util.Screen
-import com.fifty.fixitnow.featureuser.presentation.testscreen.HistoryScreen
+import com.fifty.fixitnow.featurehistory.presentation.historyscreen.WorkHistoryScreen
 import com.google.accompanist.navigation.animation.composable
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -20,7 +20,7 @@ fun NavGraphBuilder.historyNavGraph(
         route = NavigationParent.History.route
     ) {
         composable(Screen.HistoryScreen.route) {
-            HistoryScreen()
+            WorkHistoryScreen()
         }
     }
 }

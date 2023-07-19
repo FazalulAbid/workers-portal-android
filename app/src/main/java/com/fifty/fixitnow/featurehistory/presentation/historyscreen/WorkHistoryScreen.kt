@@ -1,4 +1,4 @@
-package com.fifty.fixitnow.featureuser.presentation.testscreen
+package com.fifty.fixitnow.featurehistory.presentation.historyscreen
 
 import android.util.Range
 import androidx.compose.foundation.layout.Arrangement
@@ -16,14 +16,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.core.util.toRange
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.fifty.fixitnow.R
 import com.fifty.fixitnow.core.presentation.component.StandardAppBar
 import com.fifty.fixitnow.core.presentation.ui.theme.ScaffoldBottomPaddingValue
@@ -37,14 +36,16 @@ import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HistoryScreen() {
+fun WorkHistoryScreen(
+    viewModel: WorkHistoryViewModel = hiltViewModel()
+) {
     val calenderState = rememberUseCaseState()
     val timeBoundary = LocalDate.now().let { now -> now.minusYears(2)..now }
-    val selectedRange = remember {
-        val default =
-            LocalDate.now().minusYears(2).let { time -> time.plusDays(5)..time.plusDays(8) }
-        mutableStateOf(default.toRange())
-    }
+//    val selectedRange = remember {
+//        val default =
+//            LocalDate.now().minusYears(2).let { time -> time.plusDays(5)..time.plusDays(8) }
+//        mutableStateOf(default.toRange())
+//    }
 
     Surface(
         modifier = Modifier
@@ -76,7 +77,7 @@ fun HistoryScreen() {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = selectedRange.value.toString(),
+                    text = viewModel.selectedRange.value.toString(),
                     style = MaterialTheme.typography.titleMedium.copy(
                         color = MaterialTheme.colorScheme.onSurface,
                         fontWeight = FontWeight.Medium
@@ -106,9 +107,9 @@ fun HistoryScreen() {
             style = CalendarStyle.MONTH,
         ),
         selection = CalendarSelection.Period(
-            selectedRange = selectedRange.value
+            selectedRange = viewModel.selectedRange.value.toRange()
         ) { startDate, endDate ->
-            selectedRange.value = Range(startDate, endDate)
+            viewModel.onEvent(WorkHistoryEvent.ChangeSelectedRange(Range(startDate, endDate)))
         },
     )
 }
