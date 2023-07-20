@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -17,25 +16,29 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.fifty.fixitnow.R
-import com.fifty.fixitnow.core.presentation.component.HorizontalDivider
 import com.fifty.fixitnow.core.presentation.component.PrimaryButton
 import com.fifty.fixitnow.core.presentation.component.SecondaryHeader
-import com.fifty.fixitnow.core.presentation.ui.theme.LargeStrokeThickness
 import com.fifty.fixitnow.core.presentation.ui.theme.SizeLarge
 import com.fifty.fixitnow.core.presentation.ui.theme.SizeMedium
-import com.fifty.fixitnow.core.presentation.ui.theme.SizeSmall
+import com.fifty.fixitnow.core.presentation.ui.theme.SuccessDialogBoxWidth
+import com.fifty.fixitnow.featureworker.domain.model.Worker
+import com.fifty.fixitnow.featureworkproposal.domain.model.WorkProposal
 
 @Composable
 fun WorkProposalSentDialogContent(
     title: String,
+    worker: Worker,
+    workProposal: WorkProposal,
     buttonText: String,
     onButtonClick: () -> Unit = {}
 ) {
@@ -44,15 +47,15 @@ fun WorkProposalSentDialogContent(
     )
     Box(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(SizeLarge)
+            .width(SuccessDialogBoxWidth)
             .background(
-                MaterialTheme.colorScheme.surface,
-                MaterialTheme.shapes.medium
+                MaterialTheme.colorScheme.background,
+                MaterialTheme.shapes.large
             )
+            .padding(SizeLarge)
+
     ) {
         Column(
-            modifier = Modifier.padding(SizeMedium),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -61,73 +64,58 @@ fun WorkProposalSentDialogContent(
                 composition = doneLottieComposition
             )
             Spacer(modifier = Modifier.height(SizeMedium))
+
             SecondaryHeader(
                 text = title,
                 style = MaterialTheme.typography.titleMedium.copy(
                     textAlign = TextAlign.Center
                 ),
+                fontWeight = FontWeight.SemiBold,
                 maxLines = 2
             )
-            Spacer(modifier = Modifier.height(SizeSmall))
-            Column {
-                WorkProposalSentDialogDetailItem(
-                    headText = "Date",
-                    detailText = "10th June 2022, Monday"
-                )
-                HorizontalDivider(
-                    thickness = LargeStrokeThickness,
-                    color = MaterialTheme.colorScheme.background
-                )
-                WorkProposalSentDialogDetailItem(
-                    headText = "Date",
-                    detailText = "10th June 2022, Monday"
-                )
-                HorizontalDivider(
-                    thickness = LargeStrokeThickness,
-                    color = MaterialTheme.colorScheme.background
-                )
-                WorkProposalSentDialogDetailItem(
-                    headText = "Date",
-                    detailText = "10th June 2022, Monday"
-                )
-            }
             Spacer(modifier = Modifier.height(SizeMedium))
+            val styledText = buildAnnotatedString {
+                append("You have sent a proposal to ")
+                withStyle(
+                    SpanStyle(
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                ) {
+                    append("${worker.firstName} ${worker.lastName}")
+                }
+                append(" on ")
+                withStyle(
+                    SpanStyle(
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                ) {
+                    append(workProposal.formattedProposedDate)
+                    append(" ")
+                    append(
+                        if (workProposal.isFullDay) {
+                            "(Full Day)"
+                        } else {
+                            if (workProposal.isBeforeNoon) {
+                                "(Before Noon)"
+                            } else "(After Noon)"
+                        }
+                    )
+                }
+            }
+            Text(
+                text = styledText,
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    color = MaterialTheme.colorScheme.onSurface,
+                    textAlign = TextAlign.Center
+                )
+            )
+            Spacer(modifier = Modifier.height(SizeLarge))
             PrimaryButton(
                 modifier = Modifier.fillMaxWidth(),
                 text = buttonText, onClick = onButtonClick
             )
         }
-    }
-}
-
-@Composable
-fun WorkProposalSentDialogDetailItem(
-    modifier: Modifier = Modifier,
-    headText: String,
-    detailText: String
-) {
-    Row(
-        modifier.padding(SizeMedium),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text(
-            text = headText,
-            style = MaterialTheme.typography.bodyLarge.copy(
-                fontWeight = FontWeight.Normal,
-                color = MaterialTheme.colorScheme.onSurface
-            ),
-            maxLines = 2,
-            overflow = TextOverflow.Ellipsis
-        )
-        Spacer(modifier = Modifier.width(SizeMedium))
-        Text(
-            text = detailText,
-            style = MaterialTheme.typography.bodyLarge.copy(
-                fontWeight = FontWeight.Medium,
-                color = MaterialTheme.colorScheme.onBackground
-            ),
-            maxLines = 2,
-            overflow = TextOverflow.Ellipsis
-        )
     }
 }

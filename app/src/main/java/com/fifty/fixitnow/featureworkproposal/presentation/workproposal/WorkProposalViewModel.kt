@@ -140,7 +140,12 @@ class WorkProposalViewModel @Inject constructor(
         } else {
             when (val result = sendWorkProposalResult.result) {
                 is Resource.Success -> {
-                    _eventFlow.emit(UiEvent.SentWorkProposal)
+                    result.data?.let {
+                        _state.value = state.value.copy(
+                            workProposal = it
+                        )
+                        _eventFlow.emit(UiEvent.SentWorkProposal)
+                    }
                 }
 
                 is Resource.Error -> {

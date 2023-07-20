@@ -57,6 +57,7 @@ import com.fifty.fixitnow.core.presentation.ui.theme.MediumButtonHeight
 import com.fifty.fixitnow.core.presentation.ui.theme.SizeMedium
 import com.fifty.fixitnow.core.presentation.util.UiEvent
 import com.fifty.fixitnow.core.presentation.util.makeToast
+import com.fifty.fixitnow.core.util.Screen
 import com.fifty.fixitnow.core.util.toDate
 import com.fifty.fixitnow.featureworker.presentation.component.ANIMATION_DURATION
 import com.fifty.fixitnow.featureworkproposal.data.util.WorkProposalError
@@ -76,9 +77,11 @@ import java.util.Locale
 fun WorkProposalScreen(
     onNavigate: (String) -> Unit,
     onNavigateUp: () -> Unit,
+    popBackStackUpTo: (route: String, inclusive: Boolean) -> Unit,
     imageLoader: ImageLoader,
     viewModel: WorkProposalViewModel
 ) {
+    val state = viewModel.state.value
     val context = LocalContext.current
     val calenderState = rememberUseCaseState()
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -132,7 +135,7 @@ fun WorkProposalScreen(
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
-                UiEvent.SentWorkProposal -> {
+                is UiEvent.SentWorkProposal -> {
                     makeToast("Work proposal sent successfully", context)
                     viewModel.isWorkProposalSentDialogDisplayed.postValue(true)
                 }
@@ -410,17 +413,23 @@ fun WorkProposalScreen(
             ),
             onDismissRequest = {
                 viewModel.isWorkProposalSentDialogDisplayed.postValue(false)
-                onNavigateUp()
+                popBackStackUpTo(Screen.UserDashboardScreen.route, false)
             }
         ) {
-            WorkProposalSentDialogContent(
-                title = stringResource(R.string.work_proposal_sent),
-                buttonText = stringResource(R.string.go_to_dashboard),
-                onButtonClick = {
-                    viewModel.isWorkProposalSentDialogDisplayed.postValue(false)
-                    onNavigateUp()
+            state.workProposal?.let { workProposal ->
+                viewModel.workerState.value?.let { worker ->
+                    WorkProposalSentDialogContent(
+                        title = stringResource(R.string.work_proposal_sent),
+                        workProposal = workProposal,
+                        buttonText = stringResource(R.string.go_to_dashboard),
+                        worker = worker,
+                        onButtonClick = {
+                            viewModel.isWorkProposalSentDialogDisplayed.postValue(false)
+                            popBackStackUpTo(Screen.UserDashboardScreen.route, false)
+                        }
+                    )
                 }
-            )
+            }
         }
     }
 

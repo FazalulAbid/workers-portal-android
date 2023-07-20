@@ -29,6 +29,7 @@ class WorkProposalRepositoryImpl(
             } else {
                 val responseData = response.body()
                 if (responseData?.successful == true) {
+                    Log.d("Hello", "sendWorkProposal: ${response.body().toString()}")
                     Resource.Success(data = responseData.data?.toWorkProposal())
                 } else {
                     responseData?.message?.let { message ->

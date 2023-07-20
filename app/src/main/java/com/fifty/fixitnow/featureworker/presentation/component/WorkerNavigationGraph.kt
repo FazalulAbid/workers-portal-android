@@ -112,6 +112,7 @@ fun NavGraphBuilder.workerNavGraph(
         composable(Screen.WorkProposalScreen.route) {
             WorkProposalScreen(
                 onNavigate = navController::navigate,
+                popBackStackUpTo = navController::popBackStack,
                 onNavigateUp = navController::navigateUp,
                 imageLoader = imageLoader,
                 viewModel = workProposalViewModel
