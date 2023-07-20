@@ -2,6 +2,7 @@ package com.fifty.fixitnow.featureworkproposal.presentation.workproposal
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fifty.fixitnow.core.domain.state.StandardTextFieldState
@@ -25,6 +26,8 @@ import javax.inject.Inject
 class WorkProposalViewModel @Inject constructor(
     private val sendWorkProposalUseCase: SendWorkProposalUseCase
 ) : ViewModel() {
+
+    val isWorkProposalSentDialogDisplayed = MutableLiveData(false)
 
     private val _proposalDateState = mutableStateOf<LocalDate?>(null)
     val proposalDateState: State<LocalDate?> = _proposalDateState

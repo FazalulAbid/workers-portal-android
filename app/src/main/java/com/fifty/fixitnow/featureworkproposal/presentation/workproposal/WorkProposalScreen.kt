@@ -1,6 +1,7 @@
 package com.fifty.fixitnow.featureworkproposal.presentation.workproposal
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.tween
@@ -30,6 +31,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -43,6 +45,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.times
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import coil.ImageLoader
 import com.fifty.fixitnow.R
 import com.fifty.fixitnow.core.presentation.component.PrimaryButton
@@ -130,6 +134,7 @@ fun WorkProposalScreen(
             when (event) {
                 UiEvent.SentWorkProposal -> {
                     makeToast("Work proposal sent successfully", context)
+                    viewModel.isWorkProposalSentDialogDisplayed.postValue(true)
                 }
 
                 else -> Unit
@@ -386,6 +391,34 @@ fun WorkProposalScreen(
                 text = stringResource(R.string.send_proposal),
                 onClick = {
                     viewModel.onEvent(WorkProposalEvent.SendProposal)
+                }
+            )
+        }
+    }
+
+    val isWorkProposalSentDialogDisplayed by viewModel
+        .isWorkProposalSentDialogDisplayed
+        .observeAsState(false)
+
+    AnimatedVisibility(
+        visible = isWorkProposalSentDialogDisplayed
+    ) {
+        Dialog(
+            properties = DialogProperties(
+                dismissOnBackPress = false,
+                dismissOnClickOutside = false
+            ),
+            onDismissRequest = {
+                viewModel.isWorkProposalSentDialogDisplayed.postValue(false)
+                onNavigateUp()
+            }
+        ) {
+            WorkProposalSentDialogContent(
+                title = stringResource(R.string.work_proposal_sent),
+                buttonText = stringResource(R.string.go_to_dashboard),
+                onButtonClick = {
+                    viewModel.isWorkProposalSentDialogDisplayed.postValue(false)
+                    onNavigateUp()
                 }
             )
         }
