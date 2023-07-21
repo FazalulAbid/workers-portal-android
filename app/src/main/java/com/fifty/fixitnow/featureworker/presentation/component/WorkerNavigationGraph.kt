@@ -87,9 +87,14 @@ fun NavGraphBuilder.workerNavGraph(
             )
         }
         composable(
-            route = Screen.SearchWorkerScreen.route + "?categoryId={categoryId}",
+            route = Screen.SearchWorkerScreen.route + "?categoryId={categoryId}?availabilityDate={availabilityDate}",
             arguments = listOf(
                 navArgument(name = "categoryId") {
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = null
+                },
+                navArgument(name = "availabilityDate") {
                     type = NavType.StringType
                     nullable = true
                     defaultValue = null

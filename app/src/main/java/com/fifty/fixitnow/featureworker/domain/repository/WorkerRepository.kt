@@ -23,7 +23,10 @@ interface WorkerRepository {
         query: String,
         page: Int,
         pageSize: Int,
-        categoryId: String?
+        categoryId: String?,
+        availabilityCheckDate: Long?,
+        isFullDay: Boolean?,
+        isBeforeNoon: Boolean?
     ): Resource<List<Worker>>
 
     suspend fun getWorkerDetails(workerId: String): Resource<Worker>

@@ -56,6 +56,7 @@ import com.fifty.fixitnow.core.presentation.util.ToastExt
 import com.fifty.fixitnow.core.presentation.util.UiEvent
 import com.fifty.fixitnow.core.util.Screen
 import com.fifty.fixitnow.core.util.openAppSettings
+import com.fifty.fixitnow.core.util.toMillis
 import com.fifty.fixitnow.featureuser.presentation.component.AutoSlidingCarousal
 import com.fifty.fixitnow.featureuser.presentation.component.DashboardGreetingText
 import com.fifty.fixitnow.featureuser.presentation.component.MostBookedServicesItem
@@ -356,7 +357,11 @@ fun UserDashboardScreen(
         ),
         selection = CalendarSelection.Date { date ->
             workProposalViewModel.onEvent(WorkProposalEvent.InputProposalDate(date))
-            onNavigate(Screen.SearchWorkerScreen.route + "?categoryId=${userDashboardViewModel.selectedCategoryState.value?.id}")
+            onNavigate(
+                Screen.SearchWorkerScreen.route + "?categoryId=${userDashboardViewModel.selectedCategoryState.value?.id}?availabilityDate=${
+                    date.toMillis()
+                }"
+            )
         }
     )
 }

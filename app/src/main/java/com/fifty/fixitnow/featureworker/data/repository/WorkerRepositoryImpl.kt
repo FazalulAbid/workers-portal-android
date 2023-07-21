@@ -197,14 +197,21 @@ class WorkerRepositoryImpl(
         query: String,
         page: Int,
         pageSize: Int,
-        categoryId: String?
+        categoryId: String?,
+        availabilityCheckDate: Long?,
+        isFullDay: Boolean?,
+        isBeforeNoon: Boolean?
     ): Resource<List<Worker>> {
         return try {
+            Log.d("Hello", "getSearchedSortedAndFilteredWorkers: $availabilityCheckDate")
             val response = api.getSearchedSortedAndFilteredWorkers(
                 query = query,
                 page = page,
                 pageSize = pageSize,
-                category = categoryId
+                category = categoryId,
+                date = availabilityCheckDate,
+                isFullDay = isFullDay,
+                isBeforeNoon = isBeforeNoon
             )
             if (response.successful) {
                 Resource.Success(data = response.data?.map { it.toWorker() })

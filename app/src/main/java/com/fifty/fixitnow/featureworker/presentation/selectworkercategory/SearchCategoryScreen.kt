@@ -139,7 +139,7 @@ fun SelectWorkerCategoryScreen(
         ),
         selection = CalendarSelection.Date { date ->
             workProposalViewModel.onEvent(WorkProposalEvent.InputProposalDate(date))
-            onNavigate(Screen.SearchWorkerScreen.route + "?categoryId=${searchCategoryViewModel.selectedCategoryState.value?.id}")
+            onNavigate(Screen.SearchWorkerScreen.route + "?categoryId=${searchCategoryViewModel.selectedCategoryState.value?.id}?availabilityDate=${date}")
         }
     )
 }

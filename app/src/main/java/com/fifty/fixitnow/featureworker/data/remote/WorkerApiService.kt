@@ -26,7 +26,10 @@ interface WorkerApiService {
         @Query("page") page: Int,
         @Query("pageSize") pageSize: Int,
         @Query("query") query: String,
-        @Query("category") category: String?
+        @Query("category") category: String?,
+        @Query("date") date: Long?,
+        @Query("isFullDay") isFullDay: Boolean?,
+        @Query("isBeforeNoon") isBeforeNoon: Boolean?,
     ): BasicApiResponse<List<WorkerDto>>
 
     @GET("/api/worker/get-worker-details")
