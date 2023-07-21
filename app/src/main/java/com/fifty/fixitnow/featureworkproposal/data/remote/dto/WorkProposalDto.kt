@@ -1,5 +1,6 @@
 package com.fifty.fixitnow.featureworkproposal.data.remote.dto
 
+import com.fifty.fixitnow.core.util.toFormattedDateWithDay
 import com.fifty.fixitnow.featureworkproposal.domain.model.WorkProposal
 import com.google.gson.annotations.SerializedName
 
@@ -15,8 +16,8 @@ data class WorkProposalDto(
     val isAccepted: Boolean,
     val isRejected: Boolean,
     val status: Boolean,
-    val timestamp: Any,
-    val proposedDate: Any,
+    val timestamp: Long,
+    val proposedDate: Long,
     val workDescription: String,
     val proposedAddressId: String,
     val isUserDeleted: Boolean,
@@ -36,8 +37,8 @@ data class WorkProposalDto(
             isAccepted = isAccepted,
             isRejected = isRejected,
             status = status,
-            formattedDate = "Pending",
-            formattedProposedDate = "Pending",
+            formattedDate = timestamp.toFormattedDateWithDay(),
+            formattedProposedDate = proposedDate.toFormattedDateWithDay(),
             workDescription = workDescription,
             proposedAddressId = proposedAddressId,
             isUserDeleted = isUserDeleted,

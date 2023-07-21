@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -24,6 +25,7 @@ import com.fifty.fixitnow.R
 import com.fifty.fixitnow.core.presentation.component.StandardAppBar
 import com.fifty.fixitnow.core.presentation.ui.theme.ScaffoldBottomPaddingValue
 import com.fifty.fixitnow.core.presentation.ui.theme.SizeMedium
+import com.fifty.fixitnow.core.presentation.util.makeToast
 import com.fifty.fixitnow.core.util.Screen
 import com.fifty.fixitnow.featureworker.presentation.component.WorkerItem
 
@@ -34,6 +36,7 @@ fun FavoriteWorkersScreen(
     viewModel: FavouriteWorkersViewModel = hiltViewModel()
 ) {
     val pagingState = viewModel.pagingState
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         viewModel.onEvent(FavouriteWorkersEvent.LoadFavouriteWorkers)
@@ -72,7 +75,7 @@ fun FavoriteWorkersScreen(
                         !pagingState.endReached &&
                         !pagingState.isLoading
                     ) {
-                        // viewModel.loadNextWorkers()
+                        viewModel.loadNextWorkers()
                     }
                     WorkerItem(
                         worker = worker,
@@ -81,7 +84,14 @@ fun FavoriteWorkersScreen(
                             viewModel.onEvent(FavouriteWorkersEvent.ToggleFavouriteWorkers(worker.workerId))
                         },
                         onClick = {
-                            onNavigate(Screen.WorkerProfileScreen.route + "?userId=${worker.workerId}")
+                            if (worker.openToWork) {
+                                onNavigate(Screen.WorkerProfileScreen.route + "?userId=${worker.workerId}")
+                            } else {
+                                makeToast(
+                                    message = "${worker.firstName} ${worker.lastName} is not currently accepting works",
+                                    context = context
+                                )
+                            }
                         }
                     )
                 }

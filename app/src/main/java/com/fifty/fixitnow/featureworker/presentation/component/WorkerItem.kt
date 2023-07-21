@@ -167,6 +167,18 @@ fun WorkerItem(
                     )
                 }
             }
+            if (!worker.openToWork) {
+                Spacer(modifier = Modifier.height(SizeSmall))
+                Text(
+                    text = "*Currently not accepting works",
+                    style = MaterialTheme.typography.bodySmall.copy(
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.primary
+                    ),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
         }
     }
 }
