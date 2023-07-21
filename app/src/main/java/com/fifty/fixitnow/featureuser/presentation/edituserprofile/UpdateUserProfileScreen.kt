@@ -58,8 +58,8 @@ import com.fifty.fixitnow.core.presentation.ui.theme.MediumButtonHeight
 import com.fifty.fixitnow.core.presentation.ui.theme.SizeLarge
 import com.fifty.fixitnow.core.presentation.ui.theme.SizeMedium
 import com.fifty.fixitnow.core.presentation.util.CropActivityResultContract
+import com.fifty.fixitnow.core.presentation.util.ToastExt
 import com.fifty.fixitnow.core.presentation.util.UiEvent
-import com.fifty.fixitnow.core.presentation.util.makeToast
 import com.fifty.fixitnow.core.util.Constants
 import com.fifty.fixitnow.featureworker.util.ProfileError
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
@@ -123,25 +123,40 @@ fun UpdateUserProfileScreen(
         viewModel.errorFlow.collectLatest { error ->
             when (error) {
                 ProfileError.FieldEmpty -> {
-                    makeToast(R.string.error_this_field_cant_be_empty, context)
+                    ToastExt.makeText(
+                        context = context,
+                        message = R.string.error_this_field_cant_be_empty
+                    )
                 }
 
                 ProfileError.InputTooShort -> {
-                    makeToast(R.string.error_input_too_short, context)
+                    ToastExt.makeText(
+                        context = context,
+                        message = R.string.error_input_too_short
+                    )
                 }
 
                 ProfileError.InvalidAge -> {
-                    makeToast(R.string.enter_a_valid_age, context)
+                    ToastExt.makeText(
+                        context = context,
+                        message = R.string.enter_a_valid_age
+                    )
                     ageFocusRequester.requestFocus()
                 }
 
                 ProfileError.InvalidEmail -> {
-                    makeToast(R.string.enter_a_valid_email, context)
+                    ToastExt.makeText(
+                        context = context,
+                        message = R.string.enter_a_valid_email
+                    )
                     emailFocusRequester.requestFocus()
                 }
 
                 ProfileError.InvalidFirstName -> {
-                    makeToast(R.string.enter_a_valid_first_name, context)
+                    ToastExt.makeText(
+                        context = context,
+                        message = R.string.enter_a_valid_first_name
+                    )
                     firstNameFocusRequester.requestFocus()
                 }
 

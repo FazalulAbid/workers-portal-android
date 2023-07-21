@@ -55,8 +55,8 @@ import com.fifty.fixitnow.core.presentation.component.StandardAppBar
 import com.fifty.fixitnow.core.presentation.component.StandardMultilineTextField
 import com.fifty.fixitnow.core.presentation.ui.theme.MediumButtonHeight
 import com.fifty.fixitnow.core.presentation.ui.theme.SizeMedium
+import com.fifty.fixitnow.core.presentation.util.ToastExt
 import com.fifty.fixitnow.core.presentation.util.UiEvent
-import com.fifty.fixitnow.core.presentation.util.makeToast
 import com.fifty.fixitnow.core.util.Screen
 import com.fifty.fixitnow.core.util.toDate
 import com.fifty.fixitnow.featureworker.presentation.component.ANIMATION_DURATION
@@ -136,7 +136,10 @@ fun WorkProposalScreen(
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
                 is UiEvent.SentWorkProposal -> {
-                    makeToast("Work proposal sent successfully", context)
+                    ToastExt.makeText(
+                        context = context,
+                        message = R.string.work_proposal_sent_successfully
+                    )
                     viewModel.isWorkProposalSentDialogDisplayed.postValue(true)
                 }
 
@@ -149,37 +152,58 @@ fun WorkProposalScreen(
         viewModel.errorFlow.collectLatest { error ->
             when (error) {
                 WorkProposalError.WorkerDateConflict -> {
-                    makeToast(R.string.worker_date_conflict_message, context)
+                    ToastExt.makeText(
+                        context = context,
+                        message = R.string.worker_date_conflict_message
+                    )
                 }
 
                 WorkProposalError.InvalidDate -> {
-                    makeToast("Choose a date for work proposal", context)
+                    ToastExt.makeText(
+                        context = context,
+                        message = R.string.choose_a_date_for_work_proposal
+                    )
                 }
 
                 WorkProposalError.InvalidWage -> {
-                    makeToast("Choose a valid wage", context)
+                    ToastExt.makeText(
+                        context = context,
+                        message = R.string.choose_a_valid_wage
+                    )
                 }
 
                 WorkProposalError.InvalidWorkAddress -> {
-                    makeToast("Select an address for work", context)
+                    ToastExt.makeText(
+                        context = context,
+                        message = R.string.select_an_address_for_work
+                    )
                 }
 
                 WorkProposalError.InvalidWorkCategory -> {
-                    makeToast("Choose a category for work", context)
+                    ToastExt.makeText(
+                        context = context,
+                        message = R.string.choose_a_category_for_work
+                    )
                 }
 
                 WorkProposalError.InvalidWorkDescription -> {
-                    makeToast("Enter a valid work description", context)
+                    ToastExt.makeText(
+                        context = context,
+                        message = "Enter a valid work description"
+                    )
                 }
 
                 WorkProposalError.InvalidWorker -> {
-                    makeToast("Select a worker", context)
+                    ToastExt.makeText(
+                        context = context,
+                        message = R.string.select_a_worker
+                    )
                 }
 
                 WorkProposalError.WorkerDateConflict -> {
-                    makeToast(
-                        "Selected worker is not available on selected date, please choose another worker",
-                        context
+                    ToastExt.makeText(
+                        context = context,
+                        message = R.string.worker_is_not_available_on_selected_date_please_choose_another_worker
                     )
                 }
             }

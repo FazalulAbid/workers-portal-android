@@ -44,9 +44,9 @@ import com.fifty.fixitnow.core.presentation.component.PrimarySuccessDialogConten
 import com.fifty.fixitnow.core.presentation.component.StandardAppBar
 import com.fifty.fixitnow.core.presentation.component.StandardBottomSheet
 import com.fifty.fixitnow.core.presentation.ui.theme.SizeMedium
+import com.fifty.fixitnow.core.presentation.util.ToastExt
 import com.fifty.fixitnow.core.presentation.util.UiEvent
 import com.fifty.fixitnow.core.presentation.util.asString
-import com.fifty.fixitnow.core.presentation.util.makeToast
 import com.fifty.fixitnow.featureworker.presentation.component.RegisterPagerNavItem
 import com.fifty.fixitnow.featureworker.util.ProfileError
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
@@ -84,7 +84,10 @@ fun RegisterAsWorkerScreen(
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
                 is UiEvent.MakeToast -> {
-                    makeToast(event.uiText.asString(context), context)
+                    ToastExt.makeText(
+                        context = context,
+                        message = event.uiText.asString(context)
+                    )
                 }
 
                 UiEvent.WorkerProfileUpdated -> {
@@ -117,40 +120,61 @@ fun RegisterAsWorkerScreen(
             when (error) {
                 ProfileError.FieldEmpty -> {
                     pagerState.animateScrollToPage(0)
-                    makeToast(R.string.error_this_field_cant_be_empty, context)
+                    ToastExt.makeText(
+                        context = context,
+                        message = R.string.error_this_field_cant_be_empty
+                    )
                 }
 
                 ProfileError.InputTooShort -> {
                     pagerState.animateScrollToPage(0)
-                    makeToast(R.string.error_input_too_short, context)
+                    ToastExt.makeText(
+                        context = context,
+                        message = R.string.error_input_too_short
+                    )
                 }
 
                 ProfileError.InvalidBio -> {
                     pagerState.animateScrollToPage(0)
-                    makeToast(R.string.enter_a_valid_bio, context)
+                    ToastExt.makeText(
+                        context = context,
+                        message = R.string.enter_a_valid_bio
+                    )
                     bioFocusRequester.requestFocus()
                 }
 
                 ProfileError.InvalidAge -> {
                     pagerState.animateScrollToPage(0)
-                    makeToast(R.string.enter_a_valid_age, context)
+                    ToastExt.makeText(
+                        context = context,
+                        message = R.string.enter_a_valid_age
+                    )
                     ageFocusRequester.requestFocus()
                 }
 
                 ProfileError.InvalidEmail -> {
                     pagerState.animateScrollToPage(0)
-                    makeToast(R.string.enter_a_valid_email, context)
+                    ToastExt.makeText(
+                        context = context,
+                        message = R.string.enter_a_valid_email
+                    )
                     emailFocusRequester.requestFocus()
                 }
 
                 ProfileError.InvalidFirstName -> {
                     pagerState.animateScrollToPage(0)
-                    makeToast(R.string.enter_a_valid_first_name, context)
+                    ToastExt.makeText(
+                        context = context,
+                        message = R.string.enter_a_valid_first_name
+                    )
                     firstNameFocusRequester.requestFocus()
                 }
 
                 ProfileError.NoSkillSelected -> {
-                    makeToast(R.string.select_at_least_one_skill, context)
+                    ToastExt.makeText(
+                        context = context,
+                        message = R.string.select_at_least_one_skill
+                    )
                     keyboardController?.hide()
                     pagerState.animateScrollToPage(2)
                 }
@@ -161,7 +185,10 @@ fun RegisterAsWorkerScreen(
                 }
 
                 ProfileError.NoPrimarySkillSelected -> {
-                    makeToast(R.string.select_your_primary_skill, context)
+                    ToastExt.makeText(
+                        context = context,
+                        message = R.string.select_your_primary_skill
+                    )
                     showSheet = true
                 }
             }

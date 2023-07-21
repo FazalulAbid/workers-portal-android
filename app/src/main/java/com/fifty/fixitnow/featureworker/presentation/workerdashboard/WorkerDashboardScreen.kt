@@ -38,9 +38,9 @@ import com.fifty.fixitnow.core.presentation.ui.theme.ScaffoldBottomPaddingValue
 import com.fifty.fixitnow.core.presentation.ui.theme.SizeExtraSmall
 import com.fifty.fixitnow.core.presentation.ui.theme.SizeMedium
 import com.fifty.fixitnow.core.presentation.util.OnLifecycleEvent
+import com.fifty.fixitnow.core.presentation.util.ToastExt
 import com.fifty.fixitnow.core.presentation.util.UiEvent
 import com.fifty.fixitnow.core.presentation.util.dp
-import com.fifty.fixitnow.core.presentation.util.makeToast
 import com.fifty.fixitnow.core.util.Screen
 import com.fifty.fixitnow.featureworker.presentation.component.OpenToWorkSwitch
 import com.fifty.fixitnow.featureworker.presentation.component.WorkProposalCardActionRow
@@ -67,7 +67,10 @@ fun WorkerDashboardScreen(
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
                 is UiEvent.MakeToast -> {
-                    makeToast(R.string.oops_something_went_wrong, context)
+                    ToastExt.makeText(
+                        context = context,
+                        message = R.string.oops_something_went_wrong
+                    )
                 }
 
                 UiEvent.NavigateUp -> {

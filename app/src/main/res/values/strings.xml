@@ -188,5 +188,12 @@
     <string name="worker_date_conflict_message">Worker is not available on the selected date</string>
     <string name="work_history">Work History</string>
     <string name="work_proposal_sent">Work Proposal Sent</string>
+    <string name="work_proposal_sent_successfully">Work proposal sent successfully</string>
+    <string name="choose_a_date_for_work_proposal">Choose a date for work proposal</string>
+    <string name="choose_a_valid_wage">Choose a valid wage</string>
+    <string name="select_an_address_for_work">Select an address for work</string>
+    <string name="choose_a_category_for_work">Choose a category for work</string>
+    <string name="select_a_worker">Select a worker</string>
+    <string name="worker_is_not_available_on_selected_date_please_choose_another_worker">Worker is not available on selected date, please choose another worker</string>
 
 </resources>

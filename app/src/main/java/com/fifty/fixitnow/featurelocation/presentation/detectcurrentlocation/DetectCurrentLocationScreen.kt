@@ -30,8 +30,8 @@ import com.fifty.fixitnow.R
 import com.fifty.fixitnow.core.presentation.component.StandardAppBar
 import com.fifty.fixitnow.core.presentation.component.StandardBottomSheet
 import com.fifty.fixitnow.core.presentation.ui.theme.LargeButtonHeight
+import com.fifty.fixitnow.core.presentation.util.ToastExt
 import com.fifty.fixitnow.core.presentation.util.UiEvent
-import com.fifty.fixitnow.core.presentation.util.makeToast
 import com.fifty.fixitnow.core.util.Constants
 import com.fifty.fixitnow.featurelocation.presentation.component.CurrentLocationMapSection
 import com.fifty.fixitnow.featurelocation.presentation.component.PlaceAndAddressButtonSection
@@ -104,17 +104,26 @@ fun DetectCurrentLocationScreen(
         viewModel.errorFlow.collectLatest { error ->
             when (error) {
                 AddressError.EmptyAddressTitle -> {
-                    makeToast(R.string.address_title_field_can_t_be_empty, context)
+                    ToastExt.makeText(
+                        context = context,
+                        message = R.string.address_title_field_can_t_be_empty
+                    )
                     addressTitleFocusRequester.requestFocus()
                 }
 
                 AddressError.EmptyCompleteAddress -> {
-                    makeToast(R.string.address_field_can_t_be_empty, context)
+                    ToastExt.makeText(
+                        context = context,
+                        message = R.string.address_field_can_t_be_empty
+                    )
                     completeAddressFocusRequester.requestFocus()
                 }
 
                 AddressError.EmptyCompleteAddressInputTooShort -> {
-                    makeToast(R.string.address_too_short, Constants.MINIMUM_ADDRESS_LENGTH, context)
+                    ToastExt.makeText(
+                        context = context,
+                        message = R.string.address_too_short
+                    )
                     completeAddressFocusRequester.requestFocus()
                 }
             }

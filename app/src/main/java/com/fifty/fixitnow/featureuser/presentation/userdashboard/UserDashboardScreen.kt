@@ -52,8 +52,8 @@ import com.fifty.fixitnow.core.presentation.ui.theme.SizeExtraSmall
 import com.fifty.fixitnow.core.presentation.ui.theme.SizeMedium
 import com.fifty.fixitnow.core.presentation.ui.theme.SizeSmall
 import com.fifty.fixitnow.core.presentation.util.OnLifecycleEvent
+import com.fifty.fixitnow.core.presentation.util.ToastExt
 import com.fifty.fixitnow.core.presentation.util.UiEvent
-import com.fifty.fixitnow.core.presentation.util.makeToast
 import com.fifty.fixitnow.core.util.Screen
 import com.fifty.fixitnow.core.util.openAppSettings
 import com.fifty.fixitnow.featureuser.presentation.component.AutoSlidingCarousal
@@ -291,9 +291,9 @@ fun UserDashboardScreen(
                             if (worker.openToWork) {
                                 onNavigate(Screen.WorkerProfileScreen.route + "?userId=${worker.workerId}")
                             } else {
-                                makeToast(
+                                ToastExt.makeText(
+                                    context = context,
                                     message = "${worker.firstName} ${worker.lastName} is not currently accepting works",
-                                    context = context
                                 )
                             }
                         }

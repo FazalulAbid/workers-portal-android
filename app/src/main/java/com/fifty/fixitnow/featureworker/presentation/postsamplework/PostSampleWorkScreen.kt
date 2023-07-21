@@ -76,8 +76,8 @@ import com.fifty.fixitnow.core.presentation.ui.theme.MediumButtonHeight
 import com.fifty.fixitnow.core.presentation.ui.theme.SizeLarge
 import com.fifty.fixitnow.core.presentation.ui.theme.SizeMedium
 import com.fifty.fixitnow.core.presentation.ui.theme.SizeSmall
+import com.fifty.fixitnow.core.presentation.util.ToastExt
 import com.fifty.fixitnow.core.presentation.util.UiEvent
-import com.fifty.fixitnow.core.presentation.util.makeToast
 import com.fifty.fixitnow.core.util.contentUriToFileUri
 import com.fifty.fixitnow.core.util.openAppSettings
 import com.fifty.fixitnow.featureworker.presentation.component.SelectImageSourceButton
@@ -164,7 +164,10 @@ fun PostSampleWorkScreen(
         viewModel.errorFlow.collectLatest { error ->
             when (error) {
                 SampleWorkError.NoImageError -> {
-                    makeToast(R.string.please_select_an_image_to_post, context)
+                    ToastExt.makeText(
+                        context = context,
+                        message =R.string.please_select_an_image_to_post
+                    )
                 }
             }
         }

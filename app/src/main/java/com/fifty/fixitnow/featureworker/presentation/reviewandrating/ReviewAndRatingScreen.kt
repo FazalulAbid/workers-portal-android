@@ -38,9 +38,9 @@ import com.fifty.fixitnow.core.presentation.component.ratingbar.RatingBar
 import com.fifty.fixitnow.core.presentation.ui.theme.SizeExtraLarge
 import com.fifty.fixitnow.core.presentation.ui.theme.SizeMedium
 import com.fifty.fixitnow.core.presentation.ui.theme.SizeSmall
+import com.fifty.fixitnow.core.presentation.util.ToastExt
 import com.fifty.fixitnow.core.presentation.util.UiEvent
 import com.fifty.fixitnow.core.presentation.util.asString
-import com.fifty.fixitnow.core.presentation.util.makeToast
 import com.fifty.fixitnow.core.util.items
 import com.fifty.fixitnow.featureworker.presentation.component.RatingsDetailedCountBars
 import com.fifty.fixitnow.featureworker.presentation.component.ReviewItem
@@ -65,13 +65,19 @@ fun ReviewAndRatingScreen(
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
                 is UiEvent.MakeToast -> {
-                    makeToast(event.uiText.asString(context), context)
+                    ToastExt.makeText(
+                        context = context,
+                        message = event.uiText.asString(context)
+                    )
                 }
 
                 UiEvent.ReviewAndRatingPosted -> {
                     writeReviewSheetState.hide()
                     showWriteReviewSheet = false
-                    makeToast(R.string.your_review_is_posted, context)
+                    ToastExt.makeText(
+                        context = context,
+                        message = R.string.your_review_is_posted
+                    )
                 }
 
                 else -> {}
@@ -83,11 +89,17 @@ fun ReviewAndRatingScreen(
         viewModel.errorFlow.collectLatest { error ->
             when (error) {
                 ReviewAndRatingError.EmptyField -> {
-                    makeToast(R.string.review_filed_can_t_be_empty, context)
+                    ToastExt.makeText(
+                        context = context,
+                        message = R.string.review_filed_can_t_be_empty
+                    )
                 }
 
                 ReviewAndRatingError.RatingError -> {
-                    makeToast(R.string.drag_through_rating_stars_to_select_your_rating, context)
+                    ToastExt.makeText(
+                        context = context,
+                        message = R.string.drag_through_rating_stars_to_select_your_rating
+                    )
                 }
             }
         }
