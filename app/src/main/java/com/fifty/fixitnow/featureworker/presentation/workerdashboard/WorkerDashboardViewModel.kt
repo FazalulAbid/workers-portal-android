@@ -109,12 +109,10 @@ class WorkerDashboardViewModel @Inject constructor(
 
             is WorkerDashboardEvent.AcceptWorkProposal -> {
                 acceptOrRejectWorkProposal(event.workProposalId, true)
-                loadNextWorkers(true)
             }
 
             is WorkerDashboardEvent.RejectWorkProposal -> {
                 acceptOrRejectWorkProposal(event.workProposalId, false)
-                loadNextWorkers(true)
             }
         }
     }
@@ -175,10 +173,10 @@ class WorkerDashboardViewModel @Inject constructor(
     }
 
     private fun acceptOrRejectWorkProposal(workProposalId: String, isAcceptWorkProposal: Boolean) {
-        _state.value = state.value.copy(
-            isLoading = true
-        )
         viewModelScope.launch {
+            _state.value = state.value.copy(
+                isLoading = true
+            )
             val result = acceptOrRejectWorkProposalUseCase(
                 workProposalId = workProposalId,
                 isAcceptProposal = isAcceptWorkProposal
@@ -196,6 +194,7 @@ class WorkerDashboardViewModel @Inject constructor(
                     _eventFlow.emit(UiEvent.MakeToast(result.uiText ?: UiText.unknownError()))
                 }
             }
+            loadNextWorkers(true)
             _state.value = state.value.copy(
                 isLoading = false
             )

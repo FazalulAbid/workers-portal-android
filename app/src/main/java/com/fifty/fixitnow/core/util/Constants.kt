@@ -14,6 +14,9 @@ object Constants {
     // Base urls
     const val WORKERS_PORTAL_BASE_URL = "http://192.168.29.118:8080/api/"
     const val REST_COUNTRIES_BASE_URL = "https://restcountries.com/v2/"
+    const val DEBUG_WS_BASE_URL = "ws://192.168.29.118:8080"
+
+    const val RECONNECT_INTERVAL = 5000L
 
     // Country code default values.
     const val DEFAULT_COUNTRY_NAME = "India"

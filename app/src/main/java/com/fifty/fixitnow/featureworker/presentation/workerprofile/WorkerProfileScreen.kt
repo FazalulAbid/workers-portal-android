@@ -34,6 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -62,6 +63,7 @@ import com.fifty.fixitnow.core.presentation.ui.theme.SizeMedium
 import com.fifty.fixitnow.core.presentation.ui.theme.SizeSmall
 import com.fifty.fixitnow.core.presentation.ui.theme.SkyBlueColor
 import com.fifty.fixitnow.core.presentation.ui.theme.SmallStrokeThickness
+import com.fifty.fixitnow.core.presentation.util.ToastExt
 import com.fifty.fixitnow.core.util.Screen
 import com.fifty.fixitnow.featureworker.presentation.component.LocalAddressDisplayLarge
 import com.fifty.fixitnow.featureworker.presentation.component.RatingAndRatingCountVertical
@@ -83,6 +85,7 @@ fun WorkerProfileScreen(
     workerProfileViewModel: WorkerProfileViewModel = hiltViewModel(),
     workProposalViewModel: WorkProposalViewModel
 ) {
+    val context = LocalContext.current
     val showSampleWorkImage = remember { mutableStateOf(false) }
     val state = workerProfileViewModel.state.value
     val screenWidth = with(LocalConfiguration.current) { screenWidthDp.dp }
@@ -250,17 +253,24 @@ fun WorkerProfileScreen(
                                 imageLoader = imageLoader,
                                 onClick = if (!state.isOwnProfile) {
                                     {
-                                        workProposalViewModel.onEvent(
-                                            WorkProposalEvent.SelectWorker(
-                                                state.worker
+                                        if (state.worker.openToWork) {
+                                            workProposalViewModel.onEvent(
+                                                WorkProposalEvent.SelectWorker(
+                                                    state.worker
+                                                )
                                             )
-                                        )
-                                        workProposalViewModel.onEvent(
-                                            WorkProposalEvent.SelectCategory(
-                                                workerCategory
+                                            workProposalViewModel.onEvent(
+                                                WorkProposalEvent.SelectCategory(
+                                                    workerCategory
+                                                )
                                             )
-                                        )
-                                        onNavigate(Screen.WorkProposalScreen.route)
+                                            onNavigate(Screen.WorkProposalScreen.route)
+                                        } else {
+                                            ToastExt.makeText(
+                                                context = context,
+                                                message = "${state.worker.firstName} ${state.worker.lastName} is not currently accepting works",
+                                            )
+                                        }
                                     }
                                 } else null
                             )

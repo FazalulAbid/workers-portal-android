@@ -179,14 +179,7 @@ fun SearchWorkerScreen(
                             viewModel.onEvent(SearchWorkerEvent.ToggleFavouriteWorker(worker.workerId))
                         },
                         onClick = {
-                            if (worker.openToWork) {
-                                onNavigate(Screen.WorkerProfileScreen.route + "?userId=${worker.workerId}")
-                            } else {
-                                ToastExt.makeText(
-                                    context = context,
-                                    message = "${worker.firstName} ${worker.lastName} is not currently accepting works",
-                                )
-                            }
+                            onNavigate(Screen.WorkerProfileScreen.route + "?userId=${worker.workerId}")
                         }
                     )
                 }

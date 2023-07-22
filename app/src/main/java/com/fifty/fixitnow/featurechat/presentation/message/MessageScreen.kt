@@ -30,6 +30,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.fifty.fixitnow.R
 import com.fifty.fixitnow.core.presentation.component.StandardAppBar
 import com.fifty.fixitnow.core.presentation.component.StandardTextField
@@ -43,10 +44,11 @@ import com.fifty.fixitnow.featurechat.presentation.component.OwnMessage
 import com.fifty.fixitnow.featurechat.presentation.component.RemoteMessage
 import com.fifty.fixitnow.featurechat.presentation.component.SuggestMessageItem
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MessageScreen(
-    onNavigateUp: () -> Unit = {}
+    onNavigateUp: () -> Unit = {},
+    viewModel: MessageViewModel = hiltViewModel()
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
@@ -109,7 +111,7 @@ fun MessageScreen(
                         items(5) {
                             Spacer(modifier = Modifier.width(SizeMedium))
                             SuggestMessageItem(text = "Hello, there!")
-                            if (it == 5-1) {
+                            if (it == 5 - 1) {
                                 Spacer(modifier = Modifier.width(SizeMedium))
                             }
                         }
@@ -144,7 +146,9 @@ fun MessageScreen(
                             singleLine = false
                         )
                         Spacer(modifier = Modifier.width(SizeSmall))
-                        IconButton(onClick = {}) {
+                        IconButton(onClick = {
+                            viewModel.onEvent(MessageEvent.Test)
+                        }) {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_send_filled),
                                 contentDescription = stringResource(R.string.send_message),

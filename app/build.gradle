@@ -140,11 +140,9 @@ dependencies {
     // Google authentication
     implementation 'com.google.android.gms:play-services-auth:20.6.0'
 
-    // Scarlet
-    def scarletVersion = "0.1.12"
-    implementation "com.tinder.scarlet:scarlet:$scarletVersion"
-    implementation "com.tinder.scarlet:websocket-okhttp:$scarletVersion"
-    implementation "com.tinder.scarlet:lifecycle-android:$scarletVersion"
-    implementation "com.tinder.scarlet:message-adapter-gson:$scarletVersion"
-    implementation "com.tinder.scarlet:stream-adapter-coroutines:$scarletVersion"
+    // Socket Io
+    implementation('io.socket:socket.io-client:2.0.0') {
+        exclude group: 'org.json', module: 'json'
+    }
+
 }
