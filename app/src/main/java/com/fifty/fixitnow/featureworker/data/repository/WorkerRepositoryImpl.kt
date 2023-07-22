@@ -171,7 +171,6 @@ class WorkerRepositoryImpl(
                 pageSize = Constants.DEFAULT_PAGINATION_SIZE
             )
             if (response.successful) {
-                Log.d("Hello", "getFavourites: $response")
                 Resource.Success(data = response.data?.map { it.toWorker() })
             } else {
                 response.message?.let { message ->
@@ -203,7 +202,6 @@ class WorkerRepositoryImpl(
         isBeforeNoon: Boolean?
     ): Resource<List<Worker>> {
         return try {
-            Log.d("Hello", "getSearchedSortedAndFilteredWorkers: $availabilityCheckDate")
             val response = api.getSearchedSortedAndFilteredWorkers(
                 query = query,
                 page = page,

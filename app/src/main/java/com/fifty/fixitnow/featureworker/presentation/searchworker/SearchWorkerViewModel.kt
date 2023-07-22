@@ -89,7 +89,6 @@ class SearchWorkerViewModel @Inject constructor(
 
     init {
         _availabiltyDate.value = savedStateHandle.get<String>("availabilityDate")?.toLong()
-        Log.d("Hello", "Search Worker Screen Init ${_availabiltyDate.value}")
         loadNextWorkers()
     }
 

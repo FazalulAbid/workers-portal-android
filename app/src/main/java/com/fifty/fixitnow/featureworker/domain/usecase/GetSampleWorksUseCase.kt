@@ -11,7 +11,6 @@ class GetSampleWorksUseCase(
 ) {
 
     operator fun invoke(userId: String): Flow<PagingData<SampleWork>> {
-        Log.d("Hello", "invoke: use case worked")
         return repository.getSampleWorksForUser(userId)
     }
 }

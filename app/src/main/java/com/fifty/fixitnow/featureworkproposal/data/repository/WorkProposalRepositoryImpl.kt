@@ -20,7 +20,6 @@ class WorkProposalRepositoryImpl(
 
     override suspend fun sendWorkProposal(workProposalRequest: SendWorkProposalRequest): Resource<WorkProposal> {
         return try {
-            Log.d("Hello", "sendWorkProposal: ${workProposalRequest.proposedDate}")
             val response = api.sendWorkProposal(workProposalRequest)
             if (response.code() == 409) {
                 Resource.Error(

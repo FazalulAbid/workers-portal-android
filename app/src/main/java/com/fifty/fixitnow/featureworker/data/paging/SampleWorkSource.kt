@@ -18,15 +18,12 @@ class SampleWorkSource(
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, SampleWork> {
         return try {
-            Log.d("Hello", "load: Paging source worked")
             val nextPage = params.key ?: currentPage
             val sampleWorks = api.getSampleWorks(
                 page = nextPage,
                 pageSize = Constants.DEFAULT_PAGINATION_SIZE,
                 userId = userId
             ).data ?: emptyList()
-
-            Log.d("Hello", "load: Sample Works = $sampleWorks")
 
             LoadResult.Page(
                 data = sampleWorks.map { it.toSampleWork() },

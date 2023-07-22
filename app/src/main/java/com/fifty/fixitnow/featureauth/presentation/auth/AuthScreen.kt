@@ -105,7 +105,6 @@ fun AuthScreen(
             try {
                 val gsa = task?.getResult(ApiException::class.java)
                 if (gsa != null) {
-                    Log.d("Hello", "AuthScreen: ${gsa.idToken}")
                     viewModel.onEvent(
                         AuthEvent.OnGoogleSignIn(
                             gsa.email ?: "",
