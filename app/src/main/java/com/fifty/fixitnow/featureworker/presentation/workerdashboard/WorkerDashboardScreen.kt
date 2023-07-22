@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -59,6 +58,7 @@ fun WorkerDashboardScreen(
     onNavigateUp: () -> Unit = {},
     viewModel: WorkerDashboardViewModel = hiltViewModel()
 ) {
+    val pagingState = viewModel.pagingState
     val state = viewModel.state.value
     val context = LocalContext.current
     val cards = viewModel.cards.collectAsState()
@@ -154,23 +154,43 @@ fun WorkerDashboardScreen(
                 }
 
                 LazyColumn {
-                    items(cards.value, CardModel::id) { card ->
+                    items(pagingState.items.size) { index ->
+                        val workProposal = pagingState.items[index]
+                        if (index >= pagingState.items.size - 1 &&
+                            !pagingState.endReached &&
+                            !pagingState.isLoading
+                        ) {
+                            viewModel.loadNextWorkers()
+                        }
                         Box(
                             Modifier.fillMaxWidth(),
                             contentAlignment = Alignment.CenterStart
                         ) {
                             WorkProposalCardActionRow(
                                 actionIconSize = ACTION_ITEM_SIZE.dp,
-                                onAccept = {},
-                                onReject = {}
+                                onAccept = {
+                                    viewModel.onEvent(
+                                        WorkerDashboardEvent.AcceptWorkProposal(
+                                            workProposal.workProposalId
+                                        )
+                                    )
+                                },
+                                onReject = {
+                                    viewModel.onEvent(
+                                        WorkerDashboardEvent.RejectWorkProposal(
+                                            workProposal.workProposalId
+                                        )
+                                    )
+                                }
                             )
                             WorkProposalDraggableCard(
-                                card = card,
-                                isRevealed = viewModel.revealedCard.value?.id == card.id,
+                                workProposal = workProposal,
+                                isRevealed = viewModel.revealedCard.value?.workProposalId == workProposal.workProposalId,
                                 cardOffset = CARD_OFFSET.dp(),
-                                onExpand = { viewModel.onItemExpanded(card) },
-                                onCollapse = { viewModel.onItemCollapsed(card) },
-                                onClick = { viewModel.onItemExpanded(card) }
+                                imageLoader = imageLoader,
+                                onExpand = { viewModel.onItemExpanded(workProposal) },
+                                onCollapse = { viewModel.onItemCollapsed(workProposal) },
+                                onClick = { viewModel.onItemExpanded(workProposal) }
                             )
                         }
                         HorizontalDivider()

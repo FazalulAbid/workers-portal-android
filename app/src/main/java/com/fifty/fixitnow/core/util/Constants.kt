@@ -6,6 +6,8 @@ object Constants {
     const val OTP_RESEND_INTERVAL = 20
     const val OTP_LENGTH = 6
 
+    const val CURRENCY_SYMBOL = "₹"
+
     // Message defaults
     const val MESSAGE_LENGTH = 1000
 

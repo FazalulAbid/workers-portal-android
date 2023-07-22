@@ -24,8 +24,9 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import coil.ImageLoader
 import com.fifty.fixitnow.core.presentation.ui.theme.SizeMedium
-import com.fifty.fixitnow.featureworker.presentation.workerdashboard.CardModel
+import com.fifty.fixitnow.featureworkproposal.domain.model.WorkProposalForWorker
 import kotlin.math.roundToInt
 
 const val ANIMATION_DURATION = 500
@@ -33,8 +34,9 @@ const val ANIMATION_DURATION = 500
 @SuppressLint("UnusedTransitionTargetStateParameter")
 @Composable
 fun WorkProposalDraggableCard(
-    card: CardModel,
+    workProposal: WorkProposalForWorker,
     isRevealed: Boolean,
+    imageLoader: ImageLoader,
     cardOffset: Float,
     onExpand: () -> Unit,
     onCollapse: () -> Unit,
@@ -97,9 +99,9 @@ fun WorkProposalDraggableCard(
         elevation = cardElevation,
         content = {
             WorkProposalCardItem(
-                onClick = onClick,
-                isFavourite = false,
-                lottieComposition = null
+                workProposal = workProposal,
+                imageLoader = imageLoader,
+                onClick = onClick
             )
         }
     )

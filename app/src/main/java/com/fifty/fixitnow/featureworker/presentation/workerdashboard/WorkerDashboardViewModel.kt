@@ -1,16 +1,23 @@
 package com.fifty.fixitnow.featureworker.presentation.workerdashboard
 
 import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fifty.fixitnow.core.domain.usecase.GetOwnUserIdUseCase
 import com.fifty.fixitnow.core.domain.usecase.GetProfileDetailsUseCase
 import com.fifty.fixitnow.core.domain.util.Session
+import com.fifty.fixitnow.core.presentation.PagingState
 import com.fifty.fixitnow.core.presentation.util.UiEvent
+import com.fifty.fixitnow.core.util.DefaultPaginator
+import com.fifty.fixitnow.core.util.Event
 import com.fifty.fixitnow.core.util.Resource
 import com.fifty.fixitnow.core.util.UiText
 import com.fifty.fixitnow.featureworker.domain.usecase.ToggleOpenToWorkUseCase
+import com.fifty.fixitnow.featureworkproposal.domain.model.WorkProposalForWorker
+import com.fifty.fixitnow.featureworkproposal.domain.usecase.AcceptOrRejectWorkProposalUseCase
 import com.fifty.fixitnow.featureworkproposal.domain.usecase.GetWorkProposalsForWorkerUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -27,36 +34,55 @@ class WorkerDashboardViewModel @Inject constructor(
     private val toggleOpenToWorkUseCase: ToggleOpenToWorkUseCase,
     private val getOwnUserIdUseCase: GetOwnUserIdUseCase,
     private val getProfileDetailsUseCase: GetProfileDetailsUseCase,
-    private val getWorkProposalsForWorkerUseCase: GetWorkProposalsForWorkerUseCase
+    private val getWorkProposalsForWorkerUseCase: GetWorkProposalsForWorkerUseCase,
+    private val acceptOrRejectWorkProposalUseCase: AcceptOrRejectWorkProposalUseCase
 ) : ViewModel() {
 
-    private val _cards = MutableStateFlow(listOf<CardModel>())
-    val cards: StateFlow<List<CardModel>> get() = _cards
+    private val _cards = MutableStateFlow(listOf<WorkProposalForWorker>())
+    val cards: StateFlow<List<WorkProposalForWorker>> get() = _cards
 
-    private val _revealedCard = mutableStateOf<CardModel?>(null)
-    val revealedCard: State<CardModel?> = _revealedCard
+    private val _revealedCard = mutableStateOf<WorkProposalForWorker?>(null)
+    val revealedCard: State<WorkProposalForWorker?> = _revealedCard
 
     private val _state = mutableStateOf(WorkerDashboardState())
     val state: State<WorkerDashboardState> = _state
 
-    private val _eventFlow = MutableSharedFlow<UiEvent>()
+    var pagingState by mutableStateOf(PagingState<WorkProposalForWorker>())
+
+    private val _eventFlow = MutableSharedFlow<Event>()
     val eventFlow = _eventFlow.asSharedFlow()
+
+    private val workProposalsPaginator = DefaultPaginator(
+        initialKey = pagingState.page,
+        onLoadUpdated = {
+            pagingState = pagingState.copy(isLoading = true)
+        },
+        onRequest = { nextPage ->
+            getWorkProposalsForWorkerUseCase(
+                page = nextPage
+            )
+        },
+        getNextKey = {
+            pagingState.page + 1
+        },
+        onError = {
+            pagingState = pagingState.copy(error = it)
+            _eventFlow.emit(UiEvent.MakeToast(it))
+        },
+        onSuccess = { items, newKey ->
+            pagingState = pagingState.copy(
+                items = pagingState.items + items,
+                page = newKey,
+                endReached = items.isEmpty()
+            )
+        }
+    )
 
     init {
         viewModelScope.launch {
             getUserDetails(getOwnUserIdUseCase())
         }
-        getFakeData()
-    }
-
-    private fun getFakeData() {
-        viewModelScope.launch {
-            withContext(Dispatchers.Default) {
-                val testList = arrayListOf<CardModel>()
-                repeat(20) { testList += CardModel(id = it, title = "Card $it") }
-                _cards.emit(testList)
-            }
-        }
+        loadNextWorkers()
     }
 
     fun onEvent(event: WorkerDashboardEvent) {
@@ -77,17 +103,27 @@ class WorkerDashboardViewModel @Inject constructor(
 
             WorkerDashboardEvent.LoadWorkProposal -> {
                 viewModelScope.launch {
-                    getWorkProposalsForWorkerUseCase(0)
+                    loadNextWorkers(resetPaging = true)
                 }
+            }
+
+            is WorkerDashboardEvent.AcceptWorkProposal -> {
+                acceptOrRejectWorkProposal(event.workProposalId, true)
+                loadNextWorkers(true)
+            }
+
+            is WorkerDashboardEvent.RejectWorkProposal -> {
+                acceptOrRejectWorkProposal(event.workProposalId, false)
+                loadNextWorkers(true)
             }
         }
     }
 
-    fun onItemExpanded(card: CardModel) {
+    fun onItemExpanded(card: WorkProposalForWorker) {
         _revealedCard.value = card
     }
 
-    fun onItemCollapsed(card: CardModel) {
+    fun onItemCollapsed(card: WorkProposalForWorker) {
         _revealedCard.value = null
     }
 
@@ -138,14 +174,47 @@ class WorkerDashboardViewModel @Inject constructor(
         }
     }
 
+    private fun acceptOrRejectWorkProposal(workProposalId: String, isAcceptWorkProposal: Boolean) {
+        _state.value = state.value.copy(
+            isLoading = true
+        )
+        viewModelScope.launch {
+            val result = acceptOrRejectWorkProposalUseCase(
+                workProposalId = workProposalId,
+                isAcceptProposal = isAcceptWorkProposal
+            )
+            when (result) {
+                is Resource.Success -> {
+                    if (isAcceptWorkProposal) {
+                        _eventFlow.emit(WorkerDashboardUiEvent.WorkProposalAccepted)
+                    } else {
+                        _eventFlow.emit(WorkerDashboardUiEvent.WorkProposalRejected)
+                    }
+                }
+
+                is Resource.Error -> {
+                    _eventFlow.emit(UiEvent.MakeToast(result.uiText ?: UiText.unknownError()))
+                }
+            }
+            _state.value = state.value.copy(
+                isLoading = false
+            )
+        }
+    }
+
     private fun getLocalAddress() {
         _state.value = state.value.copy(
             selectedLocalAddress = Session.selectedAddress.value
         )
     }
-}
 
-data class CardModel(
-    val id: Int,
-    val title: String
-)
+    fun loadNextWorkers(resetPaging: Boolean = false) {
+        if (resetPaging) {
+            workProposalsPaginator.reset()
+            pagingState = PagingState()
+        }
+        viewModelScope.launch {
+            workProposalsPaginator.loadNextItems()
+        }
+    }
+}

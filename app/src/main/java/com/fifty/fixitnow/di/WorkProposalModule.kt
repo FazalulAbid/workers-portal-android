@@ -3,6 +3,7 @@ package com.fifty.fixitnow.di
 import com.fifty.fixitnow.featureworkproposal.data.remote.WorkProposalApiService
 import com.fifty.fixitnow.featureworkproposal.data.repository.WorkProposalRepositoryImpl
 import com.fifty.fixitnow.featureworkproposal.domain.repository.WorkProposalRepository
+import com.fifty.fixitnow.featureworkproposal.domain.usecase.AcceptOrRejectWorkProposalUseCase
 import com.fifty.fixitnow.featureworkproposal.domain.usecase.GetWorkProposalsForWorkerUseCase
 import com.fifty.fixitnow.featureworkproposal.domain.usecase.SendWorkProposalUseCase
 import dagger.Module
@@ -47,4 +48,11 @@ object WorkProposalModule {
         repository: WorkProposalRepository
     ): GetWorkProposalsForWorkerUseCase =
         GetWorkProposalsForWorkerUseCase(repository)
+
+    @Provides
+    @Singleton
+    fun provideAcceptOrRejectWorkProposalUseCase(
+        repository: WorkProposalRepository
+    ): AcceptOrRejectWorkProposalUseCase =
+        AcceptOrRejectWorkProposalUseCase(repository)
 }

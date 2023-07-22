@@ -11,6 +11,7 @@ import com.fifty.fixitnow.core.util.UiText
 import com.fifty.fixitnow.featureworkproposal.data.remote.WorkProposalApiService
 import com.fifty.fixitnow.featureworkproposal.data.remote.request.SendWorkProposalRequest
 import com.fifty.fixitnow.featureworkproposal.domain.model.WorkProposal
+import com.fifty.fixitnow.featureworkproposal.domain.model.WorkProposalForWorker
 import com.fifty.fixitnow.featureworkproposal.domain.repository.WorkProposalRepository
 import java.io.IOException
 
@@ -52,14 +53,51 @@ class WorkProposalRepositoryImpl(
         }
     }
 
-    override suspend fun getWorkProposalsForWorker(page: Int): SimpleResource {
+    override suspend fun getWorkProposalsForWorker(page: Int): Resource<List<WorkProposalForWorker>> {
         return try {
             val response = api.getWorkProposalsForWorker(
                 page = page,
                 pageSize = Constants.DEFAULT_PAGINATION_SIZE
             )
-            Log.d("Hello", "getWorkProposalsForWorker: ${response.body().toString()}")
-            Resource.Success(Unit)
+            if (response.successful) {
+                Resource.Success(data = response.data?.map { it.toWorkProposalForWorker() })
+            } else {
+                response.message?.let { message ->
+                    Resource.Error(UiText.DynamicString(message))
+                } ?: Resource.Error(UiText.unknownError())
+            }
+        } catch (e: IOException) {
+            Resource.Error(
+                uiText = UiText.StringResource(
+                    R.string.error_could_not_reach_server
+                )
+            )
+        } catch (e: HttpException) {
+            Resource.Error(
+                uiText = UiText.StringResource(
+                    R.string.oops_something_went_wrong
+                )
+            )
+        }
+    }
+
+    override suspend fun acceptOrRejectWorkProposal(
+        workProposalId: String,
+        isAcceptProposal: Boolean
+    ): SimpleResource {
+        return try {
+            val response = if (isAcceptProposal) {
+                api.acceptWorkProposal(workProposalId)
+            } else {
+                api.rejectWorkProposal(workProposalId)
+            }
+            if (response.successful) {
+                Resource.Success(Unit)
+            } else {
+                response.message?.let { message ->
+                    Resource.Error(UiText.DynamicString(message))
+                } ?: Resource.Error(UiText.unknownError())
+            }
         } catch (e: IOException) {
             Resource.Error(
                 uiText = UiText.StringResource(
