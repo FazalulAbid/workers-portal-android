@@ -1,6 +1,7 @@
 package com.fifty.fixitnow.di
 
 import com.fifty.fixitnow.featurechat.data.remote.ChatApi
+import com.fifty.fixitnow.featurechat.data.remote.SocketManager
 import com.fifty.fixitnow.featurechat.data.repository.ChatRepositoryImpl
 import com.fifty.fixitnow.featurechat.domain.repository.ChatRepository
 import dagger.Module
@@ -28,9 +29,12 @@ object ChatModule {
 
     @Provides
     @Singleton
+    fun provideSocketManager(): SocketManager = SocketManager()
+
+    @Provides
+    @Singleton
     fun provideChatRepository(
         chatApi: ChatApi
-    ): ChatRepository {
-        return ChatRepositoryImpl(chatApi)
-    }
+    ): ChatRepository = ChatRepositoryImpl(chatApi)
+
 }
