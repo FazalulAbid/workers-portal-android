@@ -1,6 +1,7 @@
 package com.fifty.fixitnow.featureworker.presentation.component
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,8 +17,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -47,21 +50,19 @@ fun WorkerItem(
     onClick: () -> Unit = {},
     onFavouriteClick: () -> Unit = {}
 ) {
-    Box(
+    Column(
         modifier = modifier
             .fillMaxWidth()
-            .bounceClick {
-                onClick()
-            }
+            .bounceClick { onClick() }
+            .border(
+                width = SmallStrokeThickness,
+                color = MaterialTheme.colorScheme.outline,
+                shape = MaterialTheme.shapes.large
+            )
+            .clip(MaterialTheme.shapes.large)
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .border(
-                    width = SmallStrokeThickness,
-                    shape = MaterialTheme.shapes.large,
-                    color = MaterialTheme.colorScheme.outline
-                )
+            Modifier
                 .padding(SizeMedium)
         ) {
             Row(
@@ -167,16 +168,28 @@ fun WorkerItem(
                     )
                 }
             }
-            if (!worker.openToWork) {
-                Spacer(modifier = Modifier.height(SizeSmall))
+        }
+        if (!worker.openToWork) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color(0x1AFF0000))
+                    .padding(vertical = SizeSmall, horizontal = SizeMedium),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    modifier = Modifier.size(SizeMedium),
+                    painter = painterResource(id = R.drawable.ic_circle_xmark),
+                    contentDescription = null,
+                    tint = Color(0xFFFF0000)
+                )
+                Spacer(modifier = Modifier.width(SizeSmall))
                 Text(
-                    text = "*Currently not accepting works",
-                    style = MaterialTheme.typography.bodySmall.copy(
+                    text = "${worker.firstName} is not currently open to work",
+                    style = MaterialTheme.typography.bodyMedium.copy(
                         fontWeight = FontWeight.Medium,
-                        color = MaterialTheme.colorScheme.primary
-                    ),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                        color = Color(0xFFFF0000)
+                    )
                 )
             }
         }
