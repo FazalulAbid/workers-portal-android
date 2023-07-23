@@ -27,6 +27,7 @@ import com.fifty.fixitnow.core.presentation.component.SecondaryHeader
 import com.fifty.fixitnow.core.presentation.ui.theme.LargeButtonHeight
 import com.fifty.fixitnow.core.presentation.ui.theme.SizeMedium
 import com.fifty.fixitnow.core.util.formatToDateWithDay
+import com.fifty.fixitnow.featurehistory.presentation.component.SelectableChip
 import com.fifty.fixitnow.featureworker.presentation.component.Chip
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
@@ -131,19 +132,27 @@ fun WorkHistoryFilterBottomSheetContent(
             mainAxisSpacing = SizeMedium,
             crossAxisSpacing = SizeMedium
         ) {
-            Chip(
-                selected = filterState.hiringHistory,
-                onChipClick = {
-                    viewModel.onEvent(WorkHistoryEvent.ToggleHiringHistory)
+            SelectableChip(
+                isSelected = WorkHistoryCategory.HIRING in filterState.selectedHistoryCategories,
+                onSelectedChange = { isSelected ->
+                    if (isSelected || filterState.selectedHistoryCategories.size > 1) {
+                        viewModel.onEvent(
+                            WorkHistoryEvent.ToggleWorkHistoryCategory(WorkHistoryCategory.HIRING)
+                        )
+                    }
                 },
-                text = "Hiring History"
+                label = WorkHistoryCategory.HIRING.label
             )
-            Chip(
-                selected = filterState.workHistory,
-                onChipClick = {
-                    viewModel.onEvent(WorkHistoryEvent.ToggleWorkHistory)
+            SelectableChip(
+                isSelected = WorkHistoryCategory.WORKING in filterState.selectedHistoryCategories,
+                onSelectedChange = { isSelected ->
+                    if (isSelected || filterState.selectedHistoryCategories.size > 1) {
+                        viewModel.onEvent(
+                            WorkHistoryEvent.ToggleWorkHistoryCategory(WorkHistoryCategory.WORKING)
+                        )
+                    }
                 },
-                text = "Work History"
+                label = WorkHistoryCategory.WORKING.label
             )
         }
         HorizontalDivider()
@@ -163,26 +172,38 @@ fun WorkHistoryFilterBottomSheetContent(
             mainAxisSpacing = SizeMedium,
             crossAxisSpacing = SizeMedium
         ) {
-            Chip(
-                selected = filterState.pendingWorks,
-                onChipClick = {
-                    viewModel.onEvent(WorkHistoryEvent.TogglePendingFilter)
+            SelectableChip(
+                isSelected = WorkHistoryFilter.PENDING in filterState.selectedFilters,
+                onSelectedChange = { isSelected ->
+                    if (isSelected || filterState.selectedFilters.size > 1) {
+                        viewModel.onEvent(
+                            WorkHistoryEvent.ToggleFilter(WorkHistoryFilter.PENDING)
+                        )
+                    }
                 },
-                text = "Pending"
+                label = WorkHistoryFilter.PENDING.label
             )
-            Chip(
-                selected = filterState.completedWorks,
-                onChipClick = {
-                    viewModel.onEvent(WorkHistoryEvent.ToggleCompletedFilter)
+            SelectableChip(
+                isSelected = WorkHistoryFilter.COMPLETED in filterState.selectedFilters,
+                onSelectedChange = { isSelected ->
+                    if (isSelected || filterState.selectedFilters.size > 1) {
+                        viewModel.onEvent(
+                            WorkHistoryEvent.ToggleFilter(WorkHistoryFilter.COMPLETED)
+                        )
+                    }
                 },
-                text = "Completed"
+                label = WorkHistoryFilter.COMPLETED.label
             )
-            Chip(
-                selected = filterState.cancelledWorks,
-                onChipClick = {
-                    viewModel.onEvent(WorkHistoryEvent.ToggleCancelledFilter)
+            SelectableChip(
+                isSelected = WorkHistoryFilter.CANCELLED in filterState.selectedFilters,
+                onSelectedChange = { isSelected ->
+                    if (isSelected || filterState.selectedFilters.size > 1) {
+                        viewModel.onEvent(
+                            WorkHistoryEvent.ToggleFilter(WorkHistoryFilter.CANCELLED)
+                        )
+                    }
                 },
-                text = "Cancelled"
+                label = WorkHistoryFilter.CANCELLED.label
             )
         }
         Spacer(modifier = Modifier.height(SizeMedium))

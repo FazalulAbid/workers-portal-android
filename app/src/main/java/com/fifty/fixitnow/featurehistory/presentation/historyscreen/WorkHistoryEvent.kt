@@ -5,11 +5,8 @@ import java.time.LocalDate
 
 sealed class WorkHistoryEvent {
     data class ChangeSelectedRange(val range: Range<LocalDate>) : WorkHistoryEvent()
-    object ToggleWorkHistory : WorkHistoryEvent()
-    object ToggleHiringHistory : WorkHistoryEvent()
-    object TogglePendingFilter : WorkHistoryEvent()
-    object ToggleCompletedFilter : WorkHistoryEvent()
-    object ToggleCancelledFilter : WorkHistoryEvent()
+    data class ToggleWorkHistoryCategory(val value: WorkHistoryCategory) : WorkHistoryEvent()
+    data class ToggleFilter(val value: WorkHistoryFilter) : WorkHistoryEvent()
     object OnSheetDismiss : WorkHistoryEvent()
     object OnApplyFilterClick : WorkHistoryEvent()
     object OnClearFilterClick : WorkHistoryEvent()

@@ -52,33 +52,17 @@ class WorkHistoryViewModel @Inject constructor(
                 _tempSelectedRange.value = selectedRange.value
             }
 
-            WorkHistoryEvent.ToggleCancelledFilter -> {
+            is WorkHistoryEvent.ToggleFilter -> {
                 _tempFilterState.value = tempFilterState.value.copy(
-                    cancelledWorks = !tempFilterState.value.cancelledWorks
+                    selectedFilters =
+                    _tempFilterState.value.selectedFilters.toggleSelection(event.value)
                 )
             }
 
-            WorkHistoryEvent.ToggleCompletedFilter -> {
+            is WorkHistoryEvent.ToggleWorkHistoryCategory -> {
                 _tempFilterState.value = tempFilterState.value.copy(
-                    completedWorks = !tempFilterState.value.completedWorks
-                )
-            }
-
-            WorkHistoryEvent.TogglePendingFilter -> {
-                _tempFilterState.value = tempFilterState.value.copy(
-                    pendingWorks = !tempFilterState.value.pendingWorks
-                )
-            }
-
-            WorkHistoryEvent.ToggleWorkHistory -> {
-                _tempFilterState.value = tempFilterState.value.copy(
-                    workHistory = !tempFilterState.value.workHistory
-                )
-            }
-
-            WorkHistoryEvent.ToggleHiringHistory -> {
-                _tempFilterState.value = tempFilterState.value.copy(
-                    hiringHistory = !tempFilterState.value.hiringHistory
+                    selectedHistoryCategories =
+                    _tempFilterState.value.selectedHistoryCategories.toggleSelection(event.value)
                 )
             }
 
@@ -98,5 +82,13 @@ class WorkHistoryViewModel @Inject constructor(
         _tempFilterState.value = _filterState.value
         _selectedRange.value = LocalDate.now().minusDays(30)..LocalDate.now()
         _tempSelectedRange.value = _selectedRange.value
+    }
+}
+
+fun <T> Set<T>.toggleSelection(item: T): Set<T> {
+    return if (this.contains(item)) {
+        this - item
+    } else {
+        this + item
     }
 }
