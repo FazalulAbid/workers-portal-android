@@ -22,6 +22,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import com.fifty.fixitnow.R
 import com.fifty.fixitnow.core.presentation.component.HorizontalDivider
 import com.fifty.fixitnow.core.presentation.component.PrimaryButton
+import com.fifty.fixitnow.core.presentation.component.RadioButtonWithText
 import com.fifty.fixitnow.core.presentation.component.SecondaryHeader
 import com.fifty.fixitnow.core.presentation.ui.theme.LargeButtonHeight
 import com.fifty.fixitnow.core.presentation.ui.theme.SizeExtraSmall
@@ -41,28 +42,28 @@ fun SortWorkersBottomSheetContent(
             style = MaterialTheme.typography.titleMedium
         )
         HorizontalDivider()
-        SortWorkerRadioItem(
+        RadioButtonWithText(
             isSelected = (!sortState.isRatingHighToLow && !sortState.isWageHighToLow &&
                     !sortState.isDistanceLowToHigh && !sortState.isWageLowToHigh),
             text = "Relevance",
             onClick = { viewModel.onEvent(SearchWorkerEvent.SelectRelevance) }
         )
-        SortWorkerRadioItem(
+        RadioButtonWithText(
             isSelected = sortState.isRatingHighToLow,
             text = "Rating: High to Low",
             onClick = { viewModel.onEvent(SearchWorkerEvent.SelectRatingHighToLowSort) }
         )
-        SortWorkerRadioItem(
+        RadioButtonWithText(
             isSelected = sortState.isDistanceLowToHigh,
             text = "Distance: Low to High",
             onClick = { viewModel.onEvent(SearchWorkerEvent.SelectDistanceLowToHighSort) }
         )
-        SortWorkerRadioItem(
+        RadioButtonWithText(
             isSelected = sortState.isWageLowToHigh,
             text = "Wage: Low to High",
             onClick = { viewModel.onEvent(SearchWorkerEvent.SelectCostLowToHighSort) }
         )
-        SortWorkerRadioItem(
+        RadioButtonWithText(
             isSelected = sortState.isWageHighToLow,
             text = "Wage: High to Low",
             onClick = { viewModel.onEvent(SearchWorkerEvent.SelectCostHighToLowSort) }
@@ -94,32 +95,5 @@ fun SortWorkersBottomSheetContent(
                 onClick = onApplyClick
             )
         }
-    }
-}
-
-@Composable
-fun SortWorkerRadioItem(
-    isSelected: Boolean,
-    text: String,
-    onClick: () -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .clickable { onClick() }
-            .padding(horizontal = SizeMedium, vertical = SizeExtraSmall)
-            .fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = text,
-            style = MaterialTheme.typography.bodyMedium.copy(
-                color = MaterialTheme.colorScheme.onBackground
-            ),
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
-        )
-        Spacer(modifier = Modifier.width(SizeMedium))
-        RadioButton(selected = isSelected, onClick = onClick)
     }
 }

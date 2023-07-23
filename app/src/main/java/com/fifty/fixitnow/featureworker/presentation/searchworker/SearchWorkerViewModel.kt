@@ -1,6 +1,5 @@
 package com.fifty.fixitnow.featureworker.presentation.searchworker
 
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -14,7 +13,6 @@ import com.fifty.fixitnow.core.presentation.util.UiEvent
 import com.fifty.fixitnow.core.util.Constants
 import com.fifty.fixitnow.core.util.DefaultPaginator
 import com.fifty.fixitnow.core.util.FavouriteToggle
-import com.fifty.fixitnow.core.util.toMillis
 import com.fifty.fixitnow.featureworker.domain.model.Worker
 import com.fifty.fixitnow.featureworker.domain.usecase.GetSearchedSortedAndFilteredWorkersUseCase
 import com.fifty.fixitnow.featureworker.domain.usecase.ToggleFavouriteWorkerUseCase
@@ -24,7 +22,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,8 +32,8 @@ class SearchWorkerViewModel @Inject constructor(
     private val getSearchedSortedAndFilteredWorkersUseCase: GetSearchedSortedAndFilteredWorkersUseCase
 ) : ViewModel() {
 
-    private val _availabiltyDate = mutableStateOf<Long?>(null)
-    val availabiltyDate: State<Long?> = _availabiltyDate
+    private val _availabilityDate = mutableStateOf<Long?>(null)
+    val availabilityDate: State<Long?> = _availabilityDate
 
     private val _searchFieldState = mutableStateOf(StandardTextFieldState())
     val searchFieldState: State<StandardTextFieldState> = _searchFieldState
@@ -67,7 +64,7 @@ class SearchWorkerViewModel @Inject constructor(
                 page = nextPage,
                 query = _searchFieldState.value.text.trim(),
                 categoryId = savedStateHandle["categoryId"],
-                availabilityCheckDate = _availabiltyDate.value,
+                availabilityCheckDate = _availabilityDate.value,
                 isFullDay = true
             )
         },
@@ -88,7 +85,7 @@ class SearchWorkerViewModel @Inject constructor(
     )
 
     init {
-        _availabiltyDate.value = savedStateHandle.get<String>("availabilityDate")?.toLong()
+        _availabilityDate.value = savedStateHandle.get<String>("availabilityDate")?.toLong()
         loadNextWorkers()
     }
 
@@ -110,9 +107,7 @@ class SearchWorkerViewModel @Inject constructor(
             }
 
             SearchWorkerEvent.ClearAllSortAndFilters -> {
-                _filterState.value = SearchWorkerFilterState()
-                _tempSortState.value = SearchWorkerSortState()
-                _sortState.value = SearchWorkerSortState()
+                resetSortAndFiltersToDefault()
             }
 
             SearchWorkerEvent.ToggleNearestSort -> {
@@ -166,6 +161,12 @@ class SearchWorkerViewModel @Inject constructor(
                 _tempSortState.value = _sortState.value
             }
         }
+    }
+
+    private fun resetSortAndFiltersToDefault() {
+        _filterState.value = SearchWorkerFilterState()
+        _tempSortState.value = SearchWorkerSortState()
+        _sortState.value = SearchWorkerSortState()
     }
 
     private fun toggleFavouriteWorker(workerId: String) {
