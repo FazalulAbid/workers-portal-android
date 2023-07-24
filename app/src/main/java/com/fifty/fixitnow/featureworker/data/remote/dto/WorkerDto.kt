@@ -45,7 +45,7 @@ data class WorkerDto(
             localAddress = localAddress?.toLocalAddress(),
             isFavourite = isFavourite,
             primaryCategoryId = primaryCategoryId,
-            distance = distance
+            distance = "${"%.1f".format((distance * 111.32))} km"
         )
     }
 }

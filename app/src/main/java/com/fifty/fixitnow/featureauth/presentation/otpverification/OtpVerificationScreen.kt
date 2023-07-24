@@ -3,6 +3,7 @@ package com.fifty.fixitnow.featureauth.presentation.otpverification
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.widthIn
@@ -88,7 +89,7 @@ fun OtpVerificationScreen(
         }
     }
     Column(
-        Modifier.fillMaxWidth(),
+        Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         StandardAppBar(

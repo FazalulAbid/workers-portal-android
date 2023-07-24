@@ -28,6 +28,7 @@ import coil.ImageLoader
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.fifty.fixitnow.R
+import com.fifty.fixitnow.core.domain.util.Session
 import com.fifty.fixitnow.core.presentation.component.AddToFavouriteButton
 import com.fifty.fixitnow.core.presentation.component.RatingAndRatingCountHorizontal
 import com.fifty.fixitnow.core.presentation.ui.theme.ExtraLargeProfilePictureHeight
@@ -138,7 +139,7 @@ fun WorkerItem(
                         )
                         Spacer(modifier = Modifier.width(SizeExtraSmall))
                         Text(
-                            text = "2 km from Home (Pending)",
+                            text = "${worker.distance} from ${Session.selectedAddress.value?.title}",
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 color = MaterialTheme.colorScheme.onSurface
                             ),

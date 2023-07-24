@@ -98,6 +98,10 @@ class UserDashboardViewModel @Inject constructor(
             UserDashboardEvent.UpdateSelectedAddress -> {
                 getLocalAddress()
             }
+
+            UserDashboardEvent.RefreshWorkers -> {
+                loadNextWorkers(true)
+            }
         }
     }
 

@@ -1,5 +1,8 @@
 package com.fifty.fixitnow.di
 
+import com.fifty.fixitnow.featurehistory.data.repository.WorkHistoryRepositoryImpl
+import com.fifty.fixitnow.featurehistory.domain.repository.WorkHistoryRepository
+import com.fifty.fixitnow.featurehistory.domain.usecase.GetWorkHistoryRepostUseCase
 import com.fifty.fixitnow.featureworkproposal.data.remote.WorkProposalApiService
 import com.fifty.fixitnow.featureworkproposal.data.repository.WorkProposalRepositoryImpl
 import com.fifty.fixitnow.featureworkproposal.domain.repository.WorkProposalRepository
@@ -38,6 +41,12 @@ object WorkProposalModule {
 
     @Provides
     @Singleton
+    fun provideWorkHistoryRepository(
+        api: WorkProposalApiService
+    ): WorkHistoryRepository = WorkHistoryRepositoryImpl(api)
+
+    @Provides
+    @Singleton
     fun providesSendWorkProposalUseCase(
         repository: WorkProposalRepository
     ): SendWorkProposalUseCase = SendWorkProposalUseCase(repository)
@@ -55,4 +64,10 @@ object WorkProposalModule {
         repository: WorkProposalRepository
     ): AcceptOrRejectWorkProposalUseCase =
         AcceptOrRejectWorkProposalUseCase(repository)
+
+    @Provides
+    @Singleton
+    fun provideGetWorkHistoryReportUseCase(
+        repository: WorkHistoryRepository
+    ): GetWorkHistoryRepostUseCase = GetWorkHistoryRepostUseCase(repository)
 }

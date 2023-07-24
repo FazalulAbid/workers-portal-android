@@ -65,7 +65,13 @@ class SearchWorkerViewModel @Inject constructor(
                 query = _searchFieldState.value.text.trim(),
                 categoryId = savedStateHandle["categoryId"],
                 availabilityCheckDate = _availabilityDate.value,
-                isFullDay = true
+                isFullDay = true,
+                rating4PlusFilter = filterState.value.isRatingFourPlus,
+                previouslyHiredFilter = filterState.value.isPreviouslyHired,
+                isRatingHighToLowSort = sortState.value.isRatingHighToLow,
+                isDistanceLowToHighSort = sortState.value.isDistanceLowToHigh,
+                isWageLowToHighSort = sortState.value.isWageLowToHigh,
+                isWageHighToLowSort = sortState.value.isWageHighToLow,
             )
         },
         getNextKey = {

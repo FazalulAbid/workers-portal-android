@@ -2,6 +2,7 @@ package com.fifty.fixitnow.featureworker.presentation.workerprofile
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalOverscrollConfiguration
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -33,6 +34,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -234,6 +236,33 @@ fun WorkerProfileScreen(
                                 ),
                             )
                             Spacer(modifier = Modifier.height(SizeLarge))
+                        }
+                        if (state.worker?.openToWork == false) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .background(
+                                        Color(0x1AFF0000),
+                                        shape = MaterialTheme.shapes.medium
+                                    )
+                                    .padding(vertical = SizeSmall, horizontal = SizeMedium),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    modifier = Modifier.size(SizeMedium),
+                                    painter = painterResource(id = R.drawable.ic_circle_xmark),
+                                    contentDescription = null,
+                                    tint = Color(0xFFFF0000)
+                                )
+                                Spacer(modifier = Modifier.width(SizeSmall))
+                                Text(
+                                    text = "${state.worker.firstName} is not currently open to work",
+                                    style = MaterialTheme.typography.bodyMedium.copy(
+                                        fontWeight = FontWeight.Medium,
+                                        color = Color(0xFFFF0000)
+                                    )
+                                )
+                            }
                         }
                     }
                 }

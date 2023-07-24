@@ -113,6 +113,7 @@ fun UserDashboardScreen(
         when (event) {
             Lifecycle.Event.ON_RESUME -> {
                 userDashboardViewModel.onEvent(UserDashboardEvent.UpdateSelectedAddress)
+//                userDashboardViewModel.onEvent(UserDashboardEvent.RefreshWorkers)
             }
 
             else -> Unit
@@ -241,18 +242,24 @@ fun UserDashboardScreen(
                             horizontalArrangement = Arrangement.spacedBy(SizeSmall),
                             contentPadding = PaddingValues(horizontal = SizeSmall)
                         ) {
-                            items(10) {
+                            items(pagingState.items.size) { index ->
+                                val worker = pagingState.items[index]
+                                if (index >= pagingState.items.size - 1 &&
+                                    !pagingState.endReached &&
+                                    !pagingState.isLoading
+                                ) {
+                                    userDashboardViewModel.loadNextWorkers()
+                                }
                                 MostBookedServicesItem(
-                                    onClick = {
-                                        Toast.makeText(context, "OnClick", Toast.LENGTH_SHORT)
-                                            .show()
-                                    },
+                                    worker = worker,
+                                    imageLoader = imageLoader,
                                     onFavouriteClick = {
-                                        Toast.makeText(
-                                            context,
-                                            "OnFavouriteClick",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
+                                        userDashboardViewModel.onEvent(
+                                            UserDashboardEvent.ToggleFavouriteWorker(worker.workerId)
+                                        )
+                                    },
+                                    onClick = {
+                                        onNavigate(Screen.WorkerProfileScreen.route + "?userId=${worker.workerId}")
                                     }
                                 )
                             }

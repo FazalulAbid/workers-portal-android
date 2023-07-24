@@ -197,6 +197,9 @@ class WorkerRepositoryImpl(
         page: Int,
         pageSize: Int,
         categoryId: String?,
+        rating4PlusFilter: Boolean?,
+        previouslyHiredFilter: Boolean?,
+        sortFlag: Int?,
         availabilityCheckDate: Long?,
         isFullDay: Boolean?,
         isBeforeNoon: Boolean?
@@ -207,6 +210,9 @@ class WorkerRepositoryImpl(
                 page = page,
                 pageSize = pageSize,
                 category = categoryId,
+                sortFlag = sortFlag,
+                rating4PlusFilter = rating4PlusFilter,
+                previouslyHiredFilter = previouslyHiredFilter,
                 date = availabilityCheckDate,
                 isFullDay = isFullDay,
                 isBeforeNoon = isBeforeNoon

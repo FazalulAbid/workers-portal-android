@@ -24,6 +24,9 @@ interface WorkerRepository {
         page: Int,
         pageSize: Int,
         categoryId: String?,
+        rating4PlusFilter: Boolean?,
+        previouslyHiredFilter: Boolean?,
+        sortFlag: Int?,
         availabilityCheckDate: Long?,
         isFullDay: Boolean?,
         isBeforeNoon: Boolean?

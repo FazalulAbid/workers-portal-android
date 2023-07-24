@@ -35,4 +35,17 @@ interface WorkProposalApiService {
     suspend fun rejectWorkProposal(
         @Query("proposalId") workProposalId: String
     ): BasicApiResponse<String>
+
+    @GET("proposal/get-report")
+    suspend fun getWorkHistoryReport(
+        @Query("fromDate") fromDate: Long,
+        @Query("toDate") toDate: Long,
+        @Query("workHistory") isWorkHistoryNeeded: Boolean,
+        @Query("hiringHistory") isHiringHistoryNeeded: Boolean,
+        @Query("pendingWorks") isPendingWorksNeeded: Boolean,
+        @Query("completedWorks") isCompletedWorksNeeded: Boolean,
+        @Query("cancelledWorks") isCancelledWorksNeeded: Boolean,
+        @Query("page") page: Int,
+        @Query("pageSize") pageSize: Int
+    ): Response<Any>
 }

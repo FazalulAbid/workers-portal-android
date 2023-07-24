@@ -9,18 +9,21 @@ import androidx.compose.runtime.setValue
 import androidx.core.util.toClosedRange
 import androidx.core.util.toRange
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.fifty.fixitnow.core.presentation.util.UiEvent
+import com.fifty.fixitnow.featurehistory.domain.usecase.GetWorkHistoryRepostUseCase
 import com.fifty.fixitnow.featureworker.presentation.searchworker.SearchWorkerFilterState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.temporal.TemporalAdjusters
 import javax.inject.Inject
 
 @HiltViewModel
 class WorkHistoryViewModel @Inject constructor(
-
+    private val getWorkHistoryRepostUseCase: GetWorkHistoryRepostUseCase
 ) : ViewModel() {
 
     private val _filterState = mutableStateOf(WorkHistoryFilterState())
@@ -69,6 +72,11 @@ class WorkHistoryViewModel @Inject constructor(
             WorkHistoryEvent.OnApplyFilterClick -> {
                 _selectedRange.value = _tempSelectedRange.value
                 _filterState.value = _tempFilterState.value
+
+                //testing
+                viewModelScope.launch {
+                    getWorkHistoryRepostUseCase()
+                }
             }
 
             WorkHistoryEvent.OnClearFilterClick -> {
