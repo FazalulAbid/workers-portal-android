@@ -18,6 +18,7 @@ import com.fifty.fixitnow.featureworker.domain.usecase.GetSampleWorksUseCase
 import com.fifty.fixitnow.featureworker.domain.usecase.GetWorkerDetailsUseCase
 import com.fifty.fixitnow.featureworker.domain.usecase.ToggleFavouriteWorkerUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -31,7 +32,6 @@ class WorkerProfileViewModel @Inject constructor(
     private val getSampleWorksUseCase: GetSampleWorksUseCase,
     private val toggleFavouriteWorkerUseCase: ToggleFavouriteWorkerUseCase,
     private val getWorkerDetailsUseCase: GetWorkerDetailsUseCase,
-    private val favouriteToggle: FavouriteToggle,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 

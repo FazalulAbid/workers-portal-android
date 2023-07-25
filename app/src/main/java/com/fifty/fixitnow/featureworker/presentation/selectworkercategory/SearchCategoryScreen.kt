@@ -29,6 +29,7 @@ import com.fifty.fixitnow.core.presentation.ui.theme.LargeProfilePictureHeight
 import com.fifty.fixitnow.core.presentation.ui.theme.MediumButtonHeight
 import com.fifty.fixitnow.core.presentation.ui.theme.SizeMedium
 import com.fifty.fixitnow.core.util.Screen
+import com.fifty.fixitnow.core.util.toMillis
 import com.fifty.fixitnow.featureworker.presentation.component.CategoryItem
 import com.fifty.fixitnow.featureworkproposal.presentation.workproposal.WorkProposalEvent
 import com.fifty.fixitnow.featureworkproposal.presentation.workproposal.WorkProposalViewModel
@@ -139,7 +140,11 @@ fun SelectWorkerCategoryScreen(
         ),
         selection = CalendarSelection.Date { date ->
             workProposalViewModel.onEvent(WorkProposalEvent.InputProposalDate(date))
-            onNavigate(Screen.SearchWorkerScreen.route + "?categoryId=${searchCategoryViewModel.selectedCategoryState.value?.id}?availabilityDate=${date}")
+            onNavigate(
+                Screen.SearchWorkerScreen.route + "?categoryId=${searchCategoryViewModel.selectedCategoryState.value?.id}?availabilityDate=${
+                    date.toMillis()
+                }"
+            )
         }
     )
 }
