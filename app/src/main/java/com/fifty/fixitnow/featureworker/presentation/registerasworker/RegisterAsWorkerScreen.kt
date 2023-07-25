@@ -39,6 +39,8 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavBackStackEntry
 import coil.ImageLoader
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.fifty.fixitnow.R
 import com.fifty.fixitnow.core.presentation.component.PrimarySuccessDialogContent
 import com.fifty.fixitnow.core.presentation.component.StandardAppBar
@@ -79,6 +81,9 @@ fun RegisterAsWorkerScreen(
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val context = LocalContext.current
+    val doneLottieComposition by rememberLottieComposition(
+        LottieCompositionSpec.RawRes(R.raw.done_lottie)
+    )
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
@@ -333,6 +338,7 @@ fun RegisterAsWorkerScreen(
                 title = stringResource(R.string.thank_you_for_registering_as_a_worker),
                 description = stringResource(R.string.your_registration_has_been_successfully_submitted),
                 buttonText = stringResource(R.string.go_to_dashboard),
+                lottie = doneLottieComposition,
                 onButtonClick = {
                     viewModel.isRegisterCompleteDialogDisplayed.postValue(false)
                     previousBackStackEntry?.savedStateHandle?.set(

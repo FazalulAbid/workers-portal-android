@@ -8,7 +8,6 @@ import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import coil.ImageLoader
-import com.fifty.fixitnow.core.domain.util.Session
 import com.fifty.fixitnow.core.util.NavigationParent
 import com.fifty.fixitnow.core.util.Screen
 import com.fifty.fixitnow.featureworker.presentation.postsamplework.PostSampleWorkScreen
@@ -30,9 +29,7 @@ fun NavGraphBuilder.workerNavGraph(
     workProposalViewModel: WorkProposalViewModel,
 ) {
     navigation(
-        startDestination = if (Session.userSession.value?.isWorker == true) {
-            Screen.WorkerDashboardScreen.route
-        } else Screen.RegisterAsWorkerScreen.route,
+        startDestination = Screen.WorkerDashboardScreen.route,
         route = NavigationParent.Work.route
     ) {
         composable(Screen.RegisterAsWorkerScreen.route) {

@@ -198,5 +198,8 @@
     <string name="filter_work_history">Filter Work History</string>
     <string name="filter">Filter</string>
     <string name="choose_date_range">Choose date range</string>
+    <string name="not_now">Not now</string>
+    <string name="unregistered_as_worker_join_now">Unregistered as worker? Join now!</string>
+    <string name="showcase_skills_get_hired_by_others">Showcase skills, get hired by others. Be part of our skilled workforce – brighter opportunities await.</string>
 
 </resources>

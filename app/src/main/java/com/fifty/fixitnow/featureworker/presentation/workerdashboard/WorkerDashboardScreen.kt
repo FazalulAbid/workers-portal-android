@@ -1,5 +1,6 @@
 package com.fifty.fixitnow.featureworker.presentation.workerdashboard
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalOverscrollConfiguration
 import androidx.compose.foundation.layout.Arrangement
@@ -17,6 +18,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -24,14 +27,21 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import coil.ImageLoader
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.fifty.fixitnow.R
 import com.fifty.fixitnow.core.domain.util.Session
 import com.fifty.fixitnow.core.presentation.component.DashboardSelectedAddressAndProfile
 import com.fifty.fixitnow.core.presentation.component.HorizontalDivider
 import com.fifty.fixitnow.core.presentation.component.PrimaryHeader
+import com.fifty.fixitnow.core.presentation.component.PrimarySuccessDialogContent
 import com.fifty.fixitnow.core.presentation.component.SecondaryHeader
 import com.fifty.fixitnow.core.presentation.ui.theme.ScaffoldBottomPaddingValue
 import com.fifty.fixitnow.core.presentation.ui.theme.SizeExtraSmall
@@ -61,7 +71,13 @@ fun WorkerDashboardScreen(
     val pagingState = viewModel.pagingState
     val state = viewModel.state.value
     val context = LocalContext.current
-    val cards = viewModel.cards.collectAsState()
+    val spannerLottie by rememberLottieComposition(
+        LottieCompositionSpec.RawRes(R.raw.spanner_lottie)
+    )
+
+    LaunchedEffect(Unit) {
+
+    }
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
@@ -199,4 +215,40 @@ fun WorkerDashboardScreen(
             }
         }
     }
+
+    AnimatedVisibility(
+        visible = state.profile?.isWorker == false
+    ) {
+        Dialog(
+            properties = DialogProperties(
+                dismissOnBackPress = false,
+                dismissOnClickOutside = false
+            ),
+            onDismissRequest = {
+                onNavigateUp()
+            }
+        ) {
+            PrimarySuccessDialogContent(
+                title = stringResource(R.string.unregistered_as_worker_join_now),
+                description = stringResource(R.string.showcase_skills_get_hired_by_others),
+                buttonText = stringResource(R.string.register_as_worker),
+                lottie = spannerLottie,
+                cancelButtonText = stringResource(R.string.not_now),
+                onCancelClick = {
+                    onNavigateUp()
+                },
+                isCancelable = true,
+                onButtonClick = {
+                    onNavigate(Screen.RegisterAsWorkerScreen.route)
+//                    viewModel.isRegisterCompleteDialogDisplayed.postValue(false)
+//                    previousBackStackEntry?.savedStateHandle?.set(
+//                        "isWorkerProfileUpdated",
+//                        true
+//                    )
+//                    onNavigateUp()
+                }
+            )
+        }
+    }
 }
+
