@@ -43,9 +43,9 @@ fun Modifier.shimmerEffect(isVisible: Boolean = true): Modifier = composed {
         background(
             brush = Brush.linearGradient(
                 colors = listOf(
-                    Color(0xFFE4E4E4),
-                    Color(0xFFCCCCCC),
-                    Color(0xFFE4E4E4),
+                    MaterialTheme.colorScheme.surface,
+                    MaterialTheme.colorScheme.surface,
+                    MaterialTheme.colorScheme.surface,
                 ),
                 start = Offset(startOffsetX, 0f),
                 end = Offset(startOffsetX + size.width.toFloat(), size.height.toFloat())

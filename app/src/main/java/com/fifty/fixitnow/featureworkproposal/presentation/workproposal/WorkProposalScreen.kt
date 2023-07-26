@@ -136,10 +136,10 @@ fun WorkProposalScreen(
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
                 is UiEvent.SentWorkProposal -> {
-                    ToastExt.makeText(
-                        context = context,
-                        message = R.string.work_proposal_sent_successfully
-                    )
+//                    ToastExt.makeText(
+//                        context = context,
+//                        message = R.string.work_proposal_sent_successfully
+//                    )
                     viewModel.isWorkProposalSentDialogDisplayed.postValue(true)
                 }
 

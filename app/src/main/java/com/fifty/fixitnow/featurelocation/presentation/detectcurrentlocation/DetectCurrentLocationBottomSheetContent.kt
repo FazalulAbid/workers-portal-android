@@ -67,7 +67,7 @@ fun DetectCurrentLocationBottomSheetContent(
 
     Column(
         modifier = Modifier
-            .padding(horizontal = SizeMedium),
+            .padding(SizeMedium),
     ) {
         SecondaryHeader(
             text = stringResource(R.string.enter_complete_address),

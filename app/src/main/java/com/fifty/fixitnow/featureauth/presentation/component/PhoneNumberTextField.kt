@@ -36,6 +36,9 @@ fun PhoneNumberTextField(
     phoneNumberText: String = "",
     countryCodeText: String = "",
     hint: String = "",
+    backgroundColor: Color = MaterialTheme.colorScheme.surface,
+    hintColor: Color = MaterialTheme.colorScheme.onSurface,
+    textColor: Color = MaterialTheme.colorScheme.onBackground,
     maxLength: Int = DEFAULT_PHONE_NUMBER_LENGTH,
     keyboardType: KeyboardType = KeyboardType.Number,
     onValueChange: (String) -> Unit,
@@ -58,7 +61,8 @@ fun PhoneNumberTextField(
             onValueChange = {},
             modifier = Modifier.width(IntrinsicSize.Min),
             textStyle = MaterialTheme.typography.bodyLarge.copy(
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Medium,
+                color = textColor
             ),
             enabled = false,
             readOnly = true
@@ -74,7 +78,8 @@ fun PhoneNumberTextField(
             modifier = textFieldModifier
                 .weight(1f),
             textStyle = MaterialTheme.typography.bodyLarge.copy(
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Medium,
+                color = textColor
             ),
             keyboardOptions = KeyboardOptions(
                 keyboardType = keyboardType,

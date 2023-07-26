@@ -48,7 +48,7 @@ class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalAnimationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        val splash = installSplashScreen()
         splashScreenViewModel.onEvent(SplashEvent.CheckAuthentication)
 
         lifecycleScope.launch {
@@ -70,7 +70,7 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberAnimatedNavController()
                     val navBackStackEntry by navController.currentBackStackEntryAsState()
                     val snackBarHostState = remember { SnackbarHostState() }
-                    val splash = installSplashScreen()
+//                    val splash = installSplashScreen()
                     splash.setKeepOnScreenCondition {
                         keepSplashScreenOn
                     }

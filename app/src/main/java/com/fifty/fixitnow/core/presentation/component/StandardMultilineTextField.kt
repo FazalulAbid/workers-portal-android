@@ -32,7 +32,7 @@ fun StandardMultilineTextField(
     hint: String,
     titleHint: Boolean = false,
     backgroundColor: Color = MaterialTheme.colorScheme.surface,
-    textColor: Color = MaterialTheme.colorScheme.onSurface,
+    textColor: Color = MaterialTheme.colorScheme.onBackground,
     cursorColor: Color = MaterialTheme.colorScheme.primary,
     value: String,
     maxLength: Int = 400,

@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -78,7 +79,8 @@ fun WorkerItem(
                         data = worker.profileImageUrl,
                         imageLoader = imageLoader
                     ),
-                    contentDescription = null
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop
                 )
                 Spacer(modifier = Modifier.width(SizeMedium))
                 Column {

@@ -1,6 +1,5 @@
 package com.fifty.fixitnow.featureauth.presentation.auth
 
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -184,7 +183,8 @@ fun AuthScreen(
                     textAlign = TextAlign.Center
                 )
                 TextBetweenLines(
-                    text = stringResource(R.string.login_or_sign_up)
+                    text = stringResource(R.string.login_or_sign_up),
+                    textColor = MaterialTheme.colorScheme.onBackground
                 )
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Row {
@@ -233,7 +233,10 @@ fun AuthScreen(
                     )
                 }
                 if (keyboardOpenState == Keyboard.Closed) {
-                    TextBetweenLines(text = stringResource(R.string.or))
+                    TextBetweenLines(
+                        text = stringResource(R.string.or),
+                        textColor = MaterialTheme.colorScheme.onBackground
+                    )
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
