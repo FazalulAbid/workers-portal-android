@@ -58,6 +58,7 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.fifty.fixitnow.R
 import com.fifty.fixitnow.core.presentation.component.AddToFavouriteButton
+import com.fifty.fixitnow.core.presentation.component.EmptyListLottie
 import com.fifty.fixitnow.core.presentation.component.LargeDisplayProfilePicture
 import com.fifty.fixitnow.core.presentation.component.SecondaryHeader
 import com.fifty.fixitnow.core.presentation.component.StandardAppBar
@@ -96,12 +97,6 @@ fun WorkerProfileScreen(
     val screenWidth = with(LocalConfiguration.current) { screenWidthDp.dp }
     val sampleWorks =
         workerProfileViewModel.sampleWorks.collectAsLazyPagingItems()
-    val noSampleWorksLottieComposition by rememberLottieComposition(
-        LottieCompositionSpec.RawRes(R.raw.empty_box_lottie)
-    )
-    val noSampleWorksLottieProgress by animateLottieCompositionAsState(
-        composition = noSampleWorksLottieComposition, iterations = LottieConstants.IterateForever
-    )
 
     LaunchedEffect(key1 = true) {
         workerProfileViewModel.getProfile(workerId)
@@ -389,11 +384,7 @@ fun WorkerProfileScreen(
                                     .padding(SizeMedium),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                LottieAnimation(
-                                    modifier = Modifier.size(ExtraExtraLargeProfilePictureHeight),
-                                    composition = noSampleWorksLottieComposition,
-                                    progress = noSampleWorksLottieProgress
-                                )
+                                EmptyListLottie()
                             }
                         }
                     }

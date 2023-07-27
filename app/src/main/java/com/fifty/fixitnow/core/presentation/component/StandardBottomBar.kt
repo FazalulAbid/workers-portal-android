@@ -1,5 +1,13 @@
 package com.fifty.fixitnow.core.presentation.component
 
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.FiniteAnimationSpec
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -21,6 +29,7 @@ import com.fifty.fixitnow.R
 import com.fifty.fixitnow.core.domain.model.BottomNavItem
 import com.fifty.fixitnow.core.presentation.ui.theme.SizeExtraLarge
 import com.fifty.fixitnow.core.presentation.ui.theme.SizeLarge
+import com.fifty.fixitnow.core.presentation.ui.theme.SizeMedium
 import com.fifty.fixitnow.core.util.NavigationParent
 import com.fifty.fixitnow.core.util.Screen
 
@@ -63,7 +72,7 @@ fun StandardBottomBar(
             route = NavigationParent.History.route,
             label = stringResource(R.string.history),
             icon = painterResource(id = R.drawable.ic_history),
-            iconSelected = painterResource(id = R.drawable.ic_history),
+            iconSelected = painterResource(id = R.drawable.ic_history_filled),
             contentDescription = stringResource(R.string.history)
         ),
     )
@@ -72,50 +81,47 @@ fun StandardBottomBar(
 
     if (showBottomBar) {
         NavigationBar(
-            modifier = Modifier.shadow(
-                elevation = SizeExtraLarge
-            ),
+            modifier = Modifier
+                .shadow(elevation = SizeExtraLarge),
             containerColor = MaterialTheme.colorScheme.background
         ) {
-            bottomNavItems.forEachIndexed { index, item ->
-                val isSelected = parentRouteName == item.route
-                NavigationBarItem(
-                    colors = NavigationBarItemDefaults.colors(
-                        selectedTextColor = MaterialTheme.colorScheme.onSurface,
-                        indicatorColor = MaterialTheme.colorScheme.primary,
-                        selectedIconColor = MaterialTheme.colorScheme.onPrimary,
-                        unselectedIconColor = MaterialTheme.colorScheme.onSurface
-                    ),
-                    selected = isSelected,
-                    alwaysShowLabel = isSelected,
-                    onClick = {
-                        selectedItem.value = index
-                        onNavigate(item.route, navOptions {
-                            popUpTo(Screen.UserDashboardScreen.route) {
-                                saveState = true
+            Row(modifier = Modifier.padding(SizeMedium)) {
+                bottomNavItems.forEachIndexed { index, item ->
+                    val isSelected = parentRouteName == item.route
+
+                    NavigationBarItem(
+                        colors = NavigationBarItemDefaults.colors(
+                            indicatorColor = MaterialTheme.colorScheme.background,
+                            selectedIconColor = MaterialTheme.colorScheme.primary,
+                            unselectedIconColor = MaterialTheme.colorScheme.onSurface
+                        ),
+                        selected = isSelected,
+                        onClick = {
+                            selectedItem.value = index
+                            onNavigate(item.route, navOptions {
+                                popUpTo(Screen.UserDashboardScreen.route) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            })
+                        },
+                        icon = {
+                            Crossfade(
+                                targetState = isSelected,
+                                animationSpec = tween(durationMillis = 1000)
+                            ) { isSelected ->
+                                Icon(
+                                    painter = if (isSelected) {
+                                        item.iconSelected
+                                    } else item.icon,
+                                    modifier = Modifier.size(SizeExtraLarge),
+                                    contentDescription = item.contentDescription
+                                )
                             }
-                            launchSingleTop = true
-                            restoreState = true
-                        })
-                    },
-                    icon = {
-                        Icon(
-                            painter = if (isSelected) {
-                                item.iconSelected
-                            } else item.icon,
-                            modifier = if (isSelected) {
-                                Modifier.size(SizeLarge)
-                            } else Modifier.size(SizeExtraLarge),
-                            contentDescription = item.contentDescription
-                        )
-                    },
-                    label = {
-                        Text(
-                            text = item.label,
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                    }
-                )
+                        }
+                    )
+                }
             }
         }
     }

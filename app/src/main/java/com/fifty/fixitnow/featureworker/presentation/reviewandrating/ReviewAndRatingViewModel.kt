@@ -130,6 +130,9 @@ class ReviewAndRatingViewModel @Inject constructor(
                         getReviewAndRating(
                             savedStateHandle.get<String>("userId") ?: getOwnUserIdUseCase()
                         )
+                        getWorkerRatingsCount(
+                            savedStateHandle.get<String>("userId") ?: getOwnUserIdUseCase()
+                        )
                     }
 
                     is Resource.Error -> {
