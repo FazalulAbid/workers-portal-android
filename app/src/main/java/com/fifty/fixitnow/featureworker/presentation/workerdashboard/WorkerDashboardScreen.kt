@@ -39,6 +39,7 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.fifty.fixitnow.R
 import com.fifty.fixitnow.core.domain.util.Session
 import com.fifty.fixitnow.core.presentation.component.DashboardSelectedAddressAndProfile
+import com.fifty.fixitnow.core.presentation.component.EmptyListLottie
 import com.fifty.fixitnow.core.presentation.component.HorizontalDivider
 import com.fifty.fixitnow.core.presentation.component.PrimaryHeader
 import com.fifty.fixitnow.core.presentation.component.PrimarySuccessDialogContent
@@ -169,47 +170,58 @@ fun WorkerDashboardScreen(
                     )
                 }
 
-                LazyColumn {
-                    items(pagingState.items.size) { index ->
-                        val workProposal = pagingState.items[index]
-                        if (index >= pagingState.items.size - 1 &&
-                            !pagingState.endReached &&
-                            !pagingState.isLoading
-                        ) {
-                            viewModel.loadNextWorkers()
-                        }
-                        Box(
-                            Modifier.fillMaxWidth(),
-                            contentAlignment = Alignment.CenterStart
-                        ) {
-                            WorkProposalCardActionRow(
-                                actionIconSize = ACTION_ITEM_SIZE.dp,
-                                onAccept = {
-                                    viewModel.onEvent(
-                                        WorkerDashboardEvent.AcceptWorkProposal(
-                                            workProposal.workProposalId
+                if (pagingState.items.isNotEmpty()) {
+                    LazyColumn {
+                        items(pagingState.items.size) { index ->
+                            val workProposal = pagingState.items[index]
+                            if (index >= pagingState.items.size - 1 &&
+                                !pagingState.endReached &&
+                                !pagingState.isLoading
+                            ) {
+                                viewModel.loadNextWorkers()
+                            }
+                            Box(
+                                Modifier.fillMaxWidth(),
+                                contentAlignment = Alignment.CenterStart
+                            ) {
+                                WorkProposalCardActionRow(
+                                    actionIconSize = ACTION_ITEM_SIZE.dp,
+                                    onAccept = {
+                                        viewModel.onEvent(
+                                            WorkerDashboardEvent.AcceptWorkProposal(
+                                                workProposal.workProposalId
+                                            )
                                         )
-                                    )
-                                },
-                                onReject = {
-                                    viewModel.onEvent(
-                                        WorkerDashboardEvent.RejectWorkProposal(
-                                            workProposal.workProposalId
+                                    },
+                                    onReject = {
+                                        viewModel.onEvent(
+                                            WorkerDashboardEvent.RejectWorkProposal(
+                                                workProposal.workProposalId
+                                            )
                                         )
-                                    )
-                                }
-                            )
-                            WorkProposalDraggableCard(
-                                workProposal = workProposal,
-                                isRevealed = viewModel.revealedCard.value?.workProposalId == workProposal.workProposalId,
-                                cardOffset = CARD_OFFSET.dp(),
-                                imageLoader = imageLoader,
-                                onExpand = { viewModel.onItemExpanded(workProposal) },
-                                onCollapse = { viewModel.onItemCollapsed(workProposal) },
-                                onClick = { viewModel.onItemExpanded(workProposal) }
-                            )
+                                    }
+                                )
+                                WorkProposalDraggableCard(
+                                    workProposal = workProposal,
+                                    isRevealed = viewModel.revealedCard.value?.workProposalId == workProposal.workProposalId,
+                                    cardOffset = CARD_OFFSET.dp(),
+                                    imageLoader = imageLoader,
+                                    onExpand = { viewModel.onItemExpanded(workProposal) },
+                                    onCollapse = { viewModel.onItemCollapsed(workProposal) },
+                                    onClick = { viewModel.onItemExpanded(workProposal) }
+                                )
+                            }
+                            HorizontalDivider()
                         }
-                        HorizontalDivider()
+                    }
+                } else {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        EmptyListLottie()
                     }
                 }
             }

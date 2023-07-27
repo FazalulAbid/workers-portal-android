@@ -1,6 +1,7 @@
 package com.fifty.fixitnow.featurefavorites.presentation.favouriteworkers
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -22,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.ImageLoader
 import com.fifty.fixitnow.R
+import com.fifty.fixitnow.core.presentation.component.EmptyListLottie
 import com.fifty.fixitnow.core.presentation.component.StandardAppBar
 import com.fifty.fixitnow.core.presentation.ui.theme.ScaffoldBottomPaddingValue
 import com.fifty.fixitnow.core.presentation.ui.theme.SizeMedium
@@ -64,39 +66,54 @@ fun FavoriteWorkersScreen(
                     )
                 }
             )
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(SizeMedium),
-                verticalArrangement = Arrangement.spacedBy(SizeMedium)
-            ) {
-                items(pagingState.items.size) { index ->
-                    val worker = pagingState.items[index]
-                    if (index >= pagingState.items.size - 1 &&
-                        !pagingState.endReached &&
-                        !pagingState.isLoading
-                    ) {
-                        viewModel.loadNextWorkers()
-                    }
-                    WorkerItem(
-                        worker = worker,
-                        imageLoader = imageLoader,
-                        onFavouriteClick = {
-                            viewModel.onEvent(FavouriteWorkersEvent.ToggleFavouriteWorkers(worker.workerId))
-                        },
-                        onClick = {
-                            onNavigate(Screen.WorkerProfileScreen.route + "?userId=${worker.workerId}")
-                        }
-                    )
+            if ((!pagingState.isLoading) && pagingState.items.isEmpty()) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
+                    contentAlignment = Alignment.Center
+                ) {
+                    EmptyListLottie()
                 }
-                item {
-                    if (pagingState.isLoading) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(SizeMedium),
-                            horizontalArrangement = Arrangement.Center
+            } else {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(SizeMedium),
+                    verticalArrangement = Arrangement.spacedBy(SizeMedium)
+                ) {
+                    items(pagingState.items.size) { index ->
+                        val worker = pagingState.items[index]
+                        if (index >= pagingState.items.size - 1 &&
+                            !pagingState.endReached &&
+                            !pagingState.isLoading
                         ) {
-                            CircularProgressIndicator()
+                            viewModel.loadNextWorkers()
+                        }
+                        WorkerItem(
+                            worker = worker,
+                            imageLoader = imageLoader,
+                            onFavouriteClick = {
+                                viewModel.onEvent(
+                                    FavouriteWorkersEvent.ToggleFavouriteWorkers(
+                                        worker.workerId
+                                    )
+                                )
+                            },
+                            onClick = {
+                                onNavigate(Screen.WorkerProfileScreen.route + "?userId=${worker.workerId}")
+                            }
+                        )
+                    }
+                    item {
+                        if (pagingState.isLoading) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(SizeMedium),
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                CircularProgressIndicator()
+                            }
                         }
                     }
                 }
