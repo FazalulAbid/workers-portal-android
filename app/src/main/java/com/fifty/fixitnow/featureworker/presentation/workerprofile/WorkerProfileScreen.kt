@@ -30,16 +30,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -51,18 +48,12 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import coil.ImageLoader
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
-import com.airbnb.lottie.compose.LottieAnimation
-import com.airbnb.lottie.compose.LottieCompositionSpec
-import com.airbnb.lottie.compose.LottieConstants
-import com.airbnb.lottie.compose.animateLottieCompositionAsState
-import com.airbnb.lottie.compose.rememberLottieComposition
 import com.fifty.fixitnow.R
 import com.fifty.fixitnow.core.presentation.component.AddToFavouriteButton
 import com.fifty.fixitnow.core.presentation.component.EmptyListLottie
 import com.fifty.fixitnow.core.presentation.component.LargeDisplayProfilePicture
 import com.fifty.fixitnow.core.presentation.component.SecondaryHeader
 import com.fifty.fixitnow.core.presentation.component.StandardAppBar
-import com.fifty.fixitnow.core.presentation.ui.theme.ExtraExtraLargeProfilePictureHeight
 import com.fifty.fixitnow.core.presentation.ui.theme.SizeExtraSmall
 import com.fifty.fixitnow.core.presentation.ui.theme.SizeLarge
 import com.fifty.fixitnow.core.presentation.ui.theme.SizeMedium
@@ -71,10 +62,10 @@ import com.fifty.fixitnow.core.presentation.ui.theme.SkyBlueColor
 import com.fifty.fixitnow.core.presentation.ui.theme.SmallStrokeThickness
 import com.fifty.fixitnow.core.presentation.util.ToastExt
 import com.fifty.fixitnow.core.util.Screen
+import com.fifty.fixitnow.featureworker.presentation.component.CategoryItem
 import com.fifty.fixitnow.featureworker.presentation.component.LocalAddressDisplayLarge
 import com.fifty.fixitnow.featureworker.presentation.component.RatingAndRatingCountVertical
 import com.fifty.fixitnow.featureworker.presentation.component.SampleWorkItem
-import com.fifty.fixitnow.featureworker.presentation.component.WorkerCategoryChip
 import com.fifty.fixitnow.featureworkproposal.presentation.workproposal.WorkProposalEvent
 import com.fifty.fixitnow.featureworkproposal.presentation.workproposal.WorkProposalViewModel
 import com.maxkeppeker.sheets.core.views.Grid
@@ -275,7 +266,7 @@ fun WorkerProfileScreen(
                                 rowSpacing = SizeMedium,
                                 columnSpacing = SizeMedium
                             ) { workerCategory ->
-                                WorkerCategoryChip(
+                                CategoryItem(
                                     modifier = Modifier.fillMaxWidth(),
                                     workerCategory = workerCategory,
                                     imageLoader = imageLoader,

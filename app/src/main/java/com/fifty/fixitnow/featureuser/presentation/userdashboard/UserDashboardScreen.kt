@@ -207,12 +207,15 @@ fun UserDashboardScreen(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        LazyRow(Modifier.fillMaxWidth()) {
+                        LazyRow(
+                            Modifier.fillMaxWidth(),
+                            contentPadding = PaddingValues(SizeMedium),
+                            horizontalArrangement = Arrangement.spacedBy(SizeMedium)
+                        ) {
                             items(userDashboardViewModel.suggestedCategoriesState.value.suggestedCategories) {
                                 SuggestedCategoryItem(
                                     category = it,
-                                    imageLoader = imageLoader,
-                                    imageSize = MediumProfilePictureHeight
+                                    imageLoader = imageLoader
                                 ) {
                                     userDashboardViewModel.onEvent(
                                         UserDashboardEvent.SelectWorkerCategory(it)

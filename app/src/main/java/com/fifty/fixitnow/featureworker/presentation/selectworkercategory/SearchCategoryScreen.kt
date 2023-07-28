@@ -101,7 +101,7 @@ fun SelectWorkerCategoryScreen(
             horizontalArrangement = Arrangement.spacedBy(SizeMedium),
             verticalArrangement = Arrangement.spacedBy(SizeMedium),
             contentPadding = PaddingValues(horizontal = SizeMedium),
-            columns = GridCells.Adaptive(minSize = LargeProfilePictureHeight)
+            columns = GridCells.Fixed(count = 2)
         ) {
             items(pagingState.items.size) { index ->
                 val category = pagingState.items[index]
