@@ -27,12 +27,13 @@ import com.fifty.fixitnow.core.presentation.component.StandardScaffold
 import com.fifty.fixitnow.core.presentation.ui.theme.WorkersPortalTheme
 import com.fifty.fixitnow.core.util.NavigationParent
 import com.fifty.fixitnow.core.util.Screen
-import com.fifty.fixitnow.featureauth.presentation.splash.SplashEvent
+import com.fifty.fixitnow.featureauth.presentation.onboarding.OnBoardingEvent
 import com.fifty.fixitnow.featureauth.presentation.splash.SplashViewModel
 import com.fifty.fixitnow.featureauth.presentation.splash.UserAuthState
 import com.fifty.fixitnow.featureworkproposal.presentation.workproposal.WorkProposalViewModel
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -41,20 +42,18 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var imageLoader: ImageLoader
 
-    private var keepSplashScreenOn = true
-    private val splashScreenViewModel: SplashViewModel by viewModels()
-    private var userAuthState = mutableStateOf(UserAuthState.UNKNOWN)
+    private val splashViewModel: SplashViewModel by viewModels()
+    private var startDestination = mutableStateOf<String?>(null)
 
     @OptIn(ExperimentalAnimationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val splash = installSplashScreen()
-        splashScreenViewModel.onEvent(SplashEvent.CheckAuthentication)
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                splashScreenViewModel.isAuthenticated.collect {
-                    userAuthState.value = it
+                splashViewModel.startDestination.collect { route ->
+                    startDestination.value = route
                 }
             }
         }
@@ -71,7 +70,7 @@ class MainActivity : ComponentActivity() {
                     val navBackStackEntry by navController.currentBackStackEntryAsState()
                     val snackBarHostState = remember { SnackbarHostState() }
                     splash.setKeepOnScreenCondition {
-                        keepSplashScreenOn
+                        splashViewModel.isLoading.value
                     }
                     StandardScaffold(
                         onNavigate = navController::navigate,
@@ -80,32 +79,18 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.fillMaxSize(),
                         showBottomBar = shouldShowBottomBar(navBackStackEntry),
                     ) {
-                        when (userAuthState.value) {
-                            UserAuthState.UNAUTHENTICATED -> {
-                                Navigation(
-                                    navController = navController,
-                                    snackbarHostState = snackBarHostState,
-                                    startDestination = NavigationParent.Auth.route,
-                                    onDataLoaded = { keepSplashScreenOn = false },
-                                    imageLoader = imageLoader,
-                                    workProposalViewModel = workProposalViewModel,
-                                    isWorker = Session.userSession.value?.isWorker ?: false
-                                )
-                            }
-
-                            UserAuthState.AUTHENTICATED -> {
-                                Navigation(
-                                    navController = navController,
-                                    snackbarHostState = snackBarHostState,
-                                    startDestination = NavigationParent.Home.route,
-                                    onDataLoaded = { keepSplashScreenOn = false },
-                                    imageLoader = imageLoader,
-                                    workProposalViewModel = workProposalViewModel,
-                                    isWorker = Session.userSession.value?.isWorker ?: false
-                                )
-                            }
-
-                            UserAuthState.UNKNOWN -> {}
+                        startDestination.value?.let { startDestination ->
+                            Navigation(
+                                navController = navController,
+                                snackbarHostState = snackBarHostState,
+                                startDestination = startDestination,
+                                onDataLoaded = {
+                                    splashViewModel.onEvent(OnBoardingEvent.SplashLoadingComplete)
+                                },
+                                imageLoader = imageLoader,
+                                workProposalViewModel = workProposalViewModel,
+                                isWorker = Session.userSession.value?.isWorker ?: false
+                            )
                         }
                     }
                 }

@@ -2,6 +2,7 @@ package com.fifty.fixitnow.core.util
 
 sealed class Screen(val route: String) {
     object AuthScreen : Screen("auth_screen")
+    object OnBoardingScreen : Screen("on_boarding_screen")
     object SelectCountryScreen : Screen("select_country_screen")
     object OtpVerificationScreen : Screen("otp_verification_screen")
     object UserDashboardScreen : Screen("user_dashboard_screen")

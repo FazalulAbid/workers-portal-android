@@ -10,7 +10,9 @@ import com.fifty.fixitnow.core.presentation.util.enterTransitionHorizontal
 import com.fifty.fixitnow.core.presentation.util.exitTransitionHorizontal
 import com.fifty.fixitnow.core.presentation.util.popEnterTransitionHorizontal
 import com.fifty.fixitnow.core.presentation.util.popExitTransitionHorizontal
+import com.fifty.fixitnow.core.util.NavigationParent
 import com.fifty.fixitnow.featureauth.presentation.component.authNavGraph
+import com.fifty.fixitnow.featureauth.presentation.component.onboardingNavGraph
 import com.fifty.fixitnow.featurechat.presentation.component.chatNavGraph
 import com.fifty.fixitnow.featurefavorites.presentation.component.favouriteNavGraph
 import com.fifty.fixitnow.featurehistory.presentation.component.historyNavGraph
@@ -42,6 +44,7 @@ fun Navigation(
         popEnterTransition = { popEnterTransitionHorizontal },
         popExitTransition = { popExitTransitionHorizontal },
     ) {
+        onboardingNavGraph(navController, snackbarHostState, imageLoader)
         authNavGraph(navController, snackbarHostState, imageLoader)
         userNavGraph(navController, snackbarHostState, workProposalViewModel, imageLoader)
         workerNavGraph(navController, snackbarHostState, imageLoader, workProposalViewModel)

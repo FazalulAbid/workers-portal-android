@@ -12,9 +12,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.ImageLoader
+import com.fifty.fixitnow.core.util.Screen
 
 @Composable
 fun OnBoardingScreen(
+    onNavigate: (String) -> Unit,
+    popBackStack: () -> Unit,
+    imageLoader: ImageLoader,
     viewModel: OnBoardingViewModel = hiltViewModel()
 ) {
     Box(
@@ -23,7 +28,11 @@ fun OnBoardingScreen(
             .background(Color.Yellow),
         contentAlignment = Alignment.Center
     ) {
-        Button(onClick = {}) {
+        Button(onClick = {
+            viewModel.saveOnBoardingState(completed = true)
+            popBackStack()
+            onNavigate(Screen.AuthScreen.route)
+        }) {
             Text(
                 text = "On Boarding Screen",
                 style = MaterialTheme.typography.titleMedium.copy(
