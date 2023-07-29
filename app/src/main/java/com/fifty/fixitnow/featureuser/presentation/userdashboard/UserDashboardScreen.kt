@@ -2,7 +2,6 @@ package com.fifty.fixitnow.featureuser.presentation.userdashboard
 
 import android.Manifest
 import android.app.Activity
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -26,7 +25,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -36,8 +34,6 @@ import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import coil.ImageLoader
-import com.airbnb.lottie.compose.LottieCompositionSpec
-import com.airbnb.lottie.compose.rememberLottieComposition
 import com.fifty.fixitnow.R
 import com.fifty.fixitnow.core.domain.util.Session
 import com.fifty.fixitnow.core.presentation.component.CoarseLocationPermissionTextProvider
@@ -46,13 +42,11 @@ import com.fifty.fixitnow.core.presentation.component.HorizontalDivider
 import com.fifty.fixitnow.core.presentation.component.PermissionDialog
 import com.fifty.fixitnow.core.presentation.component.SecondaryHeader
 import com.fifty.fixitnow.core.presentation.ui.theme.MediumButtonHeight
-import com.fifty.fixitnow.core.presentation.ui.theme.MediumProfilePictureHeight
 import com.fifty.fixitnow.core.presentation.ui.theme.ScaffoldBottomPaddingValue
 import com.fifty.fixitnow.core.presentation.ui.theme.SizeExtraSmall
 import com.fifty.fixitnow.core.presentation.ui.theme.SizeMedium
 import com.fifty.fixitnow.core.presentation.ui.theme.SizeSmall
 import com.fifty.fixitnow.core.presentation.util.OnLifecycleEvent
-import com.fifty.fixitnow.core.presentation.util.ToastExt
 import com.fifty.fixitnow.core.presentation.util.UiEvent
 import com.fifty.fixitnow.core.util.Screen
 import com.fifty.fixitnow.core.util.openAppSettings
@@ -88,10 +82,6 @@ fun UserDashboardScreen(
     val state = userDashboardViewModel.state.value
     val context = LocalContext.current
     val calenderState = rememberUseCaseState()
-
-    val favouriteLottieComposition by rememberLottieComposition(
-        LottieCompositionSpec.RawRes(R.raw.favourite_button_lottie)
-    )
 
     val permissionsToRequest = arrayOf(
         Manifest.permission.ACCESS_FINE_LOCATION
@@ -233,7 +223,7 @@ fun UserDashboardScreen(
                             text = stringResource(R.string.most_booked_services),
                             modifier = Modifier.padding(bottom = SizeSmall),
                             style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.SemiBold,
+                            fontWeight = FontWeight.SemiBold
                         )
                     }
                     Column(

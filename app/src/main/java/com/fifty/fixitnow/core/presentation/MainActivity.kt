@@ -70,7 +70,6 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberAnimatedNavController()
                     val navBackStackEntry by navController.currentBackStackEntryAsState()
                     val snackBarHostState = remember { SnackbarHostState() }
-//                    val splash = installSplashScreen()
                     splash.setKeepOnScreenCondition {
                         keepSplashScreenOn
                     }

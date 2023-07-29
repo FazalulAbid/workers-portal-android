@@ -4,14 +4,18 @@ import android.content.Context
 import com.fifty.fixitnow.featureauth.data.remote.AuthApiService
 import com.fifty.fixitnow.featureauth.data.remote.AuthenticateApiService
 import com.fifty.fixitnow.featureauth.data.repository.AuthRepositoryImpl
+import com.fifty.fixitnow.featureauth.data.repository.OnBoardingRepositoryImpl
 import com.fifty.fixitnow.featureauth.data.repository.SessionRepositoryImpl
 import com.fifty.fixitnow.featureauth.domain.repository.AuthRepository
+import com.fifty.fixitnow.featureauth.domain.repository.OnBoardingRepository
 import com.fifty.fixitnow.featureauth.domain.repository.SessionRepository
 import com.fifty.fixitnow.featureauth.domain.usecase.AuthUseCases
 import com.fifty.fixitnow.featureauth.domain.usecase.AuthenticateUseCase
 import com.fifty.fixitnow.featureauth.domain.usecase.GetOtpUseCase
 import com.fifty.fixitnow.featureauth.domain.usecase.LogoutUseCase
+import com.fifty.fixitnow.featureauth.domain.usecase.ReadOnBoardingStateUseCase
 import com.fifty.fixitnow.featureauth.domain.usecase.SaveAccessTokenUseCase
+import com.fifty.fixitnow.featureauth.domain.usecase.SaveOnBoardingStateUseCase
 import com.fifty.fixitnow.featureauth.domain.usecase.SaveRefreshTokenUseCase
 import com.fifty.fixitnow.featureauth.domain.usecase.SaveUserIdUseCase
 import com.fifty.fixitnow.featureauth.domain.usecase.VerifyOtpUseCase
@@ -73,6 +77,25 @@ object AuthModule {
             api = api,
             authenticateApi = authenticateApi
         )
+
+    @Provides
+    @Singleton
+    fun provideOnBoardingRepository(
+        @ApplicationContext context: Context
+    ): OnBoardingRepository =
+        OnBoardingRepositoryImpl(context)
+
+    @Provides
+    @Singleton
+    fun provideSaveOnBoardingStateUseCase(
+        repository: OnBoardingRepository
+    ) = SaveOnBoardingStateUseCase(repository)
+
+    @Provides
+    @Singleton
+    fun provideReadOnBoardingStateUseCase(
+        repository: OnBoardingRepository
+    ) = ReadOnBoardingStateUseCase(repository)
 
     @Provides
     @Singleton
