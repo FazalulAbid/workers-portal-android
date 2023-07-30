@@ -103,7 +103,7 @@ fun UserDashboardScreen(
         when (event) {
             Lifecycle.Event.ON_RESUME -> {
                 userDashboardViewModel.onEvent(UserDashboardEvent.UpdateSelectedAddress)
-//                userDashboardViewModel.onEvent(UserDashboardEvent.RefreshWorkers)
+                userDashboardViewModel.onEvent(UserDashboardEvent.RefreshWorkers)
             }
 
             else -> Unit

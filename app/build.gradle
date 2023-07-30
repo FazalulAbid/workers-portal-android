@@ -97,6 +97,7 @@ dependencies {
     def nav_animation_version = "0.31.0-alpha"
     implementation "com.google.accompanist:accompanist-navigation-animation:$nav_animation_version"
 
+    // Pager and Indicators - Accompanist
     implementation "com.google.accompanist:accompanist-pager:0.13.0"
     implementation "com.google.accompanist:accompanist-pager-indicators:0.13.0"
 
