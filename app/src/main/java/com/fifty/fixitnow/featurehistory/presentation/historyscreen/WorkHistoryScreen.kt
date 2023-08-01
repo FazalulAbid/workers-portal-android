@@ -145,7 +145,10 @@ fun WorkHistoryScreen(
             ) {
                 items(workHistory) { workHistory ->
                     workHistory?.let {
-                        WorkHistoryListItem(imageLoader = imageLoader)
+                        WorkHistoryListItem(
+                            imageLoader = imageLoader,
+                            workHistory = workHistory
+                        )
                     }
                 }
             }

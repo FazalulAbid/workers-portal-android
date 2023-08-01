@@ -3,7 +3,6 @@ package com.fifty.fixitnow.featurehistory.presentation.component
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,7 +25,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -36,7 +34,6 @@ import androidx.compose.ui.unit.dp
 import coil.ImageLoader
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
-import com.airbnb.lottie.LottieComposition
 import com.fifty.fixitnow.R
 import com.fifty.fixitnow.core.presentation.ui.theme.LargeProfilePictureHeight
 import com.fifty.fixitnow.core.presentation.ui.theme.SizeExtraExtraSmall
@@ -45,13 +42,15 @@ import com.fifty.fixitnow.core.presentation.ui.theme.SizeMedium
 import com.fifty.fixitnow.core.presentation.ui.theme.SizeSmall
 import com.fifty.fixitnow.core.presentation.ui.theme.SmallStrokeThickness
 import com.fifty.fixitnow.core.presentation.util.bounceClick
+import com.fifty.fixitnow.core.util.Constants
+import com.fifty.fixitnow.featurehistory.domain.model.WorkHistory
 import com.fifty.fixitnow.featurelocation.domain.model.toDisplayAddress
-import com.fifty.fixitnow.featureworkproposal.domain.model.WorkProposalForWorker
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
 fun WorkHistoryListItem(
     modifier: Modifier = Modifier,
+    workHistory: WorkHistory,
     imageLoader: ImageLoader,
     onClick: () -> Unit = {},
 ) {
@@ -76,7 +75,7 @@ fun WorkHistoryListItem(
                         .size(LargeProfilePictureHeight)
                         .clip(MaterialTheme.shapes.small),
                     painter = rememberImagePainter(
-                        data = "https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg",
+                        data = workHistory.oppositeUserImageUrl,
                         imageLoader = imageLoader
                     ),
                     contentDescription = null,
@@ -89,8 +88,7 @@ fun WorkHistoryListItem(
                         .weight(1f)
                 ) {
                     Text(
-//                    text = "${workProposal.firstName} ${workProposal.lastName}",
-                        text = "Pending",
+                        text = "${workHistory.oppositeFirstName} ${workHistory.oppositeLastName}",
                         style = MaterialTheme.typography.bodyLarge.copy(
                             color = MaterialTheme.colorScheme.onBackground,
                             fontWeight = FontWeight.Medium
@@ -110,7 +108,7 @@ fun WorkHistoryListItem(
                         )
                         Spacer(modifier = Modifier.width(SizeExtraExtraSmall))
                         Text(
-                            text = "Pending",
+                            text = workHistory.categoryTitle,
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 color = MaterialTheme.colorScheme.onSurface
                             ),
@@ -120,8 +118,7 @@ fun WorkHistoryListItem(
                     }
                     Spacer(modifier = Modifier.height(SizeExtraExtraSmall))
                     Text(
-//                    text = workProposal.proposedAddress.toDisplayAddress() ?: "",
-                        text = "Pending",
+                        text = workHistory.proposedDisplayAddress,
                         style = MaterialTheme.typography.bodyMedium.copy(
                             color = MaterialTheme.colorScheme.onSurface
                         ),
@@ -141,14 +138,14 @@ fun WorkHistoryListItem(
                         horizontalAlignment = Alignment.End
                     ) {
                         Text(
-                            text = "Pending",
+                            text = workHistory.formattedProposedDate,
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 color = MaterialTheme.colorScheme.onSurface,
                                 fontWeight = FontWeight.Medium
                             )
                         )
                         Text(
-                            text = "Pending",
+                            text = workHistory.workType,
                             style = MaterialTheme.typography.bodySmall.copy(
                                 color = MaterialTheme.colorScheme.onSurface
                             )
@@ -160,7 +157,7 @@ fun WorkHistoryListItem(
                             .clip(RoundedCornerShape(50.dp))
                             .background(MaterialTheme.colorScheme.secondary)
                             .padding(horizontal = SizeSmall, vertical = SizeExtraSmall),
-                        text = "Pending",
+                        text = "${Constants.CURRENCY_SYMBOL} ${workHistory.wage}",
                         style = MaterialTheme.typography.bodyMedium.copy(
                             color = MaterialTheme.colorScheme.onPrimary,
                             fontWeight = FontWeight.Medium
@@ -177,7 +174,7 @@ fun WorkHistoryListItem(
                 ) {
                     append("Work Description: ")
                 }
-                append("Pending")
+                append(workHistory.workDescription)
             }
             Text(
                 text = builtString,
@@ -189,21 +186,21 @@ fun WorkHistoryListItem(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color(0x1AFF0000))
+                .background(workHistory.workStatus.color.copy(alpha = 0.1f))
                 .padding(vertical = SizeSmall, horizontal = SizeMedium),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_time),
                 contentDescription = null,
-                tint = Color(0xFFFF0000)
+                tint = workHistory.workStatus.color
             )
             Spacer(modifier = Modifier.width(SizeSmall))
             Text(
-                text = "Work is pending",
+                text = workHistory.workStatus.status,
                 style = MaterialTheme.typography.bodyMedium.copy(
                     fontWeight = FontWeight.Medium,
-                    color = Color(0xFFFF0000)
+                    color = workHistory.workStatus.color
                 )
             )
         }

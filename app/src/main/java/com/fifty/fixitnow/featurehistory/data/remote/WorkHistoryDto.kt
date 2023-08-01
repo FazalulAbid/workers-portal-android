@@ -1,7 +1,10 @@
 package com.fifty.fixitnow.featurehistory.data.remote
 
+import com.fifty.fixitnow.core.util.toFormattedDateWithDay
 import com.fifty.fixitnow.featurehistory.domain.model.WorkHistory
+import com.fifty.fixitnow.featurehistory.presentation.historyscreen.WorkHistoryStatus
 import com.fifty.fixitnow.featurelocation.data.remote.dto.LocalAddressDto
+import com.fifty.fixitnow.featurelocation.domain.model.toDisplayAddress
 import com.google.gson.annotations.SerializedName
 
 data class WorkHistoryDto(
@@ -9,7 +12,7 @@ data class WorkHistoryDto(
     val id: String,
     val userId: String,
     val workerId: String,
-    val wage: Int,
+    val wage: Float,
     val isFullDay: Boolean,
     val isBeforeNoon: Boolean,
     val isAccepted: Boolean,
@@ -27,15 +30,19 @@ data class WorkHistoryDto(
     val categorySkill: String,
     val isProposalSentByUser: Boolean
 ) {
-    fun toWorkHistory() =
-        WorkHistory(
+    fun toWorkHistory(): WorkHistory {
+        val workType = if (isFullDay) {
+            "Full Day"
+        } else {
+            if (isBeforeNoon) "Before Noon" else "After Noon"
+        }
+        return WorkHistory(
             id = id,
             oppositeUserId = if (isProposalSentByUser) userId else workerId,
             wage = wage,
-            isFullDay = isFullDay,
-            isBeforeNoon = isBeforeNoon,
+            workType = workType,
             isAccepted = isAccepted,
-            formattedProposedDate = proposedDate.toString(),
+            formattedProposedDate = proposedDate.toFormattedDateWithDay(),
             workDescription = workDescription,
             isUserDeleted = isUserDeleted,
             isWorkerDeleted = isWorkerDeleted,
@@ -43,9 +50,25 @@ data class WorkHistoryDto(
             oppositeUserImageUrl = if (isProposalSentByUser) userImageUrl else workerImageUrl,
             oppositeFirstName = oppositeFirstName,
             oppositeLastName = oppositeLastName,
-            proposedAddress = proposedAddress,
+            proposedDisplayAddress = if (isProposalSentByUser) proposedAddress.toLocalAddress()
+                .toDisplayAddress() ?: ""
+            else "Hired to ${proposedAddress.title}, ",
             categoryTitle = categoryTitle,
             categorySkill = categorySkill,
-            isProposalSentByUser = isProposalSentByUser
+            isProposalSentByUser = isProposalSentByUser,
+            workStatus = if (isCompleted) {
+                WorkHistoryStatus.COMPLETED
+            } else if (isAccepted) {
+                WorkHistoryStatus.PENDING
+            } else if (isUserDeleted) {
+                WorkHistoryStatus.CANCELLED_BY_USER
+            } else if (isWorkerDeleted) {
+                WorkHistoryStatus.CANCELLED_BY_WORKER
+            } else {
+                WorkHistoryStatus.REJECTED
+            }
         )
+    }
+
 }
+
