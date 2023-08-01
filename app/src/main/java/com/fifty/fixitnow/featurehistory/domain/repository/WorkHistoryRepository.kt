@@ -1,17 +1,18 @@
 package com.fifty.fixitnow.featurehistory.domain.repository
 
-import com.fifty.fixitnow.core.util.SimpleResource
+import androidx.paging.PagingData
+import com.fifty.fixitnow.featurehistory.domain.model.WorkHistory
+import kotlinx.coroutines.flow.Flow
 
 interface WorkHistoryRepository {
 
-    suspend fun getWorkHistoryReport(
+    fun getWorkHistoryPaged(
         fromDate: Long,
         toDate: Long,
         isWorkHistoryNeeded: Boolean,
         isHiringHistoryNeeded: Boolean,
         isPendingWorksNeeded: Boolean,
         isCancelledWorksNeeded: Boolean,
-        isCompletedWorksNeeded: Boolean,
-        page: Int
-    ): SimpleResource
+        isCompletedWorksNeeded: Boolean
+    ): Flow<PagingData<WorkHistory>>
 }

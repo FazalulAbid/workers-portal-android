@@ -1,6 +1,7 @@
 package com.fifty.fixitnow.featurehistory.presentation.historyscreen
 
 import android.util.Range
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -34,6 +35,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.core.util.toRange
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.compose.collectAsLazyPagingItems
 import coil.ImageLoader
 import com.fifty.fixitnow.R
 import com.fifty.fixitnow.core.presentation.component.HorizontalDivider
@@ -43,7 +45,9 @@ import com.fifty.fixitnow.core.presentation.ui.theme.ScaffoldBottomPaddingValue
 import com.fifty.fixitnow.core.presentation.ui.theme.SizeMedium
 import com.fifty.fixitnow.core.presentation.ui.theme.SizeSmall
 import com.fifty.fixitnow.core.util.formatDateRange
+import com.fifty.fixitnow.core.util.items
 import com.fifty.fixitnow.featurehistory.presentation.component.WorkHistoryListItem
+import com.fifty.fixitnow.featureworker.presentation.component.ReviewItem
 import com.fifty.fixitnow.featureworker.presentation.searchworker.SearchWorkerEvent
 import com.fifty.fixitnow.featureworker.presentation.searchworker.SortWorkersBottomSheetContent
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
@@ -54,12 +58,13 @@ import com.maxkeppeler.sheets.calendar.models.CalendarStyle
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun WorkHistoryScreen(
     imageLoader: ImageLoader,
     viewModel: WorkHistoryViewModel = hiltViewModel()
 ) {
+    val workHistory = viewModel.workHistory.collectAsLazyPagingItems()
     val coroutineScope = rememberCoroutineScope()
     val filterBottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var showFilterBottomSheet by remember { mutableStateOf(false) }
@@ -138,8 +143,10 @@ fun WorkHistoryScreen(
                 ),
                 verticalArrangement = Arrangement.spacedBy(SizeMedium)
             ) {
-                items(10) {
-                    WorkHistoryListItem(imageLoader = imageLoader)
+                items(workHistory) { workHistory ->
+                    workHistory?.let {
+                        WorkHistoryListItem(imageLoader = imageLoader)
+                    }
                 }
             }
         }

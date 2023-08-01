@@ -1,11 +1,10 @@
 package com.fifty.fixitnow.featureworkproposal.data.remote
 
 import com.fifty.fixitnow.core.data.dto.response.BasicApiResponse
-import com.fifty.fixitnow.featureworker.data.remote.dto.WorkerDto
+import com.fifty.fixitnow.featurehistory.data.remote.WorkHistoryDto
 import com.fifty.fixitnow.featureworkproposal.data.remote.dto.WorkProposalDto
 import com.fifty.fixitnow.featureworkproposal.data.remote.dto.WorkProposalForWorkerDto
 import com.fifty.fixitnow.featureworkproposal.data.remote.request.SendWorkProposalRequest
-import com.fifty.fixitnow.featureworkproposal.domain.model.WorkProposalForWorker
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -47,5 +46,5 @@ interface WorkProposalApiService {
         @Query("cancelledWorks") isCancelledWorksNeeded: Boolean,
         @Query("page") page: Int,
         @Query("pageSize") pageSize: Int
-    ): Response<Any>
+    ): BasicApiResponse<List<WorkHistoryDto>>
 }
