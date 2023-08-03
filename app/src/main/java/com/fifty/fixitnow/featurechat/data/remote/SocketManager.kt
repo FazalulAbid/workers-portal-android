@@ -10,12 +10,12 @@ class SocketManager {
 
     private var socket: Socket? = null
 
-    fun setSocket(server_address: String) {
+    fun setSocket(serverAddress: String) {
         try {
             val options = IO.Options()
             options.forceNew = true
             options.reconnection = true
-            socket = IO.socket(server_address, options)
+            socket = IO.socket(serverAddress, options)
         } catch (e: URISyntaxException) {
             e.printStackTrace()
         }

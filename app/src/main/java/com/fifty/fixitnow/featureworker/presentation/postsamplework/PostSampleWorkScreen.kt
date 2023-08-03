@@ -98,8 +98,8 @@ fun PostSampleWorkScreen(
     previousBackStackEntry: NavBackStackEntry?,
     viewModel: PostSampleWorkViewModel = hiltViewModel()
 ) {
-    val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
     var showImageSourceSelectorSheet by remember { mutableStateOf(true) }
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
@@ -111,7 +111,6 @@ fun PostSampleWorkScreen(
     val addImageLottieProgress by animateLottieCompositionAsState(
         composition = addImageLottieComposition, iterations = LottieConstants.IterateForever
     )
-
 
     val permissionsToRequest = arrayOf(
         Manifest.permission.CAMERA
@@ -166,7 +165,7 @@ fun PostSampleWorkScreen(
                 SampleWorkError.NoImageError -> {
                     ToastExt.makeText(
                         context = context,
-                        message =R.string.please_select_an_image_to_post
+                        message = R.string.please_select_an_image_to_post
                     )
                 }
             }
@@ -336,9 +335,14 @@ fun PostSampleWorkScreen(
                             multiplePermissionResultLauncher.launch(
                                 permissionsToRequest
                             )
+
                             coroutineScope.launch {
                                 imageSourceSheetState.hide()
                                 showImageSourceSelectorSheet = false
+                                ToastExt.makeText(
+                                    context,
+                                    R.string.this_feature_is_not_available
+                                )
                             }
                         }
                     )

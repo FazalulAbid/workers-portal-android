@@ -1,5 +1,6 @@
 package com.fifty.fixitnow.featureauth.presentation.auth
 
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -56,6 +57,7 @@ import com.fifty.fixitnow.core.presentation.ui.theme.LargeButtonHeight
 import com.fifty.fixitnow.core.presentation.ui.theme.SizeLarge
 import com.fifty.fixitnow.core.presentation.ui.theme.SizeMedium
 import com.fifty.fixitnow.core.presentation.ui.theme.SizeSmall
+import com.fifty.fixitnow.core.presentation.util.ToastExt
 import com.fifty.fixitnow.core.presentation.util.UiEvent
 import com.fifty.fixitnow.core.presentation.util.asString
 import com.fifty.fixitnow.core.util.Constants
@@ -105,15 +107,10 @@ fun AuthScreen(
                 val gsa = task?.getResult(ApiException::class.java)
                 if (gsa != null) {
                     viewModel.onEvent(
-                        AuthEvent.OnGoogleSignIn(
-                            gsa.email ?: "",
-                            gsa.displayName ?: ""
-                        )
+                        AuthEvent.OnGoogleSignIn(gsa.idToken)
                     )
-                    Toast.makeText(context, "${gsa.email}, ${gsa.displayName}", Toast.LENGTH_SHORT)
-                        .show()
                 } else {
-                    Toast.makeText(context, "Error occurred", Toast.LENGTH_SHORT).show()
+                    ToastExt.makeText(context, "Couldn't sign in with google")
                 }
                 viewModel.isGoogleAuthLoading.value = false
             } catch (e: ApiException) {

@@ -55,7 +55,7 @@ class AuthViewModel @Inject constructor(
             }
 
             is AuthEvent.OnGoogleSignIn -> {
-                Log.d("Hello", "onEvent: ${event.displayName}, ${event.email}")
+//                Log.d("Hello", "onEvent: ${event.displayName}, ${event.email}")
             }
 
             is AuthEvent.GetOtp -> {

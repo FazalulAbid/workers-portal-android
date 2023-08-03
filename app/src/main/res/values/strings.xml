@@ -201,5 +201,6 @@
     <string name="not_now">Not now</string>
     <string name="unregistered_as_worker_join_now">Unregistered as worker? Join now!</string>
     <string name="showcase_skills_get_hired_by_others">Showcase skills, get hired by others. Be part of our skilled workforce – brighter opportunities await.</string>
+    <string name="this_feature_is_not_available">This feature is not available</string>
 
 </resources>
