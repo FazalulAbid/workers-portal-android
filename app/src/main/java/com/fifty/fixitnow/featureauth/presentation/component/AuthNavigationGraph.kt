@@ -32,6 +32,11 @@ fun NavGraphBuilder.authNavGraph(
             Screen.AuthScreen.route
         ) {
             AuthScreen(
+                onNavigateWithPopBackStack = { route ->
+                    navController.navigate(route) {
+                        popUpTo(0)
+                    }
+                },
                 snackbarHostState = snackbarHostState,
                 onNavigate = navController::navigate,
                 currentBackStackEntry = navController.currentBackStackEntry,

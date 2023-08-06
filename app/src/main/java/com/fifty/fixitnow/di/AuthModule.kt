@@ -12,6 +12,7 @@ import com.fifty.fixitnow.featureauth.domain.repository.SessionRepository
 import com.fifty.fixitnow.featureauth.domain.usecase.AuthUseCases
 import com.fifty.fixitnow.featureauth.domain.usecase.AuthenticateUseCase
 import com.fifty.fixitnow.featureauth.domain.usecase.GetOtpUseCase
+import com.fifty.fixitnow.featureauth.domain.usecase.GoogleSignInUseCase
 import com.fifty.fixitnow.featureauth.domain.usecase.LogoutUseCase
 import com.fifty.fixitnow.featureauth.domain.usecase.ReadOnBoardingStateUseCase
 import com.fifty.fixitnow.featureauth.domain.usecase.SaveAccessTokenUseCase
@@ -104,7 +105,8 @@ object AuthModule {
     ): AuthUseCases =
         AuthUseCases(
             getOtp = GetOtpUseCase(authRepository),
-            verifyOtp = VerifyOtpUseCase(authRepository)
+            verifyOtp = VerifyOtpUseCase(authRepository),
+            googleSignIn = GoogleSignInUseCase(authRepository)
         )
 
     @Provides

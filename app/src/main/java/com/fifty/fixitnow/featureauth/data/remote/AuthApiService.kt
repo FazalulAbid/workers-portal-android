@@ -10,6 +10,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface AuthApiService {
 
@@ -27,4 +28,9 @@ interface AuthApiService {
     suspend fun refreshToken(
         @Header(AUTHORIZATION_KEY) token: String
     ): Response<Unit>
+
+    @POST("auth/google-auth")
+    suspend fun googleSignIn(
+        @Query("googleToken") googleToken: String
+    ): Response<BasicApiResponse<ProfileDto>>
 }

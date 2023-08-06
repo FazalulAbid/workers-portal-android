@@ -61,6 +61,7 @@ import com.fifty.fixitnow.core.presentation.util.ToastExt
 import com.fifty.fixitnow.core.presentation.util.UiEvent
 import com.fifty.fixitnow.core.presentation.util.asString
 import com.fifty.fixitnow.core.util.Constants
+import com.fifty.fixitnow.core.util.NavigationParent
 import com.fifty.fixitnow.core.util.Screen
 import com.fifty.fixitnow.featureauth.domain.util.GoogleApiContract
 import com.fifty.fixitnow.featureauth.presentation.component.CountryPickerField
@@ -81,6 +82,7 @@ import kotlin.math.roundToInt
 )
 @Composable
 fun AuthScreen(
+    onNavigateWithPopBackStack: (String) -> Unit = {},
     snackbarHostState: SnackbarHostState,
     currentBackStackEntry: NavBackStackEntry?,
     onNavigate: (String) -> Unit = {},
@@ -132,6 +134,10 @@ fun AuthScreen(
                         context, event.uiText.asString(context),
                         Toast.LENGTH_LONG
                     ).show()
+                }
+
+                is UiEvent.OnLogin -> {
+                    onNavigateWithPopBackStack(NavigationParent.Home.route)
                 }
 
                 is UiEvent.HideKeyboard -> {

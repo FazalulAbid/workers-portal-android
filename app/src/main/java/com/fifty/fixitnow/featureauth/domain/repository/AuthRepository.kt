@@ -18,5 +18,9 @@ interface AuthRepository {
         otpCode: String
     ): Resource<OtpVerification>
 
+    suspend fun googleSignIn(
+        token: String
+    ): Resource<OtpVerification>
+
     suspend fun authenticate(): Resource<UserProfile>
 }

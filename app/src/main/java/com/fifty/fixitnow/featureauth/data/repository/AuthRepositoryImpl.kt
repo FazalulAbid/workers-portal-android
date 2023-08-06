@@ -1,5 +1,6 @@
 package com.fifty.fixitnow.featureauth.data.repository
 
+import android.util.Log
 import coil.network.HttpException
 import com.fifty.fixitnow.R
 import com.fifty.fixitnow.core.data.util.ApiConstants.ACCESS_TOKEN_KEY
@@ -107,6 +108,38 @@ class AuthRepositoryImpl(
                     } ?: Resource.Error(UiText.unknownError())
                 }
             } ?: Resource.Error(UiText.unknownError())
+        } catch (e: IOException) {
+            Resource.Error(
+                uiText = UiText.StringResource(R.string.error_could_not_reach_server)
+            )
+        } catch (e: HttpException) {
+            Resource.Error(
+                uiText = UiText.StringResource(R.string.oops_something_went_wrong)
+            )
+        }
+    }
+
+    override suspend fun googleSignIn(token: String): Resource<OtpVerification> {
+        return try {
+            val response = api.googleSignIn(token)
+            if (response.isSuccessful && response.body()?.successful == true) {
+                val accessToken = response.headers()[ACCESS_TOKEN_KEY]
+                val refreshToken = response.headers()[REFRESH_TOKEN_KEY]
+                val user = response.body()?.data
+                return if (accessToken != null && refreshToken != null && user != null) {
+                    Resource.Success(
+                        data = OtpVerification(
+                            accessToken = accessToken,
+                            refreshToken = refreshToken,
+                            user = user
+                        )
+                    )
+                } else Resource.Error(UiText.unknownError())
+            } else {
+                response.body()?.message?.let { msg ->
+                    Resource.Error(UiText.DynamicString(msg))
+                } ?: Resource.Error(UiText.StringResource(R.string.error_unknown))
+            }
         } catch (e: IOException) {
             Resource.Error(
                 uiText = UiText.StringResource(R.string.error_could_not_reach_server)
