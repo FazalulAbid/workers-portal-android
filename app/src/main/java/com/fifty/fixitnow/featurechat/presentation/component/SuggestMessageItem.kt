@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
+import com.fifty.fixitnow.core.presentation.ui.theme.SizeExtraSmall
 import com.fifty.fixitnow.core.presentation.ui.theme.SizeMedium
 import com.fifty.fixitnow.core.presentation.ui.theme.SizeSmall
 import com.fifty.fixitnow.core.presentation.ui.theme.SmallStrokeThickness
@@ -29,10 +30,7 @@ fun SuggestMessageItem(
             )
             .clip(MaterialTheme.shapes.medium)
             .clickable { onClick() }
-            .padding(
-                horizontal = SizeMedium,
-                vertical = SizeSmall
-            ),
+            .padding(vertical = SizeSmall, horizontal = SizeSmall),
         contentAlignment = Alignment.Center
     ) {
         Text(

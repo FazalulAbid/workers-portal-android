@@ -14,6 +14,7 @@ import com.fifty.fixitnow.core.util.DefaultPaginator
 import com.fifty.fixitnow.core.util.FavouriteToggle
 import com.fifty.fixitnow.core.util.Resource
 import com.fifty.fixitnow.core.util.Screen
+import com.fifty.fixitnow.featurechat.domain.usecase.ChatSocketUseCases
 import com.fifty.fixitnow.featureuser.domain.usecase.GetDashboardBannersUseCase
 import com.fifty.fixitnow.featureworker.domain.model.Category
 import com.fifty.fixitnow.featureworker.domain.model.Worker
@@ -32,7 +33,8 @@ class UserDashboardViewModel @Inject constructor(
     private val getCategoriesUseCase: GetSuggestedCategoriesUseCase,
     private val toggleFavouriteWorkerUseCase: ToggleFavouriteWorkerUseCase,
     private val favouriteToggle: FavouriteToggle,
-    private val getSearchedSortedAndFilteredWorkersUseCase: GetSearchedSortedAndFilteredWorkersUseCase
+    private val getSearchedSortedAndFilteredWorkersUseCase: GetSearchedSortedAndFilteredWorkersUseCase,
+    private val chatSocketUseCases: ChatSocketUseCases
 ) : ViewModel() {
 
     val visiblePermissionDialogQueue = mutableStateListOf<String>()
@@ -83,6 +85,7 @@ class UserDashboardViewModel @Inject constructor(
         getBanners()
         getSuggestedCategories()
         loadNextWorkers()
+        chatSocketUseCases.establishConnection()
     }
 
     fun onEvent(event: UserDashboardEvent) {

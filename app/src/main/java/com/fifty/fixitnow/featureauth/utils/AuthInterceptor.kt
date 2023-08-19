@@ -1,6 +1,7 @@
 package com.fifty.fixitnow.featureauth.utils
 
 import com.fifty.fixitnow.core.data.util.ApiConstants.AUTHORIZATION_KEY
+import com.fifty.fixitnow.core.domain.util.Session
 import com.fifty.fixitnow.featureauth.domain.repository.SessionRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking

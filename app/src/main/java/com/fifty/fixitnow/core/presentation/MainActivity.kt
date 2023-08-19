@@ -28,8 +28,10 @@ import com.fifty.fixitnow.core.presentation.ui.theme.WorkersPortalTheme
 import com.fifty.fixitnow.core.util.NavigationParent
 import com.fifty.fixitnow.core.util.Screen
 import com.fifty.fixitnow.featureauth.presentation.onboarding.OnBoardingEvent
+import com.fifty.fixitnow.featureauth.presentation.splash.SplashEvent
 import com.fifty.fixitnow.featureauth.presentation.splash.SplashViewModel
 import com.fifty.fixitnow.featureauth.presentation.splash.UserAuthState
+import com.fifty.fixitnow.featurechat.domain.usecase.ChatSocketUseCases
 import com.fifty.fixitnow.featureworkproposal.presentation.workproposal.WorkProposalViewModel
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import dagger.hilt.android.AndroidEntryPoint
@@ -39,6 +41,10 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var chatSocketUseCases: ChatSocketUseCases
+
     @Inject
     lateinit var imageLoader: ImageLoader
 
@@ -85,7 +91,7 @@ class MainActivity : ComponentActivity() {
                                 snackbarHostState = snackBarHostState,
                                 startDestination = startDestination,
                                 onDataLoaded = {
-                                    splashViewModel.onEvent(OnBoardingEvent.SplashLoadingComplete)
+                                    splashViewModel.onEvent(SplashEvent.SplashLoadingComplete)
                                 },
                                 imageLoader = imageLoader,
                                 workProposalViewModel = workProposalViewModel,
@@ -96,6 +102,11 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        chatSocketUseCases.closeConnection()
     }
 
     private fun shouldShowBottomBar(backStackEntry: NavBackStackEntry?): Boolean =

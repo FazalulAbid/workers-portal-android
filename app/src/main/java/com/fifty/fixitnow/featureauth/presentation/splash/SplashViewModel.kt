@@ -56,9 +56,9 @@ class SplashViewModel @Inject constructor(
         }
     }
 
-    fun onEvent(event: OnBoardingEvent) {
+    fun onEvent(event: SplashEvent) {
         when (event) {
-            OnBoardingEvent.SplashLoadingComplete -> {
+            SplashEvent.SplashLoadingComplete -> {
                 _isLoading.value = false
             }
         }

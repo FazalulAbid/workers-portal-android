@@ -3,7 +3,9 @@ package com.fifty.fixitnow.featurechat.presentation.message
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.LocalOverscrollConfiguration
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,8 +17,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -107,20 +109,24 @@ fun MessageScreen(
                 CompositionLocalProvider(
                     LocalOverscrollConfiguration provides null
                 ) {
-                    LazyRow() {
-                        items(5) {
-                            Spacer(modifier = Modifier.width(SizeMedium))
-                            SuggestMessageItem(text = "Hello, there!")
-                            if (it == 5 - 1) {
-                                Spacer(modifier = Modifier.width(SizeMedium))
-                            }
+                    LazyRow(
+                        contentPadding = PaddingValues(horizontal = SizeMedium),
+                        horizontalArrangement = Arrangement.spacedBy(SizeMedium)
+                    ) {
+                        items(viewModel.predefinedMessages) { message ->
+                            SuggestMessageItem(
+                                text = message,
+                                onClick = {
+                                    viewModel.onEvent(MessageEvent.InputMessage(message))
+                                }
+                            )
                         }
                     }
                 }
+                Spacer(modifier = Modifier.height(SizeMedium))
                 Column(
                     Modifier.padding(horizontal = SizeMedium)
                 ) {
-                    Spacer(modifier = Modifier.height(SizeMedium))
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
@@ -137,9 +143,9 @@ fun MessageScreen(
                                     tint = MaterialTheme.colorScheme.primary
                                 )
                             },
-                            value = "Hello",
+                            value = viewModel.messageFieldState.value.text,
                             onValueChange = {
-
+                                viewModel.onEvent(MessageEvent.InputMessage(it))
                             },
                             hint = "Type your message here...",
                             maxLength = Constants.MESSAGE_LENGTH,
@@ -147,7 +153,7 @@ fun MessageScreen(
                         )
                         Spacer(modifier = Modifier.width(SizeSmall))
                         IconButton(onClick = {
-                            viewModel.onEvent(MessageEvent.Test)
+                            viewModel.onEvent(MessageEvent.SendMessage)
                         }) {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_send_filled),

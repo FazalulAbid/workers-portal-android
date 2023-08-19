@@ -4,11 +4,13 @@ import android.app.Application
 import android.content.Context
 import coil.ImageLoader
 import coil.decode.SvgDecoder
+import com.fifty.fixitnow.WorkersPortalApplication
 import com.fifty.fixitnow.core.domain.usecase.GetOwnUserIdUseCase
 import com.fifty.fixitnow.core.util.Constants
 import com.fifty.fixitnow.core.util.DefaultFavouriteToggle
 import com.fifty.fixitnow.core.util.FavouriteToggle
 import com.fifty.fixitnow.featureauth.domain.repository.SessionRepository
+import com.fifty.fixitnow.featureauth.domain.usecase.GetAccessTokenUseCase
 import com.fifty.fixitnow.featureauth.utils.AuthAuthenticator
 import com.fifty.fixitnow.featureauth.utils.AuthInterceptor
 import com.google.android.gms.location.LocationServices

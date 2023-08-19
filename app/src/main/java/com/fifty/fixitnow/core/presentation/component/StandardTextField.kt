@@ -20,6 +20,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import com.fifty.fixitnow.core.presentation.ui.theme.SizeSmall
 
@@ -43,7 +44,9 @@ fun StandardTextField(
     readOnly: Boolean = false,
     maxLines: Int = 1,
     keyboardActions: KeyboardActions = KeyboardActions(),
-    keyboardOptions: KeyboardOptions = KeyboardOptions(),
+    keyboardOptions: KeyboardOptions = KeyboardOptions(
+        capitalization = KeyboardCapitalization.Sentences
+    ),
     focusRequester: FocusRequester = FocusRequester()
 ) {
     Column(

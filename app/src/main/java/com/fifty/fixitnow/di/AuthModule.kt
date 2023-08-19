@@ -11,6 +11,7 @@ import com.fifty.fixitnow.featureauth.domain.repository.OnBoardingRepository
 import com.fifty.fixitnow.featureauth.domain.repository.SessionRepository
 import com.fifty.fixitnow.featureauth.domain.usecase.AuthUseCases
 import com.fifty.fixitnow.featureauth.domain.usecase.AuthenticateUseCase
+import com.fifty.fixitnow.featureauth.domain.usecase.GetAccessTokenUseCase
 import com.fifty.fixitnow.featureauth.domain.usecase.GetOtpUseCase
 import com.fifty.fixitnow.featureauth.domain.usecase.GoogleSignInUseCase
 import com.fifty.fixitnow.featureauth.domain.usecase.LogoutUseCase
@@ -85,6 +86,12 @@ object AuthModule {
         @ApplicationContext context: Context
     ): OnBoardingRepository =
         OnBoardingRepositoryImpl(context)
+
+    @Provides
+    @Singleton
+    fun provideGetAccessTokenUseCase(
+        repository: SessionRepository
+    ) = GetAccessTokenUseCase(repository)
 
     @Provides
     @Singleton

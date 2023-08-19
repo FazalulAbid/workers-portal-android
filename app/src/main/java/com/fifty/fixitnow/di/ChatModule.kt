@@ -4,6 +4,10 @@ import com.fifty.fixitnow.featurechat.data.remote.ChatApi
 import com.fifty.fixitnow.featurechat.data.remote.SocketManager
 import com.fifty.fixitnow.featurechat.data.repository.ChatRepositoryImpl
 import com.fifty.fixitnow.featurechat.domain.repository.ChatRepository
+import com.fifty.fixitnow.featurechat.domain.usecase.ChatSocketUseCases
+import com.fifty.fixitnow.featurechat.domain.usecase.CloseSocketConnectionUseCase
+import com.fifty.fixitnow.featurechat.domain.usecase.EstablishSocketConnectionUseCase
+import com.fifty.fixitnow.featurechat.domain.usecase.SendMessageUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -37,4 +41,13 @@ object ChatModule {
         chatApi: ChatApi
     ): ChatRepository = ChatRepositoryImpl(chatApi)
 
+    @Provides
+    @Singleton
+    fun provideChatSocketUseCases(
+        socketManager: SocketManager
+    ) = ChatSocketUseCases(
+        establishConnection = EstablishSocketConnectionUseCase(socketManager),
+        sendMessage = SendMessageUseCase(socketManager),
+        closeConnection = CloseSocketConnectionUseCase(socketManager)
+    )
 }

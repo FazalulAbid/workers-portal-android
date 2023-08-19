@@ -17,5 +17,5 @@ sealed class UiEvent : Event() {
     object WorkerProfileUpdated : UiEvent()
     object HideKeyboard : UiEvent()
     object ReviewAndRatingPosted : UiEvent()
-    object WorkerDateConflict : UiEvent()
+    object OnBoardingScreenComplete : UiEvent()
 }

@@ -8,7 +8,6 @@ import androidx.navigation.navigation
 import coil.ImageLoader
 import com.fifty.fixitnow.core.util.NavigationParent
 import com.fifty.fixitnow.core.util.Screen
-import com.fifty.fixitnow.featureauth.presentation.auth.AuthScreen
 import com.fifty.fixitnow.featureauth.presentation.onboarding.OnBoardingScreen
 import com.google.accompanist.navigation.animation.composable
 
@@ -28,7 +27,11 @@ fun NavGraphBuilder.onboardingNavGraph(
         ) {
             OnBoardingScreen(
                 onNavigate = navController::navigate,
-                popBackStack = navController::popBackStack,
+                onNavigateWithPopBackStack = { route ->
+                    navController.navigate(route) {
+                        popUpTo(0)
+                    }
+                },
                 imageLoader = imageLoader
             )
         }
