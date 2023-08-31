@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -23,6 +22,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import coil.ImageLoader
@@ -50,6 +50,7 @@ fun WorkerItem(
     worker: Worker,
     imageLoader: ImageLoader,
     onClick: () -> Unit = {},
+    isFavouriteButtonNeeded: Boolean = true,
     onFavouriteClick: () -> Unit = {}
 ) {
     Column(
@@ -105,13 +106,15 @@ fun WorkerItem(
                                 ratingCount = worker.ratingCount
                             )
                         }
-                        Spacer(modifier = Modifier.width(SizeMedium))
-                        AddToFavouriteButton(
-                            isFavourite = worker.isFavourite,
-                            onClick = {
-                                onFavouriteClick()
-                            }
-                        )
+                        if (isFavouriteButtonNeeded) {
+                            Spacer(modifier = Modifier.width(SizeMedium))
+                            AddToFavouriteButton(
+                                isFavourite = worker.isFavourite,
+                                onClick = {
+                                    onFavouriteClick()
+                                }
+                            )
+                        }
                     }
                     Spacer(modifier = Modifier.height(SizeSmall))
                     Row {
@@ -123,7 +126,7 @@ fun WorkerItem(
                         )
                         Spacer(modifier = Modifier.width(SizeExtraSmall))
                         Text(
-                            text = worker.localAddress.toDisplayAddress() ?: "",
+                            text = worker.localAddress.toDisplayAddress() ?: stringResource(R.string.address_not_available),
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 color = MaterialTheme.colorScheme.onSurface
                             ),
@@ -131,23 +134,25 @@ fun WorkerItem(
                             overflow = TextOverflow.Ellipsis
                         )
                     }
-                    Spacer(modifier = Modifier.height(SizeSmall))
-                    Row {
-                        Icon(
-                            modifier = Modifier.size(SizeMedium),
-                            painter = painterResource(id = R.drawable.ic_distance),
-                            contentDescription = "",
-                            tint = MaterialTheme.colorScheme.secondary
-                        )
-                        Spacer(modifier = Modifier.width(SizeExtraSmall))
-                        Text(
-                            text = "${worker.distance} from ${Session.selectedAddress.value?.title}",
-                            style = MaterialTheme.typography.bodyMedium.copy(
-                                color = MaterialTheme.colorScheme.onSurface
-                            ),
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
+                    if (worker.distance > 0) {
+                        Spacer(modifier = Modifier.height(SizeSmall))
+                        Row {
+                            Icon(
+                                modifier = Modifier.size(SizeMedium),
+                                painter = painterResource(id = R.drawable.ic_distance),
+                                contentDescription = "",
+                                tint = MaterialTheme.colorScheme.secondary
+                            )
+                            Spacer(modifier = Modifier.width(SizeExtraSmall))
+                            Text(
+                                text = "${worker.distanceInKm} from ${Session.selectedAddress.value?.title}",
+                                style = MaterialTheme.typography.bodyMedium.copy(
+                                    color = MaterialTheme.colorScheme.onSurface
+                                ),
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
                     }
                 }
             }

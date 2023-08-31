@@ -99,16 +99,16 @@ fun UserDashboardScreen(
         }
     )
 
-    OnLifecycleEvent { _, event ->
-        when (event) {
-            Lifecycle.Event.ON_RESUME -> {
-                userDashboardViewModel.onEvent(UserDashboardEvent.UpdateSelectedAddress)
-                userDashboardViewModel.onEvent(UserDashboardEvent.RefreshWorkers)
-            }
-
-            else -> Unit
-        }
-    }
+//    OnLifecycleEvent { _, event ->
+//        when (event) {
+//            Lifecycle.Event.ON_RESUME -> {
+//                userDashboardViewModel.onEvent(UserDashboardEvent.UpdateSelectedAddress)
+//                userDashboardViewModel.onEvent(UserDashboardEvent.RefreshWorkers)
+//            }
+//
+//            else -> Unit
+//        }
+//    }
 
     LaunchedEffect(key1 = true) {
         userDashboardViewModel.eventFlow.collectLatest { event ->
@@ -283,6 +283,7 @@ fun UserDashboardScreen(
                         modifier = Modifier.padding(horizontal = SizeMedium),
                         worker = worker,
                         imageLoader = imageLoader,
+                        isFavouriteButtonNeeded = false,
                         onFavouriteClick = {
                             userDashboardViewModel.onEvent(
                                 UserDashboardEvent.ToggleFavouriteWorker(worker.workerId)

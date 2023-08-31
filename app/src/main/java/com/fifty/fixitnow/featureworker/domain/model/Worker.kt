@@ -24,5 +24,6 @@ data class Worker(
     val localAddress: LocalAddress? = null,
     val isFavourite: Boolean,
     val primaryCategoryId: String,
-    val distance: String
+    val distance: Double,
+    val distanceInKm: String
 ) : Parcelable

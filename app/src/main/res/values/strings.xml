@@ -203,5 +203,6 @@
     <string name="showcase_skills_get_hired_by_others">Showcase skills, get hired by others. Be part of our skilled workforce – brighter opportunities await.</string>
     <string name="this_feature_is_not_available">This feature is not available</string>
     <string name="skip">Skip</string>
+    <string name="address_not_available">Address not available</string>
 
 </resources>

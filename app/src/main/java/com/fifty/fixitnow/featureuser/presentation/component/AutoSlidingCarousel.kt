@@ -50,10 +50,12 @@ fun AutoSlidingCarousal(
         while (true) {
             yield()
             delay(2000)
-            pagerState.animateScrollToPage(
-                page = (pagerState.currentPage + 1) % (pagerState.pageCount),
-                animationSpec = tween(600)
-            )
+            if (pagerState.pageCount > 1) {
+                pagerState.animateScrollToPage(
+                    page = (pagerState.currentPage + 1) % (pagerState.pageCount),
+                    animationSpec = tween(600)
+                )
+            }
         }
     }
 

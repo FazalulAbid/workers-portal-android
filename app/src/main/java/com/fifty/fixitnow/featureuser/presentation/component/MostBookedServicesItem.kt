@@ -70,18 +70,18 @@ fun MostBookedServicesItem(
                 contentDescription = null,
                 contentScale = ContentScale.Crop
             )
-            Box(
-                contentAlignment = Alignment.Center
-            ) {
-                AddToFavouriteButton(
-                    isFavourite = worker.isFavourite,
-                    unselectedColor = MaterialTheme.colorScheme.background,
-                    selectedColor = Color.Red,
-                    onClick = {
-                        onFavouriteClick()
-                    }
-                )
-            }
+//            Box(
+//                contentAlignment = Alignment.Center
+//            ) {
+//                AddToFavouriteButton(
+//                    isFavourite = worker.isFavourite,
+//                    unselectedColor = MaterialTheme.colorScheme.background,
+//                    selectedColor = Color.Red,
+//                    onClick = {
+//                        onFavouriteClick()
+//                    }
+//                )
+//            }
         }
         Spacer(modifier = Modifier.height(SizeSmall))
         Text(
