@@ -2,11 +2,9 @@ package com.fifty.fixitnow.featurechat.domain.usecase
 
 import com.fifty.fixitnow.featurechat.domain.repository.ChatRepository
 
-class CloseSocketConnectionUseCase(
+class ObserveChatMessagesUseCase(
     private val repository: ChatRepository
 ) {
 
-    operator fun invoke() {
-        repository.closeSocketConnection()
-    }
+    operator fun invoke() = repository.observeChatMessages()
 }

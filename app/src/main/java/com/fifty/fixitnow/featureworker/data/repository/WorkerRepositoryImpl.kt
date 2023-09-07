@@ -217,7 +217,6 @@ class WorkerRepositoryImpl(
                 isFullDay = isFullDay,
                 isBeforeNoon = isBeforeNoon
             )
-            Log.d("Hello", "getSearchedSortedAndFilteredWorkers: ${response.data}")
             if (response.successful) {
                 Resource.Success(data = response.data?.map { it.toWorker() })
             } else {

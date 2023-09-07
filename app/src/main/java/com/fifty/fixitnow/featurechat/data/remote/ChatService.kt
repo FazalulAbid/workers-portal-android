@@ -3,13 +3,13 @@ package com.fifty.fixitnow.featurechat.data.remote
 import io.socket.client.IO
 import io.socket.client.Socket
 import io.socket.emitter.Emitter
-import org.json.JSONObject
 import java.net.URISyntaxException
 
-class SocketManager {
+class ChatService {
 
     private var socket: Socket? = null
 
+    @Synchronized
     fun setSocket(serverAddress: String) {
         try {
             val options = IO.Options()
@@ -21,26 +21,29 @@ class SocketManager {
         }
     }
 
+    @Synchronized
     fun getSocket(): Socket? {
         return socket
     }
 
+    @Synchronized
     fun establishConnection() {
         socket?.connect() // Check if socket is not null before connecting
     }
 
+    @Synchronized
     fun closeConnection() {
         socket?.disconnect() // Check if socket is not null before disconnecting
+        socket?.off()
     }
 
-    fun emit(eventName: String, data: JSONObject) {
-        socket?.emit(eventName, data) // Check if socket is not null before emitting
+    @Synchronized
+    fun emit(eventName: String, json: String) {
+        socket?.emit(eventName, json) // Check if socket is not null before emitting
     }
 
+    @Synchronized
     fun on(eventName: String, listener: Emitter.Listener) {
-        socket?.on(
-            eventName,
-            listener
-        ) // Check if socket is not null before registering the listener
+        socket?.on(eventName, listener)
     }
 }
