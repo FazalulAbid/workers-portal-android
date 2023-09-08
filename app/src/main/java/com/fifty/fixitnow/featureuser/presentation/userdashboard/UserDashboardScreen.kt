@@ -99,16 +99,16 @@ fun UserDashboardScreen(
         }
     )
 
-//    OnLifecycleEvent { _, event ->
-//        when (event) {
-//            Lifecycle.Event.ON_RESUME -> {
-//                userDashboardViewModel.onEvent(UserDashboardEvent.UpdateSelectedAddress)
+    OnLifecycleEvent { _, event ->
+        when (event) {
+            Lifecycle.Event.ON_RESUME -> {
+                userDashboardViewModel.onEvent(UserDashboardEvent.UpdateSelectedAddress)
 //                userDashboardViewModel.onEvent(UserDashboardEvent.RefreshWorkers)
-//            }
-//
-//            else -> Unit
-//        }
-//    }
+            }
+
+            else -> Unit
+        }
+    }
 
     LaunchedEffect(key1 = true) {
         userDashboardViewModel.eventFlow.collectLatest { event ->

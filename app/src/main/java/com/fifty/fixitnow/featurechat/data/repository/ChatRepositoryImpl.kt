@@ -1,6 +1,5 @@
 package com.fifty.fixitnow.featurechat.data.repository
 
-import android.util.Log
 import com.fifty.fixitnow.featurechat.data.remote.ChatApi
 import com.fifty.fixitnow.featurechat.data.remote.ChatService
 import com.fifty.fixitnow.featurechat.data.remote.data.WsClientMessage
@@ -39,15 +38,24 @@ class ChatRepositoryImpl(
     override fun observeChatMessages(): Flow<WsServerMessage> =
         callbackFlow {
             val eventListener = Emitter.Listener { args ->
-                Log.d("Hello", "invoke: ${args.size}, ${args[0]}")
                 val message = gson.fromJson(args[0].toString(), WsServerMessage::class.java)
                 trySend(message).isSuccess
             }
 
             chatService.on("message", eventListener)
 
-            awaitClose {
-                chatService.closeConnection()
+            awaitClose()
+        }
+
+    override fun observeOverallMessages(userId: String): Flow<String> =
+        callbackFlow {
+            val eventListener = Emitter.Listener { args ->
+                val user = args[0].toString()
+                trySend(user).isSuccess
             }
+
+            chatService.on("overall-messages", eventListener)
+
+            awaitClose()
         }
 }

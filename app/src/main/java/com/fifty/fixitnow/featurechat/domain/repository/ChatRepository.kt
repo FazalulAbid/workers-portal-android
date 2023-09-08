@@ -14,4 +14,6 @@ interface ChatRepository {
     fun sendMessage(toUserId: String, content: String)
 
     fun observeChatMessages(): Flow<WsServerMessage>
+
+    fun observeOverallMessages(userId: String): Flow<String>
 }
