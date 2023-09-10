@@ -108,15 +108,15 @@ fun MessageScreen(
                 modifier = Modifier
                     .weight(1f)
             ) {
-                items(20) {
+                items(viewModel.messages.value) { message ->
                     RemoteMessage(
-                        message = "Hello there!",
+                        message = message.content,
                         formattedTime = "",
                         color = MaterialTheme.colorScheme.surface,
                         textColor = MaterialTheme.colorScheme.onSurface
                     )
                     OwnMessage(
-                        message = "Hii, here I am",
+                        message = message.content,
                         formattedTime = "",
                         color = MaterialTheme.colorScheme.primary,
                         textColor = MaterialTheme.colorScheme.onPrimary

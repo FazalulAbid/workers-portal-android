@@ -9,11 +9,15 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fifty.fixitnow.core.domain.state.StandardTextFieldState
+import com.fifty.fixitnow.core.presentation.PagingState
 import com.fifty.fixitnow.core.presentation.util.UiEvent
+import com.fifty.fixitnow.core.util.DefaultPaginator
 import com.fifty.fixitnow.core.util.Event
+import com.fifty.fixitnow.core.util.Resource
 import com.fifty.fixitnow.core.util.UiText
 import com.fifty.fixitnow.core.util.contentUriToFileUri
 import com.fifty.fixitnow.featurechat.data.remote.data.WsServerMessage
+import com.fifty.fixitnow.featurechat.domain.model.Message
 import com.fifty.fixitnow.featurechat.domain.usecase.ChatSocketUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -37,8 +41,11 @@ class MessageViewModel @Inject constructor(
     private val _messageFieldState = mutableStateOf(StandardTextFieldState())
     val messageFieldState: State<StandardTextFieldState> = _messageFieldState
 
-    private val _messages = MutableLiveData<String>()
-    val messages: LiveData<String> = _messages
+    private val _messages = mutableStateOf<List<Message>>(emptyList())
+    val messages: State<List<Message>> = _messages
+
+    private val _pagingState = mutableStateOf<PagingState<Message>>(PagingState())
+    val pagingState: State<PagingState<Message>> = _pagingState
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
@@ -56,6 +63,27 @@ class MessageViewModel @Inject constructor(
         "Could you please provide more details?"
     )
 
+//    private val paginator = DefaultPaginator(
+//        onLoadUpdated = { isLoading ->
+//            _pagingState.value = pagingState.value.copy(isLoading = isLoading)
+//        },
+//        onRequest = { nextPage ->
+//            savedStateHandle.get<String>("userId")?.let { userId ->
+//                getMessagesForChat(nextPage, userId)
+//            } ?: Resource.Error(UiText.unknownError())
+//        },
+//        onError = { errorUiText ->
+//            _eventFlow.emit(UiEvent.MakeToast(errorUiText))
+//        },
+//        onSuccess = { messages ->
+//            _pagingState.value = pagingState.value.copy(
+//                items = pagingState.value.items + messages,
+//                endReached = messages.isEmpty(),
+//                isLoading = false
+//            )
+//        }
+//    )
+
     init {
         chatSocketUseCases.establishConnection()
         observeChatMessages()
@@ -68,6 +96,16 @@ class MessageViewModel @Inject constructor(
                     toUserId = "64f094745e8421c18b24e088",
                     message = _messageFieldState.value.text
                 )
+                val message = Message(
+                    "",
+                    "",
+                    "",
+                    _messageFieldState.value.text,
+                    "",
+                    true,
+                    ""
+                )
+                _messages.value = messages.value + message
             }
 
             is MessageEvent.InputMessage -> {
@@ -78,10 +116,14 @@ class MessageViewModel @Inject constructor(
         }
     }
 
+    private fun getMessagesForChat(nextPage: Int, userId: String) {
+
+    }
+
     private fun observeChatMessages() {
         viewModelScope.launch {
             chatMessages.collect { message ->
-                Log.d("Hello", "observeChatMessages: $message")
+                _messages.value = messages.value + message.toMessage()
                 _eventFlow.emit(UiEvent.MakeToast(UiText.DynamicString(message.content)))
             }
         }
