@@ -10,6 +10,10 @@ import androidx.navigation.navigation
 import coil.ImageLoader
 import com.fifty.fixitnow.core.util.NavigationParent
 import com.fifty.fixitnow.core.util.Screen
+import com.fifty.fixitnow.featuresettings.presentation.settings.ContactUsScreen
+import com.fifty.fixitnow.featuresettings.presentation.settings.PrivacyPolicyScreen
+import com.fifty.fixitnow.featuresettings.presentation.settings.SettingsScreen
+import com.fifty.fixitnow.featuresettings.presentation.settings.TermsAndServiceScreen
 import com.fifty.fixitnow.featureuser.presentation.edituserprofile.UpdateUserProfileScreen
 import com.fifty.fixitnow.featureuser.presentation.userdashboard.UserDashboardScreen
 import com.fifty.fixitnow.featureuser.presentation.userprofile.UserProfileScreen
@@ -61,6 +65,27 @@ fun NavGraphBuilder.userNavGraph(
             UpdateUserProfileScreen(
                 onNavigateUp = navController::navigateUp,
                 previousBackStackEntry = navController.previousBackStackEntry
+            )
+        }
+        composable(Screen.SettingsScreen.route) {
+            SettingsScreen(
+                onNavigateUp = navController::navigateUp,
+                onNavigate = navController::navigate
+            )
+        }
+        composable(Screen.ContactUsScreen.route) {
+            ContactUsScreen(
+                onNavigateUp = navController::navigateUp
+            )
+        }
+        composable(Screen.PrivacyPolicyScreen.route) {
+            PrivacyPolicyScreen(
+                onNavigateUp = navController::navigateUp
+            )
+        }
+        composable(Screen.TermsAndConditionScreen.route) {
+            TermsAndServiceScreen(
+                onNavigateUp = navController::navigateUp
             )
         }
     }

@@ -65,7 +65,7 @@ data class WorkHistoryDto(
             } else if (isWorkerDeleted) {
                 WorkHistoryStatus.CANCELLED_BY_WORKER
             } else {
-                WorkHistoryStatus.REJECTED
+                WorkHistoryStatus.CONFIRMATION_PENDING
             }
         )
     }

@@ -169,7 +169,7 @@ fun UserProfileScreen(
                                     text = "Settings",
                                     description = "Tap the Settings button to access and adjust preferences and configurations for your app."
                                 ) {
-
+                                    onNavigate(Screen.SettingsScreen.route)
                                 }
                                 HorizontalDivider(
                                     color = MaterialTheme.colorScheme.background,

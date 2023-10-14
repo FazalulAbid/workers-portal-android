@@ -61,13 +61,13 @@ fun StandardBottomBar(
             iconSelected = painterResource(id = R.drawable.ic_favorite_filled),
             contentDescription = stringResource(R.string.favorites)
         ),
-        BottomNavItem(
-            route = NavigationParent.Chat.route,
-            label = stringResource(R.string.chats),
-            icon = painterResource(id = R.drawable.ic_chat),
-            iconSelected = painterResource(id = R.drawable.ic_chat_filled),
-            contentDescription = stringResource(R.string.chats)
-        ),
+//        BottomNavItem(
+//            route = NavigationParent.Chat.route,
+//            label = stringResource(R.string.chats),
+//            icon = painterResource(id = R.drawable.ic_chat),
+//            iconSelected = painterResource(id = R.drawable.ic_chat_filled),
+//            contentDescription = stringResource(R.string.chats)
+//        ),
         BottomNavItem(
             route = NavigationParent.History.route,
             label = stringResource(R.string.history),

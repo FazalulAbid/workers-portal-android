@@ -7,5 +7,6 @@ enum class WorkHistoryStatus(val status: String, val color: Color) {
     PENDING("Work is pending", Color(0xFF0F4C75)),
     CANCELLED_BY_USER("Work cancelled by you", Color(0xFFE23E57)),
     CANCELLED_BY_WORKER("Work cancelled by worker", Color(0xFFE23E57)),
-    REJECTED("Worker Rejected", Color(0xFFE23E57))
+    REJECTED("Worker Rejected", Color(0xFFE23E57)),
+    CONFIRMATION_PENDING("Confirmation Pending", Color(0xFFFFA200))
 }

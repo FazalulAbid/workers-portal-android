@@ -69,7 +69,7 @@ fun WorkHistoryScreen(
     val filterBottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var showFilterBottomSheet by remember { mutableStateOf(false) }
     val calenderState = rememberUseCaseState()
-    val timeBoundary = LocalDate.now().let { now -> now.minusYears(2)..now }
+    val timeBoundary = LocalDate.now().let { now -> now.minusYears(2)..now.plusYears(2) }
 
     Surface(
         modifier = Modifier
