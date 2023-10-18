@@ -85,7 +85,7 @@ class UserDashboardViewModel @Inject constructor(
         getBanners()
         getSuggestedCategories()
         loadNextWorkers()
-        chatSocketUseCases.establishConnection()
+//        chatSocketUseCases.establishConnection()
     }
 
     fun onEvent(event: UserDashboardEvent) {
