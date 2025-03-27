@@ -61,8 +61,8 @@ object AppModule {
         ImageLoader.Builder(app)
             .crossfade(true)
             .crossfade(200)
-            .componentRegistry {
-                add(SvgDecoder(app))
+            .components {
+                add(SvgDecoder.Factory())
             }
             .build()
 

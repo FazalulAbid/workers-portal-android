@@ -72,7 +72,7 @@ fun RegisterAsWorkerScreen(
 ) {
     val state = viewModel.updateWorkerState.value
     var showSheet by remember { mutableStateOf(false) }
-    val pagerState = rememberPagerState()
+    val pagerState = rememberPagerState(pageCount = { 4 })
     val coroutineScope = rememberCoroutineScope()
     val firstNameFocusRequester = remember { FocusRequester() }
     val emailFocusRequester = remember { FocusRequester() }
@@ -235,9 +235,8 @@ fun RegisterAsWorkerScreen(
         )
         HorizontalPager(
             modifier = Modifier.weight(1f),
-            pageCount = pages.size,
-            userScrollEnabled = false,
-            state = pagerState
+            state = pagerState,
+            userScrollEnabled = false
         ) { page ->
             when (page) {
                 0 -> {

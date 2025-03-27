@@ -67,9 +67,7 @@ fun OnBoardingScreen(
         OnBoardingPageData.Third,
         OnBoardingPageData.Fourth
     )
-    var pagerState = rememberPagerState(
-        pageCount = pages.size
-    )
+    var pagerState = rememberPagerState(0)
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collect { event ->
@@ -90,7 +88,8 @@ fun OnBoardingScreen(
         HorizontalPager(
             modifier = Modifier.weight(1f),
             state = pagerState,
-            verticalAlignment = Alignment.Top
+            verticalAlignment = Alignment.Top,
+            count = pages.size
         ) { position ->
             OnBoardingPagerScreen(pages[position], imageLoader)
         }

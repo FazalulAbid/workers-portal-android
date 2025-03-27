@@ -14,10 +14,10 @@ object Constants {
     // Base urls
     const val REST_COUNTRIES_BASE_URL = "https://restcountries.com/v2/"
 
-    //    const val WORKERS_PORTAL_BASE_URL = "http://192.168.0.3:8080/api/"
-//    const val DEBUG_WS_BASE_URL = "http://192.168.0.3:8080"
-    const val WORKERS_PORTAL_BASE_URL = "http://65.0.101.4/api/"
-    const val DEBUG_WS_BASE_URL = "http://65.0.101.4"
+    const val WORKERS_PORTAL_BASE_URL = "http://192.168.1.36:8080/api/"
+    const val DEBUG_WS_BASE_URL = "http://192.168.1.36:8080"
+//    const val WORKERS_PORTAL_BASE_URL = "http://65.0.101.4/api/"
+//    const val DEBUG_WS_BASE_URL = "http://65.0.101.4"
 
     const val RECONNECT_INTERVAL = 5000L
 

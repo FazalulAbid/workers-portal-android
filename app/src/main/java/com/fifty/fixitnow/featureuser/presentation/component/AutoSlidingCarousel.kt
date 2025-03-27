@@ -42,8 +42,7 @@ fun AutoSlidingCarousal(
     imageLoader: ImageLoader
 ) {
     val pagerState = rememberPagerState(
-        pageCount = banners.size,
-        initialOffscreenLimit = 2
+        banners.size
     )
 
     LaunchedEffect(Unit) {
@@ -64,7 +63,8 @@ fun AutoSlidingCarousal(
             .fillMaxSize()
     ) {
         HorizontalPager(
-            state = pagerState
+            state = pagerState,
+            count = banners.size
         ) { page ->
             Card(
                 modifier = Modifier
@@ -88,7 +88,7 @@ fun AutoSlidingCarousal(
                     modifier = Modifier
                         .fillMaxSize()
                         .background(MaterialTheme.colorScheme.background)
-                        .align(Alignment.Center)
+                        .align(Alignment.CenterHorizontally)
                 ) {
                     val banner = banners.getOrNull(page)
                     Image(
